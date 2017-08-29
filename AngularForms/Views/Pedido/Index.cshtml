@@ -1,0 +1,113 @@
+﻿<div ng-controller="pedController">
+    @functions{
+        public string GetAntiForgeryToken()
+        {
+            string cookieToken, formToken;
+            AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return cookieToken + ":" + formToken;
+        }
+    }
+    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+        <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
+        <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert"></div>
+        <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
+        <script src="~/app/PedidoForm/pedController.js"></script>
+        <br />
+        <div class="row">
+            <div class="col-sm-12">
+                <h4>Meu pedido</h4>
+                <hr />
+            </div>
+        </div>
+        <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
+            <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
+            <h5 class="text-warning">Para começar clique no botão Incluir item.</h5>
+        </div>
+        <div class="row">
+            <table class="table table-striped" ng-if="pedido.itens != null && pedido.itens.length > 0">
+                <thead>
+                    <tr>
+                        <th class="col-sm-1">
+                            Nº Item
+                        </th>
+                        <th class="col-sm-4">
+                            <div class="row">
+                                Descrição
+                            </div>
+                        </th>
+                        <th class="col-sm-1">
+                            Quantidade
+                        </th>
+                        <th class="col-sm-2">
+                            Preço unitário
+                        </th>
+                        <th class="col-sm-1">
+                            Extras
+                        </th>
+                        <th class="col-sm-2">
+                            Total
+                        </th>
+                        <th class="col-sm-1">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in pedido.itens">
+                        <td>
+                            {{item.seqItem}}
+                        </td>
+                        <td class="col-sm-4">
+                            <div class="row">
+                                {{item.descricaoItem}}
+                            </div>
+                            <div class="row">
+                                <span ng-repeat="obs in item.obs" class="small text-warning">{{obs.descricao}}, </span>
+                            </div>
+                            <div class="row">
+                                <span ng-repeat="extra in item.extras" class="small text-danger">{{extra.descricao}}: R$ {{extra.valorExtra}}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {{item.quantidade}}
+                        </td>
+                        <td>
+                            {{item.precoUnitario | currency: "R$ "}}
+                        </td>
+                        <td>
+                            {{item.valorExtras | currency: "R$ "}}
+                        </td>
+                        <td>
+                            {{item.valorTotal | currency: "R$ "}}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
+                                    ng-bootbox-confirm-action="confirmCallbackRemove(item.seqItem)">
+                                <span class=" glyphicon glyphicon-remove" aria-hidden="true">
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+            <div class="row">
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" data-target="#modalIncluirItem">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Incluir item
+                    </button>
+
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary btn-default btn-lg">
+                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
+                    </button>
+                </div>
+                <div>
+                    <h4 class="text-primary col-sm-offset-9">Total: {{pedido.valorTotal | currency: "R$ "}}</h4>
+                </div>
+            </div>
+        </div>
+    </form>
+    @Html.Partial("_ModalIncluirItem")
+</div>
