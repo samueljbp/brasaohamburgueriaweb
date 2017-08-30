@@ -30,6 +30,8 @@ namespace AngularForms.Controllers
                 .Include(c => c.Itens.Select(i => i.Complemento))
                 .Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
                 .Include(c => c.Itens.Select(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao)))
+                .Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
+                .Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
                 .ToList()
                 .Select(c =>
                 new
@@ -44,6 +46,8 @@ namespace AngularForms.Controllers
                             Preco = i.Preco,
                             ObservacoesPermitidas = (i.ObservacoesPermitidas != null ?
                                 i.ObservacoesPermitidas.Select(o => new { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }) : null),
+                            ExtrasPermitidos = (i.ExtrasPermitidos != null ?
+                                i.ExtrasPermitidos.Select(e => new { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }) : null),
                             Complemento = (i.Complemento != null ?
                                 new
                                 {

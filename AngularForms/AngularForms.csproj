@@ -376,6 +376,7 @@
     <Content Include="Views\Cardapio\Listar.cshtml" />
     <Content Include="Views\Pedido\Index.cshtml" />
     <Content Include="Views\Pedido\_ModalIncluirItem.cshtml" />
+    <Content Include="Views\Pedido\_FechamentoPedido.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

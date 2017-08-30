@@ -54,7 +54,7 @@
                     <div class="col-sm-8">
                         <div class="dropdown" ng-if="itemCardapioSelecionado == null">
                             <button id="dLabel" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="dropdownText">Selecione o tipo de item</span>
+                                <span id="dropdownText">{{comboClasse.descricaoClasse}}</span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dLabel">
@@ -65,12 +65,12 @@
                         </div>
                     </div>
                     @*<div class="col-sm-4 text-right" ng-if="itemCardapioSelecionado != null">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="cancelaInclusaoItem()">Cancelar</button>
-                        <button type="button" class="btn btn-success" ng-click="confirmaInclusaoItem()">Confirmar</button>
-                    </div>*@
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="cancelaInclusaoItem()">Cancelar</button>
+                            <button type="button" class="btn btn-success" ng-click="confirmaInclusaoItem()">Confirmar</button>
+                        </div>*@
                 </div>
                 <hr />
-                <h5 class="text-warning" ng-if="(itensFiltrados == null || itensFiltrados.length == 0) && codClasse > 0">Nenhum item encontrado para esta classe.</h5>
+                <h5 class="text-warning" ng-if="(itensFiltrados == null || itensFiltrados.length == 0) && comboClasse.codClasse > 0">Nenhum item encontrado para esta classe.</h5>
                 <div ng-repeat="item in itensFiltrados" ng-if="(itensFiltrados != null && itensFiltrados.length > 0) && itemCardapioSelecionado == null">
                     <div class="row">
                         <div class="col-sm-2">
@@ -78,23 +78,18 @@
                                 <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 135px; max-height: 135px; height: auto;" class="img-circle">
                             </a>
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento == null || item.complemento.imagem == null">
-                                <img src="~/Content/img/itens_cardapio/mini-sem_foto.jpeg" alt="Sem imagem" style="max-width: 90%; height: auto;" class="img-circle">
+                                @*<img src="~/Content/img/itens_cardapio/mini-sem_foto.jpeg" alt="Sem imagem" style="max-width: 90%; height: auto;" class="img-circle">*@
                             </a>
                         </div>
-                        <div class="col-sm-7">
+                        <div class="col-sm-6">
                             <h4>{{item.nome}}</h4>
                             <h6 ng-if="item.complemento != null && item.complemento.descricaoLonga != null">{{item.complemento.descricaoLonga}}</h6>
                             <h6 ng-if="item.complemento == null || item.complemento.descricaoLonga == null">{{item.nome}}</h6>
                         </div>
-                        <div class="col-sm-3 text-right">
-                            @*https://codepen.io/Thomas-Lebeau/pen/csHqx*@
-                            @*<div class="input-group spinner">
-                                    <input type="text" class="form-control" value="0">
-                                    <div class="input-group-btn-vertical">
-                                        <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-                                        <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
-                                    </div>
-                                </div>*@
+                        <div class="col-sm-2">
+                            <h4>{{item.preco | currency: "R$ "}}</h4>
+                        </div>
+                        <div class="col-sm-2 text-center">
                             <a href="#" class="btn btn-sq-sm btn-default" ng-click="selecionaItemParaInclusao(item.codItemCardapio)">
                                 <i class="fa fa-check fa-3x"></i>
                             </a>
@@ -104,18 +99,16 @@
                 </div>
                 <div ng-if="itemCardapioSelecionado != null">
                     <div class="row">
-                        <div class="col-sm-2">
-                            <h2>{{itemCardapioSelecionado.nome}}</h2>
-                        </div>
-                        <div class="col-sm-6">
-                            <h5>{{itemCardapioSelecionado.complemento.descricaoLonga}}</h5>
+                        <div class="col-sm-8">
+                            <h2 style="margin-top: 0px">{{itemCardapioSelecionado.nome}}</h2>
                         </div>
                         <div class="col-sm-2">
                             <h4>{{itemCardapioSelecionado.preco | currency: "R$ "}}</h4>
                         </div>
                         <div class="col-sm-2">
+                            @*https://codepen.io/Thomas-Lebeau/pen/csHqx*@
                             <div class="input-group spinner">
-                                <input id="quantidadeItemIncluir" type="text" class="form-control" value="{{quantidadeItemIncluir}}" readonly>
+                                <input id="quantidadeItemIncluir" type="text" class="form-control" value="{{novoItem.quantidade}}" readonly>
                                 <div class="input-group-btn-vertical">
                                     <button class="btn btn-default" type="button" ng-click="incrementaQuantidade()"><i class="fa fa-caret-up"></i></button>
                                     <button class="btn btn-default" type="button" ng-click="decrementaQuantidade()"><i class="fa fa-caret-down"></i></button>
@@ -123,28 +116,58 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-if="itemCardapioSelecionado.observacoesPermitidas != null">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h5 ng-if="itemCardapioSelecionado.complemento != null && itemCardapioSelecionado.complemento.descricaoLonga != null">{{itemCardapioSelecionado.complemento.descricaoLonga}}</h5>
+                            <h5 ng-if="itemCardapioSelecionado.complemento == null || itemCardapioSelecionado.complemento.descricaoLonga == null">{{itemCardapioSelecionado.nome}}</h5>
+                        </div>
+                    </div>
+                    <div ng-if="itemCardapioSelecionado.observacoesPermitidas != null && itemCardapioSelecionado.observacoesPermitidas.length > 0">
                         <br />
-                        <div class="row">
+                        <div class="row bg-warning">
                             <div class="col-sm-12">
-                                <span class="text-warning">Observações de produção</span>
+                                <span>Observações de preparo</span>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2" ng-repeat="obs in itemCardapioSelecionado.observacoesPermitidas">
+                            <div class="col-sm-2" ng-repeat="obs in itemCardapioSelecionado.observacoesPermitidas track by $index">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"> {{obs.descricaoObservacao}}
+                                        <input type="checkbox" ng-model="novoItem.obs[$index]" ng-false-value="null" ng-true-value="{{obs}}" id="checkObs{{obs.codObservacao}}"> {{obs.descricaoObservacao}}
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-2">
-                                Observação livre
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                            Obs
+                        </div>
+                        <div class="col-sm-11">
+                            <input type="text" required id="observacaoLivre" name="observacaoLivre" class="form-control" maxlength="100" ng-model="novoItem.observacaoLivre" />
+                        </div>
+                    </div>
+                    <div ng-if="itemCardapioSelecionado.extrasPermitidos != null && itemCardapioSelecionado.extrasPermitidos.length > 0">
+                        <br />
+                        <div class="row bg-success">
+                            <div class="col-sm-12">
+                                <span>Turbine seu pedido</span>
                             </div>
-                            <div class="col-sm-10">
-                                <input type="text" required id="observacaoLivre" name="observacaoLivre" class="form-control" maxlength="50" />
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4" ng-repeat="extra in itemCardapioSelecionado.extrasPermitidos track by $index">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="novoItem.extras[$index]" ng-false-value="null" ng-true-value="{{extra}}" id="checkExtra{{obs.codOpcaoExtra}}" ng-change="atualizaValorTotalItem()"> {{extra.descricaoOpcaoExtra}} - {{extra.preco | currency: "R$ "}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col-sm-12 text-right text-success">
+                                <h3>Total: {{novoItem.valorTotalItem | currency: "R$ "}}</h3>
                             </div>
                         </div>
                     </div>

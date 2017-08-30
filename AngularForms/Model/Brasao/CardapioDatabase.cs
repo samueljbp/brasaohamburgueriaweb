@@ -61,6 +61,9 @@ namespace AngularForms.Model
 
         [InverseProperty("Item")]
         public virtual List<ObservacaoProducaoPermitidaItemCardapio> ObservacoesPermitidas { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual List<OpcaoExtraItemCardapio> ExtrasPermitidos { get; set; }
     }
 
     [Table("COMPLEMENTO_ITEM_CARDAPIO")]

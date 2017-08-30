@@ -7,17 +7,15 @@
             return cookieToken + ":" + formToken;
         }
     }
-    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
         <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
         <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert"></div>
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
         <script src="~/app/PedidoForm/pedController.js"></script>
         <br />
         <div class="row">
-            <div class="col-sm-12">
-                <h4>Meu pedido</h4>
-                <hr />
-            </div>
+            <h4>Meu pedido</h4>
+            <hr />
         </div>
         <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
             <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
@@ -61,11 +59,11 @@
                             <div class="row">
                                 {{item.descricaoItem}}
                             </div>
-                            <div class="row">
-                                <span ng-repeat="obs in item.obs" class="small text-warning">{{obs.descricao}}, </span>
+                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
+                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
                             </div>
-                            <div class="row">
-                                <span ng-repeat="extra in item.extras" class="small text-danger">{{extra.descricao}}: R$ {{extra.valorExtra}}</span>
+                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
+                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
                             </div>
                         </td>
                         <td>
@@ -78,7 +76,7 @@
                             {{item.valorExtras | currency: "R$ "}}
                         </td>
                         <td>
-                            {{item.valorTotal | currency: "R$ "}}
+                            {{item.valorTotalItem | currency: "R$ "}}
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
@@ -93,13 +91,14 @@
             <hr />
             <div class="row">
                 <div class="col-sm-2">
-                    <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" data-target="#modalIncluirItem">
+                    <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="modalIncluirItem()">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Incluir item
                     </button>
 
                 </div>
                 <div class="col-sm-2">
-                    <button type="button" class="btn btn-primary btn-default btn-lg">
+                    <button type="button" class="btn btn-primary btn-default btn-lg" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Confirma o fechamento do pedido?"
+                            ng-bootbox-confirm-action="confirmCallbackAvancaPedido()">
                         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
                     </button>
                 </div>
@@ -110,4 +109,5 @@
         </div>
     </form>
     @Html.Partial("_ModalIncluirItem")
+    @Html.Partial("_FechamentoPedido")
 </div>
