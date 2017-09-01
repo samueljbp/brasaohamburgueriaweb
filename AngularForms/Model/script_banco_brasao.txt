@@ -1,0 +1,165 @@
+--classes
+insert into CLASSE_ITEM_CARDAPIO values (1, 'Hamburgueres', null, 1);
+insert into CLASSE_ITEM_CARDAPIO values (2, 'Porções', null, 2);
+insert into CLASSE_ITEM_CARDAPIO values (3, 'Sobremesas', null, 3);
+insert into CLASSE_ITEM_CARDAPIO values (4, 'Refrigerantes', null, 4);
+insert into CLASSE_ITEM_CARDAPIO values (5, 'Sucos', null, 5);
+insert into CLASSE_ITEM_CARDAPIO values (6, 'Cervejas clássicas', null, 6);
+insert into CLASSE_ITEM_CARDAPIO values (7, 'Cervejas especiais', null, 7);
+insert into CLASSE_ITEM_CARDAPIO values (8, 'Destilados', null, 8);
+insert into CLASSE_ITEM_CARDAPIO values (9, 'Vinhos', null, 9);
+insert into CLASSE_ITEM_CARDAPIO values (10, 'Águas', null, 10);
+
+
+
+--complementos de item
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (12, 'Burger bovino de 80g feito no mini pão com gergelim especialmente para os pequenos, coberto com mussarela derretida.', null, 1);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (23, 'Pão clássico, burger 80g, Mussarela, Maionese de ervas.', 'tradicional.jpg', 2);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (24, 'Pão clássico, burger 80g, Mussarela, Maionese de ervas, Alface Americana, Tomate e Cebola Roxa.', 'tradicional.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (28, 'Pão clássico, burger de frango 100g, Mussarela, Maionese de ervas.', 'tradicional.jpg', 4);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (25, 'Pâo Clássico, Burger 80g, Mussarela, Tiras de bacon, Maionese de ervas, Alface Americana, Tomate.', 'tradicional.jpg', 5);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (26, 'Pão Clássico, Burger 80g, Mussarela, Maionese de ervas, Ovo frito, Alface Americana, Tomate.', 'tradicional.jpg', 6);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (27, 'Pão clássico, burger 80g, Mussarela, Maionese de ervas, Tiras de Bacon, Ovo Frito, Alface Americana, Tomate, Cebola roxa.', 'tradicional.jpg', 7);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (11, 'Burger bovino de 140g no pão clássico com molho barbecue coberto com mussarela derretida e aneis de cebola.', 'roberto_carlos.jpg', 8);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (10, 'Burger de cogumelos Shitake grandes recheados com requeijão cremoso no pão integral com maionese especial de ervas e folhas de rúcula.', 'bob.jpg', 9);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (8, 'Burger de frango no pão francês com presunto e mussarela derretida cobertos com molho de tomate grosso e batata frita fininha.', 'queen.jpg', 10);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (9, 'Burger de tilápia no pão australiano com delicioso molho tártaro e folhas crocantes de alface americana e crespa.', 'tom.jpg', 11);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (7, 'Burger suíno com molho barbecue da casa no pão australiano com alface americana e chips de cebola.', 'metallica.jpg', 12);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (1, 'Burger bovino de 180g no pão clássico com maionese de ervas defumada, folhas crocantes de alface, queijo minas derretido coberto com pico de gallo e picles.', 'skank.jpg', 13);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (2, 'Burger bovino de 180g no pão australiano coberto com um delicioso dip de queijo gorgonzola, cebola caramelizada e folhas de rucula.', 'acdc.jpg', 14);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (5, 'Burger bovino de 180g no pão de cenoura com 4 tipos de queijo derretidos, maionese especial de pimenta biquinho e mix de alface.', 'anitta.jpg', 15);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (3, 'Burger bovino de 180g no pão clássico coberto com queijo emental completamente derretido, chips de cebola e mix de cogumelos salteados na manteiga.', 'pink_floyd.jpg', 16);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (4, 'Burger bovino de 180g no pão clássico com queijo cheddar derretido, calabresa moída com pimenta e uma rodela de tomate grande.', 'capital_inicial.jpg', 17);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (31, 'Burger bovino de 180g no pão australiano com um maravilhoso suflê de queijo provolone, cebola caramelizada no conhaque e maionese de ervas.', 'pearl_jam.jpg', 18);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (6, 'Burger bovino de 180g no pão clássico com queijo coalho derretido, fatias de bacon crocante, ovo frito, pasta de requeijão com tomate seco e folhas de rúcula.', 'tim.jpg', 19);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (20, 'Burger de picanha de 200g grelhado no pão estilo italiano com queijo cheddar derretido, tiras de bacon duplas, alface, tomate, cebola roxa e maionese sabor vinagrete.', 'chuck_berry.jpg', 20);
+
+
+--cadastro das observacoes
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (1, 'Ao ponto');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (2, 'Bem passado');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (3, 'Com gelo');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (4, 'Sem gelo');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (5, 'Com limão');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (6, 'Sem salada');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (7, 'Sem cebola');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (8, 'Sem sal');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (9, 'Com açúcar');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (10, 'Sem açúcar');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (11, 'Sem maionese');
+insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (12, 'Garrafa quente');
+
+--observacoes dos hamburgueres
+insert into OBSERVACAO_PRODUCAO_PERMITIDA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO
+from ITEM_CARDAPIO ic cross join OBSERVACAO_PRODUCAO op
+where ic.COD_CLASSE = 1
+and op.COD_OBSERVACAO in (1, 2, 6, 7, 11)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO;
+
+--observacoes dos sucos
+insert into OBSERVACAO_PRODUCAO_PERMITIDA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO
+from ITEM_CARDAPIO ic cross join OBSERVACAO_PRODUCAO op
+where ic.COD_CLASSE = 5
+and op.COD_OBSERVACAO in (3, 4, 9, 10)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO;
+
+--observacoes dos refrigerantes
+insert into OBSERVACAO_PRODUCAO_PERMITIDA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO
+from ITEM_CARDAPIO ic cross join OBSERVACAO_PRODUCAO op
+where ic.COD_CLASSE = 4
+and op.COD_OBSERVACAO in (3, 4, 5)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO;
+
+--observacoes para cervejas
+insert into OBSERVACAO_PRODUCAO_PERMITIDA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO
+from ITEM_CARDAPIO ic cross join OBSERVACAO_PRODUCAO op
+where ic.COD_CLASSE in (6,7)
+and op.COD_OBSERVACAO in (12)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OBSERVACAO;
+
+
+
+
+
+
+
+
+--EXTRAS
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (22 ,'Aneis de cebola extra', 4);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (14 ,'Bacon extra', 2.5);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (13 ,'Batata frita extra', 4);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (15 ,'Cheddar extra', 3.5);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (18 ,'Molho p/ filet - Barbecue', 6);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (17 ,'Molho p/ filet - Gorgonzola', 6);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (19 ,'Molho p/ filet - Pimenta Biquinho', 6);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (16 ,'Mussarela extra', 2);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (21 ,'Ovo extra', 2);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (30 ,'Presunto extra', 2);
+insert into OPCAO_EXTRA (COD_OPCAO_EXTRA, DESCRICAO_OPCAO_EXTRA, PRECO) values (29 ,'Salada extra', 1.5);
+
+
+
+
+
+
+
+
+
+--extras dos hamburgueres
+insert into OPCAO_EXTRA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OPCAO_EXTRA
+from ITEM_CARDAPIO ic cross join OPCAO_EXTRA op
+where ic.COD_CLASSE = 1
+and op.COD_OPCAO_EXTRA in (13,14,15,16,21,22,29,30)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OPCAO_EXTRA;
+
+--extras das porcoes
+insert into OPCAO_EXTRA_ITEM_CARDAPIO 
+select ic.COD_ITEM_CARDAPIO, op.COD_OPCAO_EXTRA
+from ITEM_CARDAPIO ic cross join OPCAO_EXTRA op
+where ic.COD_ITEM_CARDAPIO = 56
+and op.COD_OPCAO_EXTRA in (17,18,19)
+order by ic.COD_ITEM_CARDAPIO, op.COD_OPCAO_EXTRA;
