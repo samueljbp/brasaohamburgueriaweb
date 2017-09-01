@@ -4,7 +4,7 @@
         var returnUrl = "";
         if (Request.Params != null && Request.Params.Count > 0 && Request.Params["ReturnUrl"] != null)
         {
-            returnUrl = Request.Params["ReturnUrl"].ToString();    
+            returnUrl = Request.Params["ReturnUrl"].ToString();
         }
     }
     @functions{
@@ -17,6 +17,7 @@
     }
     <script src="~/app/LoginForm/loginController.js"></script>
     <h2 class="page-header">Entrar</h2>
+    <div cg-busy="{promise:promiseBusy,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
     <form role="form" id="formLogin" class="form-horizontal" ng-submit="submitForm()">
         <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />

@@ -145,6 +145,7 @@
     <Content Include="app\PedidoForm\pedController.js" />
     <Content Include="app\RedefinirSenha\rdSenhaController.js" />
     <Content Include="app\util.js" />
+    <Content Include="Content\angular-busy.min.css" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\font-awesome.css" />
@@ -247,6 +248,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Emails\InstrucoesEsqueciMinhaSenha.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\angular-busy.min.js" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
@@ -360,6 +362,7 @@
     <Content Include="Content\_bootstrap-datetimepicker.less" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Content\templates\_Loading.html" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -1,24 +1,11 @@
 ﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox) {
-
-    //DECLARAÇÃO DE VARIÁVEIS
-    //variável que armazena os dados do pedido que está sendo montado
-    $scope.pedido = null;
-
-    //variável para controlar se tem um item selecionado para inclusão
-    $scope.itemCardapioSelecionado = null;
-
-    //variável para controlar se tem uma classe selecionada na combo
-    $scope.comboClasse = { codClasse: 0, descricaoClasse: 'Selecione o tipo de item' }
-    //FIM DA DECLARAÇÃO DE VARIÁVEIS
-
-    
     //FUNÇÕES DA TELA QUE LISTA O PEDIDO
     //função que carrega o cardápio em memória assincronamente
     $scope.getCardapio = function () {
 
         //var accesstoken = sessionStorage.getItem('accessToken');
 
-        $http({
+        $scope.promiseGetCardapio = $http({
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,
@@ -40,8 +27,42 @@
             $('#mensagemErroFormulario').text('Ocorreu uma falha no processamento da requisição. ' + error.data);
         });
 
+        $scope.promisesLoader.push($scope.promiseGetCardapio);
+
 
     };
+
+    $scope.getDadosUsuario = function () {
+
+        if ($scope.loginUsuario) {
+
+            $scope.promiseDadosUsuario = $http({
+                method: 'GET',
+                url: urlBase + 'Conta/GetUsuario'
+            })
+            .then(function (response) {
+
+                $scope.usuario = response.data;
+
+                $scope.pedido.dadosCliente = {
+                    nome: $scope.usuario.nome,
+                    telefone: $scope.usuario.telefone,
+                    estado: $scope.usuario.estado,
+                    cidade: $scope.usuario.cidade,
+                    logradouro: $scope.usuario.logradouro,
+                    numero: $scope.usuario.numero,
+                    complemento: $scope.usuario.complemento,
+                    bairro: $scope.usuario.bairro,
+                    referencia: $scope.usuario.referencia
+                };
+
+            }, function (error) {
+                alert(error);
+            });
+
+            $scope.promisesLoader.push($scope.promiseDadosUsuario);
+        }
+    }
 
     //função que abre uma imagem grande em popup a partir de um thumbnail
     $scope.exibeImagemGrande = function (codItemCardapio) {
@@ -91,13 +112,70 @@
         return seqItem;
     }
 
-    $scope.confirmCallbackAvancaPedido = function () {
-        $scope.pedido.situacao = 1;
+    $scope.confirmAvancaPedido = function () {
+        if ($scope.pedido.itens == null || $scope.pedido.itens.length == 0) {
+            $ngBootbox.alert("Você não incluiu nenhum item no pedido!");
+            return;
+        }
+
+
+        $ngBootbox.confirm('Deseja avançar para a finalização do pedido?')
+            .then(function () {
+                $scope.pedido.situacao = 1;
+
+                sessionStorage.pedido = JSON.stringify($scope.pedido);
+
+
+
+                //configura validador
+                $('#formFechamento').validator({
+                    custom: {
+                        //função de validação customizada para validar formato de e-mail
+                        'email': function ($el) {
+                            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                            if ($el.val() != '' && !re.test($el.val())) {
+                                return 'E-mail inválido.';
+                            }
+                        }
+                    }
+                });
+
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+    }
+
+    function reiniciaVariaveisPedido() {
+
+        $scope.pedido = {
+            formaPagamento: '',
+            trocoPara: 0.0,
+            troco: 0.0,
+            bandeiraCartao: '',
+            valorTotal: 0.0,
+            situacao: 0,
+            dadosCliente: {
+                nome: '',
+                telefone: '',
+                estado: '',
+                cidade: '',
+                logradouro: '',
+                numero: '',
+                complemento: '',
+                bairro: '',
+                referencia: ''
+            },
+            itens: []
+        };
+
     }
     //FIM FUNÇÕES DA TELA QUE LISTA O PEDIDO
-    
 
-    
+
+
     //FUNÇÕES DA TELA DE INCLUSÃO DE ITEM
 
     function reiniciaVariaveisItem() {
@@ -160,6 +238,8 @@
 
         $scope.pedido.itens.push($scope.novoItem);
 
+        sessionStorage.pedido = JSON.stringify($scope.pedido);
+
         $scope.atualizaValorTotalItem();
         atualizaValorTotalPedido();
 
@@ -211,16 +291,52 @@
     }
 
     //FIM FUNÇÕES DA TELA DE INCLUSÃO DE ITEM
-    
 
-    
+
+    //FUNÇÕES DA TELA DE FECHAMENTO DO PEDIDO
+    $scope.retornarTelaPedido = function () {
+        $scope.pedido.situacao = 0;
+
+        sessionStorage.pedido = JSON.stringify($scope.pedido);
+    }
+
+    $scope.finalizaPedido = function () {
+
+        var hasErrors = $('#formFechamento').validator('validate').has('.has-error').length;
+
+        if (hasErrors) {
+            return;
+        }
+
+
+        $ngBootbox.confirm('Confirma a finalização do pedido? Não será possível retornar.')
+            .then(function () {
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+
+    }
+    //FUM FUNÇÕES DA TELA DE FECHAMENTO DO PEDIDO
+
+
     //CONFIGURAÇÃO DE CONTROLES
     //configura a popup de mensagem
+
+    var locale = {
+        OK: 'OK',
+        CANCEL: 'Cancelar',
+        CONFIRM: 'Confirmar'
+    };
+
+    bootbox.addLocale('pt', locale);
+
     $ngBootbox.setDefaults({
         animate: false,
         backdrop: false,
-        title: 'ATENÇÃO!'
-        //locale: $scope.selectedLocale
+        title: 'ATENÇÃO!',
+        locale: 'pt'
     });
 
     //configura a modal de inclusão de item
@@ -229,24 +345,43 @@
     }
 
     //FIM CONFIGURAÇÃO DE CONTROLES
-    
+
 
 
 
     //INICIALIZAÇÃO DE VARIÁVEIS
-    $scope.getCardapio();
+    $scope.init = function (loginUsuario) {
+        $scope.promisesLoader = [];
 
-    $scope.pedido = {
-        codFormaPagamento: 1,
-        codSituacao: 1,
-        valorTotal: 0,
-        situacao: 1,
-        itens: []
-    };
+        $scope.loginUsuario = loginUsuario;
 
-    atualizaValorTotalPedido();
+        //variável para exibir as classes de item na combo da modal de inclusão de item
+        $scope.classes = null;
 
-    reiniciaVariaveisItem();
+        //variável para exibir os itens na lista após seleção da classe
+        $scope.itensFiltrados = null;
+
+        //variável para controlar se tem um item selecionado para inclusão
+        $scope.itemCardapioSelecionado = null;
+
+        //variável para controlar se tem uma classe selecionada na combo
+        $scope.comboClasse = { codClasse: 0, descricaoClasse: 'Selecione o tipo de item' }
+        //FIM DA DECLARAÇÃO DE VARIÁVEIS
+
+        $scope.getCardapio();
+
+        //variável que armazena os dados do pedido que está sendo montado
+        if (!sessionStorage.pedido) {
+            reiniciaVariaveisPedido();
+            $scope.getDadosUsuario();
+        } else {
+            $scope.pedido = JSON.parse(sessionStorage.pedido);
+        }
+
+        atualizaValorTotalPedido();
+
+        reiniciaVariaveisItem();
+    }
     //FIM INICIALIZAÇÃO DE VARIÁVEIS
 });
 

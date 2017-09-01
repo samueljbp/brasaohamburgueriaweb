@@ -46,7 +46,10 @@ angularFormsApp.controller('loginController', function ($scope, $http, loginserv
                 url = $scope.loginViewModel.returnUrl;
             }
 
-            return $http({
+            //$scope.promise = $http.get('http://httpbin.org/delay/3');
+            //return;
+
+            $scope.promiseBusy = $http({
                 method: 'POST',
                 url: '/Conta/Login',
                 data: $scope.loginViewModel,
@@ -58,7 +61,6 @@ angularFormsApp.controller('loginController', function ($scope, $http, loginserv
                 var retorno = genericSuccess(success);
 
                 if (retorno.Succeeded) {
-
                     window.location.href = url;
 
                 }

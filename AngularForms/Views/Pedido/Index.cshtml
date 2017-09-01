@@ -1,4 +1,5 @@
-﻿<div ng-controller="pedController">
+﻿@using Microsoft.AspNet.Identity;
+<div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()')">
     @functions{
         public string GetAntiForgeryToken()
         {
@@ -8,6 +9,7 @@
         }
     }
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
+        <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
         <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
         <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert"></div>
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
@@ -97,8 +99,7 @@
 
                 </div>
                 <div class="col-sm-2">
-                    <button type="button" class="btn btn-primary btn-default btn-lg" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Confirma o fechamento do pedido?"
-                            ng-bootbox-confirm-action="confirmCallbackAvancaPedido()">
+                    <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="confirmAvancaPedido()">
                         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
                     </button>
                 </div>

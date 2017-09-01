@@ -12,7 +12,7 @@
                     <h4>Valor total: <span class="text-success">{{pedido.valorTotal | currency: "R$ "}}</span></h4>
                 </div>
             </div>
-            <div class="row">
+            <div class="form-group">
                 <div class="col-sm-4">
                     <label for="formaPagamento">Selecione a forma de pagamento</label>
                     <select name="formaPagamento" required id="formaPagamento" class="form-control" ng-model="pedido.formaPagamento">
@@ -34,6 +34,10 @@
                     <input type='text' name="trocoPara" id="trocoPara" class="form-control" maxlength="10" readonly ng-model="pedido.troco | currency: ' R$ '" />
                     <div class="help-block with-errors"></div>
                 </div>
+                <div class="col-sm-4" ng-if="pedido.formaPagamento == 'C' || pedido.formaPagamento == 'B'">
+                    <label for="bandeiraCartao">Bandeira (Visa, Master, etc)</label>
+                    <input type='text' name="bandeiraCartao" id="bandeiraCartao" class="form-control" maxlength="30" ng-model="pedido.bandeiraCartao" />
+                </div>
             </div>
             <div class="row">
 
@@ -41,7 +45,87 @@
         </fieldset>
         <br />
         <fieldset>
-            <legend>Entrega</legend>
+            <legend>Cliente</legend>
+            <div class="form-group">
+                <label for="nome" class="col-sm-2 control-label">Nome completo</label>
+                <div class="col-sm-10">
+                    <input type="text" required id="nome" name="nome" class="form-control" ng-model="pedido.dadosCliente.nome" maxlength="80" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="telefone" class="col-sm-2 control-label">Telefone</label>
+                <div class="col-sm-3">
+                    <input type="text" required id="telefone" name="telefone" class="form-control" ng-model="pedido.dadosCliente.telefone" maxlength="15" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+
         </fieldset>
+        <fieldset>
+            <legend>Endereço</legend>
+
+            <div class="form-group">
+                <label for="estado" class="col-sm-2 control-label">Estado</label>
+                <div class="col-sm-1">
+                    <input type="text" readonly id="estado" name="estado" class="form-control" value="MG" ng-model="pedido.dadosCliente.estado" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade" class="col-sm-2 control-label">Cataguases</label>
+                <div class="col-sm-3">
+                    <input type="text" readonly id="cidade" name="cidade" class="form-control" value="CATAGUASES" ng-model="pedido.dadosCliente.cidade" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="logradouro" class="col-sm-2 control-label">Logradouro</label>
+                <div class="col-sm-10">
+                    <input type="text" required id="logradouro" name="logradouro" class="form-control" ng-model="pedido.dadosCliente.logradouro" maxlength="100" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="numero" class="col-sm-2 control-label">Número</label>
+                <div class="col-sm-1">
+                    <input type="text" required id="numero" name="numero" class="form-control" ng-model="pedido.dadosCliente.numero" maxlength="10" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="complemento" class="col-sm-2 control-label">Complemento</label>
+                <div class="col-sm-6">
+                    <input type="text" id="complemento" name="complemento" class="form-control" ng-model="pedido.dadosCliente.complemento" maxlength="50" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bairro" class="col-sm-2 control-label">Bairro</label>
+                <div class="col-sm-6">
+                    <input type="text" required id="bairro" name="bairro" class="form-control" ng-model="pedido.dadosCliente.bairro" maxlength="50" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="referencia" class="col-sm-2 control-label">Referência</label>
+                <div class="col-sm-10">
+                    <input type="text" required id="referencia" name="referencia" class="form-control" ng-model="pedido.dadosCliente.referencia" maxlength="100" />
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+        </fieldset>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="retornarTelaPedido()">Retornar</button>
+                <button type="button" class="btn btn-success" ng-click="finalizaPedido()">
+                    Finalizar pedido
+                </button>
+            </div>
+        </div>
     </div>
 </form>
