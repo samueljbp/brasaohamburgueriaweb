@@ -8,6 +8,7 @@ using AngularForms.Extentions;
 using AngularForms.Model;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
+using AngularForms.Filters;
 
 namespace AngularForms.Controllers
 {
@@ -18,6 +19,18 @@ namespace AngularForms.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarPedido(PedidoViewModel pedido)
+        {
+            var result = new { Succeeded = false, errors = new List<String>(), data = "" };
+
+            System.Threading.Thread.Sleep(5000);
+
+            return new JsonNetResult { Data = result };
         }
 
         public async Task<JsonResult> GetCardapio()

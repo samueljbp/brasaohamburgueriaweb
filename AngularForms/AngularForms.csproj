@@ -248,6 +248,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Emails\InstrucoesEsqueciMinhaSenha.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Model\script_banco_brasao.txt" />
     <Content Include="Scripts\angular-busy.min.js" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
@@ -258,6 +259,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="Model\itens_cardapio.xls" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -1204,7 +1206,8 @@
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
     <Compile Include="Model\Brasao\BrasaoContext.cs" />
-    <Compile Include="Model\Brasao\CardapioDatabase.cs" />
+    <Compile Include="Model\Brasao\CardapioModel.cs" />
+    <Compile Include="Model\Brasao\PedidoModel.cs" />
     <Compile Include="Model\Identity\EsqueciMinhaSenhaViewModel.cs" />
     <Compile Include="Model\Identity\IdentityContext.cs" />
     <Compile Include="Model\Identity\LoginViewModel.cs" />

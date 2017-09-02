@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox) {
+﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window) {
     //FUNÇÕES DA TELA QUE LISTA O PEDIDO
     //função que carrega o cardápio em memória assincronamente
     $scope.getCardapio = function () {
@@ -23,8 +23,8 @@
             $scope.classes = null;
             $scope.itensFiltrados = null;
 
-            $('#mensagemErroFormulario').removeClass('hidden');
-            $('#mensagemErroFormulario').text('Ocorreu uma falha no processamento da requisição. ' + error.data);
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + error.data;
+            $window.scrollTo(0, 0);
         });
 
         $scope.promisesLoader.push($scope.promiseGetCardapio);
@@ -81,7 +81,7 @@
             }
         }
         atualizaValorTotalPedido();
-
+        sessionStorage.pedido = JSON.stringify($scope.pedido);
     };
 
     //função que atualiza o valor total do pedido
@@ -89,6 +89,8 @@
         $scope.pedido.valorTotal = 0;
 
         if ($scope.pedido.itens != null && $scope.pedido.itens.length > 0) {
+            $scope.pedido.valorTotal = $scope.pedido.taxaEntrega;
+
             for (i = 0; i < $scope.pedido.itens.length; i++) {
                 $scope.pedido.valorTotal = $scope.pedido.valorTotal + $scope.pedido.itens[i].valorTotalItem;
             }
@@ -127,19 +129,7 @@
 
 
 
-                //configura validador
-                $('#formFechamento').validator({
-                    custom: {
-                        //função de validação customizada para validar formato de e-mail
-                        'email': function ($el) {
-                            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-                            if ($el.val() != '' && !re.test($el.val())) {
-                                return 'E-mail inválido.';
-                            }
-                        }
-                    }
-                });
+                
 
 
 
@@ -152,6 +142,7 @@
 
         $scope.pedido = {
             formaPagamento: '',
+            taxaEntrega: 3.50,
             trocoPara: 0.0,
             troco: 0.0,
             bandeiraCartao: '',
@@ -191,7 +182,7 @@
             quantidade: 0,
             precoUnitario: 0.0,
             valorExtras: 0.0,
-            valorTotal: 0.0
+            valorTotalItem: 0.0
         }
 
     }
@@ -242,6 +233,7 @@
 
         $scope.atualizaValorTotalItem();
         atualizaValorTotalPedido();
+        sessionStorage.pedido = JSON.stringify($scope.pedido);
 
         $('#modalIncluirItem').modal('hide');
     };
@@ -294,6 +286,7 @@
 
 
     //FUNÇÕES DA TELA DE FECHAMENTO DO PEDIDO
+
     $scope.retornarTelaPedido = function () {
         $scope.pedido.situacao = 0;
 
@@ -308,9 +301,48 @@
             return;
         }
 
+        if ($scope.pedido.trocoPara > 0) {
+            if ($scope.pedido.trocoPara < $scope.pedido.valorTotal) {
+                $scope.erro.mensagem = 'O valor informado para o pagamento em dinheiro está menor que o valor total do pedido.';
+                $window.scrollTo(0, 0);
+                return;
+            }
+
+            $scope.pedido.trocoPara = parseFloat($scope.pedido.trocoPara);
+        }
 
         $ngBootbox.confirm('Confirma a finalização do pedido? Não será possível retornar.')
             .then(function () {
+
+
+                $scope.promiseGravaPedido = $http({
+                    method: 'POST',
+                    url: urlBase+ 'Pedido/GravarPedido',
+                    data: $scope.pedido,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.Succeeded) {
+
+                        //window.location.href = '/Home/Index';
+                        alert('sucesso!');
+
+
+                    }
+                    else {
+                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.erro.mensagem = error.statusText;
+                    $window.scrollTo(0, 0);
+                });
+
 
 
             }, function () {
@@ -318,6 +350,7 @@
             });
 
     }
+
     //FUM FUNÇÕES DA TELA DE FECHAMENTO DO PEDIDO
 
 
@@ -343,17 +376,18 @@
     $scope.modalIncluirItem = function () {
         $('#modalIncluirItem').modal('show');
     }
-
     //FIM CONFIGURAÇÃO DE CONTROLES
 
 
-
-
     //INICIALIZAÇÃO DE VARIÁVEIS
-    $scope.init = function (loginUsuario) {
+    $scope.init = function (loginUsuario, antiForgeryToken) {
+        $scope.erro = { mensagem: '' };
+
         $scope.promisesLoader = [];
 
         $scope.loginUsuario = loginUsuario;
+
+        $scope.antiForgeryToken = antiForgeryToken;
 
         //variável para exibir as classes de item na combo da modal de inclusão de item
         $scope.classes = null;
