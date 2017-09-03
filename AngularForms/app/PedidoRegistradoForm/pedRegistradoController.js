@@ -1,3 +1,3 @@
 ﻿angularFormsApp.controller('pedRegistradoController', function ($scope, $http, $filter) {
-    $scope.pedido = { codPedido: 1 };
+    $scope.pedido = { codPedido: sessionStorage.codPedido };
 });

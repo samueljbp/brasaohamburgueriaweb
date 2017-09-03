@@ -326,6 +326,7 @@
                         reiniciaVariaveisPedido();
                         reiniciaVariaveisItem();
 
+                        sessionStorage.pedido = null;
                         sessionStorage.codPedido = retorno.data;
 
                         window.location.href = urlBase + '/Pedido/PedidoRegistrado';
@@ -383,10 +384,6 @@
 
         $scope.promisesLoader = [];
 
-        $scope.loginUsuario = loginUsuario;
-
-        $scope.antiForgeryToken = antiForgeryToken;
-
         //variável para exibir as classes de item na combo da modal de inclusão de item
         $scope.classes = null;
 
@@ -402,6 +399,10 @@
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
+        $scope.loginUsuario = loginUsuario;
+
+        $scope.antiForgeryToken = antiForgeryToken;
+
         reiniciaVariaveis();
         
         $scope.getCardapio();
