@@ -143,6 +143,7 @@
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\LoginForm\loginController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
+    <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
     <Content Include="app\RedefinirSenha\rdSenhaController.js" />
     <Content Include="app\util.js" />
     <Content Include="Content\angular-busy.min.css" />
@@ -382,6 +383,7 @@
     <Content Include="Views\Pedido\Index.cshtml" />
     <Content Include="Views\Pedido\_ModalIncluirItem.cshtml" />
     <Content Include="Views\Pedido\_FechamentoPedido.cshtml" />
+    <Content Include="Views\Pedido\PedidoRegistrado.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1203,6 +1205,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
     <Compile Include="Model\Brasao\BrasaoContext.cs" />
@@ -1236,7 +1239,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57919</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://10.84.161.57:57919/</IISUrl>
+          <IISUrl>http://localhost:57919/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

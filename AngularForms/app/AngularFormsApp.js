@@ -4,4 +4,4 @@ angularFormsApp.config(['$httpProvider', function ($httpProvider) {
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 }]);
 
-var urlBase = 'http://10.84.161.57:57919/';
+var urlBase = 'http://192.168.0.132:57919/';

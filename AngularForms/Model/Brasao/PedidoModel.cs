@@ -158,7 +158,7 @@ namespace AngularForms.Model
 
         public virtual SituacaoPedido Situacao { get; set; }
 
-        [InverseProperty("Item")]
+        [InverseProperty("Pedido")]
         public virtual List<ItemPedido> Itens { get; set; }
     }
 
@@ -175,7 +175,7 @@ namespace AngularForms.Model
         [Column("SEQ_ITEM", Order = 2)]
         public int SeqItem { get; set; }
 
-        [ForeignKey("Item")]
+        [ForeignKey("ItemCardapio")]
         [Column("COD_ITEM_CARDAPIO")]
         public int CodItemCardapio { get; set; }
 
@@ -200,12 +200,12 @@ namespace AngularForms.Model
 
         public virtual Pedido Pedido { get; set; }
 
-        public virtual ItemCardapio Item { get; set; }
+        public virtual ItemCardapio ItemCardapio { get; set; }
 
-        [InverseProperty("Observacao")]
+        [InverseProperty("ItemPedido")]
         public virtual List<ObservacaoItemPedido> Observacoes { get; set; }
 
-        [InverseProperty("OpcaoExtra")]
+        [InverseProperty("ItemPedido")]
         public virtual List<ExtraItemPedido> Extras { get; set; }
     }
 
@@ -215,11 +215,11 @@ namespace AngularForms.Model
     public class ObservacaoItemPedido
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [Key, ForeignKey("Item")]
+        [Key, ForeignKey("ItemPedido")]
         [Column("COD_PEDIDO", Order = 1)]
         public int CodPedido { get; set; }
 
-        [Key, ForeignKey("Item")]
+        [Key, ForeignKey("ItemPedido")]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Column("SEQ_ITEM", Order = 2)]
         public int SeqItem { get; set; }
@@ -229,7 +229,7 @@ namespace AngularForms.Model
         [Column("COD_OBSERVACAO", Order = 3)]
         public int CodObservacao { get; set; }
 
-        public virtual ItemPedido Item { get; set; }
+        public virtual ItemPedido ItemPedido { get; set; }
 
         public virtual ObservacaoProducao Observacao { get; set; }
     }
@@ -238,11 +238,11 @@ namespace AngularForms.Model
     public class ExtraItemPedido
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [Key, ForeignKey("Item")]
+        [Key, ForeignKey("ItemPedido")]
         [Column("COD_PEDIDO", Order = 1)]
         public int CodPedido { get; set; }
 
-        [Key, ForeignKey("Item")]
+        [Key, ForeignKey("ItemPedido")]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Column("SEQ_ITEM", Order = 2)]
         public int SeqItem { get; set; }
@@ -252,7 +252,11 @@ namespace AngularForms.Model
         [Column("COD_OPCAO_EXTRA", Order = 3)]
         public int CodOpcaoExtra { get; set; }
 
-        public virtual ItemPedido Item { get; set; }
+        [Required]
+        [Column("PRECO")]
+        public double Preco { get; set; }
+
+        public virtual ItemPedido ItemPedido { get; set; }
 
         public virtual OpcaoExtra OpcaoExtra { get; set; }
     }

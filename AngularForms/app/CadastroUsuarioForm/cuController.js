@@ -9,7 +9,7 @@
     $scope.GetData = function () {
         if (email != null && email != '') {
 
-            $http({
+            $scope.promiseGetUsuario = $http({
                 method: 'GET',
                 url: urlBase + 'Conta/GetUsuario'
             })
@@ -79,7 +79,7 @@
 
             var postData = { 'email': $scope.usuario.email };
 
-            return $http.post(urlBase + 'Conta/EmailExiste', postData).then(function (success) {
+            $scope.promiseEmail = $http.post(urlBase + 'Conta/EmailExiste', postData).then(function (success) {
                 var retorno = genericSuccess(success);
 
                 if (retorno) {
@@ -197,7 +197,7 @@
 
         var postData = { 'usuario': $scope.usuario, 'novo': novo, 'senhaAtual': senhaAtual, 'novaSenha': novaSenha };
 
-        return $http.post(urlBase + 'Conta/Cadastrar', postData).then(function (success) {
+        $scope.promiseCadastrar = $http.post(urlBase + 'Conta/Cadastrar', postData).then(function (success) {
             var retorno = genericSuccess(success);
 
             if (retorno.Succeeded) {

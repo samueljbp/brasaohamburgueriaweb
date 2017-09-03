@@ -23,5 +23,9 @@ namespace AngularForms.Model
         public DbSet<ObservacaoProducaoPermitidaItemCardapio> ObservacoesPermitidas { get; set; }
         public DbSet<OpcaoExtra> Extras { get; set; }
         public DbSet<OpcaoExtraItemCardapio> ExtrasPermitidos { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<ItemPedido> ItensPedidos { get; set; }
+        public DbSet<ObservacaoItemPedido> ObservacoesItensPedidos { get; set; }
+        public DbSet<ExtraItemPedido> ExtrasItensPedidos { get; set; }
     }
 }

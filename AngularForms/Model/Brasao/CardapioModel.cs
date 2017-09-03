@@ -64,6 +64,9 @@ namespace AngularForms.Model
 
         [InverseProperty("Item")]
         public virtual List<OpcaoExtraItemCardapio> ExtrasPermitidos { get; set; }
+
+        [InverseProperty("ItemCardapio")]
+        public virtual List<ItemPedido> ItensPedidos { get; set; }
     }
 
     [Table("COMPLEMENTO_ITEM_CARDAPIO")]
@@ -101,6 +104,9 @@ namespace AngularForms.Model
 
         [InverseProperty("ObservacaoProducao")]
         public virtual List<ObservacaoProducaoPermitidaItemCardapio> ItensAssociados { get; set; }
+
+        [InverseProperty("Observacao")]
+        public virtual List<ObservacaoItemPedido> ObservacoesPedidos { get; set; }
     }
 
     [Table("OBSERVACAO_PRODUCAO_PERMITIDA_ITEM_CARDAPIO")]
@@ -139,6 +145,9 @@ namespace AngularForms.Model
 
         [InverseProperty("OpcaoExtra")]
         public virtual List<OpcaoExtraItemCardapio> ItensAssociados { get; set; }
+
+        [InverseProperty("OpcaoExtra")]
+        public virtual List<ExtraItemPedido> ExtrasPedidos { get; set; }
     }
 
     [Table("OPCAO_EXTRA_ITEM_CARDAPIO")]

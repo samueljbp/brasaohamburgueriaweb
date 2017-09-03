@@ -6,7 +6,7 @@ insert into CLASSE_ITEM_CARDAPIO values (4, 'Refrigerantes', null, 4);
 insert into CLASSE_ITEM_CARDAPIO values (5, 'Sucos', null, 5);
 insert into CLASSE_ITEM_CARDAPIO values (6, 'Cervejas clássicas', null, 6);
 insert into CLASSE_ITEM_CARDAPIO values (7, 'Cervejas especiais', null, 7);
-insert into CLASSE_ITEM_CARDAPIO values (8, 'Destilados', null, 8);
+--insert into CLASSE_ITEM_CARDAPIO values (8, 'Destilados', null, 8);
 insert into CLASSE_ITEM_CARDAPIO values (9, 'Vinhos', null, 9);
 insert into CLASSE_ITEM_CARDAPIO values (10, 'Águas', null, 10);
 
@@ -163,3 +163,24 @@ from ITEM_CARDAPIO ic cross join OPCAO_EXTRA op
 where ic.COD_ITEM_CARDAPIO = 56
 and op.COD_OPCAO_EXTRA in (17,18,19)
 order by ic.COD_ITEM_CARDAPIO, op.COD_OPCAO_EXTRA;
+
+
+
+
+
+
+
+
+
+
+
+
+
+--situções de pedido
+insert into SITUACAO_PEDIDO values (0, 'Em digitação');
+insert into SITUACAO_PEDIDO values (1, 'Aguardando confirmação');
+insert into SITUACAO_PEDIDO values (2, 'Confirmado');
+insert into SITUACAO_PEDIDO values (3, 'Em preparação');
+insert into SITUACAO_PEDIDO values (4, 'Em processo de entrega');
+insert into SITUACAO_PEDIDO values (5, 'Concluído');
+insert into SITUACAO_PEDIDO values (9, 'Cancelado');

@@ -127,12 +127,6 @@
 
                 sessionStorage.pedido = JSON.stringify($scope.pedido);
 
-
-
-                
-
-
-
             }, function () {
                 //console.log('Confirm dismissed!');
             });
@@ -326,11 +320,15 @@
                 }).then(function (success) {
                     var retorno = genericSuccess(success);
 
-                    if (retorno.Succeeded) {
+                    if (retorno.succeeded) {
 
-                        //window.location.href = '/Home/Index';
-                        alert('sucesso!');
+                        reiniciaVariaveis();
+                        reiniciaVariaveisPedido();
+                        reiniciaVariaveisItem();
 
+                        sessionStorage.codPedido = retorno.data;
+
+                        window.location.href = urlBase + '/Pedido/PedidoRegistrado';
 
                     }
                     else {
@@ -380,7 +378,7 @@
 
 
     //INICIALIZAÇÃO DE VARIÁVEIS
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    function reiniciaVariaveis() {
         $scope.erro = { mensagem: '' };
 
         $scope.promisesLoader = [];
@@ -400,8 +398,12 @@
 
         //variável para controlar se tem uma classe selecionada na combo
         $scope.comboClasse = { codClasse: 0, descricaoClasse: 'Selecione o tipo de item' }
-        //FIM DA DECLARAÇÃO DE VARIÁVEIS
+    }
+    //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
+    $scope.init = function (loginUsuario, antiForgeryToken) {
+        reiniciaVariaveis();
+        
         $scope.getCardapio();
 
         //variável que armazena os dados do pedido que está sendo montado
