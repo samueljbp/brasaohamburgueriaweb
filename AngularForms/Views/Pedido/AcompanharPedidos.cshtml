@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<script src="~/app/AcompanharPedidosForm/apController.js"></script>
+<div ng-controller="apController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+    <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{erro.mensagem}}
+        <br />
+    </div>
+</div>
+<form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+    <br />
+    <div class="row">
+        <h4>Acompanhar pedidos</h4>
+        <hr />
+    </div>
+</form>

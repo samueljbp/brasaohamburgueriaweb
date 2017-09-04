@@ -1,7 +1,6 @@
 ﻿<script src="~/app/PedidoRegistradoForm/pedRegistradoController.js"></script>
 <form role="form" id="formPedidoRegistrado" class="form-horizontal" ng-controller="pedRegistradoController">
-    <h3 class="text-success">Parabéns!</h3>
-    <h4>Seu pedido foi registrado com sucesso em nosso sistema!</h4><br />
+    <h3 class="text-success"><i class="fa fa-thumbs-o-up fa-3x"></i>Seu pedido foi registrado com sucesso em nosso sistema!</h3>
     <h2>O número para acompanhamento é <span class="text-success">{{pedido.codPedido}}</span></h2><br />
-    <h4>Clique <a href="~/Views/Pedido/PedidoRegistrado.cshtml">aqui</a> para acompanhar o andamento do pedido.</h4>
+    <h4>Clique @Html.ActionLink("aqui", "AcompanharPedidos", "Pedido") para acompanhar o andamento do pedido.</h4>
 </form>

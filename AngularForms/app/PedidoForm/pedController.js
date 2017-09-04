@@ -23,7 +23,7 @@
             $scope.classes = null;
             $scope.itensFiltrados = null;
 
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + error.data;
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -57,7 +57,8 @@
                 };
 
             }, function (error) {
-                alert(error);
+                $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
             });
 
             $scope.promisesLoader.push($scope.promiseDadosUsuario);

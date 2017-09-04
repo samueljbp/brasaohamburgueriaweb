@@ -20,6 +20,11 @@ namespace AngularForms.Controllers
             return View("PedidoRegistrado");
         }
 
+        public ActionResult AcompanharPedidos()
+        {
+            return View("AcompanharPedidos");
+        }
+
         // GET: Pedido
         public ActionResult Index()
         {
@@ -78,12 +83,12 @@ namespace AngularForms.Controllers
 
                         if (itemViewModel.Obs != null)
                         {
-                            context.ObservacoesItensPedidos.AddRange(itemViewModel.Obs.Where(o => o != null && o.CodObservacao != null && o.CodObservacao > 0).Select(o => new ObservacaoItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodObservacao = o.CodObservacao }).ToList());
+                            context.ObservacoesItensPedidos.AddRange(itemViewModel.Obs.Where(o => o != null && o.CodObservacao > 0).Select(o => new ObservacaoItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodObservacao = o.CodObservacao }).ToList());
                         }
 
                         if (itemViewModel.extras != null)
                         {
-                            context.ExtrasItensPedidos.AddRange(itemViewModel.extras.Where(e => e != null && e.CodOpcaoExtra != null).Select(o => new ExtraItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodOpcaoExtra = o.CodOpcaoExtra, Preco = o.Preco }).ToList());
+                            context.ExtrasItensPedidos.AddRange(itemViewModel.extras.Where(e => e != null).Select(o => new ExtraItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodOpcaoExtra = o.CodOpcaoExtra, Preco = o.Preco }).ToList());
                         }
                     }
                     context.SaveChanges();

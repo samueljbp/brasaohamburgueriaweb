@@ -9,6 +9,11 @@
         });
     });
 </script>
+<style>
+    body {
+        overflow: scroll;
+    }
+</style>
 
 <br />
 <div class="row">
@@ -79,12 +84,16 @@
                                             <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
                                         </a>
                                     }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
                                 </td>
                             }
                             <td>@item.Nome</td>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
-                                <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "")</td>
+                                <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
                             }
                             <td>@item.Preco.ToString("C")</td>
                         </tr>
