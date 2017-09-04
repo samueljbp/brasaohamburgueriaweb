@@ -408,7 +408,7 @@
         $scope.getCardapio();
 
         //variável que armazena os dados do pedido que está sendo montado
-        if (!sessionStorage.pedido) {
+        if (!!sessionStorage.pedido || sessionStorage.pedido == null) {
             reiniciaVariaveisPedido();
             $scope.getDadosUsuario();
         } else {
