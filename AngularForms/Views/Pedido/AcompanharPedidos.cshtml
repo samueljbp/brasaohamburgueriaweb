@@ -14,11 +14,143 @@
         {{erro.mensagem}}
         <br />
     </div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+        <br />
+        <div class="row">
+            <h4>Acompanhar pedidos</h4>
+            <hr />
+            <div ng-if="pedido == '' || pedido == null || pedido.codPedido == 0">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="text-success">
+                            Você não possui nenhum pedido em aberto no momento.
+                        </h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="consultarPedidos()">
+                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>Consultar pedidos antigos
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="pedido.codPedido > 0">
+                <div class="row" ng-if="pedido.situacao == 1">
+                    <div class="col-sm-12">
+                        <h3>Seu pedido <strong class="text-success">{{pedido.codPedido}}</strong> está na situação <span class="text-danger">{{descricaoSituacaoPedido}} <i class="fa fa-spinner fa-spin fa"></i></span></h3>
+                        <h4 class="text-primary">A confirmação significa que nossa loja recebeu o pedido e está iniciando o preparo dos itens. Vamos informá-lo aqui nessa tela quando ele for confirmado. Por favor aguarde...</h4>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.situacao == 2">
+                    <div class="col-sm-12">
+                        <h3>Seu pedido <strong class="text-success">{{pedido.codPedido}}</strong> está na situação <span class="text-primary">{{descricaoSituacaoPedido}} <i class="fa fa-spinner fa-spin fa"></i></span></h3>
+                        <h4 class="text-primary">Seu pedido já vai ser preparado. Por favor aguarde...</h4>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.situacao == 3">
+                    <div class="col-sm-12">
+                        <h3>Seu pedido <strong class="text-success">{{pedido.codPedido}}</strong> está na situação <span class="text-primary">{{descricaoSituacaoPedido}} <i class="fa fa-spinner fa-spin fa"></i></span></h3>
+                        <h4 class="text-primary">Seu pedido está em preparação na nossa cozinha. Por favor aguarde...</h4>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.situacao == 4">
+                    <div class="col-sm-12">
+                        <h3>Seu pedido <strong class="text-success">{{pedido.codPedido}}</strong> está na situação <span class="text-primary">{{descricaoSituacaoPedido}} <i class="fa fa-spinner fa-spin fa"></i></span></h3>
+                        <h4 class="text-primary">Tá quase. Seu pedido já saiu para entrega e já vai chegar para você. Por favor aguarde...</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>Dados do pedido</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Cliente: <strong>{{pedido.dadosCliente.nome}}</strong>
+                    </div>
+                    <div class="col-sm-3">
+                        Telefone: <strong>{{pedido.dadosCliente.telefone}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Cidade: <strong>{{pedido.dadosCliente.cidade}}</strong> / <strong>{{pedido.dadosCliente.estado}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Bairro: <strong>{{pedido.dadosCliente.bairro}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Endereço: <strong>{{pedido.dadosCliente.logradouro}}</strong>, <strong>{{pedido.dadosCliente.numero}}</strong> - <strong>{{pedido.dadosCliente.complemento}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Referência: <strong>{{pedido.dadosCliente.referencia}}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Valor total: <strong>{{pedido.valorTotal | currency: "R$ "}}</strong>
+                    </div>
+                    <div class="col-sm-8">
+                        Taxa de entrega: <strong>{{pedido.taxaEntrega | currency: "R$ "}}</strong>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.formaPagamento == 'D'">
+                    <div class="col-sm-4">
+                        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+                    </div>
+                    <div class="col-sm-3">
+                        Pagar com: <strong>{{pedido.trocoPara | currency: "R$ "}}</strong>
+                    </div>
+                    <div class="col-sm-5">
+                        Troco: <strong>{{pedido.troco | currency: "R$ "}}</strong>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.formaPagamento == 'C' || pedido.formaPagamento == 'B'">
+                    <div class="col-sm-4">
+                        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+                    </div>
+                    <div class="col-sm-8">
+                        Bandeira: <strong>{{pedido.bandeiraCartao}}</strong>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.formaPagamento == 'A'">
+                    <div class="col-sm-12">
+                        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+                    </div>
+                </div>
+                <div class="row" ng-if="pedido.situacao == 4" style="margin-top: 20px;">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Recebi a entrega
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalPedidoConfirmado" tabindex="-1" role="dialog" aria-labelledby="labelModalPedidoConfirmado" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalPedidoConfirmado">Confirmação de pedido</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h2 style="margin-top: 0px;">Oba! <i class="fa fa-handshake-o text-success" aria-hidden="true"></i></h2>
+                        <h4>
+                            Seu pedido foi confirmado! Agora é só esperar a entrega.
+                        </h4>
+                        <h5>
+                            Você poderá continuar acompanhando o andamento do pedido nessa mesma tela.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-<form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
-    <br />
-    <div class="row">
-        <h4>Acompanhar pedidos</h4>
-        <hr />
-    </div>
-</form>

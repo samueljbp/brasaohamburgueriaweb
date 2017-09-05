@@ -11,17 +11,31 @@ using Newtonsoft.Json;
 
 namespace AngularForms.Model
 {
+    public enum SituacaoPedidoEnum
+    {
+        EmDigitacao = 0,
+        AguardandoConfirmacao = 1,
+        Confirmado = 2,
+        EmPreparacao = 3,
+        EmProcessoEntrega = 4,
+        Concluido = 5,
+        Cancelado = 9
+    }
     #region "Pedido View Model"
 
     public class PedidoViewModel
     {
+        public int CodPedido { get; set; }
+        public DateTime DataPedido { get; set; }
         public string FormaPagamento { get; set; }
+        public string DescricaoFormaPagamento { get; set; }
         public double TaxaEntrega { get; set; }
-        public double TrocoPara { get; set; }
-        public double Troco { get; set; }
+        public double? TrocoPara { get; set; }
+        public double? Troco { get; set; }
         public string BandeiraCartao { get; set; }
         public double ValorTotal { get; set; }
         public int Situacao { get; set; }
+        public string DescricaoSituacao { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
     }

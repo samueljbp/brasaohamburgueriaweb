@@ -54,6 +54,14 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,7 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
+    <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
+    <Content Include="app\GerenciarPedidosForm\gpController.js" />
     <Content Include="app\LoginForm\loginController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
     <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
@@ -263,6 +273,8 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Model\itens_cardapio.xls" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -386,6 +398,8 @@
     <Content Include="Views\Pedido\_FechamentoPedido.cshtml" />
     <Content Include="Views\Pedido\PedidoRegistrado.cshtml" />
     <Content Include="Views\Pedido\AcompanharPedidos.cshtml" />
+    <Content Include="Views\Pedido\GerenciarPedidos.cshtml" />
+    <Content Include="Views\Pedido\ConsultarPedidos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1207,6 +1221,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="Helpers\Util.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
@@ -1220,6 +1235,8 @@
     <Compile Include="Model\Identity\UsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="SignalR\CustomUserIdProvider.cs" />
+    <Compile Include="SignalR\PedidoHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1241,7 +1258,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57919</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57919/</IISUrl>
+          <IISUrl>http://10.84.161.57:57919/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

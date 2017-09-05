@@ -40,6 +40,41 @@ function getUrlParameter(sParam) {
     }
 }
 
+function getDescricaoSituacaoPedido(codSituacao) {
+    switch (codSituacao) {
+        case 0:
+            return "Em aberto";
+        case 1:
+            return "Aguardando confirmação";
+        case 2:
+            return "Confirmado";
+        case 3:
+            return "Em preparação";
+        case 4:
+            return "Em processo de entrega";
+        case 5:
+            return "Concluído";
+        case 9:
+            return "Cancelado";
+        default:
+            text = "Situação não definida";
+    }
+}
+
+function getDescricaoFormaPagamentoPedido(codFormaPagamento) {
+    switch (codFormaPagamento) {
+        case "D":
+            return "Dinheiro";
+        case "C":
+            return "Cartão de crédito";
+        case "B":
+            return "CArtão de débito";
+        case "A":
+            return "Ticket refeição Alelo";
+        default:
+            text = "Forma de pagamento não definida";
+    }
+}
 
 (function ($) {
     $.fn.priceFormat = function (options) {

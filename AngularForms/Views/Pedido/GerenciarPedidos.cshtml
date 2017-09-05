@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<script src="~/app/GerenciarPedidosForm/gpController.js"></script>
+<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+    <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{erro.mensagem}}
+        <br />
+    </div>
+    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+        <br />
+        <div class="row">
+            <h4>Gerenciar pedidos</h4>
+            <hr />
+            Pedido:
+            <input type="text" ng-model="pedido.codPedido" /><br />
+            Situação:
+            <input type="text" ng-model="pedido.situacao" /><br />
+            Usuário:
+            <input type="text" ng-model="pedido.usuario" /><br />
+            <input type="button" ng-click="sendMessage()" value="aaa" />
+        </div>
+    </form>
+</div>

@@ -9,6 +9,7 @@ using AngularForms.Model;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using AngularForms.Filters;
+using AngularForms.Helpers;
 
 namespace AngularForms.Controllers
 {
@@ -20,9 +21,105 @@ namespace AngularForms.Controllers
             return View("PedidoRegistrado");
         }
 
-        public ActionResult AcompanharPedidos()
+        public ActionResult AcompanharPedido()
         {
             return View("AcompanharPedidos");
+        }
+
+        public ActionResult GerenciarPedidos()
+        {
+            return View("GerenciarPedidos");
+        }
+
+        public ActionResult ConsultarPedidos()
+        {
+            return View("ConsultarPedidos");
+        }
+
+        public async Task<JsonResult> GetUltimosPedidos(string loginUsuario)
+        {
+            var result = new { Succeeded = true, errors = new List<String>(), data = new List<PedidoViewModel>() };
+
+            BrasaoContext contexto = new BrasaoContext();
+
+            List<PedidoViewModel> pedidos = new List<PedidoViewModel>();
+
+            try
+            {
+                pedidos = await contexto.Pedidos.Where(p => p.Usuario == loginUsuario)
+                .Include(s => s.Situacao)
+                .Include(s => s.Itens)
+                .Include(s => s.Itens.Select(i => i.ItemCardapio))
+                .Select(p => new PedidoViewModel
+                {
+                    FormaPagamento = p.FormaPagamento,
+                    DataPedido = p.DataHora,
+                    CodPedido = p.CodPedido,
+                    Situacao = p.CodSituacao,
+                    DescricaoSituacao = p.Situacao.Descricao,
+                    ValorTotal = p.ValorTotal,
+                    Itens = p.Itens.Select(i => new ItemPedidoViewModel
+                    {
+                        CodItem = i.CodItemCardapio,
+                        SeqItem = i.SeqItem,
+                        DescricaoItem = i.ItemCardapio.Nome,
+                        Quantidade = i.Quantidade,
+                        PrecoUnitario = i.PrecoUnitario,
+                        ValorExtras = i.ValorExtras,
+                        ValorTotalItem = i.ValorTotal
+                    }).ToList()
+                })
+                .OrderBy(p => p.DataPedido)
+                .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                result = new { Succeeded = false, errors = new List<String> { ex.Message }, data = pedidos };
+            }
+            finally
+            {
+                foreach(var ped in pedidos)
+                {
+                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
+                }
+
+                result = new { Succeeded = true, errors = new List<String>(), data = pedidos };
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetPedidoAberto(string loginUsuario)
+        {
+            BrasaoContext contexto = new BrasaoContext();
+
+            var pedido = await contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == loginUsuario)
+                .Select(p => new PedidoViewModel
+                {
+                    BandeiraCartao = p.BandeiraCartao,
+                    FormaPagamento = p.FormaPagamento,
+                    CodPedido = p.CodPedido,
+                    Situacao = p.CodSituacao,
+                    TaxaEntrega = p.TaxaEntrega,
+                    Troco = p.Troco,
+                    TrocoPara = p.TrocoPara,
+                    ValorTotal = p.ValorTotal,
+                    DadosCliente = new DadosClientePedidoViewModel
+                    {
+                        Bairro = p.BairroEntrega,
+                        Cidade = p.CidadeEntrega,
+                        Complemento = p.ComplementoEntrega,
+                        Estado = p.UFEntrega,
+                        Logradouro = p.LogradouroEntrega,
+                        Nome = p.NomeCliente,
+                        Numero = p.NumeroEntrega,
+                        Referencia = p.ReferenciaEntrega,
+                        Telefone = p.TelefoneCliente
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            return new JsonNetResult { Data = pedido };
         }
 
         // GET: Pedido
@@ -32,7 +129,32 @@ namespace AngularForms.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> FinalizaPedido(PedidoViewModel pedido)
+        {
+            var result = new { Succeeded = true, errors = new List<String>(), data = "" };
+
+            var context = new BrasaoContext();
+
+            var ped = context.Pedidos.Where(p => p.CodPedido == pedido.CodPedido).FirstOrDefault();
+
+            if (ped != null)
+            {
+                try
+                {
+                    ped.CodSituacao = (int)SituacaoPedidoEnum.Concluido;
+                    await context.SaveChangesAsync();
+                }
+                catch(Exception ex)
+                {
+                    result = new { Succeeded = false, errors = new List<String> {ex.Message}, data = "" };
+                }
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> GravarPedido(PedidoViewModel pedidoViewModel)
         {
@@ -64,11 +186,11 @@ namespace AngularForms.Controllers
                     ped.Usuario = User.Identity.GetUserName();
                     ped.ValorTotal = pedidoViewModel.ValorTotal;
                     context.Pedidos.Add(ped);
-                    context.SaveChanges();
+                    context.SaveChangesAsync();
 
                     result = new { Succeeded = true, errors = new List<String>(), data = ped.CodPedido.ToString() };
 
-                    foreach(var itemViewModel in pedidoViewModel.Itens)
+                    foreach (var itemViewModel in pedidoViewModel.Itens)
                     {
                         var item = new ItemPedido();
                         item.CodItemCardapio = itemViewModel.CodItem;
@@ -93,12 +215,12 @@ namespace AngularForms.Controllers
                     }
                     context.SaveChanges();
 
-                    dbContextTransaction.Commit(); 
+                    dbContextTransaction.Commit();
                 }
                 catch (Exception ex)
                 {
                     dbContextTransaction.Rollback();
-                    result = new { Succeeded = false, errors = new List<String>{ex.Message}, data = "" };
+                    result = new { Succeeded = false, errors = new List<String> { ex.Message }, data = "" };
                 }
             }
 
@@ -108,9 +230,15 @@ namespace AngularForms.Controllers
 
         public async Task<JsonResult> GetCardapio()
         {
+            bool succeeded = true;
+            Object data = new List<dynamic>();
+            List<string> errors = new List<string>();
+
             var context = new BrasaoContext();
 
-            var classes = context.Classes
+            try
+            {
+                var classes = context.Classes
                 .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
@@ -143,23 +271,18 @@ namespace AngularForms.Controllers
                         })
                 }).ToList();
 
-            //var aaa = classes.Select(c => 
-            //    new { CodClasse = c.CodClasse, 
-            //          DescricaoClasse = c.DescricaoClasse, 
-            //          Itens = c.Itens.Select(i => 
-            //              new { CodItem = i.CodItemCardapio, 
-            //                    Nome = i.Nome,
-            //                    ObservacoesPermitidas = (i.ObservacoesPermitidas != null ? 
-            //                        i.ObservacoesPermitidas.Select(o => new { CodObservacao = o.ObservacaoProducao.CodObservacao, Descricao = o.ObservacaoProducao.DescricaoObservacao }) : null),
-            //                    Complemento = (i.Complemento != null ? 
-            //                        new { DescricaoLonga = i.Complemento.DescricaoLonga, 
-            //                              Imagem = i.Complemento.Imagem } : null)
-            //                  })
-            //        }).ToList();
+                succeeded = true;
+                data = classes;
+            }
+            catch(Exception ex)
+            {
+                errors.Add(ex.Message);
+                succeeded = false;
+            }
 
-            //return Json(cardapio, "application/json", JsonRequestBehavior.AllowGet);
+            var result = new { Succeeded = succeeded, errors = errors, data = data };
 
-            return new JsonNetResult { Data = new { classes = classes } };
+            return new JsonNetResult { Data = result };
         }
     }
 }
