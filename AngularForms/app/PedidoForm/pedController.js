@@ -493,7 +493,9 @@
     }
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
+        alert(taxaEntrega);
+
         $scope.loginUsuario = loginUsuario;
 
         $scope.antiForgeryToken = antiForgeryToken;

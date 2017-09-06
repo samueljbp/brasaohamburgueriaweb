@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
-<div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+<div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.TaxaEntrega.ToString()')">
     @functions{
         public string GetAntiForgeryToken()
         {
@@ -37,7 +37,7 @@
     <div ng-if="pedidoAberto == null || pedidoAberto.codPedido <= 0">
         <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
             <script src="~/app/PedidoForm/pedController.js"></script>
-            
+
             <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
                 <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
                 <h5 class="text-warning">Para começar clique no botão Incluir item.</h5>

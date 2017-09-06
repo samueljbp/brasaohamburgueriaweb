@@ -27,5 +27,6 @@ namespace AngularForms.Model
         public DbSet<ItemPedido> ItensPedidos { get; set; }
         public DbSet<ObservacaoItemPedido> ObservacoesItensPedidos { get; set; }
         public DbSet<ExtraItemPedido> ExtrasItensPedidos { get; set; }
+        public DbSet<ParametrosSistema> ParametrosSistema { get; set; }
     }
 }

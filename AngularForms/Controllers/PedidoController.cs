@@ -84,6 +84,7 @@ namespace AngularForms.Controllers
         // GET: Pedido
         public ActionResult Index()
         {
+            ViewBag.TaxaEntrega = ParametroRepository.GetTaxaEntrega();
             return View();
         }
 

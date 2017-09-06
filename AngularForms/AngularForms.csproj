@@ -1228,6 +1228,7 @@
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
     <Compile Include="Model\Brasao\BrasaoContext.cs" />
     <Compile Include="Model\Brasao\CardapioModel.cs" />
+    <Compile Include="Model\Brasao\ParametrosModel.cs" />
     <Compile Include="Model\Brasao\PedidoModel.cs" />
     <Compile Include="Model\Identity\EsqueciMinhaSenhaViewModel.cs" />
     <Compile Include="Model\Identity\IdentityContext.cs" />
@@ -1237,6 +1238,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
+    <Compile Include="Repository\ParametroRepository.cs" />
     <Compile Include="Repository\PedidoRepository.cs" />
     <Compile Include="SignalR\CustomUserIdProvider.cs" />
     <Compile Include="SignalR\PedidoHub.cs" />

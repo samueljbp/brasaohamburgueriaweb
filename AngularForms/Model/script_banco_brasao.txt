@@ -184,3 +184,13 @@ insert into SITUACAO_PEDIDO values (3, 'Em preparação');
 insert into SITUACAO_PEDIDO values (4, 'Em processo de entrega');
 insert into SITUACAO_PEDIDO values (5, 'Concluído');
 insert into SITUACAO_PEDIDO values (9, 'Cancelado');
+
+
+
+
+
+
+-parametros
+insert into PARAMETRO_SISTEMA values (1, 'Valor da taxa de entrega', '3.5');
+insert into PARAMETRO_SISTEMA values (2, 'Início do horário de funcionamento', '19:00');
+insert into PARAMETRO_SISTEMA values (3, 'Fim do horário de funcionamento', '23:59');
