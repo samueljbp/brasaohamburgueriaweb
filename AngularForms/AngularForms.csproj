@@ -1221,6 +1221,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="Helpers\ServiceResult.cs" />
     <Compile Include="Helpers\Util.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
@@ -1235,6 +1236,8 @@
     <Compile Include="Model\Identity\UsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Repository\CardapioRepository.cs" />
+    <Compile Include="Repository\PedidoRepository.cs" />
     <Compile Include="SignalR\CustomUserIdProvider.cs" />
     <Compile Include="SignalR\PedidoHub.cs" />
     <Compile Include="Startup.cs" />

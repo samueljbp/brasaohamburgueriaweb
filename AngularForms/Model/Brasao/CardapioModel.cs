@@ -11,6 +11,42 @@ using Newtonsoft.Json;
 
 namespace AngularForms.Model
 {
+    public class ClasseItemCardapioViewModel
+    {
+        public int CodClasse { get; set; }
+        public string DescricaoClasse { get; set; }
+        public List<ItemCardapioViewModel> Itens { get; set; }
+    }
+
+    public class ItemCardapioViewModel
+    {
+        public int CodItemCardapio { get; set; }
+        public string Nome { get; set; }
+        public double Preco { get; set; }
+        public ComplementoItemCardapioViewModel Complemento { get; set; }
+        public List<ObservacaoProducaoViewModel> ObservacoesPermitidas { get; set; }
+        public List<OpcaoExtraViewModel> ExtrasPermitidos { get; set; }
+    }
+
+    public class ObservacaoProducaoViewModel
+    {
+        public int CodObservacao { get; set; }
+        public string DescricaoObservacao { get; set; }
+    }
+
+    public class OpcaoExtraViewModel
+    {
+        public int CodOpcaoExtra { get; set; }
+        public string DescricaoOpcaoExtra { get; set; }
+        public double Preco { get; set; }
+    }
+
+    public class ComplementoItemCardapioViewModel
+    {
+        public string DescricaoLonga { get; set; }
+        public string Imagem { get; set; }
+    }
+
     [Table("CLASSE_ITEM_CARDAPIO")]
     public class ClasseItemCardapio
     {

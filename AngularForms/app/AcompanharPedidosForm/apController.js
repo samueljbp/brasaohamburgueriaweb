@@ -17,9 +17,20 @@
             url: urlBase + 'Pedido/GetPedidoAberto?loginUsuario=' + loginUsuario
         })
         .then(function (response) {
-            $scope.pedido = response.data;
-            $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedido.situacao);
-            $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedido.formaPagamento);
+
+            var retorno = genericSuccess(response);
+
+            if (retorno.succeeded) {
+
+                $scope.pedido = retorno.data;
+                $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedido.situacao);
+                $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedido.formaPagamento);
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
 
         }, function (error) {
             $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
@@ -76,7 +87,7 @@
     }
 
     $scope.consultarPedidos = function () {
-        window.location.href = urlBase + '/Pedido/ConsultarPedidos';
+        window.location.href = urlBase + 'Pedido/ConsultarPedidos';
     }
 
     noteService.connect();

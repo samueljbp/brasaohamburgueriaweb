@@ -12,7 +12,7 @@
                 'RequestVerificationToken': 'XMLHttpRequest',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Pedido/GetCardapio'
+            url: urlBase + 'Cardapio/GetCardapio'
         })
         .then(function (response) {
             var retorno = genericSuccess(response);
@@ -41,6 +41,47 @@
 
 
     };
+
+
+
+    //função que retorna pedido em aberto, caso exista
+    $scope.getPedidoAberto = function (loginUsuario) {
+
+        //var accesstoken = sessionStorage.getItem('accessToken');
+
+        $scope.promiseGetPedidoAberto = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Pedido/GetPedidoAberto?loginUsuario=' + loginUsuario
+        })
+        .then(function (response) {
+            var retorno = genericSuccess(response);
+
+            if (retorno.succeeded) {
+
+                $scope.pedidoAberto = retorno.data;
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }, function (error) {
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        });
+
+        $scope.promisesLoader.push($scope.promiseGetPedidoAberto);
+
+
+    };
+
+
 
     $scope.getDadosUsuario = function () {
 
@@ -298,6 +339,46 @@
         sessionStorage.pedido = JSON.stringify($scope.pedido);
     }
 
+    $scope.finalizarPedidoAberto = function () {
+
+        $ngBootbox.confirm('Confirma o encerramento do pedido que está em aberto?')
+            .then(function () {
+
+
+                $scope.promiseFinalizaPedido = $http({
+                    method: 'POST',
+                    url: urlBase + 'Pedido/FinalizaPedido',
+                    data: $scope.pedidoAberto,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.succeeded) {
+
+                        $scope.pedidoAberto = null;
+
+                    }
+                    else {
+                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.erro.mensagem = error.statusText;
+                    $window.scrollTo(0, 0);
+                });
+
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+
+    }
+
     $scope.finalizaPedido = function () {
 
         var hasErrors = $('#formFechamento').validator('validate').has('.has-error').length;
@@ -395,6 +476,9 @@
 
         $scope.promisesLoader = [];
 
+        //variável que armazena um pedido em aberto, caso ele exista
+        $scope.pedidoAberto = {};
+
         //variável para exibir as classes de item na combo da modal de inclusão de item
         $scope.classes = null;
 
@@ -417,6 +501,8 @@
         reiniciaVariaveis();
         
         $scope.getCardapio();
+
+        $scope.getPedidoAberto(loginUsuario);
 
         //variável que armazena os dados do pedido que está sendo montado
         if (!!sessionStorage.pedido || sessionStorage.pedido == null) {

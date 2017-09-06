@@ -6,11 +6,16 @@ using System.Web.Mvc;
 using AngularForms.Model;
 using AngularForms.Extentions;
 using System.Data.Entity;
+using AngularForms.Repository;
+using System.Threading.Tasks;
+using AngularForms.Helpers;
 
 namespace AngularForms.Controllers
 {
     public class CardapioController : Controller
     {
+        private CardapioRepository _rep = new CardapioRepository();
+
         public ActionResult Listar()
         {
             var context = new BrasaoContext();
@@ -23,6 +28,25 @@ namespace AngularForms.Controllers
             ViewBag.Classes = classes;
 
             return View();
+        }
+
+        public JsonResult GetCardapio()
+        {
+            var result = new ServiceResult(true, new List<string>(), null);
+
+            try
+            {
+                result.data = _rep.GetCardapio();
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
         }
     }
 }
