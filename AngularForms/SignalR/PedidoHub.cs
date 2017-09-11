@@ -22,7 +22,14 @@ namespace AngularForms.SignalR
         {
             public void SendMessage(string usuario, string codPedido, string situacao)
             {
-                Clients.User(usuario).messageAdded(codPedido, situacao);
+                if (!String.IsNullOrEmpty(usuario))
+                {
+                    Clients.User(usuario).messageAdded(codPedido, situacao);
+                }
+                else
+                {
+                    Clients.All.messageAdded(codPedido, situacao);
+                }
             }
         }
 

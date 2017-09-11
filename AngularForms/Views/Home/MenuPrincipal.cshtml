@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using AngularForms.Model;
 <br />
 <div class="row">
     <div class="col-sm-12">
@@ -30,6 +31,14 @@
                     <i class="fa fa-search fa-3x"></i><br />
                     Consultar<br>pedidos
                 </a>
+                @if (User.IsInRole(Constantes.ROLE_ADMIN))
+                {
+                    <a href="~/Pedido/GerenciarPedidos" class="btn btn-sq-lg btn-default">
+                        <br />
+                        <i class="fa fa-tasks fa-3x"></i><br />
+                        Gerenciar<br>pedidos
+                    </a>
+                }
             </p>
         </div>
     </div>

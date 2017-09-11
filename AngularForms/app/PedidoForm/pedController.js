@@ -188,7 +188,7 @@
 
         $scope.pedido = {
             formaPagamento: '',
-            taxaEntrega: 3.50,
+            taxaEntrega: $scope.taxaEntrega,
             trocoPara: 0.0,
             troco: 0.0,
             bandeiraCartao: '',
@@ -283,11 +283,6 @@
 
         $('#modalIncluirItem').modal('hide');
     };
-
-    //evento de fechamento da modal de inclusão de item
-    $('#modalIncluirItem').on('hide.bs.modal', function (e) {
-        reiniciaVariaveisItem();
-    });
 
     //evento de clique no botão que cancela a inclusao de um item
     $scope.cancelaInclusaoItem = function () {
@@ -465,6 +460,7 @@
 
     //configura a modal de inclusão de item
     $scope.modalIncluirItem = function () {
+        reiniciaVariaveisItem();
         $('#modalIncluirItem').modal('show');
     }
     //FIM CONFIGURAÇÃO DE CONTROLES
@@ -494,7 +490,7 @@
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
-        alert(taxaEntrega);
+        $scope.taxaEntrega = parseFloat(taxaEntrega);
 
         $scope.loginUsuario = loginUsuario;
 

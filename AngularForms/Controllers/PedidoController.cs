@@ -29,6 +29,7 @@ namespace AngularForms.Controllers
             return View("AcompanharPedidos");
         }
 
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public ActionResult GerenciarPedidos()
         {
             return View("GerenciarPedidos");
@@ -37,6 +38,30 @@ namespace AngularForms.Controllers
         public ActionResult ConsultarPedidos()
         {
             return View("ConsultarPedidos");
+        }
+
+        public async Task<JsonResult> GetPedidosAbertos()
+        {
+            var result = new ServiceResult(true, new List<string>(), null);
+
+            try
+            {
+                result.data = await _rep.GetPedidosAbertos();
+
+                foreach (var ped in result.data)
+                {
+                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
+                }
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
         }
 
         public async Task<JsonResult> GetUltimosPedidos(string loginUsuario)
@@ -84,7 +109,6 @@ namespace AngularForms.Controllers
         // GET: Pedido
         public ActionResult Index()
         {
-            ViewBag.TaxaEntrega = ParametroRepository.GetTaxaEntrega();
             return View();
         }
 
@@ -116,8 +140,18 @@ namespace AngularForms.Controllers
 
             try
             {
-                result.data = await _rep.GravaPedido(pedidoViewModel, User.Identity.GetUserName());
-                result.Succeeded = true;
+                //primeiro verifica se a casa está aberta para delivery
+                if (!ParametroRepository.CasaAberta())
+                {
+                    var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
+                    result.Succeeded = false;
+                    result.Errors.Add("No momento estamos fechados. Nosso horário de funcionamento é das " + horarioFuncionamento.Abertura.ToString("HH:mm") + " às " + horarioFuncionamento.Fechamento.ToString("HH:mm") + ".");
+                }
+                else
+                {
+                    result.data = await _rep.GravaPedido(pedidoViewModel, User.Identity.GetUserName());
+                    result.Succeeded = true;
+                }
             }
             catch(Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿var angularFormsApp = angular.module('angularFormsApp', ['ngBootbox', 'cgBusy']);
+﻿var angularFormsApp = angular.module('angularFormsApp', ['ngBootbox', 'cgBusy', 'timer']);
 
 angularFormsApp.config(['$httpProvider', function ($httpProvider) {
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

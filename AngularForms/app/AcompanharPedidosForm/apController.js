@@ -62,7 +62,9 @@
                     var retorno = genericSuccess(success);
 
                     if (retorno.succeeded) {
+                        var proximaSituacao = getProximaSituacaoPedido($scope.pedido.situacao);
 
+                        noteService.sendMessage('', $scope.pedido.codPedido, proximaSituacao);
                         window.location.href = urlBase + '/Home/Index';
 
                     }
@@ -95,6 +97,11 @@
 
     $scope.$on('messageAdded', function (event, codPedido, situacao) {
         
+        //para ignorar mensagens de broadcast
+        if ($scope.pedido.codPedido != codPedido) {
+            return;
+        }
+
         if ($scope.pedido.situacao == 1 && situacao == 2) {
             $('#modalPedidoConfirmado').modal('show');
         }

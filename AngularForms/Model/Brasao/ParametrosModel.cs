@@ -14,8 +14,17 @@ namespace AngularForms.Model
     public static class CodigosParametros
     {
         public const int COD_PARAMETRO_TAXA_ENTREGA = 1;
-        public const int COD_PARAMETRO_FUNCIONAMENTO_ABERTURA = 2;
-        public const int COD_PARAMETRO_FUNCIONAMENTO_FECHAMENTO = 3;
+    }
+
+    public static class Constantes
+    {
+        public const string ROLE_ADMIN = "Administradores";
+    }
+
+    public class HorarioFuncionamento
+    {
+        public DateTime Abertura { get; set;  }
+        public DateTime Fechamento { get; set; }
     }
 
     [Table("PARAMETRO_SISTEMA")]

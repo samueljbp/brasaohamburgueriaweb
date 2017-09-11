@@ -191,6 +191,12 @@ insert into SITUACAO_PEDIDO values (9, 'Cancelado');
 
 
 -parametros
-insert into PARAMETRO_SISTEMA values (1, 'Valor da taxa de entrega', '3.5');
-insert into PARAMETRO_SISTEMA values (2, 'Início do horário de funcionamento', '19:00');
-insert into PARAMETRO_SISTEMA values (3, 'Fim do horário de funcionamento', '23:59');
+insert into PARAMETRO_SISTEMA values (1, 'Valor da taxa de entrega', '3,5');
+
+
+insert into funcionamento_estabelecimento values (2, '19:00', '23:59', 1);
+insert into funcionamento_estabelecimento values (3, '19:00', '23:59', 1);
+insert into funcionamento_estabelecimento values (4, '19:00', '23:59', 1);
+insert into funcionamento_estabelecimento values (5, '19:00', '23:59', 1);
+insert into funcionamento_estabelecimento values (6, '19:00', '23:59', 1);
+insert into funcionamento_estabelecimento values (7, '19:00', '23:59', 1);

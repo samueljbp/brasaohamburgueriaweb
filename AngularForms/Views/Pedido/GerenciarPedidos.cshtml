@@ -14,18 +14,106 @@
         {{erro.mensagem}}
         <br />
     </div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <br />
         <div class="row">
             <h4>Gerenciar pedidos</h4>
             <hr />
-            Pedido:
-            <input type="text" ng-model="pedido.codPedido" /><br />
-            Situação:
-            <input type="text" ng-model="pedido.situacao" /><br />
-            Usuário:
-            <input type="text" ng-model="pedido.usuario" /><br />
-            <input type="button" ng-click="sendMessage()" value="aaa" />
+
+            <div ng-if="pedidos.length == 0">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="text-success">
+                            Nenhum pedido encontrado.
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="pedidos.length > 0">
+                <div class="row text-center">
+                    <div class="col-sm-10">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">
+                                        Nº Pedido
+                                    </th>
+                                    <th>
+                                        Cliente
+                                    </th>
+                                    <th class="text-left">
+                                        Data
+                                    </th>
+                                    <th>
+                                        Tempo
+                                    </th>
+                                    <th class="text-left">
+                                        Situação
+                                    </th>
+                                    <th class="text-right">
+                                        Valor total
+                                    </th>
+                                    <th class="text-left">
+                                        Forma pagamento
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ped in pedidos">
+                                    <td class="text-left">
+                                        {{ped.codPedido}}
+                                    </td>
+                                    <td class="text-left">
+                                        {{ped.dadosCliente.nome}}
+                                    </td>
+                                    <td class="text-left">
+                                        {{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}
+                                    </td>
+                                    <td>
+                                        <timer start-time="getTimeMs(ped.dataPedido)">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
+                                    </td>
+                                    <td ng-class="determinaEstiloBotao(ped, 'S')">
+                                        {{ped.descricaoSituacao}}
+                                    </td>
+                                    <td class="text-right">
+                                        {{ped.valorTotal | currency: "R$ "}}
+                                    </td>
+                                    <td class="text-left">
+                                        {{ped.descricaoFormaPagamento}}
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default btn-sm" title="Detalhes" ng-click="mostrarDetalhesPedido(ped.codPedido)">
+                                            <span class=" glyphicon glyphicon-list" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
+                                            <span ng-class="determinaEstiloBotao(ped, 'I')" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @*Pedido:
+                <input type="text" ng-model="pedido.codPedido" /><br />
+                Situação:
+                <input type="text" ng-model="pedido.situacao" /><br />
+                Usuário:
+                <input type="text" ng-model="pedido.usuario" /><br />
+                <input type="button" ng-click="sendMessage()" value="aaa" />*@
         </div>
     </form>
 </div>

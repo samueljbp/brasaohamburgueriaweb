@@ -35,6 +35,7 @@ namespace AngularForms.Model
         public string BandeiraCartao { get; set; }
         public double ValorTotal { get; set; }
         public int Situacao { get; set; }
+        public string Usuario { get; set; }
         public string DescricaoSituacao { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
