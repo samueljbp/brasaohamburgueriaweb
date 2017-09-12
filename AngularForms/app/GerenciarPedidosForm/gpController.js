@@ -122,6 +122,8 @@
     $scope.init = function (loginUsuario, antiForgeryToken) {
         $scope.getPedidosPendentes();
 
+        $scope.antiForgeryToken = antiForgeryToken;
+
         $scope.startTime = Date.parse("2017-09-11 14:06:00");
     }
 
@@ -130,32 +132,21 @@
         return dataHora.getTime();
     }
 
+
     $scope.avancarPedido = function (pedido) {
 
         var proximaSituacao = getProximaSituacaoPedido(pedido.situacao);
         var descricaoProximaSituacao = getDescricaoSituacaoPedido(proximaSituacao);
 
-        $ngBootbox.confirm('Deseja o pedido para a situação "' + descricaoProximaSituacao + '"?')
+        $ngBootbox.confirm('Deseja o pedido ' + pedido.codPedido + ' para a situação "' + descricaoProximaSituacao + '"?')
             .then(function () {
 
-                for (i = 0; i < $scope.pedidos.length; i++) {
-                    if ($scope.pedidos[i].codPedido == pedido.codPedido) {
-
-                        noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
-
-                        $scope.pedidos[i].situacao = proximaSituacao;
-                        $scope.pedidos[i].descricaoSituacao = descricaoProximaSituacao;
-                        $scope.$apply();
-                        return;
-                    }
-                }
-
-                return;
+                pedido.situacao = proximaSituacao;
 
                 $scope.promiseGravaPedido = $http({
                     method: 'POST',
-                    url: urlBase + 'Pedido/GravarPedido',
-                    data: $scope.pedido,
+                    url: urlBase + 'Pedido/AvancarPedido',
+                    data: pedido,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'RequestVerificationToken': $scope.antiForgeryToken
@@ -165,14 +156,16 @@
 
                     if (retorno.succeeded) {
 
-                        reiniciaVariaveis();
-                        reiniciaVariaveisPedido();
-                        reiniciaVariaveisItem();
+                        for (i = 0; i < $scope.pedidos.length; i++) {
+                            if ($scope.pedidos[i].codPedido == pedido.codPedido) {
 
-                        sessionStorage.pedido = null;
-                        sessionStorage.codPedido = retorno.data;
+                                noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
 
-                        window.location.href = urlBase + '/Pedido/PedidoRegistrado';
+                                $scope.pedidos[i].situacao = proximaSituacao;
+                                $scope.pedidos[i].descricaoSituacao = descricaoProximaSituacao;
+                                return;
+                            }
+                        }
 
                     }
                     else {

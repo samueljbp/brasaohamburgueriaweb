@@ -143,7 +143,27 @@ namespace AngularForms.Controllers
 
             try
             {
-                await _rep.FinalizaPedido(pedido.CodPedido);
+                await _rep.AlteraSituacaoPedido(pedido.CodPedido, (int)SituacaoPedidoEnum.Concluido);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> AvancarPedido(PedidoViewModel pedido)
+        {
+            var result = new ServiceResult(true, new List<string>(), null);
+
+            try
+            {
+                await _rep.AlteraSituacaoPedido(pedido.CodPedido, pedido.Situacao);
                 result.Succeeded = true;
             }
             catch (Exception ex)

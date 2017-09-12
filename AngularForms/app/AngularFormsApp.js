@@ -34,4 +34,4 @@ function ($, $rootScope) {
     }
 }]);
 
-var urlBase = 'http://192.168.0.132:57919/';
+var urlBase = 'http://10.84.161.57:57919/';

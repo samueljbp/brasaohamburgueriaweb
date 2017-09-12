@@ -35,7 +35,7 @@
                             {{item.descricaoItem}}
                         </div>
                         <div class="row" ng-if="item.obs != null && item.obs.length > 0">
-                            <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null && obs.codObservacao != 0" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
+                            <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
                         </div>
                         <div class="row" ng-if="item.extras != null && item.extras.length > 0">
                             <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>

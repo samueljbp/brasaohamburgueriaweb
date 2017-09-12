@@ -17,13 +17,13 @@ namespace AngularForms.Repository
             _contexto = new BrasaoContext();
         }
 
-        public async Task FinalizaPedido(int codPedido)
+        public async Task AlteraSituacaoPedido(int codPedido, int codSituacao)
         {
             var ped = _contexto.Pedidos.Where(p => p.CodPedido == codPedido).FirstOrDefault();
 
             if (ped != null)
             {
-                ped.CodSituacao = (int)SituacaoPedidoEnum.Concluido;
+                ped.CodSituacao = codSituacao;
                 await _contexto.SaveChangesAsync();
             }
         }
@@ -161,7 +161,7 @@ namespace AngularForms.Repository
                         {
                             CodObservacao = o.CodObservacao,
                             DescricaoObservacao = o.Observacao.DescricaoObservacao
-                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = -1, DescricaoObservacao = i.ObservacaoLivre } }).ToList(),
+                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
                         extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
                         {
                             CodOpcaoExtra = e.CodOpcaoExtra,
@@ -227,7 +227,7 @@ namespace AngularForms.Repository
                         {
                             CodObservacao = o.CodObservacao,
                             DescricaoObservacao = o.Observacao.DescricaoObservacao
-                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = -1, DescricaoObservacao = i.ObservacaoLivre } }).ToList(),
+                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = ( i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2 ), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
                         extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
                         {
                             CodOpcaoExtra = e.CodOpcaoExtra,
