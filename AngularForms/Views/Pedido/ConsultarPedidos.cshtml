@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<script src="~/app/ConsultarPedidos/cpController.js"></script>
+<div ng-controller="cpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+    <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{erro.mensagem}}
+        <br />
+    </div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+        <br />
+        <div class="row">
+            <h4>Consultar pedidos (últimos 6 meses)</h4>
+            <hr />
+        </div>
+        <div ng-if="pedidos.length == 0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="text-success">
+                        Nenhum pedido encontrado.
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div ng-if="pedidos.length > 0">
+            <div class="row text-center">
+                <div class="col-sm-10">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-left">
+                                    Nº Pedido
+                                </th>
+                                <th class="text-left">
+                                    Data
+                                </th>
+                                <th class="text-left">
+                                    Situação
+                                </th>
+                                <th class="text-right">
+                                    Valor total
+                                </th>
+                                <th class="text-left">
+                                    Forma pagamento
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ped in pedidos">
+                                <td class="text-left">
+                                    {{ped.codPedido}}
+                                </td>
+                                <td class="text-left">
+                                    {{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}
+                                </td>
+                                <td class="text-left">
+                                    {{ped.descricaoSituacao}}
+                                </td>
+                                <td class="text-right">
+                                    {{ped.valorTotal | currency: "R$ "}}
+                                </td>
+                                <td class="text-left">
+                                    {{ped.descricaoFormaPagamento}}
+                                </td>
+                                <td class="text-right">
+                                    <button type="button" class="btn btn-warning btn-sm" title="Ver itens" ng-click="mostrarItensPedido(ped.codPedido)">
+                                        <span class=" glyphicon glyphicon-list" aria-hidden="true">
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="modal fade" id="modalItensPedido" tabindex="-1" role="dialog" aria-labelledby="labelModalItensPedido" style="overflow: scroll;">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="labelModalItensPedido">Itens do pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-striped" ng-if="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-1">
+                                            Nº Item
+                                        </th>
+                                        <th class="col-sm-4">
+                                            <div class="row">
+                                                Descrição
+                                            </div>
+                                        </th>
+                                        <th class="col-sm-1">
+                                            Quantidade
+                                        </th>
+                                        <th class="col-sm-2">
+                                            Preço unitário
+                                        </th>
+                                        <th class="col-sm-1">
+                                            Extras
+                                        </th>
+                                        <th class="col-sm-2">
+                                            Total
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in pedidoSelecionado.itens">
+                                        <td>
+                                            {{item.seqItem}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <div class="row">
+                                                {{item.descricaoItem}}
+                                            </div>
+                                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
+                                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null && obs.codObservacao > 0" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
+                                            </div>
+                                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
+                                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{item.quantidade}}
+                                        </td>
+                                        <td>
+                                            {{item.precoUnitario | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            {{item.valorExtras | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            {{item.valorTotalItem | currency: "R$ "}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            -
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <div class="row">
+                                                <span class="text-info">Taxa de entrega</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            1
+                                        </td>
+                                        <td>
+                                            {{pedidoSelecionado.taxaEntrega | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            -
+                                        </td>
+                                        <td>
+                                            {{pedidoSelecionado.taxaEntrega | currency: "R$ "}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
