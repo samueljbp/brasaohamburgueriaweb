@@ -96,86 +96,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table class="table table-striped" ng-if="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0">
-                                <thead>
-                                    <tr>
-                                        <th class="col-sm-1">
-                                            Nº Item
-                                        </th>
-                                        <th class="col-sm-4">
-                                            <div class="row">
-                                                Descrição
-                                            </div>
-                                        </th>
-                                        <th class="col-sm-1">
-                                            Quantidade
-                                        </th>
-                                        <th class="col-sm-2">
-                                            Preço unitário
-                                        </th>
-                                        <th class="col-sm-1">
-                                            Extras
-                                        </th>
-                                        <th class="col-sm-2">
-                                            Total
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="item in pedidoSelecionado.itens">
-                                        <td>
-                                            {{item.seqItem}}
-                                        </td>
-                                        <td class="col-sm-4">
-                                            <div class="row">
-                                                {{item.descricaoItem}}
-                                            </div>
-                                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
-                                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null && obs.codObservacao > 0" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
-                                            </div>
-                                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
-                                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {{item.quantidade}}
-                                        </td>
-                                        <td>
-                                            {{item.precoUnitario | currency: "R$ "}}
-                                        </td>
-                                        <td>
-                                            {{item.valorExtras | currency: "R$ "}}
-                                        </td>
-                                        <td>
-                                            {{item.valorTotalItem | currency: "R$ "}}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            -
-                                        </td>
-                                        <td class="col-sm-4">
-                                            <div class="row">
-                                                <span class="text-info">Taxa de entrega</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            {{pedidoSelecionado.taxaEntrega | currency: "R$ "}}
-                                        </td>
-                                        <td>
-                                            -
-                                        </td>
-                                        <td>
-                                            {{pedidoSelecionado.taxaEntrega | currency: "R$ "}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h2>Dados do pedido</h2>
                         </div>
                     </div>
+                    @Html.Partial("_ListaItensPedido")
                 </div>
             </div>
         </div>

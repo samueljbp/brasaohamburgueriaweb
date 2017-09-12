@@ -176,9 +176,11 @@ namespace AngularForms.Repository
             return pedidos;
         }
 
-        public async Task<List<PedidoViewModel>> GetPedidosAbertos()
+        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido)
         {
-            var pedidos = await _contexto.Pedidos.Where(p => !(new List<int> { 5, 9 }).Contains(p.CodSituacao))
+            var dataHora = DateTime.Now.AddDays(-2);
+
+            var pedidos = await _contexto.Pedidos.Where(p => !(new List<int> { 5, 9 }).Contains(p.CodSituacao) && p.DataHora > dataHora && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido))
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))

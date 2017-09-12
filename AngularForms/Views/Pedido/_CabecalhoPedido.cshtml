@@ -1,0 +1,63 @@
+﻿<div class="row">
+    <div class="col-sm-6">
+        Cliente: <strong>{{pedidoSelecionado.dadosCliente.nome}}</strong>
+    </div>
+    <div class="col-sm-3">
+        Telefone: <strong>{{pedidoSelecionado.dadosCliente.telefone}}</strong>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        Cidade: <strong>{{pedidoSelecionado.dadosCliente.cidade}}</strong> / <strong>{{pedidoSelecionado.dadosCliente.estado}}</strong>
+    </div>
+    <div class="col-sm-6">
+        Bairro: <strong>{{pedidoSelecionado.dadosCliente.bairro}}</strong>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        Endereço: <strong>{{pedidoSelecionado.dadosCliente.logradouro}}</strong>, <strong>{{pedidoSelecionado.dadosCliente.numero}}</strong> - <strong>{{pedidoSelecionado.dadosCliente.complemento}}</strong>
+    </div>
+    <div class="col-sm-6">
+        Referência: <strong>{{pedidoSelecionado.dadosCliente.referencia}}</strong>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        Valor total: <strong>{{pedidoSelecionado.valorTotal | currency: "R$ "}}</strong>
+    </div>
+    <div class="col-sm-8">
+        Taxa de entrega: <strong>{{pedidoSelecionado.taxaEntrega | currency: "R$ "}}</strong>
+    </div>
+</div>
+<div class="row" ng-if="pedidoSelecionado.formaPagamento == 'D'">
+    <div class="col-sm-4">
+        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+    </div>
+    <div class="col-sm-3">
+        Pagar com: <strong>{{pedidoSelecionado.trocoPara | currency: "R$ "}}</strong>
+    </div>
+    <div class="col-sm-5">
+        Troco: <strong>{{pedidoSelecionado.troco | currency: "R$ "}}</strong>
+    </div>
+</div>
+<div class="row" ng-if="pedidoSelecionado.formaPagamento == 'C' || pedidoSelecionado.formaPagamento == 'B'">
+    <div class="col-sm-4">
+        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+    </div>
+    <div class="col-sm-8">
+        Bandeira: <strong>{{pedidoSelecionado.bandeiraCartao}}</strong>
+    </div>
+</div>
+<div class="row" ng-if="pedidoSelecionado.formaPagamento == 'A'">
+    <div class="col-sm-12">
+        Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
+    </div>
+</div>
+<div class="row" ng-if="pedidoSelecionado.situacao == 4" style="margin-top: 20px;">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">
+            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Recebi a entrega
+        </button>
+    </div>
+</div>

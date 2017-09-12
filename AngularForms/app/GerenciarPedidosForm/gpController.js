@@ -5,6 +5,43 @@
     $scope.promisesLoader = [];
     $scope.pedidoSelecionado = [];
 
+    $scope.getPedido = function (codPedido) {
+
+        $scope.promiseGetPedido = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Pedido/GetPedido?CodPedido=' + codPedido
+        })
+        .then(function (response) {
+
+            var retorno = genericSuccess(response);
+
+            if (retorno.succeeded) {
+
+                $scope.pedidos.push(retorno.data);
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+
+
+        }, function (error) {
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        });
+
+        $scope.promisesLoader.push($scope.promiseGetPedido);
+
+
+    }
+
     $scope.getPedidosPendentes = function () {
 
         //var accesstoken = sessionStorage.getItem('accessToken');
@@ -49,7 +86,14 @@
  
     $scope.$on('messageAdded', function (event, codPedido, situacao) {
         
-        if (situacao < 5) {
+        //mensagens de pedidos feito pelo usuario logado.
+        if (situacao > 1 && situacao < 5) {
+            return;
+        }
+
+        //novos pedidos, recuperar e incluir na tela
+        if (situacao == 1) {
+            $scope.getPedido(codPedido);
             return;
         }
         
@@ -149,6 +193,11 @@
 
 
 
+    }
+
+    $scope.visualizaPedido = function (pedido) {
+        $scope.pedidoSelecionado = pedido;
+        $('#modalDetalhesPedido').modal('show');
     }
 
     $scope.determinaEstiloBotao = function (pedido, tipo) {

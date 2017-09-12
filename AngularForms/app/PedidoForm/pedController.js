@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window) {
+﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
     //FUNÇÕES DA TELA QUE LISTA O PEDIDO
     //função que carrega o cardápio em memória assincronamente
     $scope.getCardapio = function () {
@@ -408,13 +408,14 @@
                     var retorno = genericSuccess(success);
 
                     if (retorno.succeeded) {
-
                         reiniciaVariaveis();
                         reiniciaVariaveisPedido();
                         reiniciaVariaveisItem();
 
                         sessionStorage.pedido = null;
                         sessionStorage.codPedido = retorno.data;
+
+                        noteService.sendMessage('', sessionStorage.codPedido, 1);
 
                         window.location.href = urlBase + '/Pedido/PedidoRegistrado';
 
@@ -436,7 +437,6 @@
             });
 
     }
-
     //FUM FUNÇÕES DA TELA DE FECHAMENTO DO PEDIDO
 
 
@@ -490,6 +490,9 @@
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
+        noteService.connect();
+        $scope.messages = [];
+
         $scope.taxaEntrega = parseFloat(taxaEntrega);
 
         $scope.loginUsuario = loginUsuario;

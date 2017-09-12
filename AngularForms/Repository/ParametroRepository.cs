@@ -5,6 +5,8 @@ using System.Web;
 using AngularForms.Model;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Threading;
+using System.Globalization;
 
 namespace AngularForms.Repository
 {
@@ -56,6 +58,8 @@ namespace AngularForms.Repository
 
             horario.Abertura = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + abertura.Abertura);
             horario.Fechamento = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + abertura.Fechamento);
+
+            horario.DiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)abertura.DiaSemana);
 
             return horario;
         }

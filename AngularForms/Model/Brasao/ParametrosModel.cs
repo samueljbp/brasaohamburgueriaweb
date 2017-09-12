@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -25,6 +23,7 @@ namespace AngularForms.Model
     {
         public DateTime Abertura { get; set;  }
         public DateTime Fechamento { get; set; }
+        public String DiaSemana { get; set; }
     }
 
     [Table("PARAMETRO_SISTEMA")]

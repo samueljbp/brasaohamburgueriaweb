@@ -40,13 +40,36 @@ namespace AngularForms.Controllers
             return View("ConsultarPedidos");
         }
 
+        public async Task<JsonResult> GetPedido(int codPedido)
+        {
+            var result = new ServiceResult(true, new List<string>(), null);
+
+            try
+            {
+                var peds = await _rep.GetPedidosAbertos(codPedido);
+                var ped = peds.FirstOrDefault();
+                ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
+
+                result.data = ped;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
         public async Task<JsonResult> GetPedidosAbertos()
         {
             var result = new ServiceResult(true, new List<string>(), null);
 
             try
             {
-                result.data = await _rep.GetPedidosAbertos();
+                result.data = await _rep.GetPedidosAbertos(null);
 
                 foreach (var ped in result.data)
                 {
@@ -145,7 +168,7 @@ namespace AngularForms.Controllers
                 {
                     var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
                     result.Succeeded = false;
-                    result.Errors.Add("No momento estamos fechados. Nosso horário de funcionamento é das " + horarioFuncionamento.Abertura.ToString("HH:mm") + " às " + horarioFuncionamento.Fechamento.ToString("HH:mm") + ".");
+                    result.Errors.Add("No momento estamos fechados. Abriremos " + horarioFuncionamento.DiaSemana + " das " + horarioFuncionamento.Abertura.ToString("HH:mm") + " às " + horarioFuncionamento.Fechamento.ToString("HH:mm") + ".");
                 }
                 else
                 {

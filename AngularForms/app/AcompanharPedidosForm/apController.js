@@ -1,6 +1,6 @@
 ﻿angularFormsApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, noteService) {
     $scope.erro = { mensagem: '' };
-    $scope.pedido = { usuario: '', codPedido: 1, situacao: 0 };
+    $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
     $scope.promisesLoader = [];
 
     $scope.getPedidoAberto = function (loginUsuario) {
@@ -22,9 +22,9 @@
 
             if (retorno.succeeded) {
 
-                $scope.pedido = retorno.data;
-                $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedido.situacao);
-                $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedido.formaPagamento);
+                $scope.pedidoSelecionado = retorno.data;
+                $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedidoSelecionado.situacao);
+                $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
 
             }
             else {
@@ -53,7 +53,7 @@
                 $scope.promiseFinalizaPedido = $http({
                     method: 'POST',
                     url: urlBase + 'Pedido/FinalizaPedido',
-                    data: $scope.pedido,
+                    data: $scope.pedidoSelecionado,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'RequestVerificationToken': $scope.antiForgeryToken
@@ -62,9 +62,9 @@
                     var retorno = genericSuccess(success);
 
                     if (retorno.succeeded) {
-                        var proximaSituacao = getProximaSituacaoPedido($scope.pedido.situacao);
+                        var proximaSituacao = getProximaSituacaoPedido($scope.pedidoSelecionado.situacao);
 
-                        noteService.sendMessage('', $scope.pedido.codPedido, proximaSituacao);
+                        noteService.sendMessage('', $scope.pedidoSelecionado.codPedido, proximaSituacao);
                         window.location.href = urlBase + '/Home/Index';
 
                     }
@@ -98,22 +98,22 @@
     $scope.$on('messageAdded', function (event, codPedido, situacao) {
         
         //para ignorar mensagens de broadcast
-        if ($scope.pedido.codPedido != codPedido) {
+        if ($scope.pedidoSelecionado.codPedido != codPedido) {
             return;
         }
 
-        if ($scope.pedido.situacao == 1 && situacao == 2) {
+        if ($scope.pedidoSelecionado.situacao == 1 && situacao == 2) {
             $('#modalPedidoConfirmado').modal('show');
         }
 
-        $scope.pedido.situacao = parseInt(situacao);
-        $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedido.situacao);
+        $scope.pedidoSelecionado.situacao = parseInt(situacao);
+        $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedidoSelecionado.situacao);
 
         $scope.$apply();
     });
 
     $scope.sendMessage = function () {
-        noteService.sendMessage($scope.usuario, $scope.pedido.usuario, $scope.pedido.codPedido, $scope.pedido.situacao);
+        noteService.sendMessage($scope.pedidoSelecionado.usuario, $scope.pedidoSelecionado.codPedido, $scope.pedidoSelecionado.situacao);
     };
 
 
