@@ -14,6 +14,7 @@ using AngularForms.Filters;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
 using AngularForms.Extentions;
+using System.Text.RegularExpressions;
 
 namespace AngularForms.Controllers
 {
@@ -21,14 +22,28 @@ namespace AngularForms.Controllers
     public class ContaController : Controller
     {
         private ApplicationUserManager _userManager;
+        private ApplicationSignInManager _signInManager;
 
         public ContaController()
         {
         }
 
-        public ContaController(ApplicationUserManager userManager)
+        public ContaController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set
+            {
+                _signInManager = value;
+            }
         }
 
         public ApplicationUserManager UserManager
@@ -43,7 +58,110 @@ namespace AngularForms.Controllers
             }
         }
 
-        
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult LoginExterno(string provider, string returnUrl)
+        {
+            // Request a redirect to the external login provider
+            return new ChallengeResult(provider, Url.Action("LoginExternoCallback", "Conta", new { ReturnUrl = returnUrl }));
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> LoginExternoCallback(string returnUrl)
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Sign in the user with this external login provider if the user already has a login
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+                    // If the user does not have an account, then prompt the user to create an account
+                    ViewBag.ReturnUrl = returnUrl;
+                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    return View("ConfirmacaoLoginExterno", new ConfirmacaoLoginExternoViewModel { Email = loginInfo.Email });
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmacaoLoginExterno(ConfirmacaoLoginExternoViewModel model, string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (ModelState.IsValid)
+            {
+                bool isEmail = Regex.IsMatch(model.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
+
+                if (!isEmail)
+                {
+                    ModelState.AddModelError("Email", "Email inválido.");
+                }
+                else
+                {
+                    var user = await UserManager.FindByEmailAsync(model.Email);
+                    if (user != null)
+                    {
+                        ModelState.AddModelError("Email", "Este e-mail já está em uso. Por favor utilize outro.");
+                    }
+                }
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Get the information about the user from the external login provider
+                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return View("ExternalLoginFailure");
+                }
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+                Usuario usu = new Usuario();
+                usu.Email = model.Email;
+                usu.Nome = model.Email;
+                usu.Estado = "MG";
+                usu.Cidade = "Cataguases";
+
+                user.DadosUsuario = usu;
+
+                IdentityUserRole role = new IdentityUserRole();
+                role.RoleId = "1";
+                role.UserId = user.Id;
+                user.Roles.Add(role);
+
+                var result = await UserManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                AddErrors(result);
+            }
+
+            ViewBag.ReturnUrl = returnUrl;
+            return View(model);
+        }
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -103,7 +221,10 @@ namespace AngularForms.Controllers
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-            user.DadosUsuario.DataNascimento = user.DadosUsuario.DataNascimento.Substring(0, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(2, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(4);
+            if (user.DadosUsuario != null && !String.IsNullOrEmpty(user.DadosUsuario.DataNascimento))
+            {
+                user.DadosUsuario.DataNascimento = user.DadosUsuario.DataNascimento.Substring(0, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(2, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(4);
+            }
 
             return new JsonNetResult { Data = user.DadosUsuario };
         }
@@ -278,6 +399,8 @@ namespace AngularForms.Controllers
 
         #region Helpers
 
+        private const string XsrfKey = "XsrfId";
+
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -310,6 +433,35 @@ namespace AngularForms.Controllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error);
+            }
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string provider, string redirectUri, string userId)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                if (UserId != null)
+                {
+                    properties.Dictionary[XsrfKey] = UserId;
+                }
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
 

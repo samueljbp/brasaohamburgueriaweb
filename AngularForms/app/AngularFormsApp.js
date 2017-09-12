@@ -34,4 +34,4 @@ function ($, $rootScope) {
     }
 }]);
 
-var urlBase = 'http://10.84.161.57:57919/';
+var urlBase = 'https://localhost:44300/';

@@ -20,6 +20,7 @@ namespace AngularForms.Controllers
                 return View("MenuPrincipal");
             }
 
+            ViewBag.ReturnUrl = "";
             return View();
         }
 

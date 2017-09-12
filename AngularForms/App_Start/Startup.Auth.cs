@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.Facebook;
 using Owin;
 using AngularForms.Model;
 using AngularForms.Providers;
@@ -58,7 +59,7 @@ namespace AngularForms
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };
@@ -66,7 +67,9 @@ namespace AngularForms
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
 
-            
+            app.UseFacebookAuthentication(appId: "1728219697481428", appSecret: "6c423e922b617cc13585e83e92972156");
+
+            app.UseGoogleAuthentication(clientId: "917311560697-rlt3mflcp9jqoobdko5no2mdtd2djri7.apps.googleusercontent.com", clientSecret: "az1B4MLYiSYGfSUrVJwt2ehl");
         }
 
         

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using AngularForms.Model
+@{
     ViewBag.Title = "Brasão Hamburgueria - Bem vindo!";
 }
 <h2>Bem vindo!</h2>
@@ -28,8 +29,9 @@
         <span class="text-primary">Já tem cadastro?</span><br />
         Clique @Html.ActionLink("aqui", "Login", "Conta") e faça login.<br /><br />
         ou<br /><br />
-        <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="margin-bottom: 10px"></div>
-        <div id="my-signin2"></div>
+        @*<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="margin-bottom: 10px"></div>
+        <div id="my-signin2"></div>*@
+        @Html.Partial("~/Views/Conta/_ListaLoginExternos.cshtml", new LoginExternoViewModel { ReturnURL = ViewBag.ReturnUrl })
     </div>
     <div class="col-sm-6">
         <br />
