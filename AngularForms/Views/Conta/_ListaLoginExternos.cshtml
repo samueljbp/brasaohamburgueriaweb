@@ -1,6 +1,6 @@
 ﻿@model AngularForms.Model.LoginExternoViewModel
 @using Microsoft.Owin.Security
-<h4>Use um serviço externo para fazer login.</h4>
+<h4>Utilize um serviço externo para fazer login.</h4>
 <hr />
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
@@ -8,11 +8,23 @@
     using (Html.BeginForm("LoginExterno", "Conta", new { ReturnUrl = Model.ReturnURL }))
     {
         @Html.AntiForgeryToken()
-        <div id="socialLoginList">
+        <div id="socialLoginList" class="col-sm-6">
             <p>
                 @foreach (AuthenticationDescription p in loginProviders)
                 {
-                    <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
+                    if (p.AuthenticationType == "Facebook")
+                    {
+                        <button class="btn btn-block btn-social btn-facebook" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Entrar usando a conta do Facebook">
+                            <span class="fa fa-facebook"></span> Entrar com Facebook
+                        </button>
+                    }
+                    else if (p.AuthenticationType == "Google")
+                    {
+                        <button class="btn btn-block btn-social btn-google" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Entrar usando a conta do Google">
+                            <span class="fa fa-google"></span> Entrar com Google
+                        </button>
+                    }
+                    @*<button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>*@
                 }
             </p>
         </div>

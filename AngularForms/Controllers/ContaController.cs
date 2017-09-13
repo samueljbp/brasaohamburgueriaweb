@@ -91,7 +91,7 @@ namespace AngularForms.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ConfirmacaoLoginExterno", new ConfirmacaoLoginExternoViewModel { Email = loginInfo.Email });
+                    return View("ConfirmacaoLoginExterno", new ConfirmacaoLoginExternoViewModel { Email = loginInfo.Email, Provider = loginInfo.Login.LoginProvider });
             }
         }
 

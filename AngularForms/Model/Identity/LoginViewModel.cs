@@ -26,5 +26,7 @@ namespace AngularForms.Model
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public string Provider { get; set; }
     }
 }
