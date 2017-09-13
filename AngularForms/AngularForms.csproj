@@ -452,6 +452,7 @@
     <Content Include="bower_components\moment\scripts\npm_prepublish.sh" />
     <Content Include="Scripts\jquery.signalR-2.2.2.js" />
     <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
+    <None Include="Properties\PublishProfiles\ArquivosDesenv.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -592,10 +593,6 @@
   <ItemGroup>
     <Content Include="app\AngularFormsApp.js" />
     <Content Include="app\CadastroUsuarioForm\cuController.js" />
-    <Content Include="app\EmployeeForm\efController.js" />
-    <Content Include="app\EmployeeForm\efDirective.js" />
-    <Content Include="app\EmployeeForm\efService.js" />
-    <Content Include="app\EmployeeForm\efTemplate.html" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

@@ -13,9 +13,9 @@
     <script src="~/app/CadastroUsuarioForm/cuController.js"></script>
 
     <h2>Cadastrar conta</h2>
-    <div cg-busy="{promise:promiseGetUsuario,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseEmail,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseCadastrar,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetUsuario,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseEmail,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseCadastrar,backdrop:false,delay:10,minDuration:1000}"></div>
     <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
     <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert"></div>
     <form role="form" id="formCadastro" class="form-horizontal" ng-submit="submitForm()">

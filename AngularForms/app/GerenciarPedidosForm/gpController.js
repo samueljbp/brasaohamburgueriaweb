@@ -4,6 +4,7 @@
     $scope.pedidos = [];
     $scope.promisesLoader = [];
     $scope.pedidoSelecionado = [];
+    $scope.acao = { ehGestao: true };
 
     $scope.getPedido = function (codPedido) {
 

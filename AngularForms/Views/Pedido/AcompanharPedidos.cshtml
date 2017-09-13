@@ -14,8 +14,8 @@
         {{erro.mensagem}}
         <br />
     </div>
-    <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <br />
         <div class="row">

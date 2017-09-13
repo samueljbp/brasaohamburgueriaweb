@@ -2,6 +2,7 @@
     $scope.erro = { mensagem: '' };
     $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
     $scope.promisesLoader = [];
+    $scope.acao = { ehGestao: false };
 
     $scope.getPedidoAberto = function (loginUsuario) {
 

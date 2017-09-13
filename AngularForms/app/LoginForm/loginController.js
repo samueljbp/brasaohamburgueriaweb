@@ -40,7 +40,7 @@ angularFormsApp.controller('loginController', function ($scope, $http, loginserv
                 return;
             }
 
-            var url = '/Home/MenuPrincipal';
+            var url = urlBase + 'Home/MenuPrincipal';
 
             if ($scope.loginViewModel.returnUrl != '') {
                 url = $scope.loginViewModel.returnUrl;
@@ -51,7 +51,7 @@ angularFormsApp.controller('loginController', function ($scope, $http, loginserv
 
             $scope.promiseBusy = $http({
                 method: 'POST',
-                url: '/Conta/Login',
+                url: urlBase + 'Conta/Login',
                 data: $scope.loginViewModel,
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',

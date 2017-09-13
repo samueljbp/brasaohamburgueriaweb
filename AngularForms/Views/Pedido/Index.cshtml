@@ -17,9 +17,9 @@
         }
     }
     <script src="~/app/PedidoForm/pedController.js"></script>
-    <div cg-busy="{promise:promisesLoader,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseGravaPedido,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,templateUrl:baseUrl + '/Content/templates/_Loading.html',delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert" style="margin-top: 10px;"></div>
     <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert" style="margin-top: 10px;"></div>
 

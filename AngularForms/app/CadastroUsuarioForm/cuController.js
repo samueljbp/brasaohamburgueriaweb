@@ -202,7 +202,7 @@
 
             if (retorno.Succeeded) {
                 if (email == '') {
-                    window.location.href = '/Home/Index';
+                    window.location.href = urlBase + 'Home/Index';
                 } else {
                     $('#mensagemSucessoFormulario').removeClass('hidden');
                     $('#mensagemSucessoFormulario').text('Os dados foram atualizados com sucesso!');

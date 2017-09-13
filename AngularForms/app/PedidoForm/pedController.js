@@ -417,7 +417,7 @@
 
                         noteService.sendMessage('', sessionStorage.codPedido, 1);
 
-                        window.location.href = urlBase + '/Pedido/PedidoRegistrado';
+                        window.location.href = urlBase + 'Pedido/PedidoRegistrado';
 
                     }
                     else {

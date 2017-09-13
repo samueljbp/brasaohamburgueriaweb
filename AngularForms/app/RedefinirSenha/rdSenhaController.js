@@ -28,7 +28,7 @@
 
             return $http({
                 method: 'POST',
-                url: '/Conta/RedefinirSenha',
+                url: urlBase + 'Conta/RedefinirSenha',
                 data: $scope.redefinirSenhaViewModel,
                 headers: {
                     'RequestVerificationToken': $scope.antiForgeryToken
@@ -37,7 +37,7 @@
                 var retorno = genericSuccess(success);
 
                 if (retorno.Succeeded) {
-                    window.location.href = '/Conta/RedefinirSenhaConfirmacao';
+                    window.location.href = urlBase + 'Conta/RedefinirSenhaConfirmacao';
                 }
                 else {
                     $('#mensagemErroFormulario').removeClass('hidden');

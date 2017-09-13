@@ -26,7 +26,7 @@
 
             return $http({
                 method: 'POST',
-                url: '/Conta/EsqueciMinhaSenha',
+                url: urlBase + 'Conta/EsqueciMinhaSenha',
                 data: $scope.esqueciMinhaSenhaViewModel,
                 headers: {
                     'RequestVerificationToken': $scope.antiForgeryToken
@@ -35,7 +35,7 @@
                 var retorno = genericSuccess(success);
 
                 if (retorno.Succeeded) {
-                    window.location.href = '/Conta/EsqueciMinhaSenhaConfirmacao';
+                    window.location.href = urlBase + 'Conta/EsqueciMinhaSenhaConfirmacao';
                 }
                 else {
                     $('#mensagemErroFormulario').removeClass('hidden');

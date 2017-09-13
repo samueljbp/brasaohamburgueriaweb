@@ -54,7 +54,7 @@
         Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.situacao == 4" style="margin-top: 20px;">
+<div class="row" ng-if="pedidoSelecionado.situacao == 4 && !acao.ehGestao" style="margin-top: 20px;">
     <div class="col-sm-12">
         <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Recebi a entrega

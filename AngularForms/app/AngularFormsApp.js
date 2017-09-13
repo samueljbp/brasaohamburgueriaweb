@@ -6,13 +6,15 @@ angularFormsApp.config(['$httpProvider', function ($httpProvider) {
 
 angularFormsApp.value('$', $);
 
+var urlBase = 'https://localhost:44300/';
+
 angularFormsApp.factory('noteService', ['$', '$rootScope',
 function ($, $rootScope) {
     var proxy;
     var connection;
     return {
         connect: function () {
-            connection = $.hubConnection();
+            connection = $.hubConnection(urlBase + 'signalr');
             proxy = connection.createHubProxy('HubMessage');
             connection.start();
             proxy.on('messageAdded', function (codPedido, situacao) {
@@ -34,4 +36,8 @@ function ($, $rootScope) {
     }
 }]);
 
-var urlBase = 'https://192.168.0.132:44300/';
+
+
+angularFormsApp.value('cgBusyDefaults', {
+    templateUrl: urlBase + 'Content/templates/_Loading.html'
+});
