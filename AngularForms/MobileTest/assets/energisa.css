@@ -1,0 +1,64 @@
+
+h2 
+{
+	width: 100%;
+	text-align: center;	
+	font-size: 24px;
+	font-family: inherit;	
+}
+
+iframe
+{
+	border-width: 0px !important;
+	margin: 0px;
+}
+
+section .wrap
+{
+	padding: 50px;
+}
+
+.marvel-device .screen
+{
+	text-indent: 0px !important;
+	width: 375px !important;
+	z-index: 9999 !important;
+}
+
+.marvel-device .screen:before
+{
+	content: none !important;
+}
+
+.black h2 
+{
+	color: #FFFFFF;	
+}
+
+.silver h2
+{
+	color: #000000;	
+}
+
+section .wrap
+{
+	padding-top: 10px;
+}
+
+.control-container
+{
+	left: 120px;
+	top: 50px;
+    display: inline-block;
+	position: absolute;
+}
+
+.selector
+{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    position: static;
+	margin-top: 20px;
+    margin-bottom: 20px;
+}

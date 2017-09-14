@@ -14,6 +14,96 @@
         overflow: scroll;
     }
 </style>
+<style id="jsbin-css">
+    .tab-pane {
+      padding: 15px 5px;
+    }
+    .responsive-tabs.nav-tabs {
+      position: relative;
+      z-index: 10;
+      height: 42px;
+      overflow: visible;
+      border-bottom: none;
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs {
+        border-bottom: 1px solid #ddd;
+      }
+    }
+    .responsive-tabs.nav-tabs span.glyphicon {
+      position: absolute;
+      top: 14px;
+      right: 22px;
+    }
+    .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
+      display: none;
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs span.glyphicon {
+        display: none;
+      }
+    }
+    .responsive-tabs.nav-tabs > li {
+      display: none;
+      float: none;
+      text-align: center;
+    }
+    .responsive-tabs.nav-tabs > li:last-of-type > a {
+      margin-right: 0;
+    }
+    .responsive-tabs.nav-tabs > li > a {
+      margin-right: 0;
+      background: #fff;
+      border: 1px solid #DDDDDD;
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs > li > a {
+        margin-right: 4px;
+      }
+    }
+    .responsive-tabs.nav-tabs > li.active {
+      display: block;
+    }
+    .responsive-tabs.nav-tabs > li.active a {
+      border: 1px solid #DDDDDD;
+      border-radius: 2px;
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs > li.active a {
+        border-bottom-color: transparent;
+      }
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs > li {
+        display: block;
+        float: left;
+      }
+    }
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+      display: block;
+    }
+    @@media (min-width: 768px) {
+      .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+        display: none;
+      }
+    }
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-bottom {
+      display: none;
+    }
+    .responsive-tabs.nav-tabs.open > li {
+      display: block;
+    }
+    .responsive-tabs.nav-tabs.open > li a {
+      border-radius: 0;
+    }
+    .responsive-tabs.nav-tabs.open > li:first-of-type a {
+      border-radius: 2px 2px 0 0;
+    }
+    .responsive-tabs.nav-tabs.open > li:last-of-type a {
+      border-radius: 0 0 2px 2px;
+    }
+
+</style>
 
 <br />
 <div class="row">
@@ -31,7 +121,7 @@
     var tamanhoColunaNome = "col-sm-11";
     var listaClassesSemDescricaoLonga = new List<int> { 4, 5, 6, 9 };
 }
-<ul class="nav nav-tabs nav-justified">
+<ul class="nav nav-tabs">
     @foreach (ClasseItemCardapio classe in classes)
     {
         <li class="small @(cont == 0 ? "active" : "")"><a data-toggle="pill" href="#@classe.CodClasse">@classe.DescricaoClasse</a></li>
@@ -52,7 +142,7 @@
                         @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                         {
                             tamanhoColunaNome = "col-sm-2";
-                            <th class="col-sm-1">
+                            <th class="hidden-sm hidden-md hidden-lg col-sm-1">
 
                             </th>
                         }
@@ -76,11 +166,12 @@
                         <tr>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
-                                <td>
+                                <td class="hidden-sm hidden-md hidden-lg">
                                     @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                     {
                                         <a href="#" class="pop">
-                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
+                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="hidden-xs img-circle">
+
                                             <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
                                         </a>
                                     }
@@ -90,7 +181,13 @@
                                     }
                                 </td>
                             }
-                            <td>@item.Nome</td>
+                            <td>
+                                @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                                {
+                                    <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="hidden-sm hidden-md hidden-lg img-circle">
+                                }
+                                @item.Nome
+                            </td>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
                                 <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
@@ -117,3 +214,20 @@
         </div>
     </div>
 </div>
+<script>
+    $.fn.responsiveTabs = function () {
+        this.addClass('responsive-tabs');
+        this.append($('<span class="glyphicon glyphicon-triangle-bottom"></span>'));
+        this.append($('<span class="glyphicon glyphicon-triangle-top"></span>'));
+
+        this.on('click', 'li.active > a, span.glyphicon', function () {
+            this.toggleClass('open');
+        }.bind(this));
+
+        this.on('click', 'li:not(.active) > a', function () {
+            this.removeClass('open');
+        }.bind(this));
+    };
+
+    $('.nav.nav-tabs').responsiveTabs();
+</script>

@@ -1,0 +1,138 @@
+﻿<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Brasão Web</title>
+    <link rel="stylesheet" href="assets/devices.min.css" type="text/css">
+    <link rel="stylesheet" href="assets/style.css" type="text/css">
+    <link rel="stylesheet" href="assets/energisa.css" type="text/css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/zenburn.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+</head>
+<body>
+    <section id="iphone6" class="silver">
+
+        <div class="control-container">
+
+            <h2 id="title">Mobile</h2>
+            <ul class="selector">
+                <li data="black" class="select-black">Preto</li>
+                <li data="silver" class="select-silver selected">Branco</li>
+            </ul>
+
+            <!--<a class="button download" ambientecorrente="producao" id="button-producao" href="javascript: void(0);">Produção</a>
+            <br /><br />
+            <a class="button download" ambientecorrente="homologacao-dmz" id="button-homologacao-dmz" href="javascript: void(0);">Homologação DMZ</a>
+            <br /><br />
+            <a class="button download" ambientecorrente="homologacao-intranet" id="button-homologacao-intranet" href="javascript: void(0);">Homologação Intranet</a>
+            <br /><br />
+            <a class="button" id="button-clear-cache" href="javascript: void(0);">Limpar Dados do Cache Local</a>-->
+
+        </div>
+
+        <div class="wrap">
+            <div class="marvel-device iphone6">
+                <div class="top-bar"></div>
+                <div class="sleep"></div>
+                <div class="volume"></div>
+                <div class="camera"></div>
+                <div class="sensor"></div>
+                <div class="speaker"></div>
+                <div class="screen">
+                    <iframe src="#"
+                            id="content-iframe"
+                            frameborder="0"
+                            scrolling="no"></iframe>
+                </div>
+                <div class="home"></div>
+                <div class="bottom-bar"></div>
+            </div>
+        </div>
+    </section>
+
+</body>
+<script src="../Scripts/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="assets/main.min.js"></script>
+<script type="text/javascript" src="assets/screenfull.js"></script>
+<script type="text/javascript">
+
+    function getParameterByName(name, url) {
+
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+
+    }
+
+    $(document).ready(function () {
+
+        var height = $('div.screen').height();
+        var width = $('div.screen').width();
+
+        $('#content-iframe').css('height', height + "px");
+        $('#content-iframe').css('width', width + "px");
+
+        if (screenfull.enabled) {
+
+            screenfull.request();
+
+        }
+
+        $('#content-iframe').attr('src', 'http://10.84.124.128:57919/');
+        $('#title').html('Brasão Web');
+
+        //var ambienteCorrente = getParameterByName('ambienteCorrente', document.location.href);
+
+        //if(ambienteCorrente == 'producao'){
+
+        //	$('#content-iframe').attr('src', '../Producao/Index.html');
+        //	$('#title').html('Energisa On - Produção');
+
+        //}
+        //else if(ambienteCorrente == 'homologacao-dmz'){
+
+        //	$('#content-iframe').attr('src', '../HomologacaoDMZ/Index.html');
+        //	$('#title').html('Energisa On - Homologação DMZ');
+
+        //}
+        //else if(ambienteCorrente == 'homologacao-intranet'){
+
+        //	$('#content-iframe').attr('src', '../HomologacaoIntranet/Index.html');
+        //	$('#title').html('Energisa On - Homologação Intranet');
+
+        //}
+        //else{
+
+        //	$('#content-iframe').attr('src', '../Producao/Index.html');
+        //	$('#title').html('Energisa On - Produção');
+
+        //}
+
+    });
+
+    $('.button.download').click(function () {
+
+        var ambienteCorrente = $(this).attr('ambienteCorrente');
+        document.location.href = 'index.html?ambienteCorrente=' + ambienteCorrente;
+
+    });
+
+    $('#button-clear-cache').click(function () {
+
+        for (var chave in window.localStorage) {
+
+            delete window.localStorage[chave];
+
+        }
+
+    });
+
+
+
+</script>
+</html>

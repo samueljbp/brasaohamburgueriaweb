@@ -12,6 +12,7 @@ using AngularForms.Helpers;
 
 namespace AngularForms.Controllers
 {
+    [AllowCrossSiteJsonAttribute]
     public class CardapioController : Controller
     {
         private CardapioRepository _rep = new CardapioRepository();

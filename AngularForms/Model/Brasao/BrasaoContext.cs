@@ -14,6 +14,7 @@ namespace AngularForms.Model
             //disable initializer
             //Database.SetInitializer<BrasaoContext>(null);
             this.Configuration.LazyLoadingEnabled = false;
+            Database.CreateIfNotExists();
         }
 
         public DbSet<ClasseItemCardapio> Classes { get; set; }

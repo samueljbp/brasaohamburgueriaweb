@@ -6,6 +6,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.Identity;
 using AngularForms.Model;
+using AngularForms.Extentions;
 
 namespace AngularForms.SignalR
 {
@@ -17,6 +18,7 @@ namespace AngularForms.SignalR
             return base.OnConnected();
         }
 
+        [AllowCrossSiteJsonAttribute]
         [HubName("HubMessage")]
         public class MyHub : Hub
         {

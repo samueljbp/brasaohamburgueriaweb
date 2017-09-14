@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 
 namespace AngularForms.Controllers
 {
+    [AllowCrossSiteJsonAttribute]
     [Authorize]
     public class ContaController : Controller
     {

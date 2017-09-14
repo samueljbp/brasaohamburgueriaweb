@@ -14,6 +14,7 @@ using AngularForms.Repository;
 
 namespace AngularForms.Controllers
 {
+    [AllowCrossSiteJsonAttribute]
     [Authorize]
     public class PedidoController : Controller
     {
