@@ -1,6 +1,6 @@
 ﻿@using AngularForms.Model
 @{
-    ViewBag.Title = "Brasão Hamburgueria - Bem vindo!";
+    ViewBag.Title = "Brasão Hamburgueria - Sistema de pedidos online";
 }
 <h2>Bem vindo!</h2>
 <script>
@@ -24,13 +24,32 @@
     }
 </script>
 <div class="row">
+    <div class="col-sm-12">
+        <p>
+            <h5>
+                Bem vindo ao sistema de pedidos online da Brasão Hamburgueria. Aqui você poderá fazer seu pedido no conforto do lar e acompanhar o andamento até recebê-lo.
+            </h5>
+        </p>
+        <p>
+            <h5>
+                Esperamos que goste! :)
+            </h5>
+        </p>
+        <p>
+            <h5>
+                Se quiser dar uma olhada no nosso cardápio antes de se cadastrar clique @Html.ActionLink("aqui", "Listar", "Cardapio").
+            </h5>
+        </p>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-6">
         <br />
         <h4 class="text-primary">Já tem cadastro?</h4>
         Clique @Html.ActionLink("aqui", "Login", "Conta") e faça login.<br /><br />
         ou<br /><br />
         @*<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="margin-bottom: 10px"></div>
-        <div id="my-signin2"></div>*@
+            <div id="my-signin2"></div>*@
         @Html.Partial("~/Views/Conta/_ListaLoginExternos.cshtml", new LoginExternoViewModel { ReturnURL = ViewBag.ReturnUrl })
     </div>
     <div class="col-sm-6">

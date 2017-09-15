@@ -275,10 +275,9 @@
 
         $scope.pedido.itens.push($scope.novoItem);
 
-        sessionStorage.pedido = JSON.stringify($scope.pedido);
-
         $scope.atualizaValorTotalItem();
         atualizaValorTotalPedido();
+
         sessionStorage.pedido = JSON.stringify($scope.pedido);
 
         $('#modalIncluirItem').modal('hide');
@@ -506,7 +505,7 @@
         $scope.getPedidoAberto(loginUsuario);
 
         //variável que armazena os dados do pedido que está sendo montado
-        if (!!sessionStorage.pedido || sessionStorage.pedido == null) {
+        if (!sessionStorage.pedido || sessionStorage.pedido == null) {
             reiniciaVariaveisPedido();
             $scope.getDadosUsuario();
         } else {

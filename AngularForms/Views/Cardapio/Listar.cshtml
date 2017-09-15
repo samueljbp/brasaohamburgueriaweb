@@ -16,93 +16,112 @@
 </style>
 <style id="jsbin-css">
     .tab-pane {
-      padding: 15px 5px;
-    }
-    .responsive-tabs.nav-tabs {
-      position: relative;
-      z-index: 10;
-      height: 42px;
-      overflow: visible;
-      border-bottom: none;
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs {
-        border-bottom: 1px solid #ddd;
-      }
-    }
-    .responsive-tabs.nav-tabs span.glyphicon {
-      position: absolute;
-      top: 14px;
-      right: 22px;
-    }
-    .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
-      display: none;
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs span.glyphicon {
-        display: none;
-      }
-    }
-    .responsive-tabs.nav-tabs > li {
-      display: none;
-      float: none;
-      text-align: center;
-    }
-    .responsive-tabs.nav-tabs > li:last-of-type > a {
-      margin-right: 0;
-    }
-    .responsive-tabs.nav-tabs > li > a {
-      margin-right: 0;
-      background: #fff;
-      border: 1px solid #DDDDDD;
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs > li > a {
-        margin-right: 4px;
-      }
-    }
-    .responsive-tabs.nav-tabs > li.active {
-      display: block;
-    }
-    .responsive-tabs.nav-tabs > li.active a {
-      border: 1px solid #DDDDDD;
-      border-radius: 2px;
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs > li.active a {
-        border-bottom-color: transparent;
-      }
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs > li {
-        display: block;
-        float: left;
-      }
-    }
-    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
-      display: block;
-    }
-    @@media (min-width: 768px) {
-      .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
-        display: none;
-      }
-    }
-    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-bottom {
-      display: none;
-    }
-    .responsive-tabs.nav-tabs.open > li {
-      display: block;
-    }
-    .responsive-tabs.nav-tabs.open > li a {
-      border-radius: 0;
-    }
-    .responsive-tabs.nav-tabs.open > li:first-of-type a {
-      border-radius: 2px 2px 0 0;
-    }
-    .responsive-tabs.nav-tabs.open > li:last-of-type a {
-      border-radius: 0 0 2px 2px;
+        padding: 15px 5px;
     }
 
+    .responsive-tabs.nav-tabs {
+        position: relative;
+        z-index: 10;
+        height: 42px;
+        overflow: visible;
+        border-bottom: none;
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs {
+            border-bottom: 1px solid #ddd;
+        }
+    }
+
+    .responsive-tabs.nav-tabs span.glyphicon {
+        position: absolute;
+        top: 14px;
+        right: 22px;
+    }
+
+        .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
+            display: none;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs span.glyphicon {
+            display: none;
+        }
+    }
+
+    .responsive-tabs.nav-tabs > li {
+        display: none;
+        float: none;
+        text-align: center;
+    }
+
+        .responsive-tabs.nav-tabs > li:last-of-type > a {
+            margin-right: 0;
+        }
+
+        .responsive-tabs.nav-tabs > li > a {
+            margin-right: 0;
+            background: #fff;
+            border: 1px solid #DDDDDD;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li > a {
+            margin-right: 4px;
+        }
+    }
+
+    .responsive-tabs.nav-tabs > li.active {
+        display: block;
+    }
+
+        .responsive-tabs.nav-tabs > li.active a {
+            border: 1px solid #DDDDDD;
+            border-radius: 2px;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li.active a {
+            border-bottom-color: transparent;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li {
+            display: block;
+            float: left;
+        }
+    }
+
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+        display: block;
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+            display: none;
+        }
+    }
+
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-bottom {
+        display: none;
+    }
+
+    .responsive-tabs.nav-tabs.open > li {
+        display: block;
+    }
+
+        .responsive-tabs.nav-tabs.open > li a {
+            border-radius: 0;
+        }
+
+        .responsive-tabs.nav-tabs.open > li:first-of-type a {
+            border-radius: 2px 2px 0 0;
+        }
+
+        .responsive-tabs.nav-tabs.open > li:last-of-type a {
+            border-radius: 0 0 2px 2px;
+        }
 </style>
 
 <br />
@@ -142,7 +161,7 @@
                         @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                         {
                             tamanhoColunaNome = "col-sm-2";
-                            <th class="hidden-sm hidden-md hidden-lg col-sm-1">
+                            <th class="hidden-xs col-sm-1">
 
                             </th>
                         }
@@ -166,12 +185,11 @@
                         <tr>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
-                                <td class="hidden-sm hidden-md hidden-lg">
+                                <td class="hidden-xs">
                                     @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                     {
                                         <a href="#" class="pop">
-                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="hidden-xs img-circle">
-
+                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
                                             <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
                                         </a>
                                     }
@@ -181,12 +199,22 @@
                                     }
                                 </td>
                             }
-                            <td>
+                            <td class="hidden-sm hidden-md hidden-lg text-left">
                                 @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                 {
-                                    <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="hidden-sm hidden-md hidden-lg img-circle">
+                                    <a href="#" class="pop">
+                                        <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
+                                        <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
+                                    </a>
                                 }
-                                @item.Nome
+                                <h5>
+                                    @item.Nome
+                                </h5>
+                            </td>
+                            <td class="hidden-xs">
+                                <h5>
+                                    @item.Nome
+                                </h5>
                             </td>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {

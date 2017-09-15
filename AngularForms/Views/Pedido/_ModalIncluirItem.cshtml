@@ -72,8 +72,21 @@
                 <hr />
                 <h5 class="text-warning" ng-if="(itensFiltrados == null || itensFiltrados.length == 0) && comboClasse.codClasse > 0">Nenhum item encontrado para esta classe.</h5>
                 <div ng-repeat="item in itensFiltrados" ng-if="(itensFiltrados != null && itensFiltrados.length > 0) && itemCardapioSelecionado == null">
+                    <div class="row hidden-sm hidden-md hidden-lg">
+                        <div class="col-xs-6 text-left">
+                            <a href="#" class="btn btn-sq-sm btn-default" ng-click="selecionaItemParaInclusao(item.codItemCardapio)">
+                                <br />
+                                <i class="fa fa-check fa-3x"></i>
+                            </a>
+                        </div>
+                        <div class="col-xs-6" ng-if="item.complemento != null && item.complemento.imagem != null">
+                            <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
+                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="height: auto;" class="img-circle">
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-2 hidden-xs">
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
                                 <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 135px; max-height: 135px; height: auto;" class="img-circle">
                             </a>
@@ -89,8 +102,9 @@
                         <div class="col-sm-2">
                             <h4>{{item.preco | currency: "R$ "}}</h4>
                         </div>
-                        <div class="col-sm-2 text-center">
+                        <div class="col-sm-2 text-center hidden-xs">
                             <a href="#" class="btn btn-sq-sm btn-default" ng-click="selecionaItemParaInclusao(item.codItemCardapio)">
+                                <br />
                                 <i class="fa fa-check fa-3x"></i>
                             </a>
                         </div>

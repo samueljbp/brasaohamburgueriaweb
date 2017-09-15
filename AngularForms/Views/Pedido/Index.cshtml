@@ -7,168 +7,181 @@
     nfi.NumberDecimalSeparator = ".";
     var horarioFuncionamento = (HorarioFuncionamento)ParametroRepository.GetHorarioAbertura();
 }
-<div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)')">
-    @functions{
-        public string GetAntiForgeryToken()
-        {
-            string cookieToken, formToken;
-            AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return cookieToken + ":" + formToken;
-        }
-    }
-    <script src="~/app/PedidoForm/pedController.js"></script>
-    <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert" style="margin-top: 10px;"></div>
-    <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert" style="margin-top: 10px;"></div>
+<div>
+    <div class="col-xs-12">
+        <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)')">
+            @functions{
+                public string GetAntiForgeryToken()
+                {
+                    string cookieToken, formToken;
+                    AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                    return cookieToken + ":" + formToken;
+                }
+            }
+            <script src="~/app/PedidoForm/pedController.js"></script>
+            <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
+            <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+            <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+            <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert" style="margin-top: 10px;"></div>
+            <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert" style="margin-top: 10px;"></div>
 
-    <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        {{erro.mensagem}}
-        <br />
-    </div>
+            <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                {{erro.mensagem}}
+                <br />
+            </div>
 
-    <br />
-    <div class="row">
-        <h4>Meu pedido</h4>
-        <hr />
-    </div>
+            <br />
+            <div class="row">
+                <h4>Meu pedido</h4>
+                <hr />
+            </div>
 
-    @if (ParametroRepository.CasaAberta())
-    {
-        <div ng-if="pedidoAberto != null && pedidoAberto.codPedido > 0">
-            <h3 class="text-danger">ATENÇÃO</h3>
-            <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
-            <h5 class="text-info">Antes de iniciar um novo pedido você deve finalizá-lo.</h5>
-            <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="finalizarPedidoAberto()">
-                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Finalizar pedido {{pedidoAberto.codPedido}}
-            </button>
-        </div>
-        <div ng-if="pedidoAberto == null || pedidoAberto.codPedido <= 0">
-            <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
-                <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
-                    <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
-                    <h5 class="text-warning">Para começar clique no botão Incluir item.</h5>
+            @if (ParametroRepository.CasaAberta())
+            {
+                <div ng-if="pedidoAberto != null && pedidoAberto.codPedido > 0">
+                    <h3 class="text-danger">ATENÇÃO</h3>
+                    <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
+                    <h5 class="text-info">Antes de iniciar um novo pedido você deve finalizá-lo.</h5>
+                    <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="finalizarPedidoAberto()">
+                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Finalizar pedido {{pedidoAberto.codPedido}}
+                    </button>
                 </div>
-                <div class="row">
-                    <table class="table table-striped" ng-if="pedido.itens != null && pedido.itens.length > 0">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-1">
-                                    Nº Item
-                                </th>
-                                <th class="col-sm-4">
-                                    <div class="row">
-                                        Descrição
-                                    </div>
-                                </th>
-                                <th class="col-sm-1">
-                                    Quantidade
-                                </th>
-                                <th class="col-sm-2">
-                                    Preço unitário
-                                </th>
-                                <th class="col-sm-1">
-                                    Extras
-                                </th>
-                                <th class="col-sm-2">
-                                    Total
-                                </th>
-                                <th class="col-sm-1">
+                <div ng-if="pedidoAberto == null || pedidoAberto.codPedido <= 0">
+                    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
+                        <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
+                            <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
+                            <h5 class="text-warning">Para começar clique no botão Incluir item.</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped" ng-if="pedido.itens != null && pedido.itens.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-1">
+                                            Nº Item
+                                        </th>
+                                        <th class="col-sm-4">
+                                            <div class="row">
+                                                Descrição
+                                            </div>
+                                        </th>
+                                        <th class="col-sm-1">
+                                            Qtd
+                                        </th>
+                                        <th class="col-sm-2">
+                                            Preço unitário
+                                        </th>
+                                        <th class="col-sm-1">
+                                            Extras
+                                        </th>
+                                        <th class="col-sm-2">
+                                            Total
+                                        </th>
+                                        <th class="col-sm-1">
 
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in pedido.itens">
-                                <td>
-                                    {{item.seqItem}}
-                                </td>
-                                <td class="col-sm-4">
-                                    <div class="row">
-                                        {{item.descricaoItem}}
-                                    </div>
-                                    <div class="row" ng-if="item.obs != null && item.obs.length > 0">
-                                        <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
-                                    </div>
-                                    <div class="row" ng-if="item.extras != null && item.extras.length > 0">
-                                        <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    {{item.quantidade}}
-                                </td>
-                                <td>
-                                    {{item.precoUnitario | currency: "R$ "}}
-                                </td>
-                                <td>
-                                    {{item.valorExtras | currency: "R$ "}}
-                                </td>
-                                <td>
-                                    {{item.valorTotalItem | currency: "R$ "}}
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
-                                            ng-bootbox-confirm-action="confirmCallbackRemove(item.seqItem)">
-                                        <span class=" glyphicon glyphicon-remove" aria-hidden="true">
-                                        </span>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    -
-                                </td>
-                                <td class="col-sm-4">
-                                    <div class="row">
-                                        <span class="text-info">Taxa de entrega</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    1
-                                </td>
-                                <td>
-                                    {{pedido.taxaEntrega | currency: "R$ "}}
-                                </td>
-                                <td>
-                                    -
-                                </td>
-                                <td>
-                                    {{pedido.taxaEntrega | currency: "R$ "}}
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in pedido.itens">
+                                        <td>
+                                            {{item.seqItem}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <div class="row">
+                                                {{item.descricaoItem}}
+                                            </div>
+                                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
+                                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
+                                            </div>
+                                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
+                                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{item.quantidade}}
+                                        </td>
+                                        <td>
+                                            {{item.precoUnitario | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            {{item.valorExtras | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            {{item.valorTotalItem | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
+                                                    ng-bootbox-confirm-action="confirmCallbackRemove(item.seqItem)">
+                                                <span class=" glyphicon glyphicon-remove" aria-hidden="true">
+                                                </span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            -
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <div class="row">
+                                                <span class="text-info">Taxa de entrega</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            1
+                                        </td>
+                                        <td>
+                                            {{pedido.taxaEntrega | currency: "R$ "}}
+                                        </td>
+                                        <td>
+                                            -
+                                        </td>
+                                        <td>
+                                            {{pedido.taxaEntrega | currency: "R$ "}}
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row hidden-sm hidden-md hidden-lg" ng-if="pedido.itens != null && pedido.itens.length > 0" style="margin-top: -10px">
+                            <div class="col-xs-12 text-right">
+                                <small>Arraste a tabela lateralmente</small>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="col-xs-12 text-right hidden-lg">
+                            <h4 class="text-primary col-sm-offset-5">Total: {{pedido.valorTotal | currency: "R$ "}}</h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2" style="margin-bottom: 5px">
+                                <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="modalIncluirItem()" style="width: 100%">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Incluir item
+                                </button>
+
+                            </div>
+                            <div class="col-lg-2">
+                                <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="confirmAvancaPedido()" style="width: 100%">
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
+                                </button>
+                            </div>
+                            <div class="col-lg-8 hidden-xs hidden-sm hidden-md">
+                                <h4 class="text-primary col-sm-offset-6">Total: {{pedido.valorTotal | currency: "R$ "}}</h4>
+                            </div>
+                        </div>
+                    </form>
+                    @Html.Partial("_ModalIncluirItem")
+                    @Html.Partial("_FechamentoPedido")
                     <hr />
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="modalIncluirItem()">
-                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>Incluir item
-                            </button>
-
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="confirmAvancaPedido()">
-                                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
-                            </button>
-                        </div>
-                        <div>
-                            <h4 class="text-primary col-sm-offset-9">Total: {{pedido.valorTotal | currency: "R$ "}}</h4>
-                        </div>
-                    </div>
                 </div>
-            </form>
-            @Html.Partial("_ModalIncluirItem")
-            @Html.Partial("_FechamentoPedido")
+            }
+            else
+            {
+                <h3 class="text-danger">ATENÇÃO</h3>
+                <h5 class="text-warning">No momento estamos fechados. Abriremos @horarioFuncionamento.DiaSemana das @horarioFuncionamento.Abertura.ToString("HH:mm") às @horarioFuncionamento.Fechamento.ToString("HH:mm").</h5>
+                <h5 class="text-info">Que tal aproveitar e dar uma olhada no nosso cardápio?</h5>
+                @Html.ActionLink("Ver cardápio", "Listar", "Cardapio", null, new { @class = "btn btn-success" })
+            }
         </div>
-    }
-    else
-    {
-        <h3 class="text-danger">ATENÇÃO</h3>
-        <h5 class="text-warning">No momento estamos fechados. Abriremos @horarioFuncionamento.DiaSemana das @horarioFuncionamento.Abertura.ToString("HH:mm") às @horarioFuncionamento.Fechamento.ToString("HH:mm").</h5>
-        <h5 class="text-info">Que tal aproveitar e dar uma olhada no nosso cardápio?</h5>
-        @Html.ActionLink("Ver cardápio", "Listar", "Cardapio", null, new { @class = "btn btn-success" })
-    }
+    </div>
 </div>
