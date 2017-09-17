@@ -13,6 +13,8 @@
     </p>
     <div class="form-group">
         @Html.HiddenFor(m => m.Provider)
+        @Html.HiddenFor(m => m.Nome)
+        @Html.HiddenFor(m => m.Telefone)
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-sm-6">
             @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })

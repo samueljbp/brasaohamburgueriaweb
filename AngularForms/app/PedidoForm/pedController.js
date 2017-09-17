@@ -195,6 +195,7 @@
             valorTotal: 0.0,
             situacao: 0,
             dadosCliente: {
+                salvar: false,
                 nome: '',
                 telefone: '',
                 estado: '',
@@ -505,7 +506,7 @@
         $scope.getPedidoAberto(loginUsuario);
 
         //variável que armazena os dados do pedido que está sendo montado
-        if (!sessionStorage.pedido || sessionStorage.pedido == null) {
+        if (sessionStorage.pedido == null || sessionStorage.pedido == "null") {
             reiniciaVariaveisPedido();
             $scope.getDadosUsuario();
         } else {

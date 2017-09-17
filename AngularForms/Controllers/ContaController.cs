@@ -92,7 +92,24 @@ namespace AngularForms.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ConfirmacaoLoginExterno", new ConfirmacaoLoginExternoViewModel { Email = loginInfo.Email, Provider = loginInfo.Login.LoginProvider });
+                    ConfirmacaoLoginExternoViewModel conf = new ConfirmacaoLoginExternoViewModel();
+                    conf.Email = loginInfo.Email;
+                    conf.Provider = loginInfo.Login.LoginProvider;
+                    conf.Nome = conf.Email;
+
+                    if (conf.Provider == "Facebook")
+                    {
+                        //conf.Nome = loginInfo.ExternalIdentity.Claims.First(c => c.Type == "urn:facebook:name").Value;
+                        conf.Nome = loginInfo.ExternalIdentity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+                        conf.Telefone = loginInfo.ExternalIdentity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.MobilePhone).Select(c => c.Value).SingleOrDefault();
+
+                    }
+                    else if (conf.Provider == "Google")
+                    {
+                        conf.Nome = loginInfo.ExternalIdentity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Name).Select(c => c.Value).SingleOrDefault();
+                        conf.Telefone = loginInfo.ExternalIdentity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.MobilePhone).Select(c => c.Value).SingleOrDefault();
+                    }
+                    return View("ConfirmacaoLoginExterno", conf);
             }
         }
 
@@ -136,7 +153,8 @@ namespace AngularForms.Controllers
 
                 Usuario usu = new Usuario();
                 usu.Email = model.Email;
-                usu.Nome = model.Email;
+                usu.Nome = model.Nome;
+                usu.Telefone = model.Telefone;
                 usu.Estado = "MG";
                 usu.Cidade = "Cataguases";
 

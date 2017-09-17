@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AngularForms.Extentions;
 using AngularForms.Model;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System.Data.Entity;
 using AngularForms.Filters;
 using AngularForms.Helpers;
@@ -18,7 +19,20 @@ namespace AngularForms.Controllers
     [Authorize]
     public class PedidoController : Controller
     {
+        private ApplicationUserManager _userManager;
         private PedidoRepository _rep = new PedidoRepository();
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         public ActionResult PedidoRegistrado()
         {
@@ -194,7 +208,23 @@ namespace AngularForms.Controllers
                 else
                 {
                     result.data = await _rep.GravaPedido(pedidoViewModel, User.Identity.GetUserName());
-                    result.Succeeded = true;
+                    if (pedidoViewModel.DadosCliente.Salvar)
+                    {
+                        try
+                        {
+                            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                            if (user != null)
+                            {
+                                PropertyCopy.Copy(pedidoViewModel.DadosCliente, user.DadosUsuario);
+                                UserManager.Update(user);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
+                        }
+                        result.Succeeded = true;
+                    }
                 }
             }
             catch(Exception ex)

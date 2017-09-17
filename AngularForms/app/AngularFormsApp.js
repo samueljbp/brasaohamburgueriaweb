@@ -6,7 +6,7 @@ angularFormsApp.config(['$httpProvider', function ($httpProvider) {
 
 angularFormsApp.value('$', $);
 
-var urlBase = 'http://10.84.124.128:57919/';
+var urlBase = 'https://localhost:44300/';
 
 angularFormsApp.factory('noteService', ['$', '$rootScope',
 function ($, $rootScope) {

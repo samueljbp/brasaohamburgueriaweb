@@ -6,6 +6,17 @@
     $scope.pedidoSelecionado = [];
     $scope.acao = { ehGestao: true };
 
+    $scope.$on('timer-tick', function (event, args) {
+        //$scope.timerConsole += $scope.timerType  + ' - event.name = '+ event.name + ', timeoutId = ' + args.timeoutId + ', millis = ' + args.millis +'\n';
+        var aaa = 1;
+    });
+
+    $scope.novoPedidoExterno = function () {
+        var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
+        win.moveTo(0, 0);
+        win.resizeTo(screen.width, screen.height);
+    }
+
     $scope.getPedido = function (codPedido) {
 
         $scope.promiseGetPedido = $http({
@@ -139,7 +150,7 @@
         var proximaSituacao = getProximaSituacaoPedido(pedido.situacao);
         var descricaoProximaSituacao = getDescricaoSituacaoPedido(proximaSituacao);
 
-        $ngBootbox.confirm('Deseja o pedido ' + pedido.codPedido + ' para a situação "' + descricaoProximaSituacao + '"?')
+        $ngBootbox.confirm('Deseja avançar o pedido ' + pedido.codPedido + ' para a situação "' + descricaoProximaSituacao + '"?')
             .then(function () {
 
                 pedido.situacao = proximaSituacao;

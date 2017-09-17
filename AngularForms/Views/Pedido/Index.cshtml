@@ -41,11 +41,19 @@
             {
                 <div ng-if="pedidoAberto != null && pedidoAberto.codPedido > 0">
                     <h3 class="text-danger">ATENÇÃO</h3>
-                    <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
-                    <h5 class="text-info">Antes de iniciar um novo pedido você deve finalizá-lo.</h5>
-                    <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="finalizarPedidoAberto()">
-                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Finalizar pedido {{pedidoAberto.codPedido}}
-                    </button>
+                    <div ng-if="pedidoAberto.situacao == 4">
+                        <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
+                        <h5 class="text-info">Antes de iniciar um novo pedido você deve finalizá-lo.</h5>
+                        <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="finalizarPedidoAberto()">
+                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Finalizar pedido {{pedidoAberto.codPedido}}
+                        </button>
+                    </div>
+                    <div ng-if="pedidoAberto.situacao < 4">
+                        <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
+                        <h5 class="text-info">Antes de iniciar um novo pedido você deve aguardar a finalização do mesmo. Se quiser fazer alterações nesse pedido por favor entre em contato por telefone.</h5>
+                        <h5>Clique @Html.ActionLink("aqui", "AcompanharPedido", "Pedido") para acompanhar o andamento do pedido.</h5>
+                    </div>
+                    <hr />
                 </div>
                 <div ng-if="pedidoAberto == null || pedidoAberto.codPedido <= 0">
                     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
@@ -181,6 +189,7 @@
                 <h5 class="text-warning">No momento estamos fechados. Abriremos @horarioFuncionamento.DiaSemana das @horarioFuncionamento.Abertura.ToString("HH:mm") às @horarioFuncionamento.Fechamento.ToString("HH:mm").</h5>
                 <h5 class="text-info">Que tal aproveitar e dar uma olhada no nosso cardápio?</h5>
                 @Html.ActionLink("Ver cardápio", "Listar", "Cardapio", null, new { @class = "btn btn-success" })
+                <hr />
             }
         </div>
     </div>

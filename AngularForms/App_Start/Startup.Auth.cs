@@ -67,7 +67,14 @@ namespace AngularForms
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
 
-            app.UseFacebookAuthentication(appId: "1728219697481428", appSecret: "6c423e922b617cc13585e83e92972156");
+            var facebookAuthenticationOptions = new FacebookAuthenticationOptions()
+            {
+                AppId = "1728219697481428",
+                AppSecret = "6c423e922b617cc13585e83e92972156"
+            };
+            facebookAuthenticationOptions.Scope.Add("email");
+            facebookAuthenticationOptions.Scope.Add("public_profile");
+            app.UseFacebookAuthentication(facebookAuthenticationOptions);
 
             app.UseGoogleAuthentication(clientId: "917311560697-rlt3mflcp9jqoobdko5no2mdtd2djri7.apps.googleusercontent.com", clientSecret: "az1B4MLYiSYGfSUrVJwt2ehl");
         }
