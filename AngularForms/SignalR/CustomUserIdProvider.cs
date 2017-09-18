@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 
-namespace AngularForms.SignalR
+namespace BrasaoHamburgueriaWeb.SignalR
 {
     public class CustomUserIdProvider : IUserIdProvider
     {

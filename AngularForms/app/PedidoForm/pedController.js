@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
+﻿brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
     //FUNÇÕES DA TELA QUE LISTA O PEDIDO
     //função que carrega o cardápio em memória assincronamente
     $scope.getCardapio = function () {
@@ -521,7 +521,7 @@
 });
 
 
-angularFormsApp.directive('format', ['$filter', function ($filter) {
+brasaoWebApp.directive('format', ['$filter', function ($filter) {
     return {
         require: '?ngModel',
         link: function (scope, elem, attrs, ctrl) {

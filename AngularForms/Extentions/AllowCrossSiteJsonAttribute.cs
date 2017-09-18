@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace AngularForms.Extentions
+namespace BrasaoHamburgueriaWeb.Extentions
 {
     public class AllowCrossSiteJsonAttribute : ActionFilterAttribute
     {

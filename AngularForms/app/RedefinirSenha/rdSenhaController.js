@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('rdSenhaController', function ($scope, $http) {
+﻿brasaoWebApp.controller('rdSenhaController', function ($scope, $http) {
     init();
 
     function init() {

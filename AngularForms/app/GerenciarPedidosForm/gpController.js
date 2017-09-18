@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, noteService) {
+﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, noteService) {
     $erro = { mensagem: '' };
 
     $scope.pedidos = [];

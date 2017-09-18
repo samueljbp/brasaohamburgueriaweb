@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace AngularForms
+namespace BrasaoHamburgueriaWeb
 {
    public class FilterConfig
    {

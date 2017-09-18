@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using AngularForms.Model;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Threading;
 using System.Globalization;
+using System.Configuration;
 
-namespace AngularForms.Repository
+namespace BrasaoHamburgueriaWeb.Repository
 {
     public static class ParametroRepository
     {
@@ -62,6 +64,16 @@ namespace AngularForms.Repository
             horario.DiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)abertura.DiaSemana);
 
             return horario;
+        }
+
+        public static string GetEmManutencao()
+        {
+            if (ConfigurationManager.AppSettings["EmManutencao"] != null && ConfigurationManager.AppSettings["EmManutencao"].ToString() == "S")
+            {
+                return "S";
+            }
+
+            return "N";
         }
     }
 }

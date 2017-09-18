@@ -1,10 +1,10 @@
 ﻿using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
-using AngularForms.SignalR;
+using BrasaoHamburgueriaWeb.SignalR;
 
-[assembly: OwinStartupAttribute(typeof(AngularForms.Startup))]
-namespace AngularForms
+[assembly: OwinStartupAttribute(typeof(BrasaoHamburgueriaWeb.Startup))]
+namespace BrasaoHamburgueriaWeb
 {
     public partial class Startup
     {

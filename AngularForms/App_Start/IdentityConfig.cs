@@ -10,13 +10,14 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using AngularForms.Model;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
 using System.Net;
 using System.Net.Mail;
 using System.Configuration;
 using System.Diagnostics;
 
-namespace AngularForms
+namespace BrasaoHamburgueriaWeb
 {
     public class EmailService : IIdentityMessageService
     {

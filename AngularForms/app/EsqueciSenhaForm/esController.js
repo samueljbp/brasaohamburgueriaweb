@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('esController', function ($scope, $http) {
+﻿brasaoWebApp.controller('esController', function ($scope, $http) {
     init();
 
     function init() {

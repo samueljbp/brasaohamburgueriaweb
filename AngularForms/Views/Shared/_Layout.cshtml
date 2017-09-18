@@ -1,7 +1,20 @@
-﻿<!DOCTYPE html>
-
-<html ng-app="angularFormsApp">
+﻿@using BrasaoHamburgueriaWeb.Repository;
+<!DOCTYPE html>
+@{
+    var emManutencao = ParametroRepository.GetEmManutencao();
+}
+<html ng-app="brasaoWebApp">
 <head>
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106648768-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments) };
+        gtag('js', new Date());
+
+        gtag('config', 'UA-106648768-1');
+    </script>
+
     <meta name="viewport" content="width=device-width" />
     <title>Brasão Hamburgueria</title>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -24,7 +37,7 @@
     <script src="~/Scripts/angular-busy.min.js"></script>
     <script src="~/bower_components/angular-timer/dist/assets/js/angular-timer-all.min.js"></script>
     <script src="~/app/util.js"></script>
-    <script src="~/app/AngularFormsApp.js"></script>
+    <script src="~/app/brasaoWebApp.js"></script>
 </head>
 <body>
     <div id="fb-root"></div>
@@ -37,13 +50,20 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (Request.IsAuthenticated)
+                    @if (emManutencao == "S")
                     {
-                        <li>@Html.ActionLink("Início", "MenuPrincipal", "Home")</li>
+                        <li></li>
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Início", "Index", "Home")</li>
+                        if (Request.IsAuthenticated)
+                        {
+                            <li>@Html.ActionLink("Início", "MenuPrincipal", "Home")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Início", "Index", "Home")</li>
+                        }
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

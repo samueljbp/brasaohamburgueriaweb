@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('cuController', function ($scope, $http) {
+﻿brasaoWebApp.controller('cuController', function ($scope, $http) {
     
     var email = $('#email').val();
     if (email == null) {

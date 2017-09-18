@@ -4,16 +4,17 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using AngularForms.Extentions;
-using AngularForms.Model;
+using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Data.Entity;
-using AngularForms.Filters;
-using AngularForms.Helpers;
-using AngularForms.Repository;
+using BrasaoHamburgueriaWeb.Filters;
+using BrasaoHamburgueriaWeb.Helpers;
+using BrasaoHamburgueriaWeb.Repository;
 
-namespace AngularForms.Controllers
+namespace BrasaoHamburgueriaWeb.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]

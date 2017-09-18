@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace AngularForms.Model
+namespace BrasaoHamburgueria.Model
 {
     public class Usuario
     {
         public int Id { get; set; }
-        public bool Salvar { get; set; }
         public String Email { get; set; }
         public String Nome { get; set; }
         public String Telefone { get; set; }
@@ -21,5 +20,6 @@ namespace AngularForms.Model
         public String Complemento { get; set; }
         public String Bairro { get; set; }
         public String Referencia { get; set; }
+        public bool Salvar { get; set; }
     }
 }

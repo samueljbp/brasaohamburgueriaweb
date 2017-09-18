@@ -8,15 +8,16 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using AngularForms.Model;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
 using Newtonsoft.Json.Serialization;
-using AngularForms.Filters;
+using BrasaoHamburgueriaWeb.Filters;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
-using AngularForms.Extentions;
+using BrasaoHamburgueriaWeb.Extentions;
 using System.Text.RegularExpressions;
 
-namespace AngularForms.Controllers
+namespace BrasaoHamburgueriaWeb.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]

@@ -1,4 +1,4 @@
-﻿angularFormsApp.service('loginservice', function ($http) {
+﻿brasaoWebApp.service('loginservice', function ($http) {
 
     this.login = function (userlogin) {
 
@@ -14,7 +14,7 @@
 
 
 
-angularFormsApp.controller('loginController', function ($scope, $http, loginservice) {
+brasaoWebApp.controller('loginController', function ($scope, $http, loginservice) {
     init();
 
     function init() {

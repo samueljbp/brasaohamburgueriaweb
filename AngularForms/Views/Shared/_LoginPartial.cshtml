@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNet.Identity
+@using BrasaoHamburgueriaWeb.Repository;
+@{
+    var emManut = ParametroRepository.GetEmManutencao();
+}
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("Sair", "Conta", FormMethod.Post, new { id = "logoutForm", @class = "" }))
@@ -17,7 +21,14 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Registrar", "Cadastrar", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-        <li>@Html.ActionLink("Entrar", "Login", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        @if (emManut == "S")
+        {
+            <li></li>
+        }
+        else
+        {
+            <li>@Html.ActionLink("Registrar", "Cadastrar", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            <li>@Html.ActionLink("Entrar", "Login", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        }
     </ul>
 }

@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, noteService) {
+﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, noteService) {
     $scope.erro = { mensagem: '' };
     $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
     $scope.promisesLoader = [];

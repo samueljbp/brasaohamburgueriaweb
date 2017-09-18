@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AngularForms.Model;
-using AngularForms.Extentions;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueriaWeb.Extentions;
 using System.Data.Entity;
-using AngularForms.Repository;
+using BrasaoHamburgueriaWeb.Repository;
 using System.Threading.Tasks;
-using AngularForms.Helpers;
+using BrasaoHamburgueriaWeb.Helpers;
 
-namespace AngularForms.Controllers
+namespace BrasaoHamburgueriaWeb.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     public class CardapioController : Controller

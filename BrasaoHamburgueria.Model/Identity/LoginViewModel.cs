@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AngularForms.Model
+namespace BrasaoHamburgueria.Model
 {
     public class LoginViewModel
     {

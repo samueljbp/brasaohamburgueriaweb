@@ -5,10 +5,11 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.Identity;
-using AngularForms.Model;
-using AngularForms.Extentions;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueriaWeb.Extentions;
 
-namespace AngularForms.SignalR
+namespace BrasaoHamburgueriaWeb.SignalR
 {
     public class PedidoHub : Hub
     {

@@ -6,11 +6,12 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Facebook;
 using Owin;
-using AngularForms.Model;
-using AngularForms.Providers;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueriaWeb.Providers;
 using System.Configuration;
 
-namespace AngularForms
+namespace BrasaoHamburgueriaWeb
 {
     public partial class Startup
     {

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using AngularForms.Extentions;
+using BrasaoHamburgueriaWeb.Extentions;
+using System.Configuration;
+using BrasaoHamburgueriaWeb.Repository;
 
-namespace AngularForms.Controllers
+namespace BrasaoHamburgueriaWeb.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]
@@ -17,6 +19,11 @@ namespace AngularForms.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
+            if (ParametroRepository.GetEmManutencao() == "S")
+            {
+                return View("EmManutencao");
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 return View("MenuPrincipal");

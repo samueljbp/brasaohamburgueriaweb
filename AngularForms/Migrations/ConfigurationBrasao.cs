@@ -1,11 +1,11 @@
-namespace AngularForms.Migrations
+namespace BrasaoHamburgueriaWeb.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class ConfigurationBrasao : DbMigrationsConfiguration<AngularForms.Model.BrasaoContext>
+    internal sealed class ConfigurationBrasao : DbMigrationsConfiguration<BrasaoHamburgueriaWeb.Context.BrasaoContext>
     {
         public ConfigurationBrasao()
         {
@@ -13,7 +13,7 @@ namespace AngularForms.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(AngularForms.Model.BrasaoContext context)
+        protected override void Seed(BrasaoHamburgueriaWeb.Context.BrasaoContext context)
         {
             //  This method will be called after migrating to the latest version.
 

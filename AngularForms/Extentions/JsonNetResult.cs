@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Web.Mvc;
 
-namespace AngularForms.Extentions
+namespace BrasaoHamburgueriaWeb.Extentions
 {
     public class JsonNetResult : JsonResult
     {

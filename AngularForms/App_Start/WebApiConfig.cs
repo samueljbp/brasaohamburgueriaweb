@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 
-namespace AngularForms
+namespace BrasaoHamburgueriaWeb
 {
     public static class WebApiConfig
     {

@@ -1,4 +1,4 @@
-﻿angularFormsApp.controller('cpController', function ($scope, $http, $filter) {
+﻿brasaoWebApp.controller('cpController', function ($scope, $http, $filter) {
 
     $scope.pedidos = [];
     $scope.promisesLoader = [];

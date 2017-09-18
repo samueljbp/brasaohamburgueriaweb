@@ -9,9 +9,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using AngularForms.Model;
+using BrasaoHamburgueria.Model;
+using BrasaoHamburgueriaWeb.Context;
 
-namespace AngularForms.Providers
+namespace BrasaoHamburgueriaWeb.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {

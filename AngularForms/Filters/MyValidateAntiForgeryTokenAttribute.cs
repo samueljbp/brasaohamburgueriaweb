@@ -8,7 +8,7 @@ using System.Web.Helpers;
 using System.Web.Http.Controllers;
 using System.Web.Mvc;
 
-namespace AngularForms.Filters
+namespace BrasaoHamburgueriaWeb.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class MyValidateAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
