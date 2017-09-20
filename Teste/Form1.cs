@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Impressao;
+using ImpressaoBematech;
 using BrasaoHamburgueria.Model;
 
 namespace Teste
@@ -109,94 +109,18 @@ namespace Teste
         private void button1_Click(object sender, EventArgs e)
         {
             PedidoViewModel ped = this.MontaPedidoTeste();
+            ped.PortasImpressaoProducao.Add(txtPorta.Text);
+            BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness bo = new BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness();
 
-            ImpressaoBematech4200 MP2032 = new ImpressaoBematech4200();
-
-            string porta = txtPorta.Text;
-            string comandoQuebraLinha = "\r\n";
-
-            try
+            var result = bo.ImprimeItensProducao(ped);
+            
+            if (result.Succeeded)
             {
-                //declaração da variável para retorno das funções
-                int iRetorno = 0;
-
-                //Função para configurar o modelo da impressora
-                iRetorno = ImpressaoBematech4200.ConfiguraModeloImpressora((int)ImpressaoBematech4200.ModeloImpressora.MP4200TH);
-
-                //Abrindo a porta
-                iRetorno = ImpressaoBematech4200.IniciaPorta(porta);
-
-                iRetorno = ImpressaoBematech4200.SelecionaQualidadeImpressao((int)ImpressaoBematech4200.QualidadeImpressao.Media);
-
-                //CABECALHO
-                iRetorno = ImpressaoBematech4200.FormataTX("================================================", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                iRetorno = ImpressaoBematech4200.FormataTX("            PEDIDO DELIVERY NR " + ped.CodPedido, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                iRetorno = ImpressaoBematech4200.FormataTX("================================================", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                //iRetorno = ImpressaoBematech4200.FormataTX("Restaurante                  " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.FormataTX(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                //iRetorno = ImpressaoBematech4200.FormataTX("Comanda: XXXX", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Ativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                //iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                iRetorno = ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-
-                iRetorno = ImpressaoBematech4200.FormataTX("Produto                                      Qtd", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                iRetorno = ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-
-                int i = 0;
-                //ITENS
-                foreach(ItemPedidoViewModel item in ped.Itens)
-                {
-                    iRetorno = ImpressaoBematech4200.FormataTX(item.DescricaoItem + RetornaEspacosCompletar(item.DescricaoItem) + item.Quantidade.ToString("00"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                    iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                    if (item.Obs != null && item.Obs.Count > 0)
-                    {
-                        var obsString = this.RetornaStringDeObs(item.Obs);
-                        iRetorno = ImpressaoBematech4200.FormataTX("OBSERVACAO: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                        iRetorno = ImpressaoBematech4200.FormataTX(obsString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                        iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                    }
-                    if (item.extras != null && item.extras.Count > 0)
-                    {
-                        var extrasString = this.RetornaStringDeExtras(item.extras);
-                        iRetorno = ImpressaoBematech4200.FormataTX("EXTRAS: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                        iRetorno = ImpressaoBematech4200.FormataTX(extrasString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                        iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                        
-                    }
-
-                    if (i < ped.Itens.Count)
-                    {
-                        iRetorno = ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                        iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                    }
-
-                    i = i + 1;
-                }
-
-                
-
-                //Função para envio de comandos //declararação da variável para receber o comando
-                
-
-                //Comando para salto de linha
-                iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-
-                iRetorno = ImpressaoBematech4200.FormataTX("", 2, 0, 0, 1, 1);
-                iRetorno = ImpressaoBematech4200.FormataTX("", 2, 0, 0, 1, 1);
-                iRetorno = ImpressaoBematech4200.AcionaGuilhotina(1);
-
-                //Fechar a porta utilizada
-                iRetorno = ImpressaoBematech4200.FechaPorta();
+                MessageBox.Show("Sucesso na impressão!");
             }
-            catch(Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Erro: " + result.Errors[0].ToString());
             }
         }
     }

@@ -47,6 +47,11 @@
     //função que retorna pedido em aberto, caso exista
     $scope.getPedidoAberto = function (loginUsuario) {
 
+        if (sessionStorage.modoAdm == "S") {
+            $scope.pedidoAberto = null;
+            return;
+        }
+
         //var accesstoken = sessionStorage.getItem('accessToken');
 
         $scope.promiseGetPedidoAberto = $http({
@@ -85,6 +90,23 @@
 
     $scope.getDadosUsuario = function () {
 
+        if (sessionStorage.modoAdm == "S") {
+            $scope.pedido.dadosCliente = {
+                nome: '',
+                telefone: '',
+                estado: '',
+                cidade: '',
+                logradouro: '',
+                numero: '',
+                complemento: '',
+                bairro: '',
+                referencia: '',
+                clienteNovo: false
+            }
+
+            return;
+        }
+
         if ($scope.loginUsuario) {
 
             $scope.promiseDadosUsuario = $http({
@@ -104,7 +126,8 @@
                     numero: $scope.usuario.numero,
                     complemento: $scope.usuario.complemento,
                     bairro: $scope.usuario.bairro,
-                    referencia: $scope.usuario.referencia
+                    referencia: $scope.usuario.referencia,
+                    clienteNovo: false
                 };
 
             }, function (error) {
@@ -114,6 +137,59 @@
 
             $scope.promisesLoader.push($scope.promiseDadosUsuario);
         }
+    }
+
+    $scope.getDadosUsuarioByPhone = function (telefone) {
+
+
+        $scope.promiseDadosUsuarioByPhone = $http({
+            method: 'GET',
+            url: urlBase + 'Conta/GetUsuarioByPhone?telefone=' + telefone
+        })
+        .then(function (response) {
+
+            var retorno = genericSuccess(response);
+
+            if (retorno.succeeded) {
+                $scope.erro.mensagem = '';
+                $scope.sucesso.mensagem = '';
+                if (retorno.data != null && retorno.data != '') {
+                    $scope.usuario = retorno.data;
+
+                    $scope.pedido.dadosCliente = {
+                        nome: $scope.usuario.nome,
+                        telefone: $scope.usuario.telefone,
+                        estado: $scope.usuario.estado,
+                        cidade: $scope.usuario.cidade,
+                        logradouro: $scope.usuario.logradouro,
+                        numero: $scope.usuario.numero,
+                        complemento: $scope.usuario.complemento,
+                        bairro: $scope.usuario.bairro,
+                        referencia: $scope.usuario.referencia,
+                        clienteNovo: $scope.usuario.clienteNovo,
+                        salvar: $scope.usuario.salvar
+                    }
+
+                    if ($scope.usuario.id <= 0) {
+                        $scope.sucesso.mensagem = 'Cliente não cadastrado.';
+                        
+                    }
+                } else {
+                    $scope.sucesso.mensagem = 'Cliente não encontrado.';
+                }
+            } else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+            
+
+        }, function (error) {
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        });
+
+        $scope.promisesLoader.push($scope.promiseDadosUsuarioByPhone);
     }
 
     //função que abre uma imagem grande em popup a partir de um thumbnail
@@ -194,6 +270,7 @@
             bandeiraCartao: '',
             valorTotal: 0.0,
             situacao: 0,
+            pedidoExterno: $scope.modoAdm.ativo,
             dadosCliente: {
                 salvar: false,
                 nome: '',
@@ -398,7 +475,7 @@
 
                 $scope.promiseGravaPedido = $http({
                     method: 'POST',
-                    url: urlBase+ 'Pedido/GravarPedido',
+                    url: urlBase + 'Pedido/GravarPedido',
                     data: $scope.pedido,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
@@ -417,7 +494,14 @@
 
                         noteService.sendMessage('', sessionStorage.codPedido, 1);
 
-                        window.location.href = urlBase + 'Pedido/PedidoRegistrado';
+                        if ($scope.modoAdm.ativo)
+                        {
+                            sessionStorage.modoAdm = "N";
+                            setTimeout(function () { window.close(); }, 5000);
+                        } else {
+                            window.location.href = urlBase + 'Pedido/PedidoRegistrado';
+                        }
+                        
 
                     }
                     else {
@@ -469,6 +553,7 @@
     //INICIALIZAÇÃO DE VARIÁVEIS
     function reiniciaVariaveis() {
         $scope.erro = { mensagem: '' };
+        $scope.sucesso = { mensagem: '' };
 
         $scope.promisesLoader = [];
 
@@ -490,6 +575,12 @@
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
+        $scope.modoAdm = { ativo: true };
+        if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null) {
+            sessionStorage.modoAdm = "N";
+            $scope.modoAdm.ativo = false;
+        }
+
         noteService.connect();
         $scope.messages = [];
 
@@ -500,7 +591,7 @@
         $scope.antiForgeryToken = antiForgeryToken;
 
         reiniciaVariaveis();
-        
+
         $scope.getCardapio();
 
         $scope.getPedidoAberto(loginUsuario);

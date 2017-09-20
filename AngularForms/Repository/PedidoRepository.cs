@@ -94,9 +94,9 @@ namespace BrasaoHamburgueriaWeb.Repository
             }
         }
 
-        public async Task<PedidoViewModel> GetPedidoAberto(string loginUsuario)
+        public async Task<PedidoViewModel> GetPedidoAberto(string loginUsuario, string telefone)
         {
-            return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == loginUsuario)
+            return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
                 .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Observacoes))
                 .Include(c => c.Itens.Select(i => i.Observacoes.Select(o => o.Observacao)))
@@ -185,6 +185,8 @@ namespace BrasaoHamburgueriaWeb.Repository
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
+                .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas))
+                .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao)))
                 .Include(c => c.Itens.Select(i => i.Observacoes))
                 .Include(c => c.Itens.Select(i => i.Observacoes.Select(o => o.Observacao)))
                 .Include(c => c.Itens.Select(i => i.Extras))
@@ -202,6 +204,8 @@ namespace BrasaoHamburgueriaWeb.Repository
                     Troco = p.Troco,
                     TrocoPara = p.TrocoPara,
                     Usuario = p.Usuario,
+                    PedidoExterno = p.PedidoExterno,
+                    PortasImpressaoComandaEntrega = new List<string> { _contexto.ImpressorasProducao.Where(i => i.CodImpressora == 1).FirstOrDefault().Porta },
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,
@@ -224,11 +228,12 @@ namespace BrasaoHamburgueriaWeb.Repository
                         ValorExtras = i.ValorExtras,
                         ValorTotalItem = i.ValorTotal,
                         ObservacaoLivre = i.ObservacaoLivre,
+                        PortasImpressaoProducao = i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao.Porta).ToList(),
                         Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
                         {
                             CodObservacao = o.CodObservacao,
                             DescricaoObservacao = o.Observacao.DescricaoObservacao
-                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = ( i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2 ), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
+                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
                         extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
                         {
                             CodOpcaoExtra = e.CodOpcaoExtra,

@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Teste</RootNamespace>
     <AssemblyName>Teste</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -64,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -74,6 +76,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="mp2064.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -83,14 +88,22 @@
       <Project>{fcf4fdf4-ce09-4690-9078-2b4f335008b1}</Project>
       <Name>BrasaoHamburgueria.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Impressao\Impressao.csproj">
+    <ProjectReference Include="..\BrasaoHamburgueria.ServicosInternos\BrasaoHamburgueria.ServicosInternos.csproj">
+      <Project>{ccfc2b69-0853-4ce4-aee1-3ec1df1aec72}</Project>
+      <Name>BrasaoHamburgueria.ServicosInternos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Impressao\ImpressaoBematech.csproj">
       <Project>{31cb258e-bb7c-4e28-961e-b86810e5497c}</Project>
-      <Name>Impressao</Name>
+      <Name>ImpressaoBematech</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Referencias\mp2064.dll" />
-    <Content Include="Referencias\SiUSBXp.dll" />
+    <Content Include="mp2064.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SiUSBXp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

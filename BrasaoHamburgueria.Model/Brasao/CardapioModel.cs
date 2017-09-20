@@ -97,6 +97,9 @@ namespace BrasaoHamburgueria.Model
         [InverseProperty("Item")]
         public virtual List<OpcaoExtraItemCardapio> ExtrasPermitidos { get; set; }
 
+        [InverseProperty("Item")]
+        public virtual List<ItemCardapioImpressora> ImpressorasAssociadas { get; set; }
+
         [InverseProperty("ItemCardapio")]
         public virtual List<ItemPedido> ItensPedidos { get; set; }
     }
@@ -196,6 +199,44 @@ namespace BrasaoHamburgueria.Model
         public int CodOpcaoExtra { get; set; }
 
         public virtual OpcaoExtra OpcaoExtra { get; set; }
+
+        public virtual ItemCardapio Item { get; set; }
+    }
+
+    [Table("IMPRESSORA_PRODUCAO")]
+    public class ImpressoraProducao
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [Column("COD_IMPRESSORA")]
+        public int CodImpressora { get; set; }
+
+        [Required]
+        [Column("DESCRICAO")]
+        public string Descricao { get; set; }
+
+        [Required]
+        [Column("PORTA")]
+        public string Porta { get; set; }
+
+        [InverseProperty("ImpressoraProducao")]
+        public virtual List<ItemCardapioImpressora> ItensAssociados { get; set; }
+    }
+
+    [Table("ITEM_CARDAPIO_IMPRESSORA_PRODUCAO")]
+    public class ItemCardapioImpressora
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key, ForeignKey("Item")]
+        [Column("COD_ITEM_CARDAPIO", Order = 1)]
+        public int CodItemCardapio { get; set; }
+
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key, ForeignKey("ImpressoraProducao")]
+        [Column("COD_IMPRESSORA", Order = 2)]
+        public int CodImpressora { get; set; }
+
+        public virtual ImpressoraProducao ImpressoraProducao { get; set; }
 
         public virtual ItemCardapio Item { get; set; }
     }

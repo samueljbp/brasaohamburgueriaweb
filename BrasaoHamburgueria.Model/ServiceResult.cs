@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BrasaoHamburgueriaWeb.Helpers
+namespace BrasaoHamburgueria.Model
 {
-    public class ServiceResult
+    public class ServiceResultViewModel
     {
         private bool _succeeded;
         private List<String> _errors;
         private dynamic _data;
 
-        public ServiceResult()
+        public ServiceResultViewModel()
         {
 
         }
 
-        public ServiceResult(bool succeeded, List<String> errors, dynamic data)
+        public ServiceResultViewModel(bool succeeded, List<String> errors, dynamic data)
         {
             this._succeeded = succeeded;
             this._errors = errors;

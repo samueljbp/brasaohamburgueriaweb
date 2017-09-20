@@ -14,8 +14,14 @@
         {{erro.mensagem}}
         <br />
     </div>
+    <div class="alert alert-success alert-dismissible fade in {{sucesso.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        {{sucesso.mensagem}}
+        <br />
+    </div>
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseImprime,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <br />
         <div class="row">
@@ -47,6 +53,9 @@
                                     <th class="text-left">
                                         Nº Pedido
                                     </th>
+                                    <th class="text-left">
+                                        Externo
+                                    </th>
                                     <th>
                                         Cliente
                                     </th>
@@ -71,12 +80,22 @@
                                     <th>
 
                                     </th>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="ped in pedidos">
                                     <td class="text-left">
                                         {{ped.codPedido}}
+                                    </td>
+                                    <td class="text-left">
+                                        <span ng-if="ped.pedidoExterno">Sim</span>
+                                        <span ng-if="!ped.pedidoExterno">Não</span>
                                     </td>
                                     <td class="text-left">
                                         {{ped.dadosCliente.nome}}
@@ -99,6 +118,18 @@
                                     <td class="text-right">
                                         <button type="button" class="btn btn-default btn-sm" title="Detalhes" ng-click="visualizaPedido(ped)">
                                             <span class=" glyphicon glyphicon-list" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default btn-sm" title="Reimprimir" ng-click="imprimePedido(ped)">
+                                            <span class=" glyphicon glyphicon-print" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default btn-sm" title="Alterar" ng-click="alteraPedido(ped)">
+                                            <span class=" glyphicon glyphicon-edit" aria-hidden="true">
                                             </span>
                                         </button>
                                     </td>

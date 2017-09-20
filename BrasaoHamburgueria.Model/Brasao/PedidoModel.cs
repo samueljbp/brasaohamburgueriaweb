@@ -33,22 +33,29 @@ namespace BrasaoHamburgueria.Model
         public int Situacao { get; set; }
         public string Usuario { get; set; }
         public string DescricaoSituacao { get; set; }
+        public bool PedidoExterno { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
+        public List<String> PortasImpressaoComandaEntrega { get; set; }
     }
 
     public class DadosClientePedidoViewModel
     {
+        public int Id { get; set; }
+        public String Email { get; set; }
+        public String Nome { get; set; }
+        public String Telefone { get; set; }
+        public String Sexo { get; set; }
+        public String DataNascimento { get; set; }
+        public String Estado { get; set; }
+        public String Cidade { get; set; }
+        public String Logradouro { get; set; }
+        public String Numero { get; set; }
+        public String Complemento { get; set; }
+        public String Bairro { get; set; }
+        public String Referencia { get; set; }
         public bool Salvar { get; set; }
-        public string Nome { get; set; }
-        public string Telefone { get; set; }
-        public string Estado { get; set; }
-        public string Cidade { get; set; }
-        public string Logradouro { get; set; }
-        public string Numero { get; set; }
-        public string Complemento { get; set; }
-        public string Bairro { get; set; }
-        public string Referencia { get; set; }
+        public bool ClienteNovo { get; set; }
     }
 
     public class ItemPedidoViewModel
@@ -63,6 +70,7 @@ namespace BrasaoHamburgueria.Model
         public double PrecoUnitario { get; set; }
         public double ValorExtras { get; set; }
         public double ValorTotalItem { get; set; }
+        public List<String> PortasImpressaoProducao { get; set; }
     }
 
     public class ObservacaoItemPedidoViewModel
@@ -107,6 +115,10 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("USUARIO")]
         public string Usuario { get; set; }
+
+        [Required]
+        [Column("PEDIDO_EXTERNO")]
+        public bool PedidoExterno { get; set; }
 
         [Required]
         [Column("DATA_HORA")]

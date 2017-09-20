@@ -13,6 +13,7 @@ using System.Data.Entity;
 using BrasaoHamburgueriaWeb.Filters;
 using BrasaoHamburgueriaWeb.Helpers;
 using BrasaoHamburgueriaWeb.Repository;
+using BrasaoHamburgueria.Helpers;
 
 namespace BrasaoHamburgueriaWeb.Controllers
 {
@@ -58,7 +59,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
         public async Task<JsonResult> GetPedido(int codPedido)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
@@ -81,7 +82,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
         public async Task<JsonResult> GetPedidosAbertos()
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
@@ -105,7 +106,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
         public async Task<JsonResult> GetUltimosPedidos(string loginUsuario)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
@@ -129,11 +130,11 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
         public async Task<JsonResult> GetPedidoAberto(string loginUsuario)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                result.data = await _rep.GetPedidoAberto(loginUsuario);
+                result.data = await _rep.GetPedidoAberto(loginUsuario, "");
                 result.Succeeded = true;
             }
             catch (Exception ex)
@@ -155,7 +156,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> FinalizaPedido(PedidoViewModel pedido)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
@@ -175,7 +176,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AvancarPedido(PedidoViewModel pedido)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
@@ -195,7 +196,35 @@ namespace BrasaoHamburgueriaWeb.Controllers
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> GravarPedido(PedidoViewModel pedidoViewModel)
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            if (pedidoViewModel.DadosCliente.Telefone.Length < 14)
+            {
+                result.Succeeded = false;
+                result.Errors.Add("O telefone não está preenchido corretamente");
+                return new JsonNetResult { Data = result };
+            }
+
+            if (pedidoViewModel.PedidoExterno)
+            {
+                try
+                {
+                    //var ped = _rep.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone).Result;
+                    var ped = BrasaoHamburgueria.Helper.AsyncHelpers.RunSync<PedidoViewModel>(() => _rep.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone));
+
+                    if (ped != null)
+                    {
+                        result.Succeeded = false;
+                        result.Errors.Add("O cliente " + pedidoViewModel.DadosCliente.Telefone + " possui o pedido " + ped.CodPedido + " em aberto. Finalize-o antes de fazer outro pedido para este cliente.");
+                        return new JsonNetResult { Data = result };
+                    }
+                }
+                catch(Exception ex)
+                {
+                    result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+                }
+            }
 
             try
             {
@@ -209,22 +238,45 @@ namespace BrasaoHamburgueriaWeb.Controllers
                 else
                 {
                     result.data = await _rep.GravaPedido(pedidoViewModel, User.Identity.GetUserName());
-                    if (pedidoViewModel.DadosCliente.Salvar)
+                    if (pedidoViewModel.DadosCliente.ClienteNovo)
                     {
                         try
                         {
-                            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                            if (user != null)
-                            {
-                                PropertyCopy.Copy(pedidoViewModel.DadosCliente, user.DadosUsuario);
-                                UserManager.Update(user);
-                            }
+                            ApplicationDbContext contexto = new ApplicationDbContext();
+                            Usuario usu = new Usuario();
+                            UsuarioViewModel usuVm = new UsuarioViewModel();
+                            PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
+                            UsuarioCopy.ViewModelToDB(usuVm, usu);
+                            usu.UsuarioExterno = true;
+                            contexto.DadosUsuarios.Add(usu);
+                            contexto.SaveChanges();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
                         }
+                        
                         result.Succeeded = true;
+                    }
+                    else if (pedidoViewModel.DadosCliente.Salvar)
+                    {
+                        try
+                        {
+                            ApplicationDbContext contexto = new ApplicationDbContext();
+                            string userName = User.Identity.GetUserName();
+                            var usu = contexto.DadosUsuarios.Where(d => d.Email == userName).FirstOrDefault();
+                            if (usu != null)
+                            {
+                                UsuarioViewModel usuVm = new UsuarioViewModel();
+                                PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
+                                UsuarioCopy.ViewModelToDB(usuVm, usu);
+                                contexto.SaveChanges();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
+                        }
                     }
                 }
             }

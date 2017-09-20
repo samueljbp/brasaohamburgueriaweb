@@ -200,3 +200,22 @@ insert into funcionamento_estabelecimento values (3, '19:00', '23:59', 1);
 insert into funcionamento_estabelecimento values (4, '19:00', '23:59', 1);
 insert into funcionamento_estabelecimento values (5, '19:00', '23:59', 1);
 insert into funcionamento_estabelecimento values (6, '19:00', '23:59', 1);
+
+
+
+
+
+
+
+insert into impressora_producao values ('COPA', 'COM2');
+insert into impressora_producao values ('COZINHA', 'COM2');
+
+insert into item_cardapio_impressora_producao
+select cod_item_cardapio, 1
+from ITEM_CARDAPIO ic
+where COD_CLASSE in (4, 5, 6, 7, 9, 10);
+
+insert into item_cardapio_impressora_producao
+select cod_item_cardapio, 2
+from ITEM_CARDAPIO ic
+where COD_CLASSE in (1, 2, 3);

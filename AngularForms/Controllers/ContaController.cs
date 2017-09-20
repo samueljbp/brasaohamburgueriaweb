@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
 using BrasaoHamburgueriaWeb.Extentions;
 using System.Text.RegularExpressions;
+using BrasaoHamburgueria.Helpers;
 
 namespace BrasaoHamburgueriaWeb.Controllers
 {
@@ -246,7 +247,48 @@ namespace BrasaoHamburgueriaWeb.Controllers
                 user.DadosUsuario.DataNascimento = user.DadosUsuario.DataNascimento.Substring(0, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(2, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(4);
             }
 
-            return new JsonNetResult { Data = user.DadosUsuario };
+            var usuario = new UsuarioViewModel();
+
+            UsuarioCopy.DBToViewModel(user.DadosUsuario, usuario);
+            
+            return new JsonNetResult { Data = usuario };
+        }
+
+        public async Task<JsonNetResult> GetUsuarioByPhone(string telefone)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            if (telefone.Length < 14)
+            {
+                result.Succeeded = false;
+                result.Errors.Add("O telefone não está preenchido corretamente");
+                return new JsonNetResult { Data = result };
+            }
+
+            ApplicationDbContext contexto = new ApplicationDbContext();
+            var user = contexto.DadosUsuarios.Where(u => u.Telefone == telefone).FirstOrDefault();
+            UsuarioViewModel usuario = new UsuarioViewModel();
+
+            if (user != null)
+            {
+                if (!String.IsNullOrEmpty(user.DataNascimento))
+                {
+                    user.DataNascimento = user.DataNascimento.Substring(0, 2) + "/" + user.DataNascimento.Substring(2, 2) + "/" + user.DataNascimento.Substring(4);
+                }
+
+                UsuarioCopy.DBToViewModel(user, usuario);                
+            }
+            else
+            {
+                usuario.ClienteNovo = true;
+                usuario.Telefone = telefone;
+                usuario.Estado = "MG";
+                usuario.Cidade = "Cataguases";
+            }
+
+            result.data = usuario;
+
+            return new JsonNetResult { Data = result };
         }
 
         [HttpPost]

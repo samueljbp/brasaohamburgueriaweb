@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Impressao
+namespace ImpressaoBematech
 {
     public class ImpressaoBematech4200
     {
@@ -63,32 +63,32 @@ namespace Impressao
         }
 
         //Configura o modelo da impressora
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int ConfiguraModeloImpressora(int modelo);
 
         //Inicia Porta
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int IniciaPorta(String porta);
 
         //Enviar texto formatado
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int FormataTX(String texto, int TipoLetra, int italico, int sublinhado, int expandido, int enfatizado);
 
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int BematechTX(String texto);
 
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int AcionaGuilhotina(int valor);
 
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int SelecionaQualidadeImpressao(int qualidade);
 
         //Enviar comandos para a impressora
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int ComandoTX(String comando, int tComando);
 
         //Fecha a porta
-        [DllImport("MP2064.dll")]
+        [DllImport("MP2032.dll")]
         public static extern int FechaPorta();
     }
 }

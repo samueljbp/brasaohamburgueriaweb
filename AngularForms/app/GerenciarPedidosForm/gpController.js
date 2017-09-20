@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, noteService) {
+﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
     $erro = { mensagem: '' };
 
     $scope.pedidos = [];
@@ -11,7 +11,17 @@
         var aaa = 1;
     });
 
+    $scope.alteraPedido = function (pedido) {
+        pedido.situacao = 0;
+        sessionStorage.pedido = JSON.stringify(pedido);
+        sessionStorage.modoAdm = "S";
+        var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
+        win.moveTo(0, 0);
+        win.resizeTo(screen.width, screen.height);
+    }
+
     $scope.novoPedidoExterno = function () {
+        sessionStorage.modoAdm = "S";
         var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
         win.moveTo(0, 0);
         win.resizeTo(screen.width, screen.height);
@@ -95,9 +105,9 @@
 
     noteService.connect();
     $scope.messages = [];
- 
+
     $scope.$on('messageAdded', function (event, codPedido, situacao) {
-        
+
         //mensagens de pedidos feito pelo usuario logado.
         if (situacao > 1 && situacao < 5) {
             return;
@@ -108,7 +118,7 @@
             $scope.getPedido(codPedido);
             return;
         }
-        
+
         for (i = 0; i < $scope.pedidos.length; i++) {
             if ($scope.pedidos[i].codPedido == codPedido) {
 
@@ -125,13 +135,16 @@
         }
 
     });
- 
+
     $scope.sendMessage = function () {
         noteService.sendMessage($scope.pedido.usuario, $scope.pedido.codPedido, $scope.pedido.situacao);
     };
 
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
+        $scope.erro = { mensagem: '' };
+        $scope.sucesso = { mensagem: '' };
+
         $scope.getPedidosPendentes();
 
         $scope.antiForgeryToken = antiForgeryToken;
@@ -143,7 +156,6 @@
         var dataHora = new Date(data);
         return dataHora.getTime();
     }
-
 
     $scope.avancarPedido = function (pedido) {
 
@@ -175,9 +187,17 @@
 
                                 $scope.pedidos[i].situacao = proximaSituacao;
                                 $scope.pedidos[i].descricaoSituacao = descricaoProximaSituacao;
-                                return;
+                                break;
                             }
                         }
+
+                        if (proximaSituacao == 2) {
+
+                            imprime(pedido);
+
+                        }
+
+
 
                     }
                     else {
@@ -195,8 +215,45 @@
             }, function () {
                 //console.log('Confirm dismissed!');
             });
+    }
 
+    function imprime(pedido) {
+        $scope.promiseImprime = $http({
+            method: 'POST',
+            crossDomain: true,
+            dataType: 'json',
+            url: urlWebAPIBase + 'Impressao/ImprimeItensProducao',
+            data: pedido
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
 
+            if (retorno.succeeded) {
+
+                $scope.sucesso.mensagem = 'Impressão enviada com sucesso.';
+                $window.scrollTo(0, 0);
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (errorInt) {
+            $scope.erro.mensagem = errorInt.statusText;
+            $window.scrollTo(0, 0);
+        });
+    }
+
+    $scope.imprimePedido = function (pedido) {
+
+        $ngBootbox.confirm('Confirma a impressão do pedido ' + pedido.codPedido + ' ?')
+            .then(function () {
+
+                imprime(pedido);
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
 
     }
 

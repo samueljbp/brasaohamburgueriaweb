@@ -164,6 +164,7 @@
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
     <Content Include="app\LoginForm\loginController.js" />
+    <Content Include="app\MenuPrincipalForm\mpController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
     <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
     <Content Include="app\RedefinirSenha\rdSenhaController.js" />
@@ -480,6 +481,7 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\ngBootbox.js" />
+    <Content Include="Scripts\validator.min.js" />
     <Content Include="Scripts\version.json" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
@@ -1408,18 +1410,20 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
     <Compile Include="Extentions\AllowCrossSiteJsonAttribute.cs" />
-    <Compile Include="Extentions\PropertyCopy.cs" />
     <Compile Include="Extentions\JsonNetResult.cs" />
     <Compile Include="Filters\MyValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
-    <Compile Include="Helpers\ServiceResult.cs" />
     <Compile Include="Helpers\Util.cs" />
-    <Compile Include="Migrations\201709181358230_Initial.cs" />
-    <Compile Include="Migrations\201709181358230_Initial.Designer.cs">
-      <DependentUpon>201709181358230_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201709191659166_InitialCreate.cs" />
+    <Compile Include="Migrations\201709191659166_InitialCreate.Designer.cs">
+      <DependentUpon>201709191659166_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709192344375_InitialCreate1.cs" />
+    <Compile Include="Migrations\201709192344375_InitialCreate1.Designer.cs">
+      <DependentUpon>201709192344375_InitialCreate1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
@@ -1441,14 +1445,21 @@
     <Folder Include="Scripts\assets\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BrasaoHamburgueria.Helper\BrasaoHamburgueria.Helper.csproj">
+      <Project>{349b8f94-7236-4b0c-ba43-cc7fc76698b5}</Project>
+      <Name>BrasaoHamburgueria.Helper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BrasaoHamburgueria.Model\BrasaoHamburgueria.Model.csproj">
       <Project>{fcf4fdf4-ce09-4690-9078-2b4f335008b1}</Project>
       <Name>BrasaoHamburgueria.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709181358230_Initial.resx">
-      <DependentUpon>201709181358230_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709191659166_InitialCreate.resx">
+      <DependentUpon>201709191659166_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709192344375_InitialCreate1.resx">
+      <DependentUpon>201709192344375_InitialCreate1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

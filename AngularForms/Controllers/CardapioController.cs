@@ -34,7 +34,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
         public JsonResult GetCardapio()
         {
-            var result = new ServiceResult(true, new List<string>(), null);
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
