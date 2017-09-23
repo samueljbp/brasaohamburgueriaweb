@@ -11,8 +11,12 @@
         var aaa = 1;
     });
 
+    function playSound() {
+        document.getElementById('play').play();
+    }
+
     $scope.alteraPedido = function (pedido) {
-        pedido.situacao = 0;
+        pedido.alterar = true;
         sessionStorage.pedido = JSON.stringify(pedido);
         sessionStorage.modoAdm = "S";
         var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
@@ -115,7 +119,11 @@
 
         //novos pedidos, recuperar e incluir na tela
         if (situacao == 1) {
-            $scope.getPedido(codPedido);
+            var existente = $filter('filter')($scope.pedidos, { codPedido: codPedido })[0];
+            if (existente == null) {
+                $scope.getPedido(codPedido);
+                playSound();
+            }            
             return;
         }
 
@@ -266,6 +274,11 @@
         var retorno = { classeBotao: "", classeIcone: "", classeSituacao: "" }
 
         switch (pedido.situacao) {
+            case 0:
+                retorno.classeIcone = "glyphicon glyphicon-thumbs-up";
+                retorno.classeBotao = "btn btn-success btn-sm";
+                retorno.classeSituacao = "text-left text-success";
+                break;
             case 1:
                 retorno.classeIcone = "glyphicon glyphicon-thumbs-up";
                 retorno.classeBotao = "btn btn-success btn-sm";

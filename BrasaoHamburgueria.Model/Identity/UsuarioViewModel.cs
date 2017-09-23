@@ -21,7 +21,7 @@ namespace BrasaoHamburgueria.Model
             usuario.Referencia = viewModel.Referencia;
             usuario.Sexo = viewModel.Sexo;
             usuario.Telefone = viewModel.Telefone;
-            usuario.UsuarioExterno = viewModel.ClienteNovo;
+            //usuario.UsuarioExterno = viewModel.ClienteNovo;
         }
 
         public static void DBToViewModel(Usuario usuario, UsuarioViewModel viewModel)

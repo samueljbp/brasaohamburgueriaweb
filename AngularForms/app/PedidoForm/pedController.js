@@ -204,7 +204,12 @@
 
         for (i = 0; i < $scope.pedido.itens.length; i++) {
             if ($scope.pedido.itens[i].seqItem == seqItem) {
-                $scope.pedido.itens.splice(i, 1);
+                if ($scope.pedido.itens[i].acaoRegistro == acaoRegistro.incluir) {
+                    $scope.pedido.itens.splice(i, 1);
+                } else if ($scope.pedido.itens[i].acaoRegistro == acaoRegistro.nenhuma) {
+                    $scope.pedido.itens[i].acaoRegistro = acaoRegistro.cancelar;
+                }
+                
                 break;
             }
         }
@@ -220,7 +225,10 @@
             $scope.pedido.valorTotal = $scope.pedido.taxaEntrega;
 
             for (i = 0; i < $scope.pedido.itens.length; i++) {
-                $scope.pedido.valorTotal = $scope.pedido.valorTotal + $scope.pedido.itens[i].valorTotalItem;
+                if ($scope.pedido.itens[i].acaoRegistro != acaoRegistro.cancelar) {
+                    $scope.pedido.valorTotal = $scope.pedido.valorTotal + $scope.pedido.itens[i].valorTotalItem;
+                }
+                
             }
         }
     }
@@ -380,7 +388,8 @@
             quantidade: 1,
             precoUnitario: $scope.itemCardapioSelecionado.preco,
             valorExtras: 0.0,
-            valorTotal: 0.0
+            valorTotal: 0.0,
+            acaoRegistro: acaoRegistro.incluir
         }
 
         $scope.atualizaValorTotalItem();
@@ -576,7 +585,7 @@
 
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
         $scope.modoAdm = { ativo: true };
-        if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null) {
+        if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null || sessionStorage.getItem("modoAdm") == 'N') {
             sessionStorage.modoAdm = "N";
             $scope.modoAdm.ativo = false;
         }
@@ -602,6 +611,9 @@
             $scope.getDadosUsuario();
         } else {
             $scope.pedido = JSON.parse(sessionStorage.pedido);
+            if ($scope.pedido.alterar) {
+                $scope.pedido.situacao = 0;
+            }
         }
 
         atualizaValorTotalPedido();

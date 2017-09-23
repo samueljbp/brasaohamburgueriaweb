@@ -1,4 +1,11 @@
-﻿/* Máscaras ER */
+﻿var acaoRegistro = {
+    incluir: 0,
+    nenhuma: 1,
+    alterar: 2,
+    cancelar: 3
+}
+
+/* Máscaras ER */
 function mascara(o, f) {
     v_obj = o
     v_fun = f

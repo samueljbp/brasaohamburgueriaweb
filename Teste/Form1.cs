@@ -109,7 +109,7 @@ namespace Teste
         private void button1_Click(object sender, EventArgs e)
         {
             PedidoViewModel ped = this.MontaPedidoTeste();
-            ped.PortasImpressaoProducao.Add(txtPorta.Text);
+            ped.PortasImpressaoComandaEntrega.Add(txtPorta.Text);
             BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness bo = new BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness();
 
             var result = bo.ImprimeItensProducao(ped);

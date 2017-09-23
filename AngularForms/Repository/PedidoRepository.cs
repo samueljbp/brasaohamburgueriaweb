@@ -35,13 +35,24 @@ namespace BrasaoHamburgueriaWeb.Repository
             {
                 try
                 {
-                    Pedido ped = new Pedido();
+                    Pedido ped;
+
+                    if (pedidoViewModel.CodPedido <= 0)
+                    {
+                        ped = new Pedido();
+                        ped.CodSituacao = pedidoViewModel.Situacao;
+                        ped.DataHora = DateTime.Now;
+                        ped.Usuario = loginUsuario;
+                    }
+                    else
+                    {
+                        ped = _contexto.Pedidos.Find(pedidoViewModel.CodPedido);
+                    }
+                    
                     ped.BairroEntrega = pedidoViewModel.DadosCliente.Bairro;
                     ped.BandeiraCartao = pedidoViewModel.BandeiraCartao;
-                    ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;
-                    ped.CodSituacao = pedidoViewModel.Situacao;
-                    ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;
-                    ped.DataHora = DateTime.Now;
+                    ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;                    
+                    ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;                    
                     ped.FormaPagamento = pedidoViewModel.FormaPagamento;
                     ped.LogradouroEntrega = pedidoViewModel.DadosCliente.Logradouro;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
@@ -51,33 +62,48 @@ namespace BrasaoHamburgueriaWeb.Repository
                     ped.TelefoneCliente = pedidoViewModel.DadosCliente.Telefone;
                     ped.Troco = pedidoViewModel.Troco;
                     ped.TrocoPara = pedidoViewModel.TrocoPara;
-                    ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;
-                    ped.Usuario = loginUsuario;
+                    ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;                    
                     ped.ValorTotal = pedidoViewModel.ValorTotal;
-                    _contexto.Pedidos.Add(ped);
+
+                    if (pedidoViewModel.CodPedido <= 0)
+                    {
+                        _contexto.Pedidos.Add(ped);
+                    }
+                    
                     await _contexto.SaveChangesAsync();
 
+                    ItemPedido item;
                     foreach (var itemViewModel in pedidoViewModel.Itens)
                     {
-                        var item = new ItemPedido();
-                        item.CodItemCardapio = itemViewModel.CodItem;
-                        item.CodPedido = ped.CodPedido;
-                        item.ObservacaoLivre = itemViewModel.ObservacaoLivre;
-                        item.PrecoUnitario = itemViewModel.PrecoUnitario;
-                        item.Quantidade = itemViewModel.Quantidade;
-                        item.SeqItem = itemViewModel.SeqItem;
-                        item.ValorExtras = itemViewModel.ValorExtras;
-                        item.ValorTotal = itemViewModel.ValorTotalItem;
-                        _contexto.ItensPedidos.Add(item);
-
-                        if (itemViewModel.Obs != null)
+                        if (itemViewModel.AcaoRegistro == (int)Comum.AcaoRegistro.Incluir)
                         {
-                            _contexto.ObservacoesItensPedidos.AddRange(itemViewModel.Obs.Where(o => o != null && o.CodObservacao > 0).Select(o => new ObservacaoItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodObservacao = o.CodObservacao }).ToList());
+                            item = new ItemPedido();
+
+                            item.CodItemCardapio = itemViewModel.CodItem;
+                            item.CodPedido = ped.CodPedido;
+                            item.ObservacaoLivre = itemViewModel.ObservacaoLivre;
+                            item.PrecoUnitario = itemViewModel.PrecoUnitario;
+                            item.Quantidade = itemViewModel.Quantidade;
+                            item.SeqItem = itemViewModel.SeqItem;
+                            item.ValorExtras = itemViewModel.ValorExtras;
+                            item.ValorTotal = itemViewModel.ValorTotalItem;
+                            _contexto.ItensPedidos.Add(item);
+
+                            if (itemViewModel.Obs != null)
+                            {
+                                _contexto.ObservacoesItensPedidos.AddRange(itemViewModel.Obs.Where(o => o != null && o.CodObservacao > 0).Select(o => new ObservacaoItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodObservacao = o.CodObservacao }).ToList());
+                            }
+
+                            if (itemViewModel.extras != null)
+                            {
+                                _contexto.ExtrasItensPedidos.AddRange(itemViewModel.extras.Where(e => e != null).Select(o => new ExtraItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodOpcaoExtra = o.CodOpcaoExtra, Preco = o.Preco }).ToList());
+                            }
                         }
-
-                        if (itemViewModel.extras != null)
+                        else if (itemViewModel.AcaoRegistro == (int)Comum.AcaoRegistro.Cancelar)
                         {
-                            _contexto.ExtrasItensPedidos.AddRange(itemViewModel.extras.Where(e => e != null).Select(o => new ExtraItemPedido { CodPedido = item.CodPedido, SeqItem = item.SeqItem, CodOpcaoExtra = o.CodOpcaoExtra, Preco = o.Preco }).ToList());
+                            item = _contexto.ItensPedidos.Find(pedidoViewModel.CodPedido, itemViewModel.SeqItem);
+
+                            item.Cancelado = true;
                         }
                     }
 
@@ -169,7 +195,7 @@ namespace BrasaoHamburgueriaWeb.Repository
                             DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
                             Preco = e.Preco
                         }).ToList()
-                    }).ToList()
+                    }).ToList().OrderBy(i => i.SeqItem).ToList()
                 })
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
@@ -218,7 +244,7 @@ namespace BrasaoHamburgueriaWeb.Repository
                         Referencia = p.ReferenciaEntrega,
                         Telefone = p.TelefoneCliente
                     },
-                    Itens = p.Itens.Select(i => new ItemPedidoViewModel
+                    Itens = p.Itens.Where(i => !i.Cancelado).Select(i => new ItemPedidoViewModel
                     {
                         CodItem = i.CodItemCardapio,
                         SeqItem = i.SeqItem,
@@ -228,6 +254,7 @@ namespace BrasaoHamburgueriaWeb.Repository
                         ValorExtras = i.ValorExtras,
                         ValorTotalItem = i.ValorTotal,
                         ObservacaoLivre = i.ObservacaoLivre,
+                        AcaoRegistro = (int)Comum.AcaoRegistro.Nenhuma,
                         PortasImpressaoProducao = i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao.Porta).ToList(),
                         Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
                         {
@@ -240,7 +267,7 @@ namespace BrasaoHamburgueriaWeb.Repository
                             DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
                             Preco = e.Preco
                         }).ToList()
-                    }).ToList()
+                    }).ToList().OrderBy(i => i.SeqItem).ToList()
                 })
                 .OrderBy(p => p.DataPedido)
                 .ToListAsync();

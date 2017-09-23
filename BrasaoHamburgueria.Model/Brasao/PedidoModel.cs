@@ -34,6 +34,7 @@ namespace BrasaoHamburgueria.Model
         public string Usuario { get; set; }
         public string DescricaoSituacao { get; set; }
         public bool PedidoExterno { get; set; }
+        public bool Alterar { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
         public List<String> PortasImpressaoComandaEntrega { get; set; }
@@ -70,6 +71,7 @@ namespace BrasaoHamburgueria.Model
         public double PrecoUnitario { get; set; }
         public double ValorExtras { get; set; }
         public double ValorTotalItem { get; set; }
+        public int AcaoRegistro { get; set; }
         public List<String> PortasImpressaoProducao { get; set; }
     }
 
@@ -221,6 +223,13 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("VALOR_TOTAL")]
         public double ValorTotal { get; set; }
+
+        [Required]
+        [Column("CANCELADO")]
+        public bool Cancelado { get; set; }
+
+        [Column("MOTIVO_CANCELAMENTO")]
+        public string MotivoCancelamento { get; set; }
 
         public virtual Pedido Pedido { get; set; }
 
