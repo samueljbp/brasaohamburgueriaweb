@@ -43,17 +43,65 @@
 
     };
 
+    $scope.cancelaPedido = function () {
+
+
+        $ngBootbox.confirm('Confirma o cancelamento definitivo do pedido?')
+            .then(function () {
+
+                $scope.pedidoSelecionado.situacao = 9;
+
+                $scope.promiseFinalizaPedido = $http({
+                    method: 'POST',
+                    url: urlBase + 'Pedido/AvancarPedido',
+                    data: $scope.pedidoSelecionado,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.succeeded) {
+                        noteService.sendMessage('', $scope.pedidoSelecionado.codPedido, 9);
+                        window.location.href = urlBase + '/Home/Index';
+
+                    }
+                    else {
+                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.erro.mensagem = error.statusText;
+                    $window.scrollTo(0, 0);
+                });
+
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+
+
+    }
+
     $scope.finalizaPedido = function () {
 
+        var hasErrors = $('#formPedido').validator('validate').has('.has-error').length;
 
+        if (hasErrors) {
+            return;
+        }
 
         $ngBootbox.confirm('Confirma o recebimento da entrega?')
             .then(function () {
 
+                $scope.pedidoSelecionado.situacao = 5;
 
                 $scope.promiseFinalizaPedido = $http({
                     method: 'POST',
-                    url: urlBase + 'Pedido/FinalizaPedido',
+                    url: urlBase + 'Pedido/AvancarPedido',
                     data: $scope.pedidoSelecionado,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',

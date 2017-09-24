@@ -18,13 +18,24 @@ namespace BrasaoHamburgueriaWeb.Repository
             _contexto = new BrasaoContext();
         }
 
-        public async Task AlteraSituacaoPedido(int codPedido, int codSituacao)
+        public async Task AlteraSituacaoPedido(int codPedido, int codSituacao, string motivoCancelamento, string feedbackCliente)
         {
             var ped = _contexto.Pedidos.Where(p => p.CodPedido == codPedido).FirstOrDefault();
 
             if (ped != null)
             {
                 ped.CodSituacao = codSituacao;
+
+                if (ped.CodSituacao == (int)SituacaoPedidoEnum.Concluido)
+                {
+                    ped.FeedbackCliente = feedbackCliente;
+                }
+
+                if (ped.CodSituacao == (int)SituacaoPedidoEnum.Cancelado)
+                {
+                    ped.MotivoCancelamento = motivoCancelamento;
+                }
+
                 await _contexto.SaveChangesAsync();
             }
         }
@@ -48,11 +59,11 @@ namespace BrasaoHamburgueriaWeb.Repository
                     {
                         ped = _contexto.Pedidos.Find(pedidoViewModel.CodPedido);
                     }
-                    
+
                     ped.BairroEntrega = pedidoViewModel.DadosCliente.Bairro;
                     ped.BandeiraCartao = pedidoViewModel.BandeiraCartao;
-                    ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;                    
-                    ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;                    
+                    ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;
+                    ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;
                     ped.FormaPagamento = pedidoViewModel.FormaPagamento;
                     ped.LogradouroEntrega = pedidoViewModel.DadosCliente.Logradouro;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
@@ -62,14 +73,17 @@ namespace BrasaoHamburgueriaWeb.Repository
                     ped.TelefoneCliente = pedidoViewModel.DadosCliente.Telefone;
                     ped.Troco = pedidoViewModel.Troco;
                     ped.TrocoPara = pedidoViewModel.TrocoPara;
-                    ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;                    
+                    ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;
                     ped.ValorTotal = pedidoViewModel.ValorTotal;
+                    ped.MotivoCancelamento = pedidoViewModel.MotivoCancelamento;
+                    ped.FeedbackCliente = pedidoViewModel.FeedbackCliente;
+                    ped.PedidoExterno = pedidoViewModel.PedidoExterno;
 
                     if (pedidoViewModel.CodPedido <= 0)
                     {
                         _contexto.Pedidos.Add(ped);
                     }
-                    
+
                     await _contexto.SaveChangesAsync();
 
                     ItemPedido item;
@@ -139,6 +153,8 @@ namespace BrasaoHamburgueriaWeb.Repository
                     Troco = p.Troco,
                     TrocoPara = p.TrocoPara,
                     ValorTotal = p.ValorTotal,
+                    FeedbackCliente = p.FeedbackCliente,
+                    MotivoCancelamento = p.MotivoCancelamento,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,
@@ -174,6 +190,8 @@ namespace BrasaoHamburgueriaWeb.Repository
                     DescricaoSituacao = p.Situacao.Descricao,
                     ValorTotal = p.ValorTotal,
                     TaxaEntrega = p.TaxaEntrega,
+                    MotivoCancelamento = p.MotivoCancelamento,
+                    FeedbackCliente = p.FeedbackCliente,
                     Itens = p.Itens.Select(i => new ItemPedidoViewModel
                     {
                         CodItem = i.CodItemCardapio,
@@ -231,6 +249,8 @@ namespace BrasaoHamburgueriaWeb.Repository
                     TrocoPara = p.TrocoPara,
                     Usuario = p.Usuario,
                     PedidoExterno = p.PedidoExterno,
+                    MotivoCancelamento = p.MotivoCancelamento,
+                    FeedbackCliente = p.FeedbackCliente,
                     PortasImpressaoComandaEntrega = new List<string> { _contexto.ImpressorasProducao.Where(i => i.CodImpressora == 1).FirstOrDefault().Porta },
                     DadosCliente = new DadosClientePedidoViewModel
                     {

@@ -54,10 +54,31 @@
         Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.situacao == 4 && !acao.ehGestao" style="margin-top: 20px;">
-    <div class="col-sm-12">
-        <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">
-            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Recebi a entrega
-        </button>
+<div ng-if="pedidoSelecionado.situacao == 1 && !acao.ehGestao" style="margin-top: 20px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-danger btn-default btn-lg" data-toggle="modal" ng-click="cancelaPedido()">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancelar o pedido
+            </button>
+        </div>
+    </div>
+    <div class="form-group col-sm-6">
+        <label for="taMotivoCancelamento" class="control-label">Motivo do cancelamento</label>
+        <input type="text" id="taMotivoCancelamento" required name="taMotivoCancelamento" class="form-control" ng-model="pedidoSelecionado.motivoCancelamento" maxlength="500" />
+        <div class="help-block with-errors"></div>
+    </div>
+</div>
+<div ng-if="pedidoSelecionado.situacao == 4 && !acao.ehGestao" style="margin-top: 20px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Recebi a entrega
+            </button>
+        </div>
+    </div>
+    <div class="form-group col-sm-6">
+        <label for="taFeedbackCliente" class="control-label">Críticas/Considerações</label>
+        <input type="text" id="taFeedbackCliente" required name="taFeedbackCliente" class="form-control" ng-model="pedidoSelecionado.feedbackCliente" maxlength="500" />
+        <div class="help-block with-errors"></div>
     </div>
 </div>

@@ -127,6 +127,7 @@
             return;
         }
 
+        //pedidos concluídos ou cancelados, retirar da lista
         for (i = 0; i < $scope.pedidos.length; i++) {
             if ($scope.pedidos[i].codPedido == codPedido) {
 
@@ -165,6 +166,55 @@
         return dataHora.getTime();
     }
 
+    $scope.finalizaPedido = function (pedido) {
+
+        var proximaSituacao = 5;
+        var descricaoProximaSituacao = getDescricaoSituacaoPedido(proximaSituacao);
+
+        $ngBootbox.confirm('Deseja finalizar o pedido ' + pedido.codPedido + '?')
+            .then(function () {
+
+                pedido.situacao = proximaSituacao;
+
+                $scope.promiseGravaPedido = $http({
+                    method: 'POST',
+                    url: urlBase + 'Pedido/AvancarPedido',
+                    data: pedido,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.succeeded) {
+
+                        for (i = 0; i < $scope.pedidos.length; i++) {
+                            if ($scope.pedidos[i].codPedido == pedido.codPedido) {
+
+                                $scope.pedidos.splice(i, 1);
+                                break;
+                            }
+                        }
+
+                    }
+                    else {
+                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.erro.mensagem = error.statusText;
+                    $window.scrollTo(0, 0);
+                });
+
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+    }
+
     $scope.avancarPedido = function (pedido) {
 
         var proximaSituacao = getProximaSituacaoPedido(pedido.situacao);
@@ -191,7 +241,9 @@
                         for (i = 0; i < $scope.pedidos.length; i++) {
                             if ($scope.pedidos[i].codPedido == pedido.codPedido) {
 
-                                noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
+                                if (!pedido.pedidoExterno) {
+                                    noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
+                                }
 
                                 $scope.pedidos[i].situacao = proximaSituacao;
                                 $scope.pedidos[i].descricaoSituacao = descricaoProximaSituacao;

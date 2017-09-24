@@ -35,6 +35,8 @@ namespace BrasaoHamburgueria.Model
         public string DescricaoSituacao { get; set; }
         public bool PedidoExterno { get; set; }
         public bool Alterar { get; set; }
+        public string MotivoCancelamento { get; set; }
+        public string FeedbackCliente { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
         public List<String> PortasImpressaoComandaEntrega { get; set; }
@@ -181,6 +183,12 @@ namespace BrasaoHamburgueria.Model
 
         [Column("REFERENCIA_ENTREGA")]
         public string ReferenciaEntrega { get; set; }
+
+        [Column("MOTIVO_CANCELAMENTO")]
+        public string MotivoCancelamento { get; set; }
+
+        [Column("FEEDBACK_CLIENTE")]
+        public string FeedbackCliente { get; set; }
 
         public virtual SituacaoPedido Situacao { get; set; }
 

@@ -408,6 +408,7 @@
     <Content Include="Content\img\itens_cardapio\zz_top.jpg" />
     <Content Include="Content\img\logo.jpg" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\sounds\beep.wav" />
     <Content Include="Emails\InstrucoesEsqueciMinhaSenha.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="MobileTest\assets\devices.min.css" />

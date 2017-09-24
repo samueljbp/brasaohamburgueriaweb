@@ -22,7 +22,7 @@
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseImprime,backdrop:false,delay:10,minDuration:1000}"></div>
-    <audio id="play" src="http://www.soundjay.com/button/beep-07.wav"></audio>
+    <audio id="play" src="~/Content/sounds/beep.wav"></audio>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <br />
         <div class="row">
@@ -87,6 +87,9 @@
                                     <th>
 
                                     </th>
+                                    <th>
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -137,6 +140,12 @@
                                     <td class="text-right">
                                         <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 0 || ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
                                             <span ng-class="determinaEstiloBotao(ped, 'I')" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default btn-sm" title="Finalizar" ng-click="finalizaPedido(ped)" ng-if="ped.pedidoExterno && ped.situacao == 4">
+                                            <span class=" glyphicon glyphicon-ok" aria-hidden="true">
                                             </span>
                                         </button>
                                     </td>
