@@ -1418,9 +1418,13 @@
     </Compile>
     <Compile Include="GlobalData.cs" />
     <Compile Include="Helpers\Util.cs" />
-    <Compile Include="Migrations\201709230232200_initial.cs" />
-    <Compile Include="Migrations\201709230232200_initial.Designer.cs">
-      <DependentUpon>201709230232200_initial.cs</DependentUpon>
+    <Compile Include="Migrations\201709252003011_InitialIdentity.cs" />
+    <Compile Include="Migrations\201709252003011_InitialIdentity.Designer.cs">
+      <DependentUpon>201709252003011_InitialIdentity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709252011202_InitialBrasao.cs" />
+    <Compile Include="Migrations\201709252011202_InitialBrasao.Designer.cs">
+      <DependentUpon>201709252011202_InitialBrasao.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ConfigurationBrasao.cs" />
     <Compile Include="Migrations\ConfigurationIdentity.cs" />
@@ -1452,8 +1456,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709230232200_initial.resx">
-      <DependentUpon>201709230232200_initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709252003011_InitialIdentity.resx">
+      <DependentUpon>201709252003011_InitialIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709252011202_InitialBrasao.resx">
+      <DependentUpon>201709252011202_InitialBrasao.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -11,6 +11,7 @@ namespace BrasaoHamburgueriaWeb.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+            ContextKey = "BrasaoHamburgueriaWeb.Context.BrasaoContext";
         }
 
         protected override void Seed(BrasaoHamburgueriaWeb.Context.BrasaoContext context)
