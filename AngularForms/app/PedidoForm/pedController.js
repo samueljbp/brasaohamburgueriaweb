@@ -1,4 +1,16 @@
-﻿brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
+﻿brasaoWebApp.directive('scrollToTop', function ($window, $timeout) {
+    return {
+        restrict: 'A',
+        link: function postLink(scope, elem, attrs) {
+            scope.$watch(attrs.scrollToTop, function () {
+                //elem[0].scrollTop = 0;
+                $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
+            });
+        }
+    };
+});
+
+brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBootbox, $window, $timeout, noteService) {
     //FUNÇÕES DA TELA QUE LISTA O PEDIDO
     //função que carrega o cardápio em memória assincronamente
     $scope.getCardapio = function () {
@@ -393,6 +405,8 @@
         }
 
         $scope.atualizaValorTotalItem();
+
+        $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
     }
 
     //função que incrementa a quantidade de um item a incluir

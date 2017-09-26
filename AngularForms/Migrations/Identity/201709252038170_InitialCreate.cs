@@ -1,9 +1,9 @@
-namespace BrasaoHamburgueriaWeb.Migrations
+namespace BrasaoHamburgueriaWeb.Migrations.Identity
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialIdentity : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {

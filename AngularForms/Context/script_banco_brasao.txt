@@ -1,3 +1,8 @@
+--no banco do identity
+insert into AspNetRoles values (1, 'Clientes');
+insert into AspNetRoles values (2, 'Administradores');
+
+
 --classes
 insert into CLASSE_ITEM_CARDAPIO values (1, 'Hamburgueres', null, 1);
 insert into CLASSE_ITEM_CARDAPIO values (2, 'Porções', null, 2);
@@ -190,7 +195,7 @@ insert into SITUACAO_PEDIDO values (9, 'Cancelado');
 
 
 
--parametros
+--parametros
 insert into PARAMETRO_SISTEMA values (1, 'Valor da taxa de entrega', '3,5');
 
 

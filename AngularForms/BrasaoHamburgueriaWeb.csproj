@@ -1418,18 +1418,18 @@
     </Compile>
     <Compile Include="GlobalData.cs" />
     <Compile Include="Helpers\Util.cs" />
-    <Compile Include="Migrations\201709252003011_InitialIdentity.cs" />
-    <Compile Include="Migrations\201709252003011_InitialIdentity.Designer.cs">
-      <DependentUpon>201709252003011_InitialIdentity.cs</DependentUpon>
+    <Compile Include="Migrations\Brasao\201709252036459_InitialCreate.cs" />
+    <Compile Include="Migrations\Brasao\201709252036459_InitialCreate.Designer.cs">
+      <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201709252011202_InitialBrasao.cs" />
-    <Compile Include="Migrations\201709252011202_InitialBrasao.Designer.cs">
-      <DependentUpon>201709252011202_InitialBrasao.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\ConfigurationBrasao.cs" />
-    <Compile Include="Migrations\ConfigurationIdentity.cs" />
+    <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
+    <Compile Include="Migrations\Identity\201709252038170_InitialCreate.cs" />
+    <Compile Include="Migrations\Identity\201709252038170_InitialCreate.Designer.cs">
+      <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
@@ -1456,11 +1456,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709252003011_InitialIdentity.resx">
-      <DependentUpon>201709252003011_InitialIdentity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Brasao\201709252036459_InitialCreate.resx">
+      <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201709252011202_InitialBrasao.resx">
-      <DependentUpon>201709252011202_InitialBrasao.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
+      <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
