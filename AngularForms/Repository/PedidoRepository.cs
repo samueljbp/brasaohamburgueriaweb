@@ -192,28 +192,29 @@ namespace BrasaoHamburgueriaWeb.Repository
                     TaxaEntrega = p.TaxaEntrega,
                     MotivoCancelamento = p.MotivoCancelamento,
                     FeedbackCliente = p.FeedbackCliente,
+                    PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
                     Itens = p.Itens.Select(i => new ItemPedidoViewModel
-                    {
-                        CodItem = i.CodItemCardapio,
-                        SeqItem = i.SeqItem,
-                        DescricaoItem = i.ItemCardapio.Nome,
-                        Quantidade = i.Quantidade,
-                        PrecoUnitario = i.PrecoUnitario,
-                        ValorExtras = i.ValorExtras,
-                        ValorTotalItem = i.ValorTotal,
-                        ObservacaoLivre = i.ObservacaoLivre,
-                        Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
                         {
-                            CodObservacao = o.CodObservacao,
-                            DescricaoObservacao = o.Observacao.DescricaoObservacao
-                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
-                        extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
-                        {
-                            CodOpcaoExtra = e.CodOpcaoExtra,
-                            DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
-                            Preco = e.Preco
-                        }).ToList()
-                    }).ToList().OrderBy(i => i.SeqItem).ToList()
+                            CodItem = i.CodItemCardapio,
+                            SeqItem = i.SeqItem,
+                            DescricaoItem = i.ItemCardapio.Nome,
+                            Quantidade = i.Quantidade,
+                            PrecoUnitario = i.PrecoUnitario,
+                            ValorExtras = i.ValorExtras,
+                            ValorTotalItem = i.ValorTotal,
+                            ObservacaoLivre = i.ObservacaoLivre,
+                            Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
+                            {
+                                CodObservacao = o.CodObservacao,
+                                DescricaoObservacao = o.Observacao.DescricaoObservacao
+                            }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
+                            extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
+                            {
+                                CodOpcaoExtra = e.CodOpcaoExtra,
+                                DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
+                                Preco = e.Preco
+                            }).ToList()
+                        }).ToList().OrderBy(i => i.SeqItem).ToList()
                 })
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
@@ -251,7 +252,7 @@ namespace BrasaoHamburgueriaWeb.Repository
                     PedidoExterno = p.PedidoExterno,
                     MotivoCancelamento = p.MotivoCancelamento,
                     FeedbackCliente = p.FeedbackCliente,
-                    PortasImpressaoComandaEntrega = new List<string> { _contexto.ImpressorasProducao.Where(i => i.CodImpressora == 1).FirstOrDefault().Porta },
+                    PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,

@@ -37,9 +37,10 @@ namespace BrasaoHamburgueria.Model
         public bool Alterar { get; set; }
         public string MotivoCancelamento { get; set; }
         public string FeedbackCliente { get; set; }
+        public string EstiloLinhaPorTempo { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
-        public List<String> PortasImpressaoComandaEntrega { get; set; }
+        public string PortaImpressaoComandaEntrega { get; set; }
     }
 
     public class DadosClientePedidoViewModel

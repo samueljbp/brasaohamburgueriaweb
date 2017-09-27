@@ -197,6 +197,7 @@ insert into SITUACAO_PEDIDO values (9, 'Cancelado');
 
 --parametros
 insert into PARAMETRO_SISTEMA values (1, 'Valor da taxa de entrega', '3,5');
+insert into PARAMETRO_SISTEMA values (2, 'Endereço impressora de comanda', '192.168.1.201');
 
 
 insert into funcionamento_estabelecimento values (0, '19:00', '23:59', 1);

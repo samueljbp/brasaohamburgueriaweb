@@ -1,15 +1,42 @@
-﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, $window, noteService) {
+﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, $window, $interval, $timeout, noteService) {
     $erro = { mensagem: '' };
 
     $scope.pedidos = [];
     $scope.promisesLoader = [];
     $scope.pedidoSelecionado = [];
-    $scope.acao = { ehGestao: true };
+    $scope.acao = { ehGestao: true, atualizacaoAutomatica: true };
 
-    $scope.$on('timer-tick', function (event, args) {
-        //$scope.timerConsole += $scope.timerType  + ' - event.name = '+ event.name + ', timeoutId = ' + args.timeoutId + ', millis = ' + args.millis +'\n';
-        var aaa = 1;
+    $scope.checkAtualizacaoAutomatica = function () {
+        if ($scope.acao.atualizacaoAutomatica) {
+            $scope.iniciarTimer();
+        } else {
+            $scope.pararTimer();
+        }
+    }
+
+
+    var parar;
+    $scope.iniciarTimer = function () {
+        // Don't start a new fight if we are already fighting
+        if (angular.isDefined(parar)) return;
+
+        parar = $interval(function () {
+            $scope.getPedidosPendentes(true);
+        }, 5000);
+    };
+
+    $scope.pararTimer = function () {
+        if (angular.isDefined(parar)) {
+            $interval.cancel(parar);
+            parar = undefined;
+        }
+    };
+
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        $scope.pararTimer();
     });
+
 
     function playSound() {
         document.getElementById('play').play();
@@ -68,7 +95,7 @@
 
     }
 
-    $scope.getPedidosPendentes = function () {
+    $scope.getPedidosPendentes = function (confereeAlerta) {
 
         //var accesstoken = sessionStorage.getItem('accessToken');
 
@@ -87,7 +114,16 @@
 
             if (retorno.succeeded) {
 
+                if (confereeAlerta) {
+                    var pedidosNovo = retorno.data;
+
+                    if (pedidosNovo.length != $scope.pedidos.length) {
+                        playSound();
+                    }
+                }
+
                 $scope.pedidos = retorno.data;
+                verificaTemposPedidos();
 
             }
             else {
@@ -145,6 +181,22 @@
 
     });
 
+    function verificaTemposPedidos() {
+        for (i = 0; i < $scope.pedidos.length; i++) {
+
+            var dataHora = new Date($scope.pedidos[i].dataPedido);
+            var agora = new Date();
+            var diff = agora.getTime() - dataHora.getTime();
+            if (diff >= 1200000) {
+                if (diff < 2400000) { //mais de 40 minutos
+                    $scope.pedidos[i].estiloLinhaPorTempo = "danger";
+                } else { //mais de 20 minutos
+                    $scope.pedidos[i].estiloLinhaPorTempo = "warning";
+                }
+            }
+        }
+    }
+
     $scope.sendMessage = function () {
         noteService.sendMessage($scope.pedido.usuario, $scope.pedido.codPedido, $scope.pedido.situacao);
     };
@@ -154,11 +206,17 @@
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
 
-        $scope.getPedidosPendentes();
+        $scope.getPedidosPendentes(false);
 
         $scope.antiForgeryToken = antiForgeryToken;
 
-        $scope.startTime = Date.parse("2017-09-11 14:06:00");
+        if ($scope.acao.atualizacaoAutomatica) {
+            $scope.checkAtualizacaoAutomatica();
+        }
+
+        $interval(function () {
+            verificaTemposPedidos();
+        }, 60000);
     }
 
     $scope.getTimeMs = function (data) {
@@ -282,7 +340,7 @@
             method: 'POST',
             crossDomain: true,
             dataType: 'json',
-            url: urlWebAPIBase + 'Impressao/ImprimeItensProducao',
+            url: urlWebAPIBase + 'Impressao/ImprimePedido',
             data: pedido
         }).then(function (success) {
             var retorno = genericSuccess(success);

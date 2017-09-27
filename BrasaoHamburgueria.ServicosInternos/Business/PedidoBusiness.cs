@@ -354,8 +354,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
             //declaração da variável para retorno das funções
             int iRetorno = 0;
 
-            return ImprimeComandaPedido(pedido);
-
             List<PortaPedido> portasPedido = DividePorPorta(pedido);
 
             ServiceResultViewModel result = new ServiceResultViewModel { Succeeded = true, Errors = new List<string>(), data = null };

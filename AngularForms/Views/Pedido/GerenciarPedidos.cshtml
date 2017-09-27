@@ -25,7 +25,7 @@
     <audio id="play" src="~/Content/sounds/beep.wav"></audio>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <br />
-        <div class="row">
+        <div>
             <h4>Gerenciar pedidos</h4>
             <hr />
 
@@ -34,6 +34,9 @@
                     <button type="button" class="btn btn-success" ng-click="novoPedidoExterno()">
                         <span class="glyphicon glyphicon-phone-alt"></span> Novo pedido externo
                     </button>
+                </div>
+                <div class="col-sm-3">
+                    <span><input type="checkbox" id="checkAtualizacaoPeriodica" ng-model="acao.atualizacaoAutomatica" ng-change="checkAtualizacaoAutomatica()" />Atualização periódica automática</span>
                 </div>
             </div>
             <div ng-if="pedidos.length == 0">
@@ -107,10 +110,10 @@
                                     <td class="text-left">
                                         {{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}
                                     </td>
-                                    <td>
+                                    <td ng-class="ped.estiloLinhaPorTempo">
                                         <timer start-time="getTimeMs(ped.dataPedido)">{{hhours}}:{{mminutes}}:{{sseconds}}</timer>
                                     </td>
-                                    <td ng-class="determinaEstiloBotao(ped, 'S')">
+                                    <td>
                                         {{ped.descricaoSituacao}}
                                     </td>
                                     <td class="text-right">

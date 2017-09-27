@@ -13,11 +13,18 @@ namespace BrasaoHamburgueria.ServicosInternos
     {
         private Business.PedidoBusiness bo = new Business.PedidoBusiness();
 
-        [Route("api/Impressao/ImprimeItensProducao")]
+        [Route("api/Impressao/ImprimePedido")]
         [HttpPost] // There are HttpGet, HttpPost, HttpPut, HttpDelete.
-        public ServiceResultViewModel ImprimeItensProducao(PedidoViewModel model)
+        public ServiceResultViewModel ImprimePedido(PedidoViewModel model)
         {
-            return bo.ImprimeItensProducao(model);
+            var retorno = bo.ImprimeComandaPedido(model);
+
+            if (retorno.Succeeded)
+            {
+                retorno = bo.ImprimeItensProducao(model);
+            }
+
+            return retorno;
         }
 
         // GET api/<controller>
