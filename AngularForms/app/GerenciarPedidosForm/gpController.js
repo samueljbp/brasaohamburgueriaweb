@@ -184,14 +184,21 @@
     function verificaTemposPedidos() {
         for (i = 0; i < $scope.pedidos.length; i++) {
 
+            $scope.pedidos[i].estiloLinhaPorTempo = "";
+
             var dataHora = new Date($scope.pedidos[i].dataPedido);
             var agora = new Date();
             var diff = agora.getTime() - dataHora.getTime();
-            if (diff >= 1200000) {
+
+            //se está aguardando confirmação a mais de 5 minutos
+            if ($scope.pedidos[i].situacao == 1 && diff >= 300000) {
+                playSound();
+                $scope.pedidos[i].estiloLinhaPorTempo = "corAlerta";
+            } else if (diff >= 1200000) {
                 if (diff < 2400000) { //mais de 40 minutos
-                    $scope.pedidos[i].estiloLinhaPorTempo = "danger";
-                } else { //mais de 20 minutos
                     $scope.pedidos[i].estiloLinhaPorTempo = "warning";
+                } else { //mais de 20 minutos
+                    $scope.pedidos[i].estiloLinhaPorTempo = "danger";
                 }
             }
         }

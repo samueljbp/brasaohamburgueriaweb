@@ -1,8 +1,13 @@
-﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, noteService) {
+﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, noteService) {
     $scope.erro = { mensagem: '' };
     $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
     $scope.promisesLoader = [];
     $scope.acao = { ehGestao: false };
+    $scope.loginUsuario = '';
+
+    $interval(function () {
+        $scope.getPedidoAberto($scope.loginUsuario);
+    }, 60000);
 
     $scope.getPedidoAberto = function (loginUsuario) {
 
@@ -23,10 +28,18 @@
 
             if (retorno.succeeded) {
 
+                var situacaoAnterior = -1;
+                if ($scope.pedidoSelecionado) {
+                    situacaoAnterior = $scope.pedidoSelecionado.situacao;
+                }
+
                 $scope.pedidoSelecionado = retorno.data;
                 $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedidoSelecionado.situacao);
                 $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
 
+                if (situacaoAnterior == 1 && $scope.pedidoSelecionado.situacao == 2) {
+                    $('#modalPedidoConfirmado').modal('show');
+                }
             }
             else {
                 $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
@@ -167,6 +180,7 @@
 
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
+        $scope.loginUsuario = loginUsuario;
         $scope.antiForgeryToken = antiForgeryToken;
         $scope.getPedidoAberto(loginUsuario);
     }

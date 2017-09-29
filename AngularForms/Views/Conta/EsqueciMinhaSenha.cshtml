@@ -1,4 +1,6 @@
-﻿<div ng-controller="esController">
+﻿@using Microsoft.AspNet.Identity;
+<script src="~/app/EsqueciSenhaForm/esController.js"></script>
+<div ng-controller="esController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
     @{
         ViewBag.Title = "Brasão Hamburgueria - Redefinir senha";
     }
@@ -10,10 +12,9 @@
             return cookieToken + ":" + formToken;
         }
     }
-    <script src="~/app/EsqueciSenhaForm/esController.js"></script>
     <h2>Redefinir senha</h2>
     <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
-    <form role="form" id="formEsqueciSenha" class="form-horizontal" ng-submit="submitForm()">
+    <form role="form" id="formEsqueciSenha" class="form-horizontal">
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
         <hr />
         <h4>Informe seu e-mail cadastrado para receber as instruções de redefinição da senha.</h4>
@@ -25,7 +26,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-5">
-                <input type="submit" class="btn btn-primary" value="Confirmar" />
+                <input type="button" class="btn btn-primary" value="Confirmar" ng-click="confirmar()" />
             </div>
         </div>
     </form>

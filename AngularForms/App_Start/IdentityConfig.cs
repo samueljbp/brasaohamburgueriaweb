@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Configuration;
 using System.Diagnostics;
+using BrasaoHamburgueriaWeb.Repository;
 
 namespace BrasaoHamburgueriaWeb
 {
@@ -23,14 +24,15 @@ namespace BrasaoHamburgueriaWeb
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            SmtpClient client = new SmtpClient("mail.energisa.com.br", 25);
+            ServidorSMTP servidor = ParametroRepository.GetServidorSMTP();
 
-            MailMessage mailMessage = new MailMessage("sistemas@energisa.com.br", message.Destination, message.Subject, message.Body);
+            // Plug in your email service here to send an email.
+            SmtpClient client = new SmtpClient(servidor.Endereco, Convert.ToInt32(servidor.Porta));
+
+            MailMessage mailMessage = new MailMessage(servidor.RemetentePadrao, message.Destination, message.Subject, message.Body);
             mailMessage.IsBodyHtml = true;
 
             return client.SendMailAsync(mailMessage);
-
         }
     }
 

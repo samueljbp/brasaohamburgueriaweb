@@ -12,6 +12,13 @@ using System.Configuration;
 
 namespace BrasaoHamburgueriaWeb.Repository
 {
+    public class ServidorSMTP
+    {
+        public string Endereco { get; set; }
+        public string Porta { get; set; }
+        public string RemetentePadrao { get; set; }
+    }
+
     public static class ParametroRepository
     {
         private static BrasaoContext _contexto = new BrasaoContext();
@@ -74,6 +81,28 @@ namespace BrasaoHamburgueriaWeb.Repository
             }
 
             return "N";
+        }
+
+        public static ServidorSMTP GetServidorSMTP()
+        {
+            ServidorSMTP serv = new ServidorSMTP();
+
+            if (ConfigurationManager.AppSettings["ServidorSMTP"] != null)
+            {
+                serv.Endereco = ConfigurationManager.AppSettings["ServidorSMTP"].ToString();
+            }
+
+            if (ConfigurationManager.AppSettings["PortaSMTP"] != null)
+            {
+                serv.Porta = ConfigurationManager.AppSettings["PortaSMTP"].ToString();
+            }
+
+            if (ConfigurationManager.AppSettings["RemetentePadrao"] != null)
+            {
+                serv.RemetentePadrao = ConfigurationManager.AppSettings["RemetentePadrao"].ToString();
+            }
+
+            return serv;
         }
     }
 }

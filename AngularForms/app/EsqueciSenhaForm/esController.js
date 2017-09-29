@@ -1,8 +1,7 @@
 ﻿brasaoWebApp.controller('esController', function ($scope, $http) {
-    init();
-
-    function init() {
+    function init(loginUsuario, antiForgeryToken) {
         $scope.esqueciMinhaSenhaViewModel = { email: "" }
+        $scope.antiForgeryToken = antiForgeryToken;
 
         $('#formEsqueciSenha').validator({
             custom: {
@@ -15,39 +14,40 @@
                 }
             }
         });
+    }
 
-        $scope.submitForm = function () {
+    $scope.confirmar = function () {
 
-            var hasErrors = $('#formEsqueciSenha').validator('validate').has('.has-error').length;
+        var hasErrors = $('#formEsqueciSenha').validator('validate').has('.has-error').length;
 
-            if (hasErrors) {
-                return;
+        if (hasErrors) {
+            return;
+        }
+
+        return $http({
+            method: 'POST',
+            url: urlBase + 'Conta/EsqueciMinhaSenha',
+            data: $scope.esqueciMinhaSenhaViewModel,
+            headers: {
+                'RequestVerificationToken': $scope.antiForgeryToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.Succeeded) {
+                window.location.href = urlBase + 'Conta/EsqueciMinhaSenhaConfirmacao';
+            }
+            else {
+                $('#mensagemErroFormulario').removeClass('hidden');
+                $('#mensagemErroFormulario').text(retorno.errors[0]);
             }
 
-            return $http({
-                method: 'POST',
-                url: urlBase + 'Conta/EsqueciMinhaSenha',
-                data: $scope.esqueciMinhaSenhaViewModel,
-                headers: {
-                    'RequestVerificationToken': $scope.antiForgeryToken
-                }
-            }).then(function (success) {
-                var retorno = genericSuccess(success);
-
-                if (retorno.Succeeded) {
-                    window.location.href = urlBase + 'Conta/EsqueciMinhaSenhaConfirmacao';
-                }
-                else {
-                    $('#mensagemErroFormulario').removeClass('hidden');
-                    $('#mensagemErroFormulario').text(retorno.errors[0]);
-                }
-
-            }).catch(function (error) {
-                $('#mensagemErroFormulario').removeClass('hidden');
-                $('#mensagemErroFormulario').text(error.statusText);
-            });
+        }).catch(function (error) {
+            $('#mensagemErroFormulario').removeClass('hidden');
+            $('#mensagemErroFormulario').text(error.statusText);
+        });
 
 
-        };
-    }
+    };
 });

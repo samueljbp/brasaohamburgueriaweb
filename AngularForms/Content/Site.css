@@ -1,4 +1,8 @@
-﻿.texto-tachado {
+﻿.corAlerta {
+    background-color: #fb0303;
+}
+
+.texto-tachado {
     text-decoration: line-through;
 }
 
