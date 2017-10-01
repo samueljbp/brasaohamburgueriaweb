@@ -6,7 +6,7 @@ brasaoWebApp.config(['$httpProvider', function ($httpProvider) {
 
 brasaoWebApp.value('$', $);
 
-var urlBase = 'http://10.84.124.128:57919/';
+var urlBase = 'http://localhost:57919/';
 var urlWebAPIBase = 'http://localhost:62993/api/';
 
 brasaoWebApp.factory('noteService', ['$', '$rootScope',

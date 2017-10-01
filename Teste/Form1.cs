@@ -108,20 +108,20 @@ namespace Teste
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PedidoViewModel ped = this.MontaPedidoTeste();
-            ped.PortasImpressaoComandaEntrega.Add(txtPorta.Text);
-            BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness bo = new BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness();
+            //PedidoViewModel ped = this.MontaPedidoTeste();
+            //ped.PortasImpressaoComandaEntrega.Add(txtPorta.Text);
+            //BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness bo = new BrasaoHamburgueria.ServicosInternos.Business.PedidoBusiness();
 
-            var result = bo.ImprimeItensProducao(ped);
+            //var result = bo.ImprimeItensProducao(ped);
             
-            if (result.Succeeded)
-            {
-                MessageBox.Show("Sucesso na impressão!");
-            }
-            else
-            {
-                MessageBox.Show("Erro: " + result.Errors[0].ToString());
-            }
+            //if (result.Succeeded)
+            //{
+            //    MessageBox.Show("Sucesso na impressão!");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Erro: " + result.Errors[0].ToString());
+            //}
         }
     }
 }

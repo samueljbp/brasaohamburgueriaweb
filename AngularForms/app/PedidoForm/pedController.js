@@ -106,8 +106,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             $scope.pedido.dadosCliente = {
                 nome: '',
                 telefone: '',
-                estado: '',
-                cidade: '',
+                estado: 'MG',
+                cidade: 'Cataguases',
                 logradouro: '',
                 numero: '',
                 complemento: '',
@@ -183,21 +183,21 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                     }
 
                     if ($scope.usuario.id <= 0) {
-                        $scope.sucesso.mensagem = 'Cliente não cadastrado.';
+                        $scope.informacao.mensagem = 'Cliente não cadastrado.';
                         
                     }
                 } else {
-                    $scope.sucesso.mensagem = 'Cliente não encontrado.';
+                    $scope.informacao.mensagem = 'Cliente não encontrado.';
                 }
             } else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.informacao.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
             
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.informacao.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -295,8 +295,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 salvar: false,
                 nome: '',
                 telefone: '',
-                estado: '',
-                cidade: '',
+                estado: 'MG',
+                cidade: 'Cataguases',
                 logradouro: '',
                 numero: '',
                 complemento: '',
@@ -577,6 +577,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     function reiniciaVariaveis() {
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
+        $scope.informacao = { mensagem: '' };
 
         $scope.promisesLoader = [];
 

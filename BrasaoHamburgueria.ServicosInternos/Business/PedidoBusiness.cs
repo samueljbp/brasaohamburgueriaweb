@@ -245,6 +245,15 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         i = i + 1;
                     }
 
+                    if (pedido.TaxaEntrega > 0)
+                    {
+                        var qtdTx = 1;
+                        texto += FormataComEspacos(qtdTx.ToString("00"), 5) + FormataComEspacos("Taxa entrega", 24) + FormataComEspacos(pedido.TaxaEntrega.ToString("C"), 10) + FormataComEspacos(pedido.TaxaEntrega.ToString("C"), 9);
+                        texto += comandoQuebraLinha;
+                        texto += "------------------------------------------------";
+                        texto += comandoQuebraLinha;
+                    }
+
                     ImpressaoBematech4200.BematechTX(texto).ValidaRetornoImpressora(portaComanda);
 
                     ImpressaoBematech4200.FormataTX("     TOTAL: " + pedido.ValorTotal.ToString("C"), (int)ImpressaoBematech4200.TipoLetraImpressao.Elite, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Ativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);

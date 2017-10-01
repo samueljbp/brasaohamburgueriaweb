@@ -117,7 +117,7 @@
                 if (confereeAlerta) {
                     var pedidosNovo = retorno.data;
 
-                    if (pedidosNovo.length != $scope.pedidos.length) {
+                    if (pedidosNovo.length != $scope.pedidos.length && pedidosNovo.length > 0) {
                         playSound();
                     }
                 }
@@ -192,7 +192,6 @@
 
             //se está aguardando confirmação a mais de 5 minutos
             if ($scope.pedidos[i].situacao == 1 && diff >= 300000) {
-                playSound();
                 $scope.pedidos[i].estiloLinhaPorTempo = "corAlerta";
             } else if (diff >= 1200000) {
                 if (diff < 2400000) { //mais de 40 minutos
