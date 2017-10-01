@@ -28,6 +28,7 @@ namespace BrasaoHamburgueriaWeb
 
             // Plug in your email service here to send an email.
             SmtpClient client = new SmtpClient(servidor.Endereco, Convert.ToInt32(servidor.Porta));
+            client.EnableSsl = false;
 
             MailMessage mailMessage = new MailMessage(servidor.RemetentePadrao, message.Destination, message.Subject, message.Body);
             mailMessage.IsBodyHtml = true;

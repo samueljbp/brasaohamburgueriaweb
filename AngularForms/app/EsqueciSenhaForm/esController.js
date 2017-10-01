@@ -24,7 +24,7 @@
             return;
         }
 
-        return $http({
+        $scope.promiseEsqueciSenha = $http({
             method: 'POST',
             url: urlBase + 'Conta/EsqueciMinhaSenha',
             data: $scope.esqueciMinhaSenhaViewModel,
