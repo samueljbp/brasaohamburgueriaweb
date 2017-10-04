@@ -32,6 +32,25 @@ namespace BrasaoHamburgueriaWeb.Controllers
             return View();
         }
 
+        public JsonResult GetDadosItemCardapio(int codItemCardapio)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                result.data = _rep.GetDadosItemCardapio(codItemCardapio);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
         public JsonResult GetCardapio()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

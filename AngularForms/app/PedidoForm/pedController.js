@@ -184,7 +184,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
                     if ($scope.usuario.id <= 0) {
                         $scope.informacao.mensagem = 'Cliente não cadastrado.';
-                        
+
                     }
                 } else {
                     $scope.informacao.mensagem = 'Cliente não encontrado.';
@@ -194,7 +194,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 $window.scrollTo(0, 0);
             }
 
-            
+
 
         }, function (error) {
             $scope.informacao.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
@@ -221,7 +221,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 } else if ($scope.pedido.itens[i].acaoRegistro == acaoRegistro.nenhuma) {
                     $scope.pedido.itens[i].acaoRegistro = acaoRegistro.cancelar;
                 }
-                
+
                 break;
             }
         }
@@ -240,7 +240,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 if ($scope.pedido.itens[i].acaoRegistro != acaoRegistro.cancelar) {
                     $scope.pedido.valorTotal = $scope.pedido.valorTotal + $scope.pedido.itens[i].valorTotalItem;
                 }
-                
+
             }
         }
     }
@@ -316,6 +316,12 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     function reiniciaVariaveisItem() {
         $scope.itemCardapioSelecionado = null;
 
+        $scope.dadosItemCardapio = {
+            codItemCardapio: 0,
+            observacoes: [],
+            extras: []
+        }
+
         $scope.novoItem = {
             seqItem: 0,
             codItem: 0,
@@ -386,27 +392,77 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         reiniciaVariaveisItem();
     }
 
+    $scope.formataTelefone = function () {
+        var numero = $scope.pedido.dadosCliente.telefone;
+        if (numero.length <= 11) {
+            var ddd = numero.substring(0, 2);
+            var resto = numero.substring(2);
+            var primeiroBloco = '';
+            var segundoBloco = '';
+            if (resto.length > 8) {
+                primeiroBloco = resto.substring(0, 5);
+                segundoBloco = resto.substring(5);
+            } else {
+                primeiroBloco = resto.substring(0, 4);
+                segundoBloco = resto.substring(4);
+            }
+
+            $scope.pedido.dadosCliente.telefone = '(' + ddd + ') ' + primeiroBloco + '-' + segundoBloco;
+        }
+    }
+
     //função de seleção de item para inclusão
     $scope.selecionaItemParaInclusao = function (codItemCardapio) {
-        $scope.itemCardapioSelecionado = $filter('filter')($scope.itensFiltrados, { codItemCardapio: codItemCardapio })[0];
 
-        $scope.novoItem = {
-            seqItem: getNextSeqItemPedido(),
-            codItem: $scope.itemCardapioSelecionado.codItemCardapio,
-            descricaoItem: $scope.itemCardapioSelecionado.nome,
-            obs: [],
-            observacaoLivre: '',
-            extras: [],
-            quantidade: 1,
-            precoUnitario: $scope.itemCardapioSelecionado.preco,
-            valorExtras: 0.0,
-            valorTotal: 0.0,
-            acaoRegistro: acaoRegistro.incluir
-        }
+        $scope.promiseGetDadosItemCardapio = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cardapio/GetDadosItemCardapio?codItemCardapio=' + codItemCardapio
+        })
+        .then(function (response) {
+            var retorno = genericSuccess(response);
 
-        $scope.atualizaValorTotalItem();
+            if (retorno.succeeded) {
 
-        $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
+                $scope.dadosItemCardapio = retorno.data;
+
+                $scope.itemCardapioSelecionado = $filter('filter')($scope.itensFiltrados, { codItemCardapio: codItemCardapio })[0];
+
+                $scope.novoItem = {
+                    seqItem: getNextSeqItemPedido(),
+                    codItem: $scope.itemCardapioSelecionado.codItemCardapio,
+                    descricaoItem: $scope.itemCardapioSelecionado.nome,
+                    obs: [],
+                    observacaoLivre: '',
+                    extras: [],
+                    quantidade: 1,
+                    precoUnitario: $scope.itemCardapioSelecionado.preco,
+                    valorExtras: 0.0,
+                    valorTotal: 0.0,
+                    acaoRegistro: acaoRegistro.incluir
+                }
+
+                $scope.atualizaValorTotalItem();
+
+                $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }, function (error) {
+            console.log(error);
+
+            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        });
+
     }
 
     //função que incrementa a quantidade de um item a incluir
@@ -512,19 +568,18 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                         reiniciaVariaveisPedido();
                         reiniciaVariaveisItem();
 
-                        sessionStorage.pedido = null;
-                        sessionStorage.codPedido = retorno.data;
-
                         noteService.sendMessage('', sessionStorage.codPedido, 1);
 
-                        if ($scope.modoAdm.ativo)
-                        {
+                        sessionStorage.removeItem('pedido');
+                        sessionStorage.removeItem('codPedido');
+
+                        if ($scope.modoAdm.ativo) {
                             sessionStorage.modoAdm = "N";
                             setTimeout(function () { window.close(); }, 5000);
                         } else {
                             window.location.href = urlBase + 'Pedido/PedidoRegistrado';
                         }
-                        
+
 
                     }
                     else {
@@ -603,6 +658,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null || sessionStorage.getItem("modoAdm") == 'N') {
             sessionStorage.modoAdm = "N";
             $scope.modoAdm.ativo = false;
+        } else {
+
         }
 
         noteService.connect();

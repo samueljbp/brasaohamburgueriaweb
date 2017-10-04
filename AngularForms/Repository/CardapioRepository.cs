@@ -18,6 +18,26 @@ namespace BrasaoHamburgueriaWeb.Repository
             _contexto = new BrasaoContext();
         }
 
+        public DadosItemCardapioViewModel GetDadosItemCardapio(int codItemCardapio)
+        {
+            return _contexto.ItensCardapio
+                    .Where(i => i.CodItemCardapio == codItemCardapio)
+                    .Include(i => i.ObservacoesPermitidas)
+                    .Include(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao))
+                    .Include(i => i.ExtrasPermitidos)
+                    .Include(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra))
+                    .ToList()
+                    .Select(i =>
+                    new DadosItemCardapioViewModel
+                    {
+                        CodItemCardapio = i.CodItemCardapio,
+                        Observacoes = (i.ObservacoesPermitidas != null ?
+                               i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList() : null),
+                        Extras = (i.ExtrasPermitidos != null ?
+                                i.ExtrasPermitidos.Select(e => new OpcaoExtraViewModel { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }).ToList() : null)
+                    }).FirstOrDefault();
+        }
+
         public List<ClasseItemCardapioViewModel> GetCardapio()
         {
 
@@ -25,10 +45,10 @@ namespace BrasaoHamburgueriaWeb.Repository
                 .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
-                .Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
-                .Include(c => c.Itens.Select(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao)))
-                .Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
-                .Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
+                //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
+                //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao)))
+                //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
+                //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
                 .ToList()
                 .Select(c =>
                 new ClasseItemCardapioViewModel
@@ -41,10 +61,10 @@ namespace BrasaoHamburgueriaWeb.Repository
                             CodItemCardapio = i.CodItemCardapio,
                             Nome = i.Nome,
                             Preco = i.Preco,
-                            ObservacoesPermitidas = (i.ObservacoesPermitidas != null ?
+                            /*ObservacoesPermitidas = (i.ObservacoesPermitidas != null ?
                                 i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList() : null),
                             ExtrasPermitidos = (i.ExtrasPermitidos != null ?
-                                i.ExtrasPermitidos.Select(e => new OpcaoExtraViewModel { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }).ToList() : null),
+                                i.ExtrasPermitidos.Select(e => new OpcaoExtraViewModel { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }).ToList() : null),*/
                             Complemento = (i.Complemento != null ?
                                 new ComplementoItemCardapioViewModel
                                 {

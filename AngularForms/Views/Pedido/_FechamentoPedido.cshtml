@@ -26,7 +26,8 @@
                 </div>
                 <div class="col-sm-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
                     <label for="trocoPara">Pagar com</label>
-                    <input type='text' name="trocoPara" autocomplete="off" id="trocoPara" format="number" class="form-control" ng-model="pedido.trocoPara" ng-blur="pedido.troco = pedido.trocoPara - pedido.valorTotal" />
+                    <input type='text' name="trocoPara" autocomplete="off" id="trocoPara" format="number" class="form-control hidden-sm hidden-xs" ng-model="pedido.trocoPara" ng-blur="pedido.troco = pedido.trocoPara - pedido.valorTotal" />
+                    <input type='number' step="any" name="trocoPara" autocomplete="off" id="trocoPara" class="form-control hidden-md hidden-lg" ng-model="pedido.trocoPara" ng-blur="pedido.troco = pedido.trocoPara - pedido.valorTotal" />
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="col-sm-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
@@ -52,7 +53,8 @@
             <div class="form-group">
                 <label for="telefone" class="col-sm-2 control-label">Telefone</label>
                 <div class="col-sm-3">
-                    <input type="text" autocomplete="off" required id="telefone" name="telefone" class="form-control" ng-model="pedido.dadosCliente.telefone" maxlength="15" onkeypress="mascara(this, mtel)" />
+                    <input type="text" autocomplete="off" required id="telefone" name="telefone" class="form-control" ng-model="pedido.dadosCliente.telefone" maxlength="15" onkeypress="mascara(this, mtel)" ng-blur="formataTelefone()" />
+                    <small class="hidden-sm hidden-md hidden-lg">Somente números com ddd. Ex: 99999999999</small>
                     <div class="help-block with-errors"></div>
                 </div>
                 <div ng-if="modoAdm.ativo" class="col-sm-1">

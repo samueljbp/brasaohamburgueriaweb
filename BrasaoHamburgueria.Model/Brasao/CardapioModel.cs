@@ -7,6 +7,13 @@ using System.Globalization;
 
 namespace BrasaoHamburgueria.Model
 {
+    public class DadosItemCardapioViewModel
+    {
+        public int CodItemCardapio { get; set; }
+        public List<ObservacaoProducaoViewModel> Observacoes { get; set; }
+        public List<OpcaoExtraViewModel> Extras { get; set; }
+    }
+
     public class ClasseItemCardapioViewModel
     {
         public int CodClasse { get; set; }

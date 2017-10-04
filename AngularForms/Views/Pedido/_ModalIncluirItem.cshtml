@@ -50,6 +50,7 @@
                 <h4 class="modal-title" id="labelModalIncluirItem">Incluir item no pedido</h4>
             </div>
             <div class="modal-body">
+                <div cg-busy="{promise:promiseGetDadosItemCardapio,backdrop:false,delay:10,minDuration:1000}"></div>
                 <div class="row">
                     <div class="col-sm-8">
                         <div class="dropdown" ng-if="itemCardapioSelecionado == null">
@@ -136,7 +137,7 @@
                             <h5 ng-if="itemCardapioSelecionado.complemento == null || itemCardapioSelecionado.complemento.descricaoLonga == null">{{itemCardapioSelecionado.nome}}</h5>
                         </div>
                     </div>
-                    <div ng-if="itemCardapioSelecionado.observacoesPermitidas != null && itemCardapioSelecionado.observacoesPermitidas.length > 0">
+                    <div ng-if="dadosItemCardapio != null && dadosItemCardapio.observacoes != null && dadosItemCardapio.observacoes.length > 0">
                         <br />
                         <div class="row bg-warning">
                             <div class="col-sm-12">
@@ -144,7 +145,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2" ng-repeat="obs in itemCardapioSelecionado.observacoesPermitidas track by $index">
+                            <div class="col-sm-2" ng-repeat="obs in dadosItemCardapio.observacoes track by $index">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" ng-model="novoItem.obs[$index]" ng-false-value="null" ng-true-value="{{obs}}" id="checkObs{{obs.codObservacao}}"> {{obs.descricaoObservacao}}
@@ -161,7 +162,7 @@
                             <input type="text" required id="observacaoLivre" name="observacaoLivre" class="form-control" maxlength="100" ng-model="novoItem.observacaoLivre" />
                         </div>
                     </div>
-                    <div ng-if="itemCardapioSelecionado.extrasPermitidos != null && itemCardapioSelecionado.extrasPermitidos.length > 0">
+                    <div ng-if="dadosItemCardapio != null && dadosItemCardapio.extras != null && dadosItemCardapio.extras.length > 0">
                         <br />
                         <div class="row bg-success">
                             <div class="col-sm-12">
@@ -169,7 +170,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4" ng-repeat="extra in itemCardapioSelecionado.extrasPermitidos track by $index">
+                            <div class="col-sm-4" ng-repeat="extra in dadosItemCardapio.extras track by $index">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" ng-model="novoItem.extras[$index]" ng-false-value="null" ng-true-value="{{extra}}" id="checkExtra{{obs.codOpcaoExtra}}" ng-change="atualizaValorTotalItem()"> {{extra.descricaoOpcaoExtra}} - {{extra.preco | currency: "R$ "}}

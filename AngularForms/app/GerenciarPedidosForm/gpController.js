@@ -159,7 +159,7 @@
             if (existente == null) {
                 $scope.getPedido(codPedido);
                 playSound();
-            }            
+            }
             return;
         }
 
