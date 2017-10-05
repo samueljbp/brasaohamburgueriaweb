@@ -2,10 +2,18 @@
 @using System.Globalization;
 @using BrasaoHamburgueria.Model;
 @using BrasaoHamburgueriaWeb.Repository;
+@using System.Web;
 @{
     NumberFormatInfo nfi = new NumberFormatInfo();
     nfi.NumberDecimalSeparator = ".";
     var horarioFuncionamento = (HorarioFuncionamento)ParametroRepository.GetHorarioAbertura();
+    bool modoAdm = false;
+    string modoAdmStr = "";
+    if (HttpContext.Current.Request.QueryString["ModoAdm"] != null)
+    {
+        modoAdmStr = HttpContext.Current.Request.QueryString["ModoAdm"].ToString();
+    }
+    modoAdm = (modoAdmStr == "S");
 }
 <div>
     <div class="col-xs-12">
@@ -42,7 +50,7 @@
                 <hr />
             </div>
 
-            @if (ParametroRepository.CasaAberta())
+            @if (ParametroRepository.CasaAberta() || modoAdm)
             {
                 <div ng-if="pedidoAberto != null && pedidoAberto.codPedido > 0">
                     <h3 class="text-danger">ATENÇÃO</h3>

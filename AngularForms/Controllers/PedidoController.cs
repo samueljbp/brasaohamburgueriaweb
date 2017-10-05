@@ -228,8 +228,16 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
             try
             {
+                bool modoAdm = false;
+                string modoAdmStr = "";
+                if (Request.QueryString["ModoAdm"] != null)
+                {
+                    modoAdmStr = Request.QueryString["ModoAdm"].ToString();
+                }
+                modoAdm = (modoAdmStr == "S");
+
                 //primeiro verifica se a casa está aberta para delivery
-                if (!ParametroRepository.CasaAberta())
+                if (!ParametroRepository.CasaAberta() && !modoAdm)
                 {
                     var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
                     result.Succeeded = false;

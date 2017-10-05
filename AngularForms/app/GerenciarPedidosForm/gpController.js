@@ -46,14 +46,14 @@
         pedido.alterar = true;
         sessionStorage.pedido = JSON.stringify(pedido);
         sessionStorage.modoAdm = "S";
-        var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
+        var win = window.open(urlBase + "Pedido/Index?ModoAdm=S", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
         win.moveTo(0, 0);
         win.resizeTo(screen.width, screen.height);
     }
 
     $scope.novoPedidoExterno = function () {
         sessionStorage.modoAdm = "S";
-        var win = window.open(urlBase + "Pedido/Index", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
+        var win = window.open(urlBase + "Pedido/Index?ModoAdm=S", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
         win.moveTo(0, 0);
         win.resizeTo(screen.width, screen.height);
     }
