@@ -205,7 +205,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
                 return new JsonNetResult { Data = result };
             }
 
-            if (pedidoViewModel.PedidoExterno)
+            if (pedidoViewModel.PedidoExterno && pedidoViewModel.CodPedido <= 0)
             {
                 try
                 {
@@ -228,16 +228,8 @@ namespace BrasaoHamburgueriaWeb.Controllers
 
             try
             {
-                bool modoAdm = false;
-                string modoAdmStr = "";
-                if (Request.QueryString["ModoAdm"] != null)
-                {
-                    modoAdmStr = Request.QueryString["ModoAdm"].ToString();
-                }
-                modoAdm = (modoAdmStr == "S");
-
                 //primeiro verifica se a casa está aberta para delivery
-                if (!ParametroRepository.CasaAberta() && !modoAdm)
+                if (!ParametroRepository.CasaAberta() & pedidoViewModel.CodPedido <= 0)
                 {
                     var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
                     result.Succeeded = false;

@@ -127,6 +127,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BrasaoHamburgueria.Helper\BrasaoHamburgueria.Helper.csproj">
+      <Project>{349b8f94-7236-4b0c-ba43-cc7fc76698b5}</Project>
+      <Name>BrasaoHamburgueria.Helper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BrasaoHamburgueria.Model\BrasaoHamburgueria.Model.csproj">
       <Project>{fcf4fdf4-ce09-4690-9078-2b4f335008b1}</Project>
       <Name>BrasaoHamburgueria.Model</Name>

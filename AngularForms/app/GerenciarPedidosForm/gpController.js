@@ -383,6 +383,7 @@
 
     $scope.visualizaPedido = function (pedido) {
         $scope.pedidoSelecionado = pedido;
+        $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
         $('#modalDetalhesPedido').modal('show');
     }
 

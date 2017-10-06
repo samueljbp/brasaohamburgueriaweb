@@ -324,6 +324,7 @@
     <Content Include="Content\img\itens_cardapio\antuerpia_pilsen.JPG" />
     <Content Include="Content\img\itens_cardapio\antuerpia_red.JPG" />
     <Content Include="Content\img\itens_cardapio\antuerpia_tabla.JPG" />
+    <Content Include="Content\img\itens_cardapio\antuerpia_tapereba.jpg" />
     <Content Include="Content\img\itens_cardapio\antuerpia_trigo.JPG" />
     <Content Include="Content\img\itens_cardapio\antuerpia_tripel.JPG" />
     <Content Include="Content\img\itens_cardapio\antuerpia_umbu.JPG" />
@@ -344,6 +345,7 @@
     <Content Include="Content\img\itens_cardapio\johnny.jpg" />
     <Content Include="Content\img\itens_cardapio\katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\madonna.jpg" />
+    <Content Include="Content\img\itens_cardapio\maiara_maraisa.jpg" />
     <Content Include="Content\img\itens_cardapio\metallica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-3lobos_american_pilsen.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-3lobos_bravo.JPG" />
@@ -356,6 +358,7 @@
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_pilsen.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_red.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_tabla.JPG" />
+    <Content Include="Content\img\itens_cardapio\mini-antuerpia_tapereba.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_trigo.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_tripel.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-antuerpia_umbu.JPG" />
@@ -376,6 +379,7 @@
     <Content Include="Content\img\itens_cardapio\mini-johnny.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-madonna.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-maiara_maraisa.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-metallica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-pearl_jam.JPG" />
     <Content Include="Content\img\itens_cardapio\mini-pink_floyd.jpg" />

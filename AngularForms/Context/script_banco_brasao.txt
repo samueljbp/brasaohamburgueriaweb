@@ -79,6 +79,136 @@ insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORD
 values (20, 'Burger de picanha de 200g grelhado no pão estilo italiano com queijo cheddar derretido, tiras de bacon duplas, alface, tomate, cebola roxa e maionese sabor vinagrete.', 'chuck_berry.jpg', 20);
 
 
+
+
+
+
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (50, 'Porção de batatas fritas (400g).', 'batata.jpg', 1);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (51, 'Porção de batatas fritas (400g) cobertas com muito queijo cheddar e bacon em pedaços.', 'ivete.jpg', 2);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (52, 'Porção de batatas (400g) fritas ao estilo rústico com ervas finas.', 'johnny.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (53, 'Porção de cebola (400g) cortada em aneis empanados e fritos.', 'engenheiros.jpg', 4);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (54, 'Porção de asa e coxinha da asa (400g) de frango frito apimentado servidos com molho de queijo gorgonzola.', 'red_hot.jpg', 5);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (55, 'Porção de costela suína (500g) assada com molho barbecue da casa acompanhada de batatas rústicas.', 'zz_top.jpg', 6);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (56, 'Porção de filet acebolado frito na manteiga.', 'rappa.jpg', 7);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (57, 'Porção de linguiça suína artesanal recheada com azeitona frita acompanhada de batatas rústicas.', 'maiara_maraisa.jpg', 8);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (58, 'Batata grande recheada com requeijão e bacon coberta com mussarela derretida.', 'henrique_juliano.jpg', 9);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (59, 'Porção de linguiça enrolada com batata frita acompanhada de molho barbecue.', 'zeze.jpg', 10);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (60, 'Mix de alface, tomate, cebola, champignon, alcaparras, pimenta biquinho e queijo gorgonzola.', 'salada_brasao.jpg', 11);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (61, 'Tilápia frita em pedaços empanados e recheados com mussarela derretida.', 'tilapia.jpg', 12);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (63, 'Mix de alface, tomate, cebola, champignon, alcaparras, pimenta biquinho e queijo gorgonzola. Porção individual.', 'salada_brasao.jpg', 13);
+
+
+
+
+
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (100, 'Porção de mini churros servidos na taça com doce de leite.', 'katy_perry.jpg', 1);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (101, 'Waffle com fruta da estação e sorvete de baunilha cobertos com calda de chocolate.', 'madonna.jpg', 2);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (102, 'Verrine especial de banana com doce de leite, crocante de biscoito e chantilly de limão com canela.', 'carmen_miranda.jpg', 3);
+
+
+
+
+
+
+
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (300, 'Tommy Gun é poder de fogo. Com cinco tipos de maltes importados e aromas frutados, mantém a tradição da família Las Mafiosas. Esse integrante tem uma quantidade extra de lúpulos no caráter que o torna amargo, bem amargo. Com Tommy Gun, cada gole é muito e todo cuidado é pouco.', 'backer_tommy_gun.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (301, 'Diabolique, a mulher da família, vai além da mistura entre maltes e lúpulos nobres. Com o limão-capeta correndo em suas veias, a mafiosa tem uma personalidade ácida e cítrica. O perfume de frutas e a textura aveludada até parecem contradizer o gênio forte de Diabolique, mas não se engane: ela é uma bomba tropical.', 'backer_diabolique.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (302, 'O encorpado chefe da família responde pelo nome de Corleone. Um dia, cinco maltes nobres resolveram se juntar a cinco variedades de lúpulo. Tantos ingredientes deram a Corleone uma personalidade mutável e instável; ora amargo e cítrico, ora doce e caramelado, o lobo ainda passeia pelas notas terrosas e torradas. O último sabor é seco. O chefe da família também.', 'backer_corleone.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (303, 'Refrescante, de alta fermentação e paladar suave, a Backer Trigo combina com nosso clima tropical. Apresenta notas de cravo, aromas frutados e é envasada sem filtrar. Pode ser encontrada nas versões 355ml e 600ml. É clássica, é genuína, é trigo.', 'backer_trigo.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (304, 'Potássio, cálcio e ferro. Três vitaminas, Três Lobos e um ingrediente especial: açúcar mascavo. Uma forte lupulagem de variedades americanas completa a receita dessa American Pilsen.', '3lobos_american_pilsen.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (305, 'O nome já diz muito sobre a Bravo. Maturada em barris nacionais de umburana, possui aromas fortemente amadeirados, além de chocolate amargo e café. Com a coragem e bravura dos caubóis, ainda apresenta notas tostadas que encaram muito bem o paladar.', '3lobos_bravo.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (306, 'Essa Três Lobos inspirada nos índios norte-americanos tem uma doçura maltada, aroma cítrico e um final seco e amargo. Pele Vermelha, como prefere ser chamada, tem como ingrediente especial a laranja-da-terra, deixando o sabor importado bastante brasileiro.', 'backer_pele_vermelha.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (307, 'Na Idade Média, a Blond Ale era fabricada pelos monges. Dourada, sagrada, com maltes especiais, lúpulos florais e condimentados e o frutado típico das levedura belgas marcam a Medieval. Essa receita sagrada só poderia ser servida no Templo Cervejeiro.', 'backer_medieval.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (308, 'Envasada sem filtrar. O que isso significa? Trigo, muito trigo. A Exterminador vem de uma série extreme, com lúpulos americanos e adição de capim limão como matéria prima nacional. Cada gole é como domar um crocodilo: a sensação é única.', '3lobos_exterminador.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (309, 'A Antuérpia Tabla é uma versão americana do histórico estilo inglês, India Pale Ale  produzida com atitude e ingredientes americanos. Uma seleção de oito variedades de lúpulos americanos, explorados tanto no processo tradicional de fabricação, como no dry-hopping, conferem a esta cerveja um amargor intenso com uma mistura de aromas cítrico, floral, resinoso e frutado.', 'antuerpia_tabla.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (310, 'Uma cerveja do estilo Russian Imperial Stout extremamente bem elaborada com seis maltes especiais, de cor preta e colarinho bege, volumoso e denso. Aroma de café, chocolate, tostado e amadeirado. Notas de frutas secas tais como uva passas e ameixa são levemente perceptíveis. Muito encorpada, transmite um sensação de boca cheia, e no sabor predomina o tostado dos maltes utilizados mas com presença de café e chocolate.', 'antuerpia_kremlin.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (311, 'No aroma, um bouquet condimentado, com notas de cravo e ésteres refletindo frutas cítricas como laranja. A sua aparência é turva no dourado profundo, acompanhada do colar branco e cremoso. No paladar, a perfeita harmonia entre sabores: condimentos, frutados e álcool, são bem inseridos com notas de cravo e frutas cítricas.', 'antuerpia_tripel.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (312, 'Uma cerveja turva e amarelo palha, com uma espuma branca e cremosa. Com notas de trigo e frutas ácidas – como tangerina, pitanga e acerola – que impressionam tanto no paladar quanto no olfato.', 'antuerpia_eugenia.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (313, 'Uma cerveja ácida, leve e refrescante, em tradicional estilo alemão, mas com identidade nacional. Tem adição de Umbu para criar mais camadas de complexidade no aroma e sabor. Ácida como o estilo e brasileira como gostaríamos que fosse. Cerveja colaborativa entre Cervejaria Antuérpia e RockBird Craft Brewery.', 'antuerpia_umbu.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (314, 'Uma cerveja com coloração amarelo ouro, uma ótima formação de espuma, boa carbonatação e um colar incrivelmente branco. Aroma levemente floral, notas de malte, e lúpulo presente. No paladar, um equilíbrio entre o amargor e o malte, com notas florais, um final seco e o retrogosto amargo com um leve sabor de malte.', 'antuerpia_pilsen.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (315, 'Uma cerveja cobre avermelhada com baixa formação de espuma bege claro. No olfato são percebidos aromas de caramelo toffee, tostado, ameixa seca e um pouco floral. O paladar predominantemente caramelo traz leves notas de amanteigado como toffee e sabor frutado. Corpo médio-baixo, final seco, limpo e suave.', 'antuerpia_red.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (316, 'Aroma elegante, com presença rica de malte, tostado que remete a casca de pão torrado, notas de chocolate e café, lúpulo levemente presente com um pouco floral. De cor marrom bem escuro quase preto, limpa, com colar cremoso e da cor de bronze. A variedade rica de malte toma conta no paladar, com o sabor de tostado e café. O amargor do lúpulo é moderadamente baixo mas perceptível e com um final seco.', 'antuerpia_black.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (317, 'Uma cerveja com aroma típico de cravo e banana e um toque perfeito de trigo que lembra pão. Tem aparência amarelo palha, é bem turva por não ser filtrada, com um colar branco. No paladar é perceptível as notas de cravo e banana junto com o sabor de malte de trigo mais granulado e suave, e ausência de amargor. Com o corpo médio-baixo, é um estilo bastante cremoso derivado do trigo que deixa uma sensação de maciez.', 'antuerpia_trigo.jpg', 3);
+
+insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)
+values (323, 'Uma cerveja do estilo Berline Weisse com adição de polpa de Taperebá ganhando a identidade brasileira.
+Taperebá: é uma fruta tipicamente brasileira muito apreciada na Amazônia e outras regiões do Brasil.
+Essa cerveja vem para trazer uma acidez agradável ao paladar, leve e refrescante bem no estilo brasileiro. Cerveja colaborativa entre Cervejaria Antuérpia e RockBird Craf Brewery.', 'antuerpia_tapereba.jpg', 3);
+
+
+
+
+
+
+
 --cadastro das observacoes
 insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (1, 'Ao ponto');
 insert into OBSERVACAO_PRODUCAO (COD_OBSERVACAO, DESCRICAO_OBSERVACAO) values (2, 'Bem passado');

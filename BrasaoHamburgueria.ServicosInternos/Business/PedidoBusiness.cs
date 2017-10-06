@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using ExtensionMethods;
 using System.Web.Http;
 using System.Threading.Tasks;
+using BrasaoHamburgueria.Helpers;
 
 namespace BrasaoHamburgueria.ServicosInternos.Business
 {
@@ -99,6 +100,8 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
         {
             //declaração da variável para retorno das funções
             int iRetorno = 0;
+
+            pedido.DescricaoFormaPagamento = Helper.Util.getDescricaoFormaPagamentoPedido(pedido.FormaPagamento);
 
             List<string> portasComanda = new List<string> { "192.168.1.201" };
 
@@ -267,7 +270,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     texto += comandoQuebraLinha;
                     texto += "               FORMA DE PAGAMENTO               ";
                     texto += comandoQuebraLinha;
-                    texto += pedido.FormaPagamento;
+                    texto += pedido.DescricaoFormaPagamento;
                     if (!String.IsNullOrEmpty(pedido.BandeiraCartao))
                     {
                         texto += " - " + pedido.BandeiraCartao;
