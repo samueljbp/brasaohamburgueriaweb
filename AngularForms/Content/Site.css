@@ -32,6 +32,18 @@ body {
   border-color: #ffffff;
 }
 
+.navbar-inverse .navbar-collapse .dropdown ul {
+    background-color: #800000;
+}
+
+.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a {
+    
+}
+
+.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a:hover {
+    background-color: #800000;
+}
+
 .btn-sq-lg {
   width: 150px !important;
   height: 150px !important;
