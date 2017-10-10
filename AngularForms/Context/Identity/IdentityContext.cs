@@ -29,6 +29,7 @@ namespace BrasaoHamburgueriaWeb.Context
             : base("DefaultConnection", throwIfV1Schema: false)
         {
             Database.CreateIfNotExists();
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, BrasaoHamburgueriaWeb.Migrations.Identity.Configuration>());
         }
 
         public static ApplicationDbContext Create()

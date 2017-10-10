@@ -13,9 +13,9 @@ namespace BrasaoHamburgueriaWeb.Context
             : base("BrasaoContext")
         {
             //disable initializer
-            //Database.SetInitializer<BrasaoContext>(null);
-            this.Configuration.LazyLoadingEnabled = false;
             Database.CreateIfNotExists();
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<BrasaoContext, BrasaoHamburgueriaWeb.Migrations.Brasao.Configuration>());
+            this.Configuration.LazyLoadingEnabled = false;
         }
 
         public DbSet<ClasseItemCardapio> Classes { get; set; }
