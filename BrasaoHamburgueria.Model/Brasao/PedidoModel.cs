@@ -38,6 +38,9 @@ namespace BrasaoHamburgueria.Model
         public string MotivoCancelamento { get; set; }
         public string FeedbackCliente { get; set; }
         public string EstiloLinhaPorTempo { get; set; }
+        public double? PercentualDesconto { get; set; }
+        public double? ValorDesconto { get; set; }
+        public string MotivoDesconto { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
         public string PortaImpressaoComandaEntrega { get; set; }
@@ -190,6 +193,15 @@ namespace BrasaoHamburgueria.Model
 
         [Column("FEEDBACK_CLIENTE")]
         public string FeedbackCliente { get; set; }
+
+        [Column("PERCENTUAL_DESCONTO")]
+        public double? PercentualDesconto { get; set; }
+
+        [Column("VALOR_DESCONTO")]
+        public double? ValorDesconto { get; set; }
+
+        [Column("MOTIVO_DESCONTO")]
+        public string MotivoDesconto { get; set; }
 
         public virtual SituacaoPedido Situacao { get; set; }
 

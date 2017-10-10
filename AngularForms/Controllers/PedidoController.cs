@@ -152,25 +152,25 @@ namespace BrasaoHamburgueriaWeb.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[MyValidateAntiForgeryToken]
-        //public async Task<JsonResult> FinalizaPedido(PedidoViewModel pedido)
-        //{
-        //    var result = new ServiceResultViewModel(true, new List<string>(), null);
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> AplicaDesconto(PedidoViewModel pedido)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
 
-        //    try
-        //    {
-        //        await _rep.AlteraSituacaoPedido(pedido.CodPedido, (int)SituacaoPedidoEnum.Concluido);
-        //        result.Succeeded = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        result.Succeeded = false;
-        //        result.Errors.Add(ex.Message);
-        //    }
+            try
+            {
+                await _rep.AplicaDescontoPedido(pedido);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
 
-        //    return new JsonNetResult { Data = result };
-        //}
+            return new JsonNetResult { Data = result };
+        }
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
@@ -229,7 +229,7 @@ namespace BrasaoHamburgueriaWeb.Controllers
             try
             {
                 //primeiro verifica se a casa está aberta para delivery
-                if (!ParametroRepository.CasaAberta() & pedidoViewModel.CodPedido <= 0)
+                if (!pedidoViewModel.PedidoExterno && !ParametroRepository.CasaAberta() && pedidoViewModel.CodPedido <= 0)
                 {
                     var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
                     result.Succeeded = false;

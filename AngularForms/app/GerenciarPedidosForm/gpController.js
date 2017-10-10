@@ -1,10 +1,13 @@
 ﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, $window, $interval, $timeout, noteService) {
-    $erro = { mensagem: '' };
+    $scope.mensagem = {
+        sucesso: '',
+        erro: ''
+    };
 
     $scope.pedidos = [];
     $scope.promisesLoader = [];
     $scope.pedidoSelecionado = [];
-    $scope.acao = { ehGestao: true, atualizacaoAutomatica: true };
+    $scope.acao = { ehGestao: true, atualizacaoAutomatica: true, alertaSonoro: true, pedidoSelecionado: null };
 
     $scope.checkAtualizacaoAutomatica = function () {
         if ($scope.acao.atualizacaoAutomatica) {
@@ -14,15 +17,14 @@
         }
     }
 
-
     var parar;
     $scope.iniciarTimer = function () {
         // Don't start a new fight if we are already fighting
         if (angular.isDefined(parar)) return;
 
         parar = $interval(function () {
-            $scope.getPedidosPendentes(true);
-        }, 5000);
+            $scope.getPedidosPendentes(true, false);
+        }, 10000);
     };
 
     $scope.pararTimer = function () {
@@ -39,7 +41,9 @@
 
 
     function playSound() {
-        document.getElementById('play').play();
+        if ($scope.acao.alertaSonoro) {
+            document.getElementById('play').play();
+        }
     }
 
     $scope.alteraPedido = function (pedido) {
@@ -79,14 +83,14 @@
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
 
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -95,7 +99,7 @@
 
     }
 
-    $scope.getPedidosPendentes = function (confereeAlerta) {
+    $scope.getPedidosPendentes = function (confereAlerta, mostraErro) {
 
         //var accesstoken = sessionStorage.getItem('accessToken');
 
@@ -114,7 +118,7 @@
 
             if (retorno.succeeded) {
 
-                if (confereeAlerta) {
+                if (confereAlerta) {
                     var pedidosNovo = retorno.data;
 
                     if (pedidosNovo.length != $scope.pedidos.length && pedidosNovo.length > 0) {
@@ -127,15 +131,19 @@
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
-                $window.scrollTo(0, 0);
+                if (mostraErro) {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
             }
 
 
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
+            if (mostraErro) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            }
         });
 
         $scope.promisesLoader.push($scope.promiseGetPedidos);
@@ -212,7 +220,7 @@
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
 
-        $scope.getPedidosPendentes(false);
+        $scope.getPedidosPendentes(false, true);
 
         $scope.antiForgeryToken = antiForgeryToken;
 
@@ -228,6 +236,144 @@
     $scope.getTimeMs = function (data) {
         var dataHora = new Date(data);
         return dataHora.getTime();
+    }
+
+    $scope.cancelaPedido = function (pedido) {
+        $scope.acao.pedidoSelecionado = pedido;
+        $('#modalCancelamentoPedido').modal('show');
+    }
+
+    $scope.descontoPedido = function (pedido) {
+        $scope.acao.pedidoSelecionado = pedido;
+        $('#modalDescontoPedido').modal('show');
+    }
+
+    $scope.calculaDesconto = function (tipo) {
+        if (tipo == 'V') {
+            $scope.acao.pedidoSelecionado.percentualDesconto = ($scope.acao.pedidoSelecionado.valorDesconto / $scope.acao.pedidoSelecionado.valorTotal) * 100;
+            $scope.acao.pedidoSelecionado.percentualDesconto = $scope.acao.pedidoSelecionado.percentualDesconto.toFixed(2);
+        } else if (tipo == 'P') {
+            $scope.acao.pedidoSelecionado.valorDesconto = (($scope.acao.pedidoSelecionado.percentualDesconto / 100) * $scope.acao.pedidoSelecionado.valorTotal);
+            $scope.acao.pedidoSelecionado.valorDesconto = $scope.acao.pedidoSelecionado.valorDesconto.toFixed(2);
+        }
+    }
+
+    $scope.aplicaDescontoPedido = function () {
+
+        //configura validador
+        $('#formDesconto').validator({
+            custom: {
+                'valorDesconto': function ($el) {
+                    if ($el.val() <= 0) {
+                        return 'Valor de desconto inválido.';
+                    }
+
+                    if ($el.val() >= $scope.acao.pedidoSelecionado.valorTotal) {
+                        return 'Valor de desconto deve ser inferior ao valor do pedido.';
+                    }
+
+                },
+                'percentualDesconto': function ($el) {
+                    if ($el.val() <= 0) {
+                        return 'Percentual de desconto inválido.';
+                    }
+
+                    if ($el.val() > 99) {
+                        return 'Percentual de desconto não pode ser superior a 99%.';
+                    }
+                }
+            }
+        });
+
+        var hasErrors = $('#formDesconto').validator('validate').has('.has-error').length;
+
+        if (hasErrors) {
+            return;
+        }
+
+        $scope.acao.pedidoSelecionado.valorDesconto = parseFloat($scope.acao.pedidoSelecionado.valorDesconto);
+        $scope.acao.pedidoSelecionado.percentualDesconto = parseFloat($scope.acao.pedidoSelecionado.percentualDesconto);
+
+        $scope.promiseGravaPedido = $http({
+            method: 'POST',
+            url: urlBase + 'Pedido/AplicaDesconto',
+            data: $scope.acao.pedidoSelecionado,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.succeeded) {
+
+                $scope.mensagem.sucesso = 'Desconto aplicado com sucesso.';
+
+                $scope.acao.pedidoSelecionado = null;
+
+                $('#modalDescontoPedido').modal('hide');
+
+            }
+            else {
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (error) {
+            $scope.mensagem.erro = error.statusText;
+            $window.scrollTo(0, 0);
+        });
+
+    }
+
+    $scope.executaCancelamentoPedido = function () {
+
+        var hasErrors = $('#formCancelamento').validator('validate').has('.has-error').length;
+
+        if (hasErrors) {
+            return;
+        }
+
+        $scope.acao.pedidoSelecionado.situacao = 9;
+
+        $scope.promiseGravaPedido = $http({
+            method: 'POST',
+            url: urlBase + 'Pedido/AvancarPedido',
+            data: $scope.acao.pedidoSelecionado,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.succeeded) {
+
+                for (i = 0; i < $scope.pedidos.length; i++) {
+                    if ($scope.pedidos[i].codPedido == $scope.acao.pedidoSelecionado.codPedido) {
+
+                        $scope.pedidos.splice(i, 1);
+                        break;
+                    }
+                }
+
+                $scope.mensagem.sucesso = 'Pedido cancelado com sucesso';
+
+                $scope.acao.pedidoSelecionado = null;
+
+                $('#modalCancelamentoPedido').modal('hide');
+
+            }
+            else {
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (error) {
+            $scope.mensagem.erro = error.statusText;
+            $window.scrollTo(0, 0);
+        });
+
     }
 
     $scope.finalizaPedido = function (pedido) {
@@ -263,12 +409,12 @@
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = error.statusText;
                     $window.scrollTo(0, 0);
                 });
 
@@ -325,12 +471,12 @@
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = error.statusText;
                     $window.scrollTo(0, 0);
                 });
 
@@ -353,17 +499,17 @@
 
             if (retorno.succeeded) {
 
-                $scope.sucesso.mensagem = 'Impressão enviada com sucesso.';
+                $scope.mensagem.sucesso = 'Impressão enviada com sucesso.';
                 $window.scrollTo(0, 0);
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
         }).catch(function (errorInt) {
-            $scope.erro.mensagem = errorInt.statusText;
+            $scope.mensagem.erro = errorInt.statusText;
             $window.scrollTo(0, 0);
         });
     }
@@ -431,3 +577,34 @@
     }
 
 });
+
+
+
+
+brasaoWebApp.directive('format', ['$filter', function ($filter) {
+    return {
+        require: '?ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            if (!ctrl) return;
+
+            var format = {
+                prefix: '',
+                centsSeparator: '.',
+                thousandsSeparator: ''
+            };
+
+            ctrl.$parsers.unshift(function (value) {
+                elem.priceFormat(format);
+                console.log('parsers', elem[0].value);
+                return elem[0].value;
+            });
+
+            ctrl.$formatters.unshift(function (value) {
+                elem[0].value = ctrl.$modelValue * 100;
+                elem.priceFormat(format);
+                console.log('formatters', elem[0].value);
+                return elem[0].value;
+            })
+        }
+    };
+}]);

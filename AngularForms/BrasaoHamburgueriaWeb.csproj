@@ -344,8 +344,8 @@
     <Content Include="Content\img\itens_cardapio\henrique_juliano.jpg" />
     <Content Include="Content\img\itens_cardapio\ivete.jpg" />
     <Content Include="Content\img\itens_cardapio\johnny.jpg" />
-    <Content Include="Content\img\itens_cardapio\katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\madonna.jpg" />
+    <Content Include="Content\img\itens_cardapio\katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\maiara_maraisa.jpg" />
     <Content Include="Content\img\itens_cardapio\metallica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-3lobos_american_pilsen.JPG" />
@@ -378,8 +378,8 @@
     <Content Include="Content\img\itens_cardapio\mini-henrique_juliano.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-ivete.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-johnny.jpg" />
-    <Content Include="Content\img\itens_cardapio\mini-katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-madonna.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-katy_perry.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-maiara_maraisa.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-metallica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-pearl_jam.JPG" />
@@ -1432,6 +1432,10 @@
     <Compile Include="Migrations\Brasao\201709252036459_InitialCreate.Designer.cs">
       <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201710091824193_DescontoPedido.cs" />
+    <Compile Include="Migrations\Brasao\201710091824193_DescontoPedido.Designer.cs">
+      <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1468,6 +1472,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\Brasao\201709252036459_InitialCreate.resx">
       <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710091824193_DescontoPedido.resx">
+      <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

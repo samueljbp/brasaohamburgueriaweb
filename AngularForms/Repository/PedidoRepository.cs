@@ -18,6 +18,20 @@ namespace BrasaoHamburgueriaWeb.Repository
             _contexto = new BrasaoContext();
         }
 
+        public async Task AplicaDescontoPedido(PedidoViewModel pedido)
+        {
+            var ped = _contexto.Pedidos.Where(p => p.CodPedido == pedido.CodPedido).FirstOrDefault();
+
+            if (ped != null)
+            {
+                ped.ValorDesconto = pedido.ValorDesconto;
+                ped.PercentualDesconto = pedido.PercentualDesconto;
+                ped.MotivoDesconto = pedido.MotivoDesconto;
+
+                await _contexto.SaveChangesAsync();
+            }
+        }
+
         public async Task AlteraSituacaoPedido(int codPedido, int codSituacao, string motivoCancelamento, string feedbackCliente)
         {
             var ped = _contexto.Pedidos.Where(p => p.CodPedido == codPedido).FirstOrDefault();
@@ -155,6 +169,9 @@ namespace BrasaoHamburgueriaWeb.Repository
                     ValorTotal = p.ValorTotal,
                     FeedbackCliente = p.FeedbackCliente,
                     MotivoCancelamento = p.MotivoCancelamento,
+                    ValorDesconto = p.ValorDesconto,
+                    PercentualDesconto = p.PercentualDesconto,
+                    MotivoDesconto = p.MotivoDesconto,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,
@@ -192,6 +209,9 @@ namespace BrasaoHamburgueriaWeb.Repository
                     TaxaEntrega = p.TaxaEntrega,
                     MotivoCancelamento = p.MotivoCancelamento,
                     FeedbackCliente = p.FeedbackCliente,
+                    ValorDesconto = p.ValorDesconto,
+                    PercentualDesconto = p.PercentualDesconto,
+                    MotivoDesconto = p.MotivoDesconto,
                     PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
                     Itens = p.Itens.Select(i => new ItemPedidoViewModel
                         {
@@ -224,7 +244,7 @@ namespace BrasaoHamburgueriaWeb.Repository
 
         public async Task<List<PedidoViewModel>> GetPedidosConsulta(DateTime? inicio, DateTime? fim)
         {
-            var pedidos = await _contexto.Pedidos.Where(p => p.DataHora >= (inicio != null ? inicio.Value : p.DataHora) && p.DataHora <= (fim != null ? fim.Value : p.DataHora))
+            var pedidos = await _contexto.Pedidos.Where(p => p.DataHora >= (inicio != null ? inicio.Value : p.DataHora) && p.DataHora <= (fim != null ? fim.Value : p.DataHora) && p.CodSituacao >= 2 && p.CodSituacao < 9)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
@@ -241,6 +261,9 @@ namespace BrasaoHamburgueriaWeb.Repository
                     DescricaoSituacao = p.Situacao.Descricao,
                     ValorTotal = p.ValorTotal,
                     TaxaEntrega = p.TaxaEntrega,
+                    ValorDesconto = p.ValorDesconto,
+                    PercentualDesconto = p.PercentualDesconto,
+                    MotivoDesconto = p.MotivoDesconto,
                     MotivoCancelamento = p.MotivoCancelamento,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
@@ -315,6 +338,9 @@ namespace BrasaoHamburgueriaWeb.Repository
                     PedidoExterno = p.PedidoExterno,
                     MotivoCancelamento = p.MotivoCancelamento,
                     FeedbackCliente = p.FeedbackCliente,
+                    ValorDesconto = p.ValorDesconto,
+                    PercentualDesconto = p.PercentualDesconto,
+                    MotivoDesconto = p.MotivoDesconto,
                     PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
                     DadosCliente = new DadosClientePedidoViewModel
                     {

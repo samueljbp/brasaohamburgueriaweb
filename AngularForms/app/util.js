@@ -32,6 +32,20 @@ function genericSuccess(res) {
     return res.data;
 }
 
+function quebraData(data) {
+    var dia = data.substr(0, 2);
+    var mes = data.substr(3, 2);
+    var ano = data.substr(6);
+
+    var retorno = {
+        dia: dia,
+        mes: mes,
+        ano: ano
+    }
+
+    return retorno;
+}
+
 function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),

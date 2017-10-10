@@ -262,6 +262,15 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     ImpressaoBematech4200.FormataTX("     TOTAL: " + pedido.ValorTotal.ToString("C"), (int)ImpressaoBematech4200.TipoLetraImpressao.Elite, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Ativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
                     ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
 
+                    if (pedido.ValorDesconto != null && pedido.ValorDesconto > 0)
+                    {
+                        texto += "Desconto: " + pedido.ValorDesconto.Value.ToString("C");
+                        texto += comandoQuebraLinha;
+                        var valorComDesconto = pedido.ValorTotal - pedido.ValorDesconto.Value;
+                        texto += "Total c/ desconto: " + valorComDesconto.ToString("C");
+                        texto += comandoQuebraLinha;
+                    }
+
                     texto = "================================================";
                     texto += comandoQuebraLinha;
                     texto += "             NÃO É DOCUMENTO FISCAL             ";
@@ -276,7 +285,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         texto += " - " + pedido.BandeiraCartao;
                         texto += comandoQuebraLinha;
                     }
-                    if (pedido.Troco != null)
+                    if (pedido.FormaPagamento == "D" && pedido.Troco != null)
                     {
                         texto += " - Troco: " + pedido.Troco.Value.ToString("C");
                         texto += comandoQuebraLinha;

@@ -9,21 +9,21 @@
 }
 <script src="~/app/GerenciarPedidosForm/gpController.js"></script>
 <div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
-    <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        {{erro.mensagem}}
+    <div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
+        {{mensagem.erro}}
         <br />
     </div>
-    <div class="alert alert-success alert-dismissible fade in {{sucesso.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        {{sucesso.mensagem}}
+    <div class="alert alert-success alert-dismissible fade in {{mensagem.sucesso ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+        <button type="button" class="close" aria-label="Close" ng-click="mensagem.sucesso = ''"><span aria-hidden="true">×</span></button>
+        {{mensagem.sucesso}}
         <br />
     </div>
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseImprime,backdrop:false,delay:10,minDuration:1000}"></div>
     <audio id="play" src="~/Content/sounds/beep.wav"></audio>
-    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+    <form role="form" id="formPedido" class="form-horizontal">
         <br />
         <div>
             <h4>Gerenciar pedidos</h4>
@@ -38,6 +38,9 @@
                 <div class="col-sm-3">
                     <span><input type="checkbox" id="checkAtualizacaoPeriodica" ng-model="acao.atualizacaoAutomatica" ng-change="checkAtualizacaoAutomatica()" />Atualização periódica automática</span>
                 </div>
+                <div class="col-sm-3">
+                    <span><input type="checkbox" id="checkAlertaSonoro" ng-model="acao.alertaSonoro" />Alerta sonoro para novos pedidos</span>
+                </div>
             </div>
             <div ng-if="pedidos.length == 0">
                 <div class="row">
@@ -50,7 +53,7 @@
             </div>
             <div ng-if="pedidos.length > 0">
                 <div class="row text-center">
-                    <div class="col-sm-10">
+                    <div class="col-sm-12">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -93,6 +96,9 @@
                                     <th>
 
                                     </th>
+                                    <th>
+
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,31 +123,39 @@
                                         {{ped.descricaoSituacao}}
                                     </td>
                                     <td class="text-right">
-                                        {{ped.valorTotal | currency: "R$ "}}
+                                        <button type="button" class="btn btn-default btn-sm" title="Aplicar desconto" ng-click="descontoPedido(ped)">
+                                            {{ped.valorTotal | currency: "R$ "}}
+                                        </button>
                                     </td>
                                     <td class="text-left">
                                         {{ped.descricaoFormaPagamento}}
                                     </td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-default btn-sm" title="Detalhes" ng-click="visualizaPedido(ped)">
+                                        <button type="button" class="btn btn-default btn-sm" title="Visualizar detalhes" ng-click="visualizaPedido(ped)">
                                             <span class=" glyphicon glyphicon-list" aria-hidden="true">
                                             </span>
                                         </button>
                                     </td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-default btn-sm" title="Reimprimir" ng-click="imprimePedido(ped)">
+                                        <button type="button" class="btn btn-default btn-sm" title="Reimprimir comanda e cupons de produção" ng-click="imprimePedido(ped)">
                                             <span class=" glyphicon glyphicon-print" aria-hidden="true">
                                             </span>
                                         </button>
                                     </td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-default btn-sm" title="Alterar" ng-click="alteraPedido(ped)">
+                                        <button type="button" class="btn btn-default btn-sm" title="Alterar pedido" ng-click="alteraPedido(ped)">
                                             <span class=" glyphicon glyphicon-edit" aria-hidden="true">
                                             </span>
                                         </button>
                                     </td>
                                     <td class="text-right">
-                                        <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 0 || ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
+                                        <button type="button" class="btn btn-danger btn-sm" title="Cancelar pedido" ng-click="cancelaPedido(ped)">
+                                            <span class=" glyphicon glyphicon-remove" aria-hidden="true">
+                                            </span>
+                                        </button>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar status" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 0 || ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
                                             <span ng-class="determinaEstiloBotao(ped, 'I')" aria-hidden="true">
                                             </span>
                                         </button>
@@ -177,6 +191,100 @@
                     <div class="modal-body">
                         @Html.Partial("_CabecalhoPedido")<hr />
                         @Html.Partial("_ListaItensPedido")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form role="form" id="formCancelamento" class="form-horizontal">
+        <div class="modal fade" id="modalCancelamentoPedido" tabindex="-1" role="dialog" aria-labelledby="labelModaCancelamentoPedido" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModaCancelamentoPedido">Cancelamento de pedido</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span class="text-primary">Confirma o cancelamento do pedido {{acao.pedidoSelecionado.codPedido}}?</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="taMotivoCancelamento" class="control-label">Motivo do cancelamento</label>
+                                <input type="text" id="taMotivoCancelamento" required name="taMotivoCancelamento" class="form-control" ng-model="acao.pedidoSelecionado.motivoCancelamento" maxlength="500" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" ng-click="executaCancelamentoPedido()">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancelar o pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form role="form" id="formDesconto" class="form-horizontal">
+        <div class="modal fade" id="modalDescontoPedido" tabindex="-1" role="dialog" aria-labelledby="labelModaDescontoPedido" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModaDescontoPedido">Conceder desconto</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="text-primary">Aplicar desconto ao pedido {{acao.pedidoSelecionado.codPedido}}?</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Valor original: <span class="text-success">{{acao.pedidoSelecionado.valorTotal | currency: "R$ "}}</span></h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h5>Valor c/ desconto: <span class="text-primary">{{acao.pedidoSelecionado.valorTotal - acao.pedidoSelecionado.valorDesconto | currency: "R$ "}}</span></h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="valorDesconto">Desconto (R$)</label>
+                                        <input type='text' name="valorDesconto" required data-valordesconto autocomplete="off" id="valorDesconto" format="number" class="form-control" ng-model="acao.pedidoSelecionado.valorDesconto" ng-blur="calculaDesconto('V')" />
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="percentualDesconto">Desconto (%)</label>
+                                        <input type='text' name="percentualDesconto" required data-percentualdesconto autocomplete="off" id="percentualDesconto" format="number" class="form-control" ng-model="acao.pedidoSelecionado.percentualDesconto" ng-blur="calculaDesconto('P')" />
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="txtJustificativaDesconto" class="control-label">Justificativa do desconto</label>
+                                <input type="text" id="txtJustificativaDesconto" required name="txtJustificativaDesconto" class="form-control" ng-model="acao.pedidoSelecionado.motivoDesconto" maxlength="500" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" ng-click="aplicaDescontoPedido()">
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>Aplicar o desconto
+                        </button>
                     </div>
                 </div>
             </div>

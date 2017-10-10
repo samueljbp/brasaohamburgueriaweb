@@ -53,16 +53,16 @@
             <div class="form-group">
                 <label for="telefone" class="col-sm-2 control-label">Telefone</label>
                 <div class="col-sm-3">
-                    <input type="text" autocomplete="off" required id="telefone" name="telefone" class="form-control" ng-model="pedido.dadosCliente.telefone" maxlength="15" onkeypress="mascara(this, mtel)" ng-blur="formataTelefone()" />
+                    <input type="text" autocomplete="off" required id="telefone" ng-blur="getDadosUsuarioByPhone(pedido.dadosCliente.telefone)" name="telefone" class="form-control" ng-model="pedido.dadosCliente.telefone" maxlength="15" onkeypress="mascara(this, mtel)" ng-blur="formataTelefone()" />
                     <small class="hidden-sm hidden-md hidden-lg">Somente números com ddd. Ex: 99999999999</small>
                     <div class="help-block with-errors"></div>
                 </div>
-                <div ng-if="modoAdm.ativo" class="col-sm-1">
+                @*<div ng-if="modoAdm.ativo" class="col-sm-1">
                     <button type="button" class="btn btn-primary btn-sm" title="Buscar" ng-click="getDadosUsuarioByPhone(pedido.dadosCliente.telefone)">
                         <span class=" glyphicon glyphicon-search" aria-hidden="true">
                         </span>
                     </button>
-                </div>
+                </div>*@
                 <div class="col-sm-5 alert alert-info alert-dismissible fade in {{informacao.mensagem ? '' : 'hidden'}}" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                     {{informacao.mensagem}}

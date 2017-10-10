@@ -16,7 +16,7 @@ namespace BrasaoHamburgueriaWeb.Helpers
                 case "C":
                     return "Cartão de crédito";
                 case "B":
-                    return "CArtão de débito";
+                    return "Cartão de débito";
                 case "A":
                     return "Ticket refeição Alelo";
                 default:

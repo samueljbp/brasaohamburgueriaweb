@@ -30,6 +30,19 @@
         Taxa de entrega: <strong>{{pedidoSelecionado.taxaEntrega | currency: "R$ "}}</strong>
     </div>
 </div>
+<div class="row" ng-if="pedidoSelecionado.valorDesconto > 0">
+    <div class="col-sm-4">
+        Desconto: <strong>{{pedidoSelecionado.valorDesconto | currency: "R$ "}}</strong>
+    </div>
+    <div class="col-sm-4">
+        Valor total c/ desconto: <strong>{{pedidoSelecionado.valorTotal - pedidoSelecionado.valorDesconto | currency: "R$ "}}</strong>
+    </div>
+</div>
+<div class="row" ng-if="pedidoSelecionado.valorDesconto > 0">
+    <div class="col-sm-12">
+        Desconto: <strong>{{pedidoSelecionado.motivoDesconto}}</strong>
+    </div>
+</div>
 <div class="row" ng-if="pedidoSelecionado.formaPagamento == 'D'">
     <div class="col-sm-4">
         Forma de pagamento: <strong>{{descricaoFormaPagamentoPedido}}</strong>

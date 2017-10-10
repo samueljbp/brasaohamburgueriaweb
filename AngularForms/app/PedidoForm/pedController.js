@@ -153,6 +153,9 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
     $scope.getDadosUsuarioByPhone = function (telefone) {
 
+        if (!$scope.modoAdm.ativo) {
+            return;
+        }
 
         $scope.promiseDadosUsuarioByPhone = $http({
             method: 'GET',
@@ -575,7 +578,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
                         if ($scope.modoAdm.ativo) {
                             sessionStorage.modoAdm = "N";
-                            setTimeout(function () { window.close(); }, 5000);
+                            setTimeout(function () { window.close(); }, 2000);
                         } else {
                             window.location.href = urlBase + 'Pedido/PedidoRegistrado';
                         }

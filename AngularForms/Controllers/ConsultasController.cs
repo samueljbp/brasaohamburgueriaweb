@@ -22,17 +22,20 @@ namespace BrasaoHamburgueriaWeb.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetPedido(int codPedido)
+        public async Task<JsonResult> GetPedido(DateTime? dataInicio, DateTime? dataFim)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var peds = await _rep.GetPedidosConsulta(codPedido);
-                var ped = peds.FirstOrDefault();
-                ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
+                var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim);
 
-                result.data = ped;
+                foreach(var ped in peds)
+                {
+                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
+                }
+
+                result.data = peds;
 
                 result.Succeeded = true;
             }
