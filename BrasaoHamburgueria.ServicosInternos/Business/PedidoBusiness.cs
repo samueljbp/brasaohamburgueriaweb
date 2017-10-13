@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using ExtensionMethods;
 using System.Web.Http;
 using System.Threading.Tasks;
-using BrasaoHamburgueria.Helpers;
+using BrasaoHamburgueria.Helper;
 
 namespace BrasaoHamburgueria.ServicosInternos.Business
 {
@@ -101,7 +101,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
             //declaração da variável para retorno das funções
             int iRetorno = 0;
 
-            pedido.DescricaoFormaPagamento = Helper.Util.getDescricaoFormaPagamentoPedido(pedido.FormaPagamento);
+            pedido.DescricaoFormaPagamento = BrasaoUtil.getDescricaoFormaPagamentoPedido(pedido.FormaPagamento);
 
             List<string> portasComanda = new List<string> { "192.168.1.201" };
 

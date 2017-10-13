@@ -1,20 +1,20 @@
-namespace BrasaoHamburgueriaWeb.Migrations.Identity
+namespace BrasaoHamburgueria.Web.Migrations.Identity
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<BrasaoHamburgueriaWeb.Context.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<BrasaoHamburgueria.Web.Context.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
             MigrationsDirectory = @"Migrations\Identity";
-            ContextKey = "BrasaoHamburgueriaWeb.Context.ApplicationDbContext";
+            ContextKey = "BrasaoHamburgueria.Web.Context.ApplicationDbContext";
         }
 
-        protected override void Seed(BrasaoHamburgueriaWeb.Context.ApplicationDbContext context)
+        protected override void Seed(BrasaoHamburgueria.Web.Context.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

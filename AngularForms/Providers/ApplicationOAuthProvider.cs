@@ -10,9 +10,9 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 
-namespace BrasaoHamburgueriaWeb.Providers
+namespace BrasaoHamburgueria.Web.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {

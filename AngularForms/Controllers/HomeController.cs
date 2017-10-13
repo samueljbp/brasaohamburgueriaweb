@@ -4,11 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Extentions;
 using System.Configuration;
-using BrasaoHamburgueriaWeb.Repository;
+using BrasaoHamburgueria.Web.Repository;
 
-namespace BrasaoHamburgueriaWeb.Controllers
+namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]

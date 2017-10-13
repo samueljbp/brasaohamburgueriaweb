@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using BrasaoHamburgueria.Model;
 
-namespace BrasaoHamburgueriaWeb.Context
+namespace BrasaoHamburgueria.Web.Context
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
@@ -29,7 +29,7 @@ namespace BrasaoHamburgueriaWeb.Context
             : base("DefaultConnection", throwIfV1Schema: false)
         {
             Database.CreateIfNotExists();
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, BrasaoHamburgueriaWeb.Migrations.Identity.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, BrasaoHamburgueria.Web.Migrations.Identity.Configuration>());
         }
 
         public static ApplicationDbContext Create()

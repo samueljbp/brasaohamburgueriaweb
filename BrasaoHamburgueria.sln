@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoHamburgueriaWeb", "AngularForms\BrasaoHamburgueriaWeb.csproj", "{F8246FB5-629A-4112-AEE2-EC63909680E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoHamburgueria.Web", "AngularForms\BrasaoHamburgueria.Web.csproj", "{F8246FB5-629A-4112-AEE2-EC63909680E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpressaoBematech", "Impressao\ImpressaoBematech.csproj", "{31CB258E-BB7C-4E28-961E-B86810E5497C}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoHamburgueria.ServicosInternos", "BrasaoHamburgueria.ServicosInternos\BrasaoHamburgueria.ServicosInternos.csproj", "{CCFC2B69-0853-4CE4-AEE1-3EC1DF1AEC72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoHamburgueria.Helper", "BrasaoHamburgueria.Helper\BrasaoHamburgueria.Helper.csproj", "{349B8F94-7236-4B0C-BA43-CC7FC76698B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoHamburgueria.TronSolutionData", "BrasaoHamburgueria.TronSolutionData\BrasaoHamburgueria.TronSolutionData.csproj", "{6CDD1572-29E4-4FCA-B1FD-9BC9D2603671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{349B8F94-7236-4B0C-BA43-CC7FC76698B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{349B8F94-7236-4B0C-BA43-CC7FC76698B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{349B8F94-7236-4B0C-BA43-CC7FC76698B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDD1572-29E4-4FCA-B1FD-9BC9D2603671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDD1572-29E4-4FCA-B1FD-9BC9D2603671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDD1572-29E4-4FCA-B1FD-9BC9D2603671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDD1572-29E4-4FCA-B1FD-9BC9D2603671}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

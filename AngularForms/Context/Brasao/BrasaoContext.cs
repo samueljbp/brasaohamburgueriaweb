@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using BrasaoHamburgueria.Model;
 
-namespace BrasaoHamburgueriaWeb.Context
+namespace BrasaoHamburgueria.Web.Context
 {
     public class BrasaoContext : DbContext
     {
@@ -14,7 +14,7 @@ namespace BrasaoHamburgueriaWeb.Context
         {
             //disable initializer
             Database.CreateIfNotExists();
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<BrasaoContext, BrasaoHamburgueriaWeb.Migrations.Brasao.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<BrasaoContext, BrasaoHamburgueria.Web.Migrations.Brasao.Configuration>());
             this.Configuration.LazyLoadingEnabled = false;
         }
 

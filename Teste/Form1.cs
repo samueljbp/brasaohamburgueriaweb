@@ -123,5 +123,15 @@ namespace Teste
             //    MessageBox.Show("Erro: " + result.Errors[0].ToString());
             //}
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //TronEntities tron = new TronEntities();
+            //var query = from item in tron.ITEM_CARDAPIO
+            //            join emp in tron.ITEM_CARDAPIOXEMPRESA on item.CD_ITEMCARDAPIO equals emp.CD_ITEMCARDAPIO
+            //            select new { CodItemCardapio = item.CD_ITEMCARDAPIO, CodClasse = item.CD_CLASSEITEMCARDAPIO, Nome = item.DS_ITEMCARDAPIO, Preco = emp.VALOR_VENDA };
+
+            //dataGridView1.DataSource = query.ToList();
+        }
     }
 }

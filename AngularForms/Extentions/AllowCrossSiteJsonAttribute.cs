@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace BrasaoHamburgueriaWeb.Extentions
+namespace BrasaoHamburgueria.Web.Extentions
 {
     public class AllowCrossSiteJsonAttribute : ActionFilterAttribute
     {

@@ -11,14 +11,14 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 using System.Net;
 using System.Net.Mail;
 using System.Configuration;
 using System.Diagnostics;
-using BrasaoHamburgueriaWeb.Repository;
+using BrasaoHamburgueria.Web.Repository;
 
-namespace BrasaoHamburgueriaWeb
+namespace BrasaoHamburgueria.Web
 {
     public class EmailService : IIdentityMessageService
     {

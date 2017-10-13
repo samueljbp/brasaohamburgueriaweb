@@ -24,8 +24,10 @@ namespace BrasaoHamburgueria.Model
     public class ItemCardapioViewModel
     {
         public int CodItemCardapio { get; set; }
+        public int CodClasse { get; set; }
         public string Nome { get; set; }
         public double Preco { get; set; }
+        public bool Ativo { get; set; }
         public ComplementoItemCardapioViewModel Complemento { get; set; }
         public List<ObservacaoProducaoViewModel> ObservacoesPermitidas { get; set; }
         public List<OpcaoExtraViewModel> ExtrasPermitidos { get; set; }
@@ -92,6 +94,10 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("PRECO")]
         public double Preco { get; set; }
+
+        [Required]
+        [Column("ATIVO")]
+        public bool Ativo { get; set; }
 
         public virtual ClasseItemCardapio Classe { get; set; }
 

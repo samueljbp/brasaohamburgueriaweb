@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Threading;
 using System.Globalization;
 using System.Configuration;
 
-namespace BrasaoHamburgueriaWeb.Repository
+namespace BrasaoHamburgueria.Web.Repository
 {
     public class ServidorSMTP
     {

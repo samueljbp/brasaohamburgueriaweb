@@ -4,14 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Context;
+using BrasaoHamburgueria.Web.Extentions;
 using System.Data.Entity;
-using BrasaoHamburgueriaWeb.Repository;
+using BrasaoHamburgueria.Web.Repository;
 using System.Threading.Tasks;
-using BrasaoHamburgueriaWeb.Helpers;
+using BrasaoHamburgueria.Web.Helpers;
 
-namespace BrasaoHamburgueriaWeb.Controllers
+namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     public class CardapioController : Controller

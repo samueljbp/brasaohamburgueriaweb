@@ -9,16 +9,16 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 using Newtonsoft.Json.Serialization;
-using BrasaoHamburgueriaWeb.Filters;
+using BrasaoHamburgueria.Web.Filters;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Extentions;
 using System.Text.RegularExpressions;
-using BrasaoHamburgueria.Helpers;
+using BrasaoHamburgueria.Helper;
 
-namespace BrasaoHamburgueriaWeb.Controllers
+namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]

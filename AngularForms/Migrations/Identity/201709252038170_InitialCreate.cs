@@ -1,4 +1,4 @@
-namespace BrasaoHamburgueriaWeb.Migrations.Identity
+namespace BrasaoHamburgueria.Web.Migrations.Identity
 {
     using System;
     using System.Data.Entity.Migrations;

@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace BrasaoHamburgueriaWeb
+namespace BrasaoHamburgueria.Web
 {
    public class FilterConfig
    {

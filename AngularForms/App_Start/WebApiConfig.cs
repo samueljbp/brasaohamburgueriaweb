@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 
-namespace BrasaoHamburgueriaWeb
+namespace BrasaoHamburgueria.Web
 {
     public static class WebApiConfig
     {

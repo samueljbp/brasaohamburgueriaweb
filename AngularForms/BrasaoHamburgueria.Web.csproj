@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BrasaoHamburgueriaWeb</RootNamespace>
-    <AssemblyName>BrasaoHamburgueriaWeb</AssemblyName>
+    <RootNamespace>BrasaoHamburgueria.Web</RootNamespace>
+    <AssemblyName>BrasaoHamburgueria.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44300</IISExpressSSLPort>
@@ -163,6 +163,7 @@
     <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
+    <Content Include="app\IntegracaoTronSolutionForm\itsController.js" />
     <Content Include="app\LoginForm\loginController.js" />
     <Content Include="app\MenuPrincipalForm\mpController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
@@ -1378,6 +1379,7 @@
     <Content Include="Views\Consultas\PedidosRealizados.cshtml" />
     <Content Include="Scripts\smart-table.min.js.map" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Integracoes\TronSolution.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1419,6 +1421,7 @@
     <Compile Include="Controllers\ConsultasController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IntegracoesController.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
     <Compile Include="Extentions\AllowCrossSiteJsonAttribute.cs" />
     <Compile Include="Extentions\JsonNetResult.cs" />
@@ -1436,6 +1439,10 @@
     <Compile Include="Migrations\Brasao\201710091824193_DescontoPedido.Designer.cs">
       <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.cs" />
+    <Compile Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.Designer.cs">
+      <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1447,6 +1454,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
+    <Compile Include="Repository\IntegracoesRepository.cs" />
     <Compile Include="Repository\ParametroRepository.cs" />
     <Compile Include="Repository\PedidoRepository.cs" />
     <Compile Include="SignalR\CustomUserIdProvider.cs" />
@@ -1475,6 +1483,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201710091824193_DescontoPedido.resx">
       <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.resx">
+      <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

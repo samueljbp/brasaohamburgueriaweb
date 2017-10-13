@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json.Serialization;
 
-namespace BrasaoHamburgueriaWeb
+namespace BrasaoHamburgueria.Web
 {
     public class Global : System.Web.HttpApplication
     {

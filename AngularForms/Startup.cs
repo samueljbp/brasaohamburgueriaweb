@@ -1,10 +1,10 @@
 ﻿using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
-using BrasaoHamburgueriaWeb.SignalR;
+using BrasaoHamburgueria.Web.SignalR;
 
-[assembly: OwinStartupAttribute(typeof(BrasaoHamburgueriaWeb.Startup))]
-namespace BrasaoHamburgueriaWeb
+[assembly: OwinStartupAttribute(typeof(BrasaoHamburgueria.Web.Startup))]
+namespace BrasaoHamburgueria.Web
 {
     public partial class Startup
     {

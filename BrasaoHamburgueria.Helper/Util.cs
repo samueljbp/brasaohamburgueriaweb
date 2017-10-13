@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BrasaoHamburgueria.Helper
 {
-    public static class Util
+    public static class BrasaoUtil
     {
         public static string getDescricaoFormaPagamentoPedido(string codFormaPagamento)
         {

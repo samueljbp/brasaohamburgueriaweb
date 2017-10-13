@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace BrasaoHamburgueriaWeb.Repository
+namespace BrasaoHamburgueria.Web.Repository
 {
     public class PedidoRepository
     {

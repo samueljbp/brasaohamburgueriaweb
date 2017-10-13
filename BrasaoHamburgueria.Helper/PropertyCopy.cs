@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace BrasaoHamburgueria.Helpers
+namespace BrasaoHamburgueria.Helper
 {
     /// <summary>
     /// Non-generic class allowing properties to be copied from one instance

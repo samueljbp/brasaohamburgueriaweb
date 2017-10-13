@@ -6,10 +6,10 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.Identity;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Context;
+using BrasaoHamburgueria.Web.Extentions;
 
-namespace BrasaoHamburgueriaWeb.SignalR
+namespace BrasaoHamburgueria.Web.SignalR
 {
     public class PedidoHub : Hub
     {

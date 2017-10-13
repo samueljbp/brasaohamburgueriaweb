@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using BrasaoHamburgueriaWeb.Repository;
+using BrasaoHamburgueria.Web.Repository;
 using System.Threading.Tasks;
-using BrasaoHamburgueria.Helpers;
+using BrasaoHamburgueria.Helper;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Helpers;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Helpers;
+using BrasaoHamburgueria.Web.Extentions;
 
-namespace BrasaoHamburgueriaWeb.Controllers
+namespace BrasaoHamburgueria.Web.Controllers
 {
     public class ConsultasController : Controller
     {

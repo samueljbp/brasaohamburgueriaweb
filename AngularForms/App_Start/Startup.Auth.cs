@@ -7,11 +7,11 @@ using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Facebook;
 using Owin;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
-using BrasaoHamburgueriaWeb.Providers;
+using BrasaoHamburgueria.Web.Context;
+using BrasaoHamburgueria.Web.Providers;
 using System.Configuration;
 
-namespace BrasaoHamburgueriaWeb
+namespace BrasaoHamburgueria.Web
 {
     public partial class Startup
     {

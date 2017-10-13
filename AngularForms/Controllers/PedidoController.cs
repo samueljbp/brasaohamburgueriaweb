@@ -4,18 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
-using BrasaoHamburgueriaWeb.Extentions;
+using BrasaoHamburgueria.Web.Extentions;
 using BrasaoHamburgueria.Model;
-using BrasaoHamburgueriaWeb.Context;
+using BrasaoHamburgueria.Web.Context;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Data.Entity;
-using BrasaoHamburgueriaWeb.Filters;
-using BrasaoHamburgueriaWeb.Helpers;
-using BrasaoHamburgueriaWeb.Repository;
-using BrasaoHamburgueria.Helpers;
+using BrasaoHamburgueria.Web.Filters;
+using BrasaoHamburgueria.Web.Helpers;
+using BrasaoHamburgueria.Web.Repository;
+using BrasaoHamburgueria.Helper;
 
-namespace BrasaoHamburgueriaWeb.Controllers
+namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
     [Authorize]
