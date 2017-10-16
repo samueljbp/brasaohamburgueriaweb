@@ -25,10 +25,16 @@
         <h3>Integração - Tron Solution</h3>
         <hr />
         <div class="row">
-            <div class="col-sm-12">
-                @*<div ng-repeat="item in pedidoSelecionado.itens"><span>{{}}</span></div>*@
+            <div class="col-sm-12" ng-if="listaAlteracoes == null || listaAlteracoes.length <= 0">
+                <span>Clique no botão para sincronizar.</span>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div ng-repeat="item in listaAlteracoes"><span>{{item}}</span></div>
+            </div>
+        </div>
+        <hr />
         <button type="button" class="btn btn-success" ng-click="solicitarSincronizacao()">
             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>Sincronizar
         </button>

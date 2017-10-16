@@ -219,10 +219,10 @@ namespace BrasaoHamburgueria.Web.Controllers
                         return new JsonNetResult { Data = result };
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     result.Succeeded = false;
-                result.Errors.Add(ex.Message);
+                    result.Errors.Add(ex.Message);
                 }
             }
 
@@ -255,7 +255,7 @@ namespace BrasaoHamburgueria.Web.Controllers
                         {
                             //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
                         }
-                        
+
                         result.Succeeded = true;
                     }
                     else if (pedidoViewModel.DadosCliente.Salvar)
@@ -280,7 +280,7 @@ namespace BrasaoHamburgueria.Web.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Succeeded = false;
                 result.Errors.Add(ex.Message);

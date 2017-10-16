@@ -15,10 +15,17 @@ namespace BrasaoHamburgueria.ServicosInternos
         private Business.TronSolutionBusiness bo = new Business.TronSolutionBusiness();
 
         [Route("api/TronSolutionData/GetItemCardapio")]
-        [HttpGet] // There are HttpGet, HttpPost, HttpPut, HttpDelete.
+        [HttpGet]
         public ServiceResultViewModel GetItemCardapio()
         {
             return bo.GetItensFromTron();
+        }
+
+        [Route("api/TronSolutionData/GetClassesItemCardapio")]
+        [HttpGet]
+        public ServiceResultViewModel GetClassesItemCardapio()
+        {
+            return bo.GetClassesFromTron();
         }
 
         // GET api/<controller>

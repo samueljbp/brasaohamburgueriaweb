@@ -1,21 +1,23 @@
-﻿<div ng-controller="rdSenhaController">
-    @{
-        ViewBag.Title = "Brasão Hamburgueria - Redefinir Senha";
+﻿@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "Brasão Hamburgueria - Redefinir Senha";
+}
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
     }
-    @functions{
-        public string GetAntiForgeryToken()
-        {
-            string cookieToken, formToken;
-            AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return cookieToken + ":" + formToken;
-        }
-    }
-    <script src="~/app/RedefinirSenha/rdSenhaController.js"></script>
+}
+<script src="~/app/RedefinirSenha/rdSenhaController.js"></script>
+<div ng-controller="rdSenhaController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Code')">
     <h2>Redefina sua senha</h2>
     <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
+    <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formRedefinirSenha" class="form-horizontal" ng-submit="submitForm()">
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
-        <input id="code" type="hidden" ng-model="redefinirSenhaViewModel.code" value="@ViewBag.Code" />
+        <input id="code" type="hidden" ng-model="redefinirSenhaViewModel.code" />
         <hr />
         <h4>Preencha os campos abaixo para confirmar a redefinição da sua senha.</h4>
         <div class="form-group">
@@ -29,7 +31,7 @@
         <div class="form-group">
             <label for="fullName" class="col-sm-2 control-label">Nova senha</label>
             <div class="col-sm-2">
-                <input type="password" required id="senha" name="senha" class="form-control" ng-model="redefinirSenhaViewModel.senha" maxlength="10" />
+                <input type="password" autocomplete="off" required id="senha" name="senha" class="form-control" ng-model="redefinirSenhaViewModel.senha" maxlength="10" />
                 <small class="text-info">Máximo 10 caracteres</small>
                 <div class="help-block with-errors"></div>
             </div>
@@ -37,7 +39,7 @@
         <div class="form-group">
             <label for="fullName" class="col-sm-2 control-label">Confirme a nova senha</label>
             <div class="col-sm-2">
-                <input type="password" required id="confirmeSenha" name="confirmeSenha" class="form-control" ng-model="redefinirSenhaViewModel.senhaConfirmada" max="10" />
+                <input type="password" autocomplete="off" required id="confirmeSenha" name="confirmeSenha" class="form-control" ng-model="redefinirSenhaViewModel.senhaConfirmada" max="10" />
                 <div class="help-block with-errors"></div>
             </div>
         </div>

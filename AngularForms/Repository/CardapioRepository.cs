@@ -42,7 +42,7 @@ namespace BrasaoHamburgueria.Web.Repository
         {
 
             return _contexto.Classes
-                .Include(c => c.Itens)
+                .Include(c => c.Itens.Where(i => i.Ativo))
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
                 //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
@@ -50,6 +50,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
                 //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
                 .ToList()
+                .Where(i => i.Itens.Count > 0)
                 .Select(c =>
                 new ClasseItemCardapioViewModel
                 {

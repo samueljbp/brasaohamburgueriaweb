@@ -17,7 +17,7 @@
 
             if (retorno.succeeded) {
 
-                alert('sucesso');
+                $scope.listaAlteracoes = retorno.data;
 
             }
             else {
@@ -36,6 +36,8 @@
 
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
+
+        $scope.listaAlteracoes = [];
 
     }
 

@@ -571,10 +571,12 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                         reiniciaVariaveisPedido();
                         reiniciaVariaveisItem();
 
-                        noteService.sendMessage('', sessionStorage.codPedido, 1);
+                        var codPedido = retorno.data;
+
+                        noteService.sendMessage('', codPedido, 1);
 
                         sessionStorage.removeItem('pedido');
-                        sessionStorage.removeItem('codPedido');
+                        sessionStorage.codPedido = codPedido;
 
                         if ($scope.modoAdm.ativo) {
                             sessionStorage.modoAdm = "N";

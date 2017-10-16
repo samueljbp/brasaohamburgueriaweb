@@ -246,6 +246,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             {
                 user.DadosUsuario.DataNascimento = user.DadosUsuario.DataNascimento.Substring(0, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(2, 2) + "/" + user.DadosUsuario.DataNascimento.Substring(4);
             }
+            user.DadosUsuario.Email = user.Email;
 
             var usuario = new UsuarioViewModel();
 
