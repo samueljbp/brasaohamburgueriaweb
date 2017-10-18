@@ -14,6 +14,37 @@ namespace BrasaoHamburgueria.ServicosInternos
     {
         private Business.TronSolutionBusiness bo = new Business.TronSolutionBusiness();
 
+        [Route("api/TronSolutionData/GetDadosTron")]
+        [HttpGet]
+        public ServiceResultViewModel GetDadosTron()
+        {
+            ServiceResultViewModel retorno = new ServiceResultViewModel(true, null, null);
+            ServiceResultViewModel retornoClasses;
+            ServiceResultViewModel retornoItens = bo.GetItensFromTron();
+
+            if (retornoItens.Succeeded)
+            {
+                retornoClasses = bo.GetClassesFromTron();
+
+                if (retornoClasses.Succeeded)
+                {
+                    retorno.Succeeded = true;
+                    retorno.data = new { Classes = retornoClasses.data, Itens = retornoItens.data };
+                }
+                else
+                {
+                    return retornoClasses;
+                }
+            }
+            else
+            {
+                return retornoItens;
+            }
+
+
+            return retorno;
+        }
+
         [Route("api/TronSolutionData/GetItemCardapio")]
         [HttpGet]
         public ServiceResultViewModel GetItemCardapio()

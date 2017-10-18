@@ -25,6 +25,9 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                             select new ItemCardapioViewModel { CodItemCardapio = item.CD_ITEMCARDAPIO, Ativo = (emp.ATIVO == null || emp.ATIVO.Value == 0 ? false : true), CodClasse = item.CD_CLASSEITEMCARDAPIO.Value, Nome = item.DS_ITEMCARDAPIO, Preco = (Double)emp.VALOR_VENDA.Value };
 
                 result.data = query.ToList();
+
+                tron.Dispose();
+                tron = null;
             }
             catch (Exception ex)
             {
@@ -49,6 +52,9 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                             select new ClasseItemCardapioViewModel { CodClasse = classe.CD_CLASSEITEMCARDAPIO, DescricaoClasse = classe.DS_CLASSEITEMCARDAPIO };
 
                 result.data = query.ToList();
+
+                tron.Dispose();
+                tron = null;
             }
             catch (Exception ex)
             {

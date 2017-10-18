@@ -7,6 +7,7 @@ using BrasaoHamburgueria.Web.Extentions;
 using System.Threading.Tasks;
 using BrasaoHamburgueria.Model;
 using BrasaoHamburgueria.Web.Repository;
+using BrasaoHamburgueria.Web.Filters;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -22,14 +23,16 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> SolicitarSincronismoTronSolution()
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> SolicitarSincronismoTronSolution(List<ItemCardapioViewModel> itensTron, List<ClasseItemCardapioViewModel> classesTron)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
                 //result.data = await _rep.GetPedidosAbertos(null);
-                result.data = await _rep.ExecutaIntegracaoTronSolution();
+                result.data = await _rep.ExecutaIntegracaoTronSolution(itensTron, classesTron);
 
                 result.Succeeded = true;
             }

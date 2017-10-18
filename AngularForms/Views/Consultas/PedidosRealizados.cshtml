@@ -15,7 +15,7 @@
 <script src="~/app/PedidosRealizadosForm/prController.js"></script>
 <div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
     <div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
         {{mensagem.erro}}
         <br />
     </div>

@@ -17,9 +17,8 @@ namespace BrasaoHamburgueria.Web.Repository
     public class IntegracoesRepository
     {
         private BrasaoContext _contexto = new BrasaoContext();
-        static HttpClient client = new HttpClient();
 
-        public async Task<List<String>> ExecutaIntegracaoTronSolution()
+        public async Task<List<String>> ExecutaIntegracaoTronSolution(List<ItemCardapioViewModel> itensTron, List<ClasseItemCardapioViewModel> classesTron)
         {
             String urlBase = "";
             if (ConfigurationManager.AppSettings["URLServicosInternos"] != null)
@@ -29,14 +28,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
             List<String> lista = new List<string>();
 
-            HttpResponseMessage responseClasses = await client.GetAsync(urlBase + "api/TronSolutionData/GetClassesItemCardapio");
-            var totalAlteracoes = 0;
-
-            if (responseClasses.IsSuccessStatusCode)
+            if (classesTron != null && classesTron.Count > 0)
             {
-                ServiceResultViewModel result = await responseClasses.Content.ReadAsAsync<ServiceResultViewModel>();
-                List<ClasseItemCardapioViewModel> classesTron = JsonConvert.DeserializeObject<List<ClasseItemCardapioViewModel>>(result.data.ToString());
-
                 List<ClasseItemCardapioViewModel> classesBrasao = _contexto.Classes.Select(i => new ClasseItemCardapioViewModel { CodClasse = i.CodClasse, DescricaoClasse = i.DescricaoClasse }).ToList();
 
                 List<ClasseItemCardapioViewModel> classesNovas = new List<ClasseItemCardapioViewModel>();
@@ -44,20 +37,20 @@ namespace BrasaoHamburgueria.Web.Repository
                 List<ClasseItemCardapioViewModel> classesInativar = new List<ClasseItemCardapioViewModel>();
 
                 classesNovas = (from t in classesTron
-                              where !classesBrasao.Any(b => (b.CodClasse == t.CodClasse))
-                              select t).ToList();
+                                where !classesBrasao.Any(b => (b.CodClasse == t.CodClasse))
+                                select t).ToList();
 
                 classesInativar = (from b in classesBrasao
                                    where !classesTron.Any(t => (b.CodClasse == t.CodClasse))
-                                 select b).ToList();
+                                   select b).ToList();
 
                 classesAlterar = (from t in classesTron
-                                  where classesTron.Any(b => (b.CodClasse == t.CodClasse && b.DescricaoClasse.Trim().ToUpper() != t.DescricaoClasse.Trim().ToUpper()))
-                                select t).ToList();
+                                  where classesBrasao.Any(b => (b.CodClasse == t.CodClasse && b.DescricaoClasse.Trim().ToUpper() != t.DescricaoClasse.Trim().ToUpper()))
+                                  select t).ToList();
 
                 if (classesNovas.Count > 0)
                 {
-                    foreach(var nova in classesNovas)
+                    foreach (var nova in classesNovas)
                     {
                         var classe = new ClasseItemCardapio();
                         classe.CodClasse = nova.CodClasse;
@@ -65,14 +58,13 @@ namespace BrasaoHamburgueria.Web.Repository
                         _contexto.Classes.Add(classe);
                     }
 
-                    _contexto.SaveChanges();
-                    totalAlteracoes += 1;
+                    await _contexto.SaveChangesAsync();
                     lista.Add(classesNovas.Count + " classe(s) de cardápio incluídas.");
                 }
 
                 if (classesAlterar.Count > 0)
                 {
-                    foreach(var diferente in classesAlterar)
+                    foreach (var diferente in classesAlterar)
                     {
                         var classe = _contexto.Classes.Find(diferente.CodClasse);
                         if (classe != null)
@@ -81,23 +73,37 @@ namespace BrasaoHamburgueria.Web.Repository
                         }
                     }
 
-                    _contexto.SaveChanges();
-                    totalAlteracoes += 1;
+                    await _contexto.SaveChangesAsync();
                     lista.Add(classesAlterar.Count + " classe(s) de cardápio alteradas.");
                 }
 
-                
-                //lista.Add(classesInativar.Count + " classe(s) de cardápio inativadas.");
-                
+                if (classesInativar.Count > 0)
+                {
+                    var qtd = 0;
+                    foreach (var inativada in classesInativar)
+                    {
+                        if (_contexto.ItensCardapio.Where(i => i.CodClasse == inativada.CodClasse).Count() == 0)
+                        {
+                            var classe = _contexto.Classes.Find(inativada.CodClasse);
+                            if (classe != null)
+                            {
+                                _contexto.Classes.Remove(classe);
+                                qtd+=1;
+                            }
+                        }
+                    }
+
+                    if (qtd > 0)
+                    {
+                        await _contexto.SaveChangesAsync();
+                        lista.Add(classesInativar.Count + " classe(s) de cardápio excluídas.");
+                    }
+                }
+
             }
 
-            HttpResponseMessage responseItensCardapio = await client.GetAsync(urlBase + "api/TronSolutionData/GetItemCardapio");
-
-            if (responseItensCardapio.IsSuccessStatusCode)
+            if (itensTron != null && itensTron.Count > 0)
             {
-                ServiceResultViewModel result = await responseItensCardapio.Content.ReadAsAsync<ServiceResultViewModel>();
-                List<ItemCardapioViewModel> itensTron = JsonConvert.DeserializeObject<List<ItemCardapioViewModel>>(result.data.ToString());
-
                 List<ItemCardapioViewModel> itensBrasao = _contexto.ItensCardapio.Select(i => new ItemCardapioViewModel { Ativo = i.Ativo, CodItemCardapio = i.CodItemCardapio, CodClasse = i.CodClasse, Nome = i.Nome, Preco = i.Preco }).ToList();
 
                 List<ItemCardapioViewModel> itensNovos = new List<ItemCardapioViewModel>();
@@ -117,12 +123,12 @@ namespace BrasaoHamburgueria.Web.Repository
                                         select b).ToList());
 
                 itensAlterar = (from t in itensTron
-                                where t.Ativo && itensTron.Any(b => (b.CodItemCardapio == t.CodItemCardapio && b.Ativo && (b.Nome.Trim().ToUpper() != t.Nome.Trim().ToUpper() || b.CodClasse != t.CodClasse || b.Preco != t.Preco)))
+                                where t.Ativo && itensBrasao.Any(b => (b.CodItemCardapio == t.CodItemCardapio && (!b.Ativo || b.Nome.Trim().ToUpper() != t.Nome.Trim().ToUpper() || b.CodClasse != t.CodClasse || b.Preco != t.Preco)))
                                 select t).ToList();
 
                 if (itensNovos.Count > 0)
                 {
-                    foreach(var novo in itensNovos)
+                    foreach (var novo in itensNovos)
                     {
                         var item = new ItemCardapio();
                         item.CodItemCardapio = novo.CodItemCardapio;
@@ -132,14 +138,13 @@ namespace BrasaoHamburgueria.Web.Repository
                         item.Preco = novo.Preco;
                         _contexto.ItensCardapio.Add(item);
                     }
-                    _contexto.SaveChanges();
-                    totalAlteracoes += 1;
+                    await _contexto.SaveChangesAsync();
                     lista.Add(itensNovos.Count + " iten(s) de cardápio incluídos.");
                 }
 
                 if (itensInativar.Count > 0)
                 {
-                    foreach(var inativo in itensInativar)
+                    foreach (var inativo in itensInativar)
                     {
                         var item = _contexto.ItensCardapio.Find(inativo.CodItemCardapio);
                         if (item != null)
@@ -148,15 +153,14 @@ namespace BrasaoHamburgueria.Web.Repository
                         }
                     }
 
-                    _contexto.SaveChanges();
-                    totalAlteracoes += 1;
+                    await _contexto.SaveChangesAsync();
                     lista.Add(itensInativar.Count + " iten(s) de cardápio inativados.");
                 }
 
-                
+
                 if (itensAlterar.Count > 0)
                 {
-                    foreach(var alterado in itensAlterar)
+                    foreach (var alterado in itensAlterar)
                     {
                         var item = _contexto.ItensCardapio.Find(alterado.CodItemCardapio);
                         if (item != null)
@@ -165,16 +169,16 @@ namespace BrasaoHamburgueria.Web.Repository
                             item.CodClasse = alterado.CodClasse;
                             item.Nome = alterado.Nome;
                             item.Preco = alterado.Preco;
+                            item.Ativo = alterado.Ativo;
                         }
                     }
 
-                    _contexto.SaveChanges();
-                    totalAlteracoes += 1;
+                    await _contexto.SaveChangesAsync();
                     lista.Add(itensAlterar.Count + " iten(s) de cardápio alterados.");
                 }
             }
 
-            if (totalAlteracoes == 0)
+            if (lista.Count == 0)
             {
                 lista.Add("Nenhuma alteração foi necessária.");
             }

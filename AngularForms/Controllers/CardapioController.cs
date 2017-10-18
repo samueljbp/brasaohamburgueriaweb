@@ -25,6 +25,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             var classes = context.Classes.Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
+                .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
                 .ToList();
 
             ViewBag.Classes = classes;

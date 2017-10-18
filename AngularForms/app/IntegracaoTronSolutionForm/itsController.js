@@ -1,6 +1,37 @@
 ﻿brasaoWebApp.controller('itsController', function ($scope, $http, $filter) {
 
+    $scope.executaSincronizacao = function () {
+
+        $scope.promiseExecutarSincronizacao = $http({
+            method: 'POST',
+            url: urlBase + 'Integracoes/SolicitarSincronismoTronSolution',
+            data: { itensTron: $scope.dadosTron.itens, classesTron: $scope.dadosTron.classes },
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.succeeded) {
+
+                $scope.listaAlteracoes = retorno.data;
+
+            }
+            else {
+                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (error) {
+            $scope.erro.mensagem = error.statusText;
+            $window.scrollTo(0, 0);
+        });
+
+    }
+
     $scope.solicitarSincronizacao = function () {
+
 
         $scope.promiseSolicitarSincronizacao = $http({
             method: 'GET',
@@ -9,7 +40,7 @@
                 'RequestVerificationToken': 'XMLHttpRequest',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Integracoes/SolicitarSincronismoTronSolution'
+            url: urlWebAPIBase + 'TronSolutionData/GetDadosTron'
         })
         .then(function (response) {
 
@@ -17,7 +48,8 @@
 
             if (retorno.succeeded) {
 
-                $scope.listaAlteracoes = retorno.data;
+                $scope.dadosTron = retorno.data;
+                $scope.executaSincronizacao();
 
             }
             else {
@@ -32,12 +64,20 @@
             $window.scrollTo(0, 0);
         });
 
+
+
+        
+
     }
 
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
 
+        $scope.antiForgeryToken = antiForgeryToken;
         $scope.listaAlteracoes = [];
+        $scope.mensagem = {
+            erro: ''
+        }
 
     }
 

@@ -142,7 +142,7 @@
     List<ClasseItemCardapio> classes = ViewBag.Classes;
     var cont = 0;
     var tamanhoColunaNome = "col-sm-11";
-    var listaClassesSemDescricaoLonga = new List<int> { 4, 5, 6, 9 };
+    var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21 };
 }
 <ul class="nav nav-tabs">
     @foreach (ClasseItemCardapio classe in classes)
@@ -184,7 +184,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (ItemCardapio item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse).OrderBy(i => i.Preco).ToList())
+                    @foreach (ItemCardapio item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
                     {
                         <tr>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))

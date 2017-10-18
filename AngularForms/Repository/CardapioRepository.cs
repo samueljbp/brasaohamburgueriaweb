@@ -41,8 +41,8 @@ namespace BrasaoHamburgueria.Web.Repository
         public List<ClasseItemCardapioViewModel> GetCardapio()
         {
 
-            return _contexto.Classes
-                .Include(c => c.Itens.Where(i => i.Ativo))
+            var retorno = _contexto.Classes
+                .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
                 //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
@@ -50,7 +50,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
                 //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
                 .ToList()
-                .Where(i => i.Itens.Count > 0)
+                .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
                 .Select(c =>
                 new ClasseItemCardapioViewModel
                 {
@@ -62,6 +62,7 @@ namespace BrasaoHamburgueria.Web.Repository
                             CodItemCardapio = i.CodItemCardapio,
                             Nome = i.Nome,
                             Preco = i.Preco,
+                            Ativo = i.Ativo,
                             /*ObservacoesPermitidas = (i.ObservacoesPermitidas != null ?
                                 i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList() : null),
                             ExtrasPermitidos = (i.ExtrasPermitidos != null ?
@@ -74,6 +75,13 @@ namespace BrasaoHamburgueria.Web.Repository
                                 } : null)
                         }).ToList()
                 }).ToList();
+
+            foreach(var classe in retorno)
+            {
+                classe.Itens = classe.Itens.Where(i => i.Ativo).ToList();
+            }
+
+            return retorno;
         }
     }
 }
