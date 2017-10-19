@@ -18,6 +18,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         IntegracoesRepository _rep = new IntegracoesRepository();
 
         // GET: Integracoes
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public ActionResult TronSolution()
         {
             return View();

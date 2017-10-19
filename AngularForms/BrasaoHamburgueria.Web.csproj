@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
+    <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
     <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
@@ -1380,6 +1381,7 @@
     <Content Include="Scripts\smart-table.min.js.map" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Integracoes\TronSolution.cshtml" />
+    <Content Include="Views\Cadastros\ObservacaoProducao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1417,6 +1419,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CadastrosController.cs" />
     <Compile Include="Controllers\CardapioController.cs" />
     <Compile Include="Controllers\ConsultasController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
@@ -1455,6 +1458,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
     <Compile Include="Repository\IntegracoesRepository.cs" />
+    <Compile Include="Repository\ObservacaoRepository.cs" />
     <Compile Include="Repository\ParametroRepository.cs" />
     <Compile Include="Repository\PedidoRepository.cs" />
     <Compile Include="SignalR\CustomUserIdProvider.cs" />

@@ -19,6 +19,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         private PedidoRepository _rep = new PedidoRepository();
 
         // GET: Consultas
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public ActionResult PedidosRealizados()
         {
             return View();

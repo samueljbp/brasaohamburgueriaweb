@@ -153,6 +153,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
     $scope.getDadosUsuarioByPhone = function (telefone) {
 
+        $scope.formataTelefone();
+
         if (!$scope.modoAdm.ativo) {
             return;
         }
@@ -338,6 +340,13 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             valorTotalItem: 0.0
         }
 
+    }
+
+    $scope.calculaTroco = function () {
+        $scope.pedido.troco = $scope.pedido.trocoPara - $scope.pedido.valorTotal;
+        if ($scope.pedido.troco < 0) {
+            $scope.pedido.troco = 0;
+        }
     }
 
     //função que atualiza valor total de um item que está sendo incluído
@@ -548,7 +557,15 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 return;
             }
 
+            if ($scope.troco < 0) {
+                $scope.troco = 0;
+            }
+
             $scope.pedido.trocoPara = parseFloat($scope.pedido.trocoPara);
+        } else if ($scope.pedido.formaPagamento == 'D' && $scope.pedido.trocoPara <= 0) {
+            $scope.erro.mensagem = 'Informe como o pagamento em dinheiro será realizado.';
+            $window.scrollTo(0, 0);
+            return;
         }
 
         $ngBootbox.confirm('Confirma a finalização do pedido? Não será possível retornar.')
