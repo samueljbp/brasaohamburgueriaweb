@@ -1,13 +1,4 @@
-﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, noteService) {
-    $scope.erro = { mensagem: '' };
-    $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
-    $scope.promisesLoader = [];
-    $scope.acao = { ehGestao: false };
-    $scope.loginUsuario = '';
-
-    $interval(function () {
-        $scope.getPedidoAberto($scope.loginUsuario);
-    }, 60000);
+﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, $window, noteService) {
 
     $scope.getPedidoAberto = function (loginUsuario) {
 
@@ -42,12 +33,12 @@
                 }
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -81,12 +72,12 @@
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                     $window.scrollTo(0, 0);
                 });
 
@@ -131,12 +122,12 @@
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                     $window.scrollTo(0, 0);
                 });
 
@@ -183,6 +174,21 @@
         $scope.loginUsuario = loginUsuario;
         $scope.antiForgeryToken = antiForgeryToken;
         $scope.getPedidoAberto(loginUsuario);
+
+        $scope.mensagem = {
+            erro: '',
+            sucesso: '',
+            informacao: ''
+        }
+
+        $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
+        $scope.promisesLoader = [];
+        $scope.acao = { ehGestao: false };
+        $scope.loginUsuario = '';
+
+        $interval(function () {
+            $scope.getPedidoAberto($scope.loginUsuario);
+        }, 60000);
     }
 
 });

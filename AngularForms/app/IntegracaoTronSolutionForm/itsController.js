@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('itsController', function ($scope, $http, $filter) {
+﻿brasaoWebApp.controller('itsController', function ($scope, $http, $filter, $window) {
 
     $scope.executaSincronizacao = function () {
 
@@ -19,7 +19,7 @@
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
@@ -76,7 +76,9 @@
         $scope.antiForgeryToken = antiForgeryToken;
         $scope.listaAlteracoes = [];
         $scope.mensagem = {
-            erro: ''
+            erro: '',
+            sucesso: '',
+            informacao: ''
         }
 
     }

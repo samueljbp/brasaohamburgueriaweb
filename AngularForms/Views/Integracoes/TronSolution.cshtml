@@ -14,11 +14,7 @@
 </style>
 <script src="~/app/IntegracaoTronSolutionForm/itsController.js"></script>
 <div ng-controller="itsController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
-    <div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
-        {{mensagem.erro}}
-        <br />
-    </div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseSolicitarSincronizacao,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExecutarSincronizacao,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formIntegracao" class="form-horizontal" ng-submit="submitForm()">

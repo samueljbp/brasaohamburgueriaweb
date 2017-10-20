@@ -1382,6 +1382,7 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Integracoes\TronSolution.cshtml" />
     <Content Include="Views\Cadastros\ObservacaoProducao.cshtml" />
+    <Content Include="Views\Shared\_MensagensInformativas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1446,6 +1447,14 @@
     <Compile Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.Designer.cs">
       <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.cs" />
+    <Compile Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.Designer.cs">
+      <DependentUpon>201710201601450_IndicadoresSincronizarRegistro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.cs" />
+    <Compile Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.Designer.cs">
+      <DependentUpon>201710201616251_ImpressoraPadraoClasse.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1490,6 +1499,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.resx">
       <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.resx">
+      <DependentUpon>201710201601450_IndicadoresSincronizarRegistro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.resx">
+      <DependentUpon>201710201616251_ImpressoraPadraoClasse.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

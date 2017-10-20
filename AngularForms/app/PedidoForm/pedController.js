@@ -36,7 +36,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
@@ -45,7 +45,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             $scope.classes = null;
             $scope.itensFiltrados = null;
 
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -84,12 +84,12 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -143,7 +143,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 };
 
             }, function (error) {
-                $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
             });
 
@@ -168,8 +168,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             var retorno = genericSuccess(response);
 
             if (retorno.succeeded) {
-                $scope.erro.mensagem = '';
-                $scope.sucesso.mensagem = '';
+                $scope.mensagem.erro = '';
+                $scope.mensagem.sucesso = '';
                 if (retorno.data != null && retorno.data != '') {
                     $scope.usuario = retorno.data;
 
@@ -188,21 +188,21 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                     }
 
                     if ($scope.usuario.id <= 0) {
-                        $scope.informacao.mensagem = 'Cliente não cadastrado.';
+                        $scope.mensagem.informacao = 'Cliente não cadastrado.';
 
                     }
                 } else {
-                    $scope.informacao.mensagem = 'Cliente não encontrado.';
+                    $scope.mensagem.informacao = 'Cliente não encontrado.';
                 }
             } else {
-                $scope.informacao.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.informacao = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
 
 
         }, function (error) {
-            $scope.informacao.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.informacao = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -464,14 +464,14 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
         }, function (error) {
             console.log(error);
 
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -525,12 +525,12 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = error.statusText;
                     $window.scrollTo(0, 0);
                 });
 
@@ -552,7 +552,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
         if ($scope.pedido.trocoPara > 0) {
             if ($scope.pedido.trocoPara < $scope.pedido.valorTotal) {
-                $scope.erro.mensagem = 'O valor informado para o pagamento em dinheiro está menor que o valor total do pedido.';
+                $scope.mensagem.erro = 'O valor informado para o pagamento em dinheiro está menor que o valor total do pedido.';
                 $window.scrollTo(0, 0);
                 return;
             }
@@ -563,7 +563,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
             $scope.pedido.trocoPara = parseFloat($scope.pedido.trocoPara);
         } else if ($scope.pedido.formaPagamento == 'D' && $scope.pedido.trocoPara <= 0) {
-            $scope.erro.mensagem = 'Informe como o pagamento em dinheiro será realizado.';
+            $scope.mensagem.erro = 'Informe como o pagamento em dinheiro será realizado.';
             $window.scrollTo(0, 0);
             return;
         }
@@ -605,12 +605,12 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
                     }
                     else {
-                        $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                         $window.scrollTo(0, 0);
                     }
 
                 }).catch(function (error) {
-                    $scope.erro.mensagem = error.statusText;
+                    $scope.mensagem.erro = error.statusText;
                     $window.scrollTo(0, 0);
                 });
 
@@ -652,9 +652,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
     //INICIALIZAÇÃO DE VARIÁVEIS
     function reiniciaVariaveis() {
-        $scope.erro = { mensagem: '' };
-        $scope.sucesso = { mensagem: '' };
-        $scope.informacao = { mensagem: '' };
+        $scope.mensagem = {
+            erro: '',
+            sucesso: '',
+            informacao: ''
+        }
 
         $scope.promisesLoader = [];
 
@@ -676,6 +678,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
+
         $scope.modoAdm = { ativo: true };
         if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null || sessionStorage.getItem("modoAdm") == 'N') {
             sessionStorage.modoAdm = "N";

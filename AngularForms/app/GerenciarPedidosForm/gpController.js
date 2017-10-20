@@ -1,8 +1,9 @@
 ﻿brasaoWebApp.controller('gpController', function ($scope, $http, $filter, $ngBootbox, $window, $interval, $timeout, noteService) {
     $scope.mensagem = {
+        erro: '',
         sucesso: '',
-        erro: ''
-    };
+        informacao: ''
+    }
 
     $scope.pedidos = [];
     $scope.promisesLoader = [];

@@ -14,7 +14,7 @@
     }
     <h2>Redefinir senha</h2>
     <div cg-busy="{promise:promiseEsqueciSenha,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <form role="form" id="formEsqueciSenha" class="form-horizontal">
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
         <hr />

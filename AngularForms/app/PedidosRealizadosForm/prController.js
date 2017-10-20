@@ -1,37 +1,44 @@
-﻿brasaoWebApp.controller('prController', function ($scope, $http, $filter) {
+﻿brasaoWebApp.controller('prController', function ($scope, $http, $filter, $window) {
 
-    function calculaTotais() {
+    function calculaTotais(collection) {
         $scope.totais = {
             debito: 0.0,
             credito: 0.0,
             dinheiro: 0.0,
-            ticket: 0.0
+            ticket: 0.0,
+            qtdPeds: 0
         }
 
-        if ($scope.rowCollection != null && $scope.rowCollection.length > 0) {
+        if (collection != null && collection.length > 0) {
 
-            for (i = 0; i < $scope.rowCollection.length; i++) {
+            $scope.totais.qtdPeds = collection.length;
 
-                switch ($scope.rowCollection[i].formaPagamento) {
+            for (i = 0; i < collection.length; i++) {
+
+                switch (collection[i].formaPagamento) {
                     case 'D':
-                        $scope.totais.dinheiro = $scope.totais.dinheiro + $scope.rowCollection[i].valorTotal;
+                        $scope.totais.dinheiro = $scope.totais.dinheiro + (collection[i].valorTotal - collection[i].valorDesconto);
                         break;
 
                     case 'C':
-                        $scope.totais.credito = $scope.totais.credito + $scope.rowCollection[i].valorTotal;
+                        $scope.totais.credito = $scope.totais.credito + (collection[i].valorTotal - collection[i].valorDesconto);
                         break;
 
                     case 'B':
-                        $scope.totais.debito = $scope.totais.debito + $scope.rowCollection[i].valorTotal;
+                        $scope.totais.debito = $scope.totais.debito + (collection[i].valorTotal - collection[i].valorDesconto);
                         break;
 
                     case 'A':
-                        $scope.totais.ticket = $scope.totais.ticket + $scope.rowCollection[i].valorTotal;
+                        $scope.totais.ticket = $scope.totais.ticket + (collection[i].valorTotal - collection[i].valorDesconto);
                         break;
                 }
 
             }
         }
+    }
+
+    $scope.onFilter = function (stCtrl) {
+        calculaTotais(stCtrl.getFilteredCollection());
     }
 
     $scope.getPedidosRealizados = function () {
@@ -96,7 +103,7 @@
             if (retorno.succeeded) {
 
                 $scope.rowCollection = retorno.data;
-                calculaTotais();
+                calculaTotais($scope.rowCollection);
 
             }
             else {
@@ -115,7 +122,7 @@
     };
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
-        
+
         $scope.rowCollection = [];
         $scope.mensagem = {
             erro: '',
@@ -127,7 +134,8 @@
             debito: 0.0,
             credito: 0.0,
             dinheiro: 0.0,
-            ticket: 0.0
+            ticket: 0.0,
+            qtdPeds: 0
         }
 
         $scope.itemsByPage = 10;
@@ -198,4 +206,22 @@
 
     }
 
+});
+
+
+brasaoWebApp.directive('onFilter', function () {
+    return {
+        require: '^stTable',
+        scope: {
+            onFilter: '='
+        },
+        link: function (scope, element, attr, ctrl) {
+
+            scope.$watch(function () {
+                return ctrl.tableState().search;
+            }, function (newValue, oldValue) {
+                scope.onFilter(ctrl);
+            }, true);
+        }
+    };
 });

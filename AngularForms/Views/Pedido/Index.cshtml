@@ -33,11 +33,7 @@
             <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert" style="margin-top: 10px;"></div>
             <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert" style="margin-top: 10px;"></div>
 
-            <div class="alert alert-danger alert-dismissible fade in {{erro.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                {{erro.mensagem}}
-                <br />
-            </div>
+            @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
             <div class="alert alert-info alert-dismissible fade in {{sucesso.mensagem ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
                 {{sucesso.mensagem}}

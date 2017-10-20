@@ -16,8 +16,7 @@
     <div cg-busy="{promise:promiseGetUsuario,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseEmail,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseCadastrar,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
-    <div id="mensagemSucessoFormulario" class="alert alert-success hidden" role="alert"></div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <form role="form" id="formCadastro" class="form-horizontal" ng-submit="submitForm()">
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
         <fieldset>

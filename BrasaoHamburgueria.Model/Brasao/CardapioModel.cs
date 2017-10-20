@@ -18,6 +18,7 @@ namespace BrasaoHamburgueria.Model
     {
         public int CodClasse { get; set; }
         public string DescricaoClasse { get; set; }
+        public bool Sincronizar { get; set; }
         public List<ItemCardapioViewModel> Itens { get; set; }
     }
 
@@ -28,6 +29,7 @@ namespace BrasaoHamburgueria.Model
         public string Nome { get; set; }
         public double Preco { get; set; }
         public bool Ativo { get; set; }
+        public bool Sincronizar { get; set; }
         public ComplementoItemCardapioViewModel Complemento { get; set; }
         public List<ObservacaoProducaoViewModel> ObservacoesPermitidas { get; set; }
         public List<OpcaoExtraViewModel> ExtrasPermitidos { get; set; }
@@ -55,6 +57,11 @@ namespace BrasaoHamburgueria.Model
     [Table("CLASSE_ITEM_CARDAPIO")]
     public class ClasseItemCardapio
     {
+        public ClasseItemCardapio()
+        {
+            Sincronizar = true;
+        }
+
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Column("COD_CLASSE")]
@@ -70,13 +77,28 @@ namespace BrasaoHamburgueria.Model
         [Column("ORDEM_EXIBICAO")]
         public int OrdemExibicao { get; set; }
 
+        [Column("SINCRONIZAR")]
+        public bool Sincronizar { get; set; }
+
+        [Column("COD_IMPRESSORA_PADRAO")]
+        [ForeignKey("ImpressoraPadrao")]
+        public int? CodImpressoraPadrao { get; set; }
+
         [InverseProperty("Classe")]
         public virtual List<ItemCardapio> Itens { get; set; }
+
+        public virtual ImpressoraProducao ImpressoraPadrao { get; set; }
     }
 
     [Table("ITEM_CARDAPIO")]
     public class ItemCardapio
     {
+        public ItemCardapio()
+        {
+            Ativo = true;
+            Sincronizar = true;
+        }
+
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Column("COD_ITEM_CARDAPIO")]
@@ -98,6 +120,9 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("ATIVO")]
         public bool Ativo { get; set; }
+
+        [Column("SINCRONIZAR")]
+        public bool Sincronizar { get; set; }
 
         public virtual ClasseItemCardapio Classe { get; set; }
 
@@ -162,12 +187,12 @@ namespace BrasaoHamburgueria.Model
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Key, ForeignKey("Item")]
-        [Column("COD_ITEM_CARDAPIO", Order=1)]
+        [Column("COD_ITEM_CARDAPIO", Order = 1)]
         public int CodItemCardapio { get; set; }
 
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Key, ForeignKey("ObservacaoProducao")]
-        [Column("COD_OBSERVACAO", Order=2)]
+        [Column("COD_OBSERVACAO", Order = 2)]
         public int CodObservacao { get; set; }
 
         public virtual ObservacaoProducao ObservacaoProducao { get; set; }
@@ -234,6 +259,9 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("ImpressoraProducao")]
         public virtual List<ItemCardapioImpressora> ItensAssociados { get; set; }
+
+        [InverseProperty("ImpressoraPadrao")]
+        public virtual List<ClasseItemCardapio> ClassesAssociadas { get; set; }
     }
 
     [Table("ITEM_CARDAPIO_IMPRESSORA_PRODUCAO")]

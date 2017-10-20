@@ -1,8 +1,4 @@
-﻿brasaoWebApp.controller('cpController', function ($scope, $http, $filter) {
-
-    $scope.pedidos = [];
-    $scope.promisesLoader = [];
-    $scope.pedidoSelecionado = [];
+﻿brasaoWebApp.controller('cpController', function ($scope, $http, $filter, $window) {
 
     $scope.getUltimosPedidos = function (loginUsuario) {
 
@@ -27,14 +23,14 @@
 
             }
             else {
-                $scope.erro.mensagem = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
                 $window.scrollTo(0, 0);
             }
 
             
 
         }, function (error) {
-            $scope.erro.mensagem = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
             $window.scrollTo(0, 0);
         });
 
@@ -51,6 +47,16 @@
     };
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
+        $scope.mensagem = {
+            erro: '',
+            sucesso: '',
+            informacao: ''
+        }
+
+        $scope.pedidos = [];
+        $scope.promisesLoader = [];
+        $scope.pedidoSelecionado = [];
+
         $scope.getUltimosPedidos(loginUsuario);
     }
 

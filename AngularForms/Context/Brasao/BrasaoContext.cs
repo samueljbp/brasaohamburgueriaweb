@@ -18,6 +18,12 @@ namespace BrasaoHamburgueria.Web.Context
             this.Configuration.LazyLoadingEnabled = false;
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<System.Data.Entity.ModelConfiguration.Conventions.ManyToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<System.Data.Entity.ModelConfiguration.Conventions.OneToManyCascadeDeleteConvention>();
+        }
+
         public DbSet<ClasseItemCardapio> Classes { get; set; }
         public DbSet<ItemCardapio> ItensCardapio { get; set; }
         public DbSet<ComplementoItemCardapio> ComplementosItens { get; set; }

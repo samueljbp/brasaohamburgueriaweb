@@ -13,7 +13,7 @@
 <script src="~/app/RedefinirSenha/rdSenhaController.js"></script>
 <div ng-controller="rdSenhaController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Code')">
     <h2>Redefina sua senha</h2>
-    <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formRedefinirSenha" class="form-horizontal" ng-submit="submitForm()">
         <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />

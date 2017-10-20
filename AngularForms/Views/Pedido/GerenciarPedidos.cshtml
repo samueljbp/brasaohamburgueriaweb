@@ -9,16 +9,7 @@
 }
 <script src="~/app/GerenciarPedidosForm/gpController.js"></script>
 <div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
-    <div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
-        {{mensagem.erro}}
-        <br />
-    </div>
-    <div class="alert alert-success alert-dismissible fade in {{mensagem.sucesso ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" aria-label="Close" ng-click="mensagem.sucesso = ''"><span aria-hidden="true">×</span></button>
-        {{mensagem.sucesso}}
-        <br />
-    </div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseImprime,backdrop:false,delay:10,minDuration:1000}"></div>

@@ -1,6 +1,12 @@
-﻿brasaoWebApp.controller('cuController', function ($scope, $http) {
+﻿brasaoWebApp.controller('cuController', function ($scope, $http, $window) {
 
     $scope.init = function (loginUsuario, antiForgeryToken, email) {
+
+        $scope.mensagem = {
+            erro: '',
+            sucesso: '',
+            informacao: ''
+        }
 
         $scope.novo = !(email != '');
         $scope.usuario = { estado: 'MG', cidade: 'Cataguases', email: '' };
@@ -10,11 +16,6 @@
         }
 
         $scope.GetData();
-
-
-
-
-
 
 
         //variável de apoio para validação de e-mail
@@ -77,8 +78,8 @@
                         return;
                     }
                 }).catch(function (error) {
-                    $('#mensagemErroFormulario').removeClass('hidden');
-                    $('#mensagemErroFormulario').text('Ocorreu uma falha no processamento da requisição. ' + error.statusText);
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (error.statusText ? error.statusText : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
                 });
             });
 
@@ -181,7 +182,8 @@
                 $scope.usuario = response.data;
 
             }, function (error) {
-                alert(error);
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (error.statusText ? error.statusText : 'erro desconhecido');
+                $window.scrollTo(0, 0);
             });
 
         }
@@ -225,13 +227,13 @@
                 }
             }
             else {
-                $('#mensagemErroFormulario').removeClass('hidden');
-                $('#mensagemErroFormulario').text('Ocorreu uma falha durante o cadastro com a seguinte mensagem: ' + retorno.Errors[0]);
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
             }
 
         }).catch(function (error) {
-            $('#mensagemErroFormulario').removeClass('hidden');
-            $('#mensagemErroFormulario').text(error.statusText);
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
         });
 
     };

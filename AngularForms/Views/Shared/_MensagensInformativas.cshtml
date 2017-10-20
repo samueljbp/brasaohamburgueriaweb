@@ -1,0 +1,15 @@
+﻿<div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+    <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
+    {{mensagem.erro}}
+    <br />
+</div>
+<div class="alert alert-success alert-dismissible fade in {{mensagem.sucesso ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+    <button type="button" class="close" aria-label="Close" ng-click="mensagem.sucesso = ''"><span aria-hidden="true">×</span></button>
+    {{mensagem.sucesso}}
+    <br />
+</div>
+<div class="alert alert-warning alert-dismissible fade in {{mensagem.informacao ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+    <button type="button" class="close" aria-label="Close" ng-click="mensagem.informacao = ''"><span aria-hidden="true">×</span></button>
+    {{mensagem.informacao}}
+    <br />
+</div>

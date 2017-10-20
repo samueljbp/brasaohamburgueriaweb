@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('mpController', function ($scope, $http, noteService) {
+﻿brasaoWebApp.controller('mpController', function ($scope, $http, noteService, $window) {
     $scope.init = function () {
         
     }

@@ -1,5 +1,5 @@
 ﻿@using BrasaoHamburgueria.Model
-<div ng-controller="loginController">
+<div ng-controller="loginController" ng-init="init()">
     @{
         ViewBag.Title = "Brasão Hamburgueria - Login";
         var returnUrl = "";
@@ -22,7 +22,7 @@
         <div class="col-sm-6">
             <div cg-busy="{promise:promiseBusy,backdrop:false,delay:10,minDuration:1000}"></div>
             <form role="form" id="formLogin" class="form-horizontal" ng-submit="submitForm()">
-                <div id="mensagemErroFormulario" class="alert alert-danger hidden" role="alert"></div>
+                @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
                 <input id="antiForgeryToken" data-ng-model="antiForgeryToken" type="hidden" data-ng-init="antiForgeryToken='@GetAntiForgeryToken()'" />
                 <input id="returnUrl" data-ng-model="returnUrl" type="hidden" data-ng-init="loginViewModel.returnUrl='@returnUrl'" />
                 <div class="form-group">

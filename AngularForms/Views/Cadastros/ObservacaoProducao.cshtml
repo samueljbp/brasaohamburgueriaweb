@@ -14,13 +14,10 @@
 </style>
 <script src="~/app/CadastroObservacaoProducaoForm/copController.js"></script>
 <div ng-controller="copController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
-    <div class="alert alert-danger alert-dismissible fade in {{mensagem.erro ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
-        <button type="button" class="close" aria-label="Close" ng-click="mensagem.erro = ''"><span aria-hidden="true">×</span></button>
-        {{mensagem.erro}}
-        <br />
-    </div>
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetObservacoes,backdrop:false,delay:10,minDuration:1000}"></div>
-    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
+    <div cg-busy="{promise:promiseExcluirObs,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formObs" class="form-horizontal" ng-submit="submitForm()">
         <br />
         <h3>Observações de produção - Cadastro</h3>
         <hr />
@@ -51,13 +48,13 @@
                     <td>{{obs.codObservacao}}</td>
                     <td>{{obs.descricaoObservacao}}</td>
                     <td>
-                        <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
+                        <button type="button" ng-click="confirmaExclusaoObs(obs)" class="btn btn-sm btn-danger">
                             <i class="glyphicon glyphicon-remove">
                             </i>
                         </button>
                     </td>
                     <td>
-                        <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning">
+                        <button type="button" ng-click="modalAlteracao(obs)" class="btn btn-sm btn-warning">
                             <i class="glyphicon glyphicon-edit">
                             </i>
                         </button>
@@ -68,7 +65,7 @@
                 <tr>
                     <td colspan="4" class="text-right">
                         <div class="text-right">
-                            <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-primary">
+                            <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                 <i class="glyphicon glyphicon-plus">
                                 </i>Cadastrar
                             </button>
@@ -82,5 +79,42 @@
                 </tr>
             </tfoot>
         </table>
+    </form>
+    <form role="form" id="formGravarObs" class="form-horizontal">
+        <div class="modal fade" id="modalGravarObs" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarObs" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarObs">Observação de produção - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarObs,backdrop:false,delay:10,minDuration:1000}"></div>
+
+                        <div class="form-group">
+                            <label for="codObservacao" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codObservacao" ng-disabled="modoCadastro == 'A'" name="codObservacao" class="form-control" ng-model="obsSelecionada.codObservacao" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numero" class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="numero" name="numero" class="form-control" ng-model="obsSelecionada.descricaoObservacao" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarObservacao()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>

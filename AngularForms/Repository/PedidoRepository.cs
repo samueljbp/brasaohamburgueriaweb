@@ -265,6 +265,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     PercentualDesconto = p.PercentualDesconto,
                     MotivoDesconto = p.MotivoDesconto,
                     MotivoCancelamento = p.MotivoCancelamento,
+                    PedidoExterno = p.PedidoExterno,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,
