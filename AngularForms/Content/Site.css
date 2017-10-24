@@ -1,4 +1,23 @@
-﻿.st-sort-ascent:before {
+﻿.centro {
+    background-color: white;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+.rodape {
+    color: white;
+    font-weight: bold;
+}
+
+.texto-branco {
+    color: white;
+    font-weight: bold;
+}
+
+
+
+
+.st-sort-ascent:before {
     content: '\25B2';
 }
 
@@ -28,6 +47,7 @@ body {
     background-color: #D8C078;
     /*background-image: url('img/menu_background.jpg');*/
     border-color: #ffffff;
+    border: none;
 }
 
 
@@ -238,60 +258,63 @@ ul.nav.navbar-nav .dropdown.open .dropdown-toggle {
 
 /* The switch - the box around the slider */
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 15px;
-  margin: 0px;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 15px;
+    margin: 0px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
+    /* Hide default HTML checkbox */
+    .switch input {
+        display: none;
+    }
 
 /* The slider */
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #F0F0D8;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #F0F0D8;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 10px;
-  width: 10px;
-  left: 1px;
-  bottom: 3px;
-  background-color: #560702;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 10px;
+        width: 10px;
+        left: 1px;
+        bottom: 3px;
+        background-color: #560702;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
 
 input:checked + .slider {
-  background-color: #D89000;
+    background-color: #D89000;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #D89000;
+    box-shadow: 0 0 1px #D89000;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(18px);
-  -ms-transform: translateX(18px);
-  transform: translateX(18px);
+    -webkit-transform: translateX(18px);
+    -ms-transform: translateX(18px);
+    transform: translateX(18px);
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+    border-radius: 34px;
 }
 
-.slider.round:before {
-  border-radius: 50%;
-}
+    .slider.round:before {
+        border-radius: 50%;
+    }
+

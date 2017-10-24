@@ -16,7 +16,7 @@
     modoAdm = (modoAdmStr == "S");
 }
 <div>
-    <div class="col-xs-12">
+    <div class="col-xs-12 centro" style="margin-top: 20px">
         <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)')">
             @functions{
                 public string GetAntiForgeryToken()
@@ -31,7 +31,6 @@
             <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
             <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
             @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
-            <br />
             <div class="row">
                 <h4>Meu pedido</h4>
                 <hr />

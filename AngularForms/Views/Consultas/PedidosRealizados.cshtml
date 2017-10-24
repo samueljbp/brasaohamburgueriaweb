@@ -13,11 +13,10 @@
  }
 </style>
 <script src="~/app/PedidosRealizadosForm/prController.js"></script>
-<div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+<div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetPedidosRealizados,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
-        <br />
         <h3>Pedidos realizados</h3>
         <hr />
         <div class="row">

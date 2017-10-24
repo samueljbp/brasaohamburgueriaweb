@@ -317,6 +317,8 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\img\background_inicio.jpg" />
+    <Content Include="Content\img\background_logado.jpg" />
     <Content Include="Content\img\itens_cardapio\3lobos_american_pilsen.JPG" />
     <Content Include="Content\img\itens_cardapio\3lobos_bravo.JPG" />
     <Content Include="Content\img\itens_cardapio\3lobos_exterminador.JPG" />

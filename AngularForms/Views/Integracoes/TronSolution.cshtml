@@ -13,12 +13,11 @@
     }
 </style>
 <script src="~/app/IntegracaoTronSolutionForm/itsController.js"></script>
-<div ng-controller="itsController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+<div ng-controller="itsController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseSolicitarSincronizacao,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExecutarSincronizacao,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formIntegracao" class="form-horizontal" ng-submit="submitForm()">
-        <br />
         <h3>Integração - Tron Solution</h3>
         <hr />
         <div class="row">

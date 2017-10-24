@@ -126,121 +126,125 @@
 </style>
 
 <br />
-<div class="row">
-    <div class="col-sm-10">
-        <h3>Conheça nosso cardápio</h3>
+<div class="centro">
+
+
+    <div class="row">
+        <div class="col-sm-10">
+            <h3>Conheça nosso cardápio</h3>
+        </div>
+        <div class="col-sm-2">
+            @if (ParametroRepository.GetEmManutencao() == "N")
+            {
+                @Html.ActionLink("Fazer um pedido", "Index", "Pedido", null, new { @class = "btn btn-success" })
+            }
+        </div>
     </div>
-    <div class="col-sm-2">
-        @if (ParametroRepository.GetEmManutencao() == "N")
-        {
-            @Html.ActionLink("Fazer um pedido", "Index", "Pedido", null, new { @class = "btn btn-success" })
-        }
-    </div>
-</div>
-<hr />
-@{
-    List<ClasseItemCardapio> classes = ViewBag.Classes;
-    var cont = 0;
-    var tamanhoColunaNome = "col-sm-11";
-    var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21 };
-}
-<ul class="nav nav-tabs">
-    @foreach (ClasseItemCardapio classe in classes)
-    {
-        <li class="small @(cont == 0 ? "active" : "")"><a data-toggle="pill" href="#@classe.CodClasse">@classe.DescricaoClasse</a></li>
-        cont++;
+    <hr />
+    @{
+        List<ClasseItemCardapio> classes = ViewBag.Classes;
+        var cont = 0;
+        var tamanhoColunaNome = "col-sm-11";
+        var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21 };
     }
-</ul>
+    <ul class="nav nav-tabs">
+        @foreach (ClasseItemCardapio classe in classes)
+        {
+            <li class="small @(cont == 0 ? "active" : "")"><a data-toggle="pill" href="#@classe.CodClasse">@classe.DescricaoClasse</a></li>
+            cont++;
+        }
+    </ul>
 
-<div class="tab-content">
-    @{ cont = 0; }
-    @foreach (ClasseItemCardapio classe in classes)
-    {
-        tamanhoColunaNome = "col-sm-11";
-        <div id="@classe.CodClasse" class="tab-pane fade @(cont == 0 ? "in active" : "")">
-            <br />
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
-                        {
-                            tamanhoColunaNome = "col-sm-2";
-                            <th class="hidden-xs col-sm-1">
-
-                            </th>
-                        }
-                        <th class="@tamanhoColunaNome">
-                            Item
-                        </th>
-                        @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
-                        {
-                            <th class="col-sm-8">
-                                Descrição
-                            </th>
-                        }
-                        <th class="col-sm-1">
-                            Preço
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (ItemCardapio item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
-                    {
+    <div class="tab-content">
+        @{ cont = 0; }
+        @foreach (ClasseItemCardapio classe in classes)
+        {
+            tamanhoColunaNome = "col-sm-11";
+            <div id="@classe.CodClasse" class="tab-pane fade @(cont == 0 ? "in active" : "")">
+                <br />
+                <table class="table table-striped">
+                    <thead>
                         <tr>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
-                                <td class="hidden-xs">
+                                tamanhoColunaNome = "col-sm-2";
+                                <th class="hidden-xs col-sm-1">
+
+                                </th>
+                            }
+                            <th class="@tamanhoColunaNome">
+                                Item
+                            </th>
+                            @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                            {
+                                <th class="col-sm-8">
+                                    Descrição
+                                </th>
+                            }
+                            <th class="col-sm-1">
+                                Preço
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ItemCardapio item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
+                        {
+                            <tr>
+                                @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                                {
+                                    <td class="hidden-xs">
+                                        @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                                        {
+                                            <a href="#" class="pop">
+                                                <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
+                                                <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                }
+                                <td class="hidden-sm hidden-md hidden-lg text-left">
                                     @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                     {
                                         <a href="#" class="pop">
-                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
+                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
                                             <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
                                         </a>
                                     }
-                                    else
-                                    {
-                                        <span>-</span>
-                                    }
+                                    <h5>
+                                        @item.Nome
+                                    </h5>
                                 </td>
-                            }
-                            <td class="hidden-sm hidden-md hidden-lg text-left">
-                                @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                                <td class="hidden-xs">
+                                    <h5>
+                                        @item.Nome
+                                    </h5>
+                                </td>
+                                @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                                 {
-                                    <a href="#" class="pop">
-                                        <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
-                                        <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
-                                    </a>
+                                    <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
                                 }
-                                <h5>
-                                    @item.Nome
-                                </h5>
-                            </td>
-                            <td class="hidden-xs">
-                                <h5>
-                                    @item.Nome
-                                </h5>
-                            </td>
-                            @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
-                            {
-                                <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
-                            }
-                            <td>@item.Preco.ToString("C")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-                    {
-                        cont = cont + 1;
-                    }
-    }
+                                <td>@item.Preco.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+                        {
+                            cont = cont + 1;
+                        }
+        }
 
-    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <img src="" class="imagepreview" style="width: 100%;">
+        <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <img src="" class="imagepreview" style="width: 100%;">
+                    </div>
                 </div>
             </div>
         </div>

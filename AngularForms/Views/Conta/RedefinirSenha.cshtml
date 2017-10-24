@@ -11,7 +11,7 @@
     }
 }
 <script src="~/app/RedefinirSenha/rdSenhaController.js"></script>
-<div ng-controller="rdSenhaController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Code')">
+<div ng-controller="rdSenhaController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Code')" class="centro">
     <h2>Redefina sua senha</h2>
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>

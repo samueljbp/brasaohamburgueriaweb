@@ -47,7 +47,9 @@ else
         else
         {
             <li>
-                <a id="@(casaAberta ? "casaAberta" : "casaFechada")" href="#">@(casaAberta ? "Aberto" : "Fechado") agora</a>
+                <a class="{{casaAberta ? 'casaAberta' : 'casaFechada'}}" href="#">
+                    {{casaAberta ? 'Aberto' : 'Fechado'}} agora
+                </a>
             </li>
             <li>@Html.ActionLink("Registrar", "Cadastrar", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
             <li>@Html.ActionLink("Entrar", "Login", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
