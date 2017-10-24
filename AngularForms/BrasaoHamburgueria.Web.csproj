@@ -167,6 +167,7 @@
     <Content Include="app\IntegracaoTronSolutionForm\itsController.js" />
     <Content Include="app\LoginForm\loginController.js" />
     <Content Include="app\MenuPrincipalForm\mpController.js" />
+    <Content Include="app\NavbarForm\nbController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
     <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
     <Content Include="app\PedidosRealizadosForm\prController.js" />
@@ -414,6 +415,8 @@
     <Content Include="Content\img\itens_cardapio\zeze.jpg" />
     <Content Include="Content\img\itens_cardapio\zz_top.jpg" />
     <Content Include="Content\img\logo.jpg" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\menu_background.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\sounds\beep.wav" />
     <Content Include="Emails\InstrucoesEsqueciMinhaSenha.html" />

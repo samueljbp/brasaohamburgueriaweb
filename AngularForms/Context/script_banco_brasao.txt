@@ -355,3 +355,10 @@ insert into item_cardapio_impressora_producao
 select cod_item_cardapio, 2
 from ITEM_CARDAPIO ic
 where COD_CLASSE in (1, 2, 3);
+
+
+
+
+
+update PARAMETRO_SISTEMA set DESCRICAO_PARAMETRO = 'Código impressora de comanda', VALOR_PARAMETRO = '1' where COD_PARAMETRO = 2;
+insert into PARAMETRO_SISTEMA values (3, 'Indicador casa aberta', 1);

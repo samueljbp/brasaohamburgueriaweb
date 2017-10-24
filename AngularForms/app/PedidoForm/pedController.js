@@ -507,10 +507,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         $ngBootbox.confirm('Confirma o encerramento do pedido que está em aberto?')
             .then(function () {
 
+                $scope.pedidoAberto.situacao = 5;
 
                 $scope.promiseFinalizaPedido = $http({
                     method: 'POST',
-                    url: urlBase + 'Pedido/FinalizaPedido',
+                    url: urlBase + 'Pedido/AvancarPedido',
                     data: $scope.pedidoAberto,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',

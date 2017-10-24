@@ -46,15 +46,6 @@
             }
         });
 
-        //esconde mensagem de validação do formulário no início
-        if (!$('#mensagemErroFormulario').hasClass('hidden')) {
-            $('#mensagemErroFormulario').addClass('hidden');
-        }
-
-        if (!$('#mensagemSucessoFormulario').hasClass('hidden')) {
-            $('#mensagemSucessoFormulario').addClass('hidden');
-        }
-
         if ($scope.usuario.email == '') { //se estiver cadastrando, esconde as opções de mudar senha e configura validação de e-mail
             $("#email").focusout(function () {
                 if ($(this).val() == '') {
@@ -221,8 +212,7 @@
                 if ($scope.novo) {
                     window.location.href = urlBase + 'Home/Index';
                 } else {
-                    $('#mensagemSucessoFormulario').removeClass('hidden');
-                    $('#mensagemSucessoFormulario').text('Os dados foram atualizados com sucesso!');
+                    $scope.mensagem.sucesso = 'Os dados foram atualizados com sucesso!';
                     window.scrollTo(0, 0);
                 }
             }

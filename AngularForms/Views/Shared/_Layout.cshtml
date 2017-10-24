@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 @{
     var emManutencao = ParametroRepository.GetEmManutencao();
+    var casaAberta = ParametroRepository.CasaAberta();
 }
 <html ng-app="brasaoWebApp">
 <head>
@@ -41,10 +42,11 @@
     <script src="~/Scripts/smart-table.min.js"></script>
     <script src="~/app/util.js"></script>
     <script src="~/app/brasaoWebApp.js"></script>
+    <script src="~/app/NavbarForm/nbController.js"></script>
 </head>
 <body>
     <div id="fb-root"></div>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" ng-controller="nbController" ng-init="init('@(casaAberta ? "S" : "N")')">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -53,6 +55,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <a class="navbar-brand" href="~/Home/MenuPrincipal">
+                            <img alt="Brand" src="~/Content/img/logo.png" style="width: 40px; height: 40px; margin-top: -10px;">
+                        </a>
+                        @*@Html.ActionLink("Início", "MenuPrincipal", "Home")*@
+                    </li>
+                    <li>
+                        @Html.ActionLink("Início", "MenuPrincipal", "Home")
+                    </li>
                     @if (emManutencao == "S")
                     {
                         <li></li>
@@ -61,7 +72,6 @@
                     {
                         if (Request.IsAuthenticated)
                         {
-                            <li>@Html.ActionLink("Início", "MenuPrincipal", "Home")</li>
                             if (User.IsInRole(Constantes.ROLE_ADMIN))
                             {
                                 <li class="dropdown">
@@ -90,14 +100,10 @@
                                 </li>
                             }
                         }
-                        else
-                        {
-                            <li>@Html.ActionLink("Início", "Index", "Home")</li>
-                        }
                     }
 
                 </ul>
-                @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial", new { CasaAberta = casaAberta, EmManutencao = emManutencao })
             </div>
         </div>
     </div>

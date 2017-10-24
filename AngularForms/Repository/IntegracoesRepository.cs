@@ -28,10 +28,10 @@ namespace BrasaoHamburgueria.Web.Repository
 
             List<String> lista = new List<string>();
 
+            List<ClasseItemCardapioViewModel> classesBrasao = _contexto.Classes.Select(i => new ClasseItemCardapioViewModel { CodClasse = i.CodClasse, DescricaoClasse = i.DescricaoClasse, CodImpressoraPadrao = i.CodImpressoraPadrao }).ToList();
+
             if (classesTron != null && classesTron.Count > 0)
             {
-                List<ClasseItemCardapioViewModel> classesBrasao = _contexto.Classes.Select(i => new ClasseItemCardapioViewModel { CodClasse = i.CodClasse, DescricaoClasse = i.DescricaoClasse }).ToList();
-
                 List<ClasseItemCardapioViewModel> classesNovas = new List<ClasseItemCardapioViewModel>();
                 List<ClasseItemCardapioViewModel> classesAlterar = new List<ClasseItemCardapioViewModel>();
                 List<ClasseItemCardapioViewModel> classesInativar = new List<ClasseItemCardapioViewModel>();
@@ -137,6 +137,15 @@ namespace BrasaoHamburgueria.Web.Repository
                         item.Nome = novo.Nome;
                         item.Preco = novo.Preco;
                         _contexto.ItensCardapio.Add(item);
+
+                        var classe = classesBrasao.Where(c => c.CodClasse == novo.CodClasse).FirstOrDefault();
+                        if (classe != null && classe.CodImpressoraPadrao != null && classe.CodImpressoraPadrao.Value > 0)
+                        {
+                            ItemCardapioImpressora imp = new ItemCardapioImpressora();
+                            imp.CodItemCardapio = novo.CodItemCardapio;
+                            imp.CodImpressora = classe.CodImpressoraPadrao.Value;
+                            _contexto.ImpressorasItens.Add(imp);
+                        }
                     }
                     await _contexto.SaveChangesAsync();
                     lista.Add(itensNovos.Count + " iten(s) de cardápio incluídos.");

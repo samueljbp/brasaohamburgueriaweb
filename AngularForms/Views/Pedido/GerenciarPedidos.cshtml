@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Repository;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -7,14 +8,17 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var tempoMedioEspera = ParametroRepository.GetTempoMedioEspera();
+}
 <script src="~/app/GerenciarPedidosForm/gpController.js"></script>
-<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')">
+<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@tempoMedioEspera')">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseImprime,backdrop:false,delay:10,minDuration:1000}"></div>
     <audio id="play" src="~/Content/sounds/beep.wav"></audio>
-    <form role="form" id="formPedido" class="form-horizontal">
+    <form role="form" id="formPedido" class="form-inline">
         <br />
         <div>
             <h4>Gerenciar pedidos</h4>
@@ -32,6 +36,15 @@
                 <div class="col-sm-3">
                     <span><input type="checkbox" id="checkAlertaSonoro" ng-model="acao.alertaSonoro" />Alerta sonoro para novos pedidos</span>
                 </div>
+            </div>
+            <div class="control-group">
+                <label for="tempoMedioEspera" class="control-label">Espera (min)</label>
+                <input type="number" step="1" min="20" max="180" required id="tempoMedioEspera" name="tempoMedioEspera" class="form-control" ng-model="tempoMedioEspera" maxlength="3" />
+                <button type="button" class="btn btn-primary btn-sm" title="Alterar tempo de espera" ng-click="alteraTempoMedioEspera()">
+                    <span class=" glyphicon glyphicon-ok" aria-hidden="true">
+                    </span>
+                </button>
+                <div class="help-block with-errors"></div>
             </div>
             <div ng-if="pedidos.length == 0">
                 <div class="row">

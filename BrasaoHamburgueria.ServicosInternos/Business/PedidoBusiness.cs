@@ -103,8 +103,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
 
             pedido.DescricaoFormaPagamento = BrasaoUtil.getDescricaoFormaPagamentoPedido(pedido.FormaPagamento);
 
-            List<string> portasComanda = new List<string> { "192.168.1.201" };
-
             ServiceResultViewModel result = new ServiceResultViewModel { Succeeded = true, Errors = new List<string>(), data = null };
 
             ImpressaoBematech4200 MP2032 = new ImpressaoBematech4200();
@@ -122,8 +120,10 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     throw new Exception("Parâmetro de modelo de impressora inválido. ");
                 }
 
-                foreach (var portaComanda in portasComanda)
+                if (pedido.PortaImpressaoComandaEntrega != "")
                 {
+                    var portaComanda = pedido.PortaImpressaoComandaEntrega;
+
                     bool sucesso = false;
                     int count = 0;
                     //Abrindo a porta

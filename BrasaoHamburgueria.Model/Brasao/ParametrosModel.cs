@@ -10,7 +10,9 @@ namespace BrasaoHamburgueria.Model
     public static class CodigosParametros
     {
         public const int COD_PARAMETRO_TAXA_ENTREGA = 1;
-        public const int COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA = 2;
+        public const int COD_PARAMETRO_CODIGO_IMPRESSORA_COMANDA = 2;
+        public const int COD_PARAMETRO_CASA_ABERTA = 3;
+        public const int COD_PARAMETRO_TEMPO_MEDIO_ESPERA = 4;
     }
 
     public static class Constantes

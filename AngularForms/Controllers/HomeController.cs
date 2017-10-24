@@ -7,6 +7,9 @@ using Microsoft.AspNet.Identity;
 using BrasaoHamburgueria.Web.Extentions;
 using System.Configuration;
 using BrasaoHamburgueria.Web.Repository;
+using BrasaoHamburgueria.Web.Filters;
+using System.Threading.Tasks;
+using BrasaoHamburgueria.Model;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -36,6 +39,25 @@ namespace BrasaoHamburgueria.Web.Controllers
         public ActionResult MenuPrincipal()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AbreFechaLoja(bool aberta)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                await ParametroRepository.AbreFechaCasa(aberta);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
         }
 	}
 }

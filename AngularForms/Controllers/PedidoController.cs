@@ -174,6 +174,26 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> AlteraTempoMedioEspera(int tempo)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                await ParametroRepository.AlteraTempoMedioEspera(tempo);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AvancarPedido(PedidoViewModel pedido)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

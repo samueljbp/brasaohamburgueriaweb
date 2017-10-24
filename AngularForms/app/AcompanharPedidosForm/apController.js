@@ -1,5 +1,7 @@
 ﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, $window, noteService) {
 
+    $scope.promisesLoader = [];
+
     $scope.getPedidoAberto = function (loginUsuario) {
 
         //var accesstoken = sessionStorage.getItem('accessToken');
@@ -25,6 +27,7 @@
                 }
 
                 $scope.pedidoSelecionado = retorno.data;
+                $scope.tempoMedioEspera = $scope.pedidoSelecionado.tempoMedioEspera;
                 $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedidoSelecionado.situacao);
                 $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
 
@@ -170,7 +173,8 @@
     };
 
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera) {
+        $scope.tempoMedioEspera = parseInt(tempoMedioEspera);
         $scope.loginUsuario = loginUsuario;
         $scope.antiForgeryToken = antiForgeryToken;
         $scope.getPedidoAberto(loginUsuario);
@@ -182,9 +186,7 @@
         }
 
         $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
-        $scope.promisesLoader = [];
         $scope.acao = { ehGestao: false };
-        $scope.loginUsuario = '';
 
         $interval(function () {
             $scope.getPedidoAberto($scope.loginUsuario);

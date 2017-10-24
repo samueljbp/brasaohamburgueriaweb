@@ -19,6 +19,7 @@ namespace BrasaoHamburgueria.Model
         public int CodClasse { get; set; }
         public string DescricaoClasse { get; set; }
         public bool Sincronizar { get; set; }
+        public int? CodImpressoraPadrao { get; set; }
         public List<ItemCardapioViewModel> Itens { get; set; }
     }
 

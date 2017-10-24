@@ -150,6 +150,9 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<PedidoViewModel> GetPedidoAberto(string loginUsuario, string telefone)
         {
+            var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
+            var tempoMedioEspera = ParametroRepository.GetTempoMedioEspera();
+
             return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
                 .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Observacoes))
@@ -172,6 +175,8 @@ namespace BrasaoHamburgueria.Web.Repository
                     ValorDesconto = p.ValorDesconto,
                     PercentualDesconto = p.PercentualDesconto,
                     MotivoDesconto = p.MotivoDesconto,
+                    PortaImpressaoComandaEntrega = impressoraComanda,
+                    TempoMedioEspera = tempoMedioEspera,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,
@@ -190,6 +195,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<List<PedidoViewModel>> GetUltimosPedidos(string loginUsuario)
         {
+            var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
+
             var pedidos = await _contexto.Pedidos.Where(p => p.Usuario == loginUsuario && !p.PedidoExterno)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
@@ -212,7 +219,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     ValorDesconto = p.ValorDesconto,
                     PercentualDesconto = p.PercentualDesconto,
                     MotivoDesconto = p.MotivoDesconto,
-                    PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
+                    PortaImpressaoComandaEntrega = impressoraComanda,
                     Itens = p.Itens.Select(i => new ItemPedidoViewModel
                         {
                             CodItem = i.CodItemCardapio,
@@ -312,6 +319,7 @@ namespace BrasaoHamburgueria.Web.Repository
         public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido)
         {
             var dataHora = DateTime.Now.AddDays(-2);
+            var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
 
             var pedidos = await _contexto.Pedidos.Where(p => !(new List<int> { 5, 9 }).Contains(p.CodSituacao) && (p.DataHora > dataHora || p.CodSituacao < 4) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido))
                 .Include(s => s.Situacao)
@@ -342,7 +350,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     ValorDesconto = p.ValorDesconto,
                     PercentualDesconto = p.PercentualDesconto,
                     MotivoDesconto = p.MotivoDesconto,
-                    PortaImpressaoComandaEntrega = _contexto.ParametrosSistema.Where(a => a.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COMANDA).FirstOrDefault().ValorParametro,
+                    PortaImpressaoComandaEntrega = impressoraComanda,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
                         Bairro = p.BairroEntrega,

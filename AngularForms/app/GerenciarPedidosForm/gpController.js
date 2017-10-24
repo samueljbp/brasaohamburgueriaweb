@@ -47,6 +47,42 @@
         }
     }
 
+    $scope.alteraTempoMedioEspera = function () {
+
+        if (typeof $scope.tempoMedioEspera == 'undefined') {
+            $scope.mensagem.erro = 'Informe um valor entre 20 e 180 minutos.';
+            $window.scrollTo(0, 0);
+            return;
+        }
+
+        $scope.promiseAlteraTempoMedioEspera = $http({
+            method: 'POST',
+            url: urlBase + 'Pedido/AlteraTempoMedioEspera',
+            data: { tempo: $scope.tempoMedioEspera },
+            headers: {
+                'RequestVerificationToken': $scope.antiForgeryToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.succeeded) {
+                $scope.mensagem.sucesso = 'Tempo de espera alterado com sucesso.';
+            }
+            else {
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (error) {
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        });
+
+        $scope.promisesLoader.push($scope.promiseAlteraTempoMedioEspera);
+
+    }
+
     $scope.alteraPedido = function (pedido) {
         pedido.alterar = true;
         sessionStorage.pedido = JSON.stringify(pedido);
@@ -70,7 +106,7 @@
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
             url: urlBase + 'Pedido/GetPedido?CodPedido=' + codPedido
@@ -109,7 +145,7 @@
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
             url: urlBase + 'Pedido/GetPedidosAbertos'
@@ -218,9 +254,11 @@
     };
 
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera) {
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
+
+        $scope.tempoMedioEspera = parseInt(tempoMedioEspera);
 
         $scope.getPedidosPendentes(false, true);
 
