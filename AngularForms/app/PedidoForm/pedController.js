@@ -551,6 +551,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             return;
         }
 
+        $scope.calculaTroco();
+
         if ($scope.pedido.trocoPara > 0) {
             if ($scope.pedido.trocoPara < $scope.pedido.valorTotal) {
                 $scope.mensagem.erro = 'O valor informado para o pagamento em dinheiro está menor que o valor total do pedido.';

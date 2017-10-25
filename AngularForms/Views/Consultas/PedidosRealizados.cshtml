@@ -8,9 +8,9 @@
     }
 }
 <style>
- body {
-     overflow-y: scroll;
- }
+    body {
+        overflow-y: scroll;
+    }
 </style>
 <script src="~/app/PedidosRealizadosForm/prController.js"></script>
 <div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
@@ -71,82 +71,84 @@
         <div ng-if="rowCollection.length <= 0">
             <small>Nenhum item encontrado</small>
         </div>
-        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
-            <thead>
-                <tr>
-                    <th st-sort="codPedido" width="5%"><a href="#">Nº</a></th>
-                    <th st-sort="codPedido" width="5%"><a href="#">Externo</a></th>
-                    <th st-sort="dataPedido" width="15%"><a href="#">Data/Hora</a></th>
-                    <th st-sort="nome" width="40%"><a href="#">Cliente</a></th>
-                    <th st-sort="descricaoFormaPagamento" width="20%"><a href="#">Forma pagamento</a></th>
-                    <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
-                </tr>
-                <tr>
-                    <th>
-                        <input st-search="codPedido" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                    </th>
-                    <th>
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
+                <thead>
+                    <tr>
+                        <th st-sort="codPedido" width="5%"><a href="#">Nº</a></th>
+                        <th st-sort="codPedido" width="5%"><a href="#">Externo</a></th>
+                        <th st-sort="dataPedido" width="15%"><a href="#">Data/Hora</a></th>
+                        <th st-sort="nome" width="40%"><a href="#">Cliente</a></th>
+                        <th st-sort="descricaoFormaPagamento" width="20%"><a href="#">Forma pagamento</a></th>
+                        <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codPedido" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
 
-                    </th>
-                    <th>
+                        </th>
+                        <th>
 
-                    </th>
-                    <th>
-                        <input st-search="dadosCliente.nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                    </th>
-                    <th>
-                        <input st-search="descricaoFormaPagamento" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                    </th>
-                    <th>
+                        </th>
+                        <th>
+                            <input st-search="dadosCliente.nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoFormaPagamento" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="ped in displayedCollection">
-                    <td>{{ped.codPedido}}</td>
-                    <td>{{(ped.pedidoExterno ? 'Sim' : 'Não')}}</td>
-                    <td>{{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}</td>
-                    <td>{{ped.dadosCliente.nome}}</td>
-                    <td>{{ped.descricaoFormaPagamento}}</td>
-                    <td>{{ped.valorTotal - ped.valorDesconto | currency: "R$ "}}</td>
-                    @*<td>
-                        <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning">
-                            <i class="glyphicon glyphicon-list">
-                            </i>
-                        </button>
-                    </td>*@
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="5" class="text-right">
-                        <div class="row">
-                            <div class="col-sm-2"><small>Qtd peds: <span class="text-success">{{totais.qtdPeds}}</span></small></div>
-                            <div class="col-sm-2">
-                                <small>Débito: <span class="text-primary">{{totais.debito | currency: "R$ "}}</span></small>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="ped in displayedCollection">
+                        <td>{{ped.codPedido}}</td>
+                        <td>{{(ped.pedidoExterno ? 'Sim' : 'Não')}}</td>
+                        <td>{{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{ped.dadosCliente.nome}}</td>
+                        <td>{{ped.descricaoFormaPagamento}}</td>
+                        <td>{{ped.valorTotal - ped.valorDesconto | currency: "R$ "}}</td>
+                        @*<td>
+                                <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning">
+                                    <i class="glyphicon glyphicon-list">
+                                    </i>
+                                </button>
+                            </td>*@
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-left">
+                            <div class="row">
+                                <div class="col-sm-2"><small>Qtd peds: <span class="text-success">{{totais.qtdPeds}}</span></small></div>
+                                <div class="col-sm-2">
+                                    <small>Débito: <span class="text-primary">{{totais.debito | currency: "R$ "}}</span></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small>Crédito: <span class="text-primary">{{totais.credito | currency: "R$ "}}</span></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small>Dinheiro: <span class="text-primary">{{totais.dinheiro | currency: "R$ "}}</span></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small>Ticket: <span class="text-primary">{{totais.ticket | currency: "R$ "}}</span></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small>Total: <span class="text-success">{{totais.debito + totais.credito + totais.dinheiro + totais.ticket | currency: "R$ "}}</span></small>
+                                </div>
                             </div>
-                            <div class="col-sm-2">
-                                <small>Crédito: <span class="text-primary">{{totais.credito | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Dinheiro: <span class="text-primary">{{totais.dinheiro | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Ticket: <span class="text-primary">{{totais.ticket | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Total: <span class="text-success">{{totais.debito + totais.credito + totais.dinheiro + totais.ticket | currency: "R$ "}}</span></small>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </form>
 </div>

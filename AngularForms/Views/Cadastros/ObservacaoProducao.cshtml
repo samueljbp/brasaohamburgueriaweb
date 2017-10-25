@@ -23,61 +23,63 @@
         <div ng-if="rowCollection.length <= 0">
             <small>Nenhum item cadastrado</small>
         </div>
-        <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
-            <thead>
-                <tr>
-                    <th st-sort="codPedido" width="10%"><a href="#">Código</a></th>
-                    <th st-sort="dataPedido" width="90%"><a href="#">Descrição</a></th>
-                    <th st-sort="" colspan="3" width="10%"><a href="#"></a></th>
-                </tr>
-                <tr>
-                    <th>
-                        <input st-search="codObservacao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                    </th>
-                    <th>
-                        <input st-search="descricaoObservacao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                    </th>
-                    <th colspan="2">
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+                <thead>
+                    <tr>
+                        <th st-sort="codPedido" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="dataPedido" width="90%"><a href="#">Descrição</a></th>
+                        <th st-sort="" colspan="3" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codObservacao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoObservacao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="obs in displayedCollection">
-                    <td>{{obs.codObservacao}}</td>
-                    <td>{{obs.descricaoObservacao}}</td>
-                    <td>
-                        <button type="button" ng-click="confirmaExclusaoObs(obs)" class="btn btn-sm btn-danger">
-                            <i class="glyphicon glyphicon-remove">
-                            </i>
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" ng-click="modalAlteracao(obs)" class="btn btn-sm btn-warning">
-                            <i class="glyphicon glyphicon-edit">
-                            </i>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4" class="text-right">
-                        <div class="text-right">
-                            <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
-                                <i class="glyphicon glyphicon-plus">
-                                </i>Cadastrar
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="obs in displayedCollection">
+                        <td>{{obs.codObservacao}}</td>
+                        <td>{{obs.descricaoObservacao}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoObs(obs)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
                             </button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <div st-pagination="" st-items-by-page="itemsByPage"></div>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(obs)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </form>
     <form role="form" id="formGravarObs" class="form-horizontal">
         <div class="modal fade" id="modalGravarObs" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarObs" style="overflow: scroll;">

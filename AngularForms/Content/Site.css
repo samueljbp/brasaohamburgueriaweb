@@ -2,6 +2,9 @@
     background-color: white;
     padding: 30px;
     margin-top: 20px;
+    margin-left: 1px;
+    margin-right: 1px;
+    height: 100%;
 }
 
 .rodape {
@@ -87,9 +90,12 @@ ul.nav.navbar-nav .dropdown.open .dropdown-toggle {
     background-color: #807718;
 }
 
-.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a {
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+    color: #000000;
 }
 
+.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a {
+}
 
 .divider {
     border-top: 1px solid #F0F0D8;
@@ -317,4 +323,3 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
-
