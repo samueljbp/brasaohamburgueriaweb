@@ -28,6 +28,11 @@ namespace BrasaoHamburgueria.Web.Repository
                 ped.PercentualDesconto = pedido.PercentualDesconto;
                 ped.MotivoDesconto = pedido.MotivoDesconto;
 
+                if (ped.FormaPagamento == "D" && ped.TrocoPara != null && ped.TrocoPara.Value > 0)
+                {
+                    ped.Troco = ped.TrocoPara - ped.ValorTotal - ped.ValorDesconto.Value;
+                }
+
                 await _contexto.SaveChangesAsync();
             }
         }
@@ -54,8 +59,66 @@ namespace BrasaoHamburgueria.Web.Repository
             }
         }
 
+        private bool ValidaValorPedido(PedidoViewModel pedidoViewModel)
+        {
+            if (pedidoViewModel.CodPedido > 0)
+            {
+                return true;
+            }
+
+            var valorTotalPedido = 0.0;
+            var valorExtras = 0.0;
+
+            foreach(var item in pedidoViewModel.Itens)
+            {
+                valorExtras = 0;
+                if (item.extras != null && item.extras.Count > 0)
+                {
+                    foreach(var extra in item.extras)
+                    {
+                        if (extra != null)
+                        {
+                            var extraBase = _contexto.Extras.Find(extra.CodOpcaoExtra);
+                            if (extraBase != null)
+                            {
+                                valorExtras += item.Quantidade * extraBase.Preco;
+                            }
+                        }
+                    }
+                }
+
+                var itemBase = _contexto.ItensCardapio.Find(item.CodItem);
+
+                if (itemBase != null)
+                {
+                    valorTotalPedido += item.Quantidade * itemBase.Preco;
+                }
+
+                valorTotalPedido += valorExtras;
+            }
+
+            valorTotalPedido += pedidoViewModel.TaxaEntrega;
+
+            if (pedidoViewModel.ValorDesconto != null && pedidoViewModel.ValorDesconto.Value > 0)
+            {
+                valorTotalPedido -= pedidoViewModel.ValorDesconto.Value;
+            }
+
+            if (pedidoViewModel.ValorTotal != valorTotalPedido)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<int> GravaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
         {
+            if (!ValidaValorPedido(pedidoViewModel))
+            {
+                throw new Exception("O valor do pedido ou dos itens foi manipulado durante a requisição. Favor tentar novamente.");
+            }
+
             using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
                 try
@@ -143,7 +206,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 }
                 catch (Exception ex)
                 {
-                    throw ex; ;
+                    throw ex;
                 }
             }
         }

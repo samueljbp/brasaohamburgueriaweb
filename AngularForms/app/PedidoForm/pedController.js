@@ -367,7 +367,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
         $.each($scope.novoItem.extras, function (index, value) {
             if (value != null && value.preco != null) {
-                valorExtras = valorExtras + value.preco;
+                valorExtras = valorExtras + ($scope.novoItem.quantidade * value.preco);
             }
         });
 
