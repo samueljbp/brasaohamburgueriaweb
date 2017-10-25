@@ -142,9 +142,80 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer class="rodape">
+
+        @if (Request.IsAuthenticated)
+        {
+            <footer class="nav-1 hidden-md hidden-lg nav-bottom text-center color-2 bg-1">
+                <ul class="list-unstyled list-inline">
+                    <li class="col-xs-3">
+                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
+                    </li>
+                    <li class="col-xs-3">
+                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
+
+                    </li>
+                    <li class="col-xs-3">
+                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
+                    </li>
+                    <li class="col-xs-3">
+                        <a href="#" class="btn-4  text-lowercase"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i><br>Sair</a>
+                    </li>
+                </ul>
+            </footer>
+
+            <footer class="rodape hidden-sm hidden-xs">
+
+
+
+
+
+                <div class="row divTransparente">
+                    <div class="col-xs-4">
+                        <p>Entre em contato</p>
+
+                        <p><i class="fa fa-phone" aria-hidden="true"></i> (32) 3421-7809 </p>
+
+                        <p> <a href="mailto:brasaohamburgueria@gmail.com" class="linkRodape"><i class="fa fa-envelope-o" aria-hidden="true"></i>brasaohamburgueria@gmail.com</a></p>
+
+                        <p><i class="fa fa-location-arrow" aria-hidden="true"></i> Av Astolfo Dutra, 535 - Centro - Cataguases - MG</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p class="text-uppercase">Informações</p>
+                        <p class="bottom-15">
+                            <a href="/front/sobre/horario" class="linkRodape">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> Horário de funcionamento
+                            </a>
+                        </p>
+                        <p>
+                            <a href="/front/sobre/entrega" class="linkRodape">
+                                <i class="fa fa-info" aria-hidden="true"></i> Sobre a casa
+                            </a>
+                        </p>
+                        <p>
+                            <a href="http://www.facebook.com" target="_blank">
+                                <i class="fa fa-facebook-official" aria-hidden="true"></i> /brasaohamburgueria
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <p class="text-uppercase bottom-15">Brasão Hamburgueria & Bar</p>
+                        <p></p>
+                    </div>
+
+                </div>
+
+
+
+
+            </footer>
+        }
+        else
+        {
             <p>&copy; @DateTime.Now.Year - Brasão Hamburgueria</p>
-        </footer>
+            <p>
+                Av Astolfo Dutra, 535 - Cataguases / MG - Telefone: (32) 3421-7809
+            </p>
+        }
     </div>
 </body>
 </html>
