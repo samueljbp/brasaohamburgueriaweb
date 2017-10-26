@@ -160,6 +160,7 @@
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
+    <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
     <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
@@ -1388,6 +1389,11 @@
     <Content Include="Views\Integracoes\TronSolution.cshtml" />
     <Content Include="Views\Cadastros\ObservacaoProducao.cshtml" />
     <Content Include="Views\Shared\_MensagensInformativas.cshtml" />
+    <Content Include="Views\Cadastros\OpcaoExtra.cshtml" />
+    <Content Include="Views\Cadastros\ClasseItemCardapio.cshtml" />
+    <Content Include="Views\Cadastros\ItemCardapio.cshtml" />
+    <Content Include="Views\Institucional\Sobre.cshtml" />
+    <Content Include="Views\Institucional\HorarioFuncionamento.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1430,6 +1436,7 @@
     <Compile Include="Controllers\ConsultasController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InstitucionalController.cs" />
     <Compile Include="Controllers\IntegracoesController.cs" />
     <Compile Include="Controllers\PedidoController.cs" />
     <Compile Include="Extentions\AllowCrossSiteJsonAttribute.cs" />
@@ -1472,7 +1479,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
     <Compile Include="Repository\IntegracoesRepository.cs" />
-    <Compile Include="Repository\ObservacaoRepository.cs" />
+    <Compile Include="Repository\CadastrosRepository.cs" />
     <Compile Include="Repository\ParametroRepository.cs" />
     <Compile Include="Repository\PedidoRepository.cs" />
     <Compile Include="SignalR\CustomUserIdProvider.cs" />

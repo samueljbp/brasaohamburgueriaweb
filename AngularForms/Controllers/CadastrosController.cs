@@ -15,9 +15,93 @@ namespace BrasaoHamburgueria.Web.Controllers
     [Authorize]
     public class CadastrosController : Controller
     {
-        private ObservacaoRepository _rep = new ObservacaoRepository();
+        private CadastrosRepository _rep = new CadastrosRepository();
 
-        // GET: Cadastros
+        #region Item cardápio
+        public ActionResult ItemCardapio()
+        {
+            return View();
+        }
+        #endregion
+
+        #region Classe item cardápio
+        public ActionResult ClasseItemCardapio()
+        {
+            return View();
+        }
+        #endregion
+
+        #region Opção extra
+        public ActionResult OpcaoExtra()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetOpcoesExtra()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var opcoes = await _rep.GetOpcoesExtra();
+
+                result.data = opcoes;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiOpcaoExtra(OpcaoExtraViewModel opcao)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiOpcaoExtra(opcao);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarOpcaoExtra(OpcaoExtraViewModel opcao, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var observacao = await _rep.GravarOpcaoExtra(opcao, modoCadastro);
+                result.Succeeded = true;
+                result.data = observacao;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+        #endregion
+
+        #region Observação produção
         public ActionResult ObservacaoProducao()
         {
             return View();
@@ -85,5 +169,6 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             return new JsonNetResult { Data = result };
         }
+        #endregion
     }
 }

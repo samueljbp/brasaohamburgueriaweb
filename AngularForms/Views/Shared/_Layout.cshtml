@@ -123,7 +123,7 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Classes de cardápio", "CasseItemCardapio", "Cadastros")</li>
+                                        <li>@Html.ActionLink("Classes de cardápio", "ClasseItemCardapio", "Cadastros")</li>
                                         <li>@Html.ActionLink("Itens de cardápio", "ItemCardapio", "Cadastros")</li>
                                         <li role="separator" class="divider"></li>
                                         <li>@Html.ActionLink("Observações de produção", "ObservacaoProducao", "Cadastros")</li>
@@ -148,17 +148,17 @@
             <footer class="nav-1 hidden-md hidden-lg nav-bottom text-center color-2 bg-1">
                 <ul class="list-unstyled list-inline">
                     <li class="col-xs-3">
-                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
+                        <a href="/" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
                     </li>
                     <li class="col-xs-3">
-                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
+                        <a href="/Institucional/Sobre" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
 
                     </li>
                     <li class="col-xs-3">
-                        <a href="#" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
+                        <a href="/Cardapio/Listar" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
                     </li>
                     <li class="col-xs-3">
-                        <a href="#" class="btn-4  text-lowercase"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i><br>Sair</a>
+                        <a href="/Institucional/HorarioFuncionamento" class="btn-4  text-lowercase"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i><br>Funcionamento</a>
                     </li>
                 </ul>
             </footer>
@@ -182,12 +182,12 @@
                     <div class="col-xs-4">
                         <p class="text-uppercase">Informações</p>
                         <p class="bottom-15">
-                            <a href="/front/sobre/horario" class="linkRodape">
+                            <a href="/Institucional/HorarioFuncionamento" class="linkRodape">
                                 <i class="fa fa-clock-o" aria-hidden="true"></i> Horário de funcionamento
                             </a>
                         </p>
                         <p>
-                            <a href="/front/sobre/entrega" class="linkRodape">
+                            <a href="/Institucional/Sobre" class="linkRodape">
                                 <i class="fa fa-info" aria-hidden="true"></i> Sobre a casa
                             </a>
                         </p>

@@ -354,7 +354,7 @@ a , a:hover { text-decoration: none;}
 .bg-1 { background: #D8C078; }
 
 .btn-4 { color:#fff; padding:5px 0; display: block; }
-.btn-4:hover , .btn-4-active { color: #000000; background:#fff;  text-decoration: none; border-top:3px solid #807718; margin-top:-10px; padding:10px 0;}
+.btn-4:hover , .btn-4-active { color: #000000; background:#fff;  text-decoration: none; border-top:3px solid #807718; margin-top:-10px; padding:8.5px 0;}
 
 .icon-login:before {
     content: "\e903";

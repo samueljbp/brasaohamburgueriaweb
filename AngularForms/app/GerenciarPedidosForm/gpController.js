@@ -617,34 +617,3 @@
     }
 
 });
-
-
-
-
-brasaoWebApp.directive('format', ['$filter', function ($filter) {
-    return {
-        require: '?ngModel',
-        link: function (scope, elem, attrs, ctrl) {
-            if (!ctrl) return;
-
-            var format = {
-                prefix: '',
-                centsSeparator: '.',
-                thousandsSeparator: ''
-            };
-
-            ctrl.$parsers.unshift(function (value) {
-                elem.priceFormat(format);
-                console.log('parsers', elem[0].value);
-                return elem[0].value;
-            });
-
-            ctrl.$formatters.unshift(function (value) {
-                elem[0].value = ctrl.$modelValue * 100;
-                elem.priceFormat(format);
-                console.log('formatters', elem[0].value);
-                return elem[0].value;
-            })
-        }
-    };
-}]);
