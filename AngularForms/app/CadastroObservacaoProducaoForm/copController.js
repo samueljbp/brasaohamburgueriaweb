@@ -21,7 +21,6 @@
     }
 
     $scope.modalAlteracao = function (obs) {
-        $('#formGravarObs')[0].reset();
         $('#formGravarObs').validator('destroy').validator();
 
         $scope.obsSelecionada = obs;
@@ -30,7 +29,6 @@
     }
 
     $scope.modalInclusao = function () {
-        $('#formGravarObs')[0].reset();
         $('#formGravarObs').validator('destroy').validator();
 
         $scope.obsSelecionada = {};

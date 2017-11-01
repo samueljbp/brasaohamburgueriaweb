@@ -85,7 +85,7 @@ namespace BrasaoHamburgueria.Web.Repository
             return false;
         }
 
-        public static HorarioFuncionamento GetHorarioAbertura()
+        public static FuncionamentoEstabelecimentoViewModel GetHorarioAbertura()
         {
             BrasaoContext _contexto = new BrasaoContext();
 
@@ -93,12 +93,13 @@ namespace BrasaoHamburgueria.Web.Repository
 
             var abertura = _contexto.FuncionamentosEstabelecimento.Where(p => p.DiaSemana >= diaSemana && p.TemDelivery).OrderBy(p => p.Abertura).FirstOrDefault();
 
-            HorarioFuncionamento horario = new HorarioFuncionamento();
+            FuncionamentoEstabelecimentoViewModel horario = new FuncionamentoEstabelecimentoViewModel();
 
             horario.Abertura = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + abertura.Abertura);
             horario.Fechamento = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + abertura.Fechamento);
 
-            horario.DiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)abertura.DiaSemana);
+            horario.DiaSemana = abertura.DiaSemana;
+            horario.DescricaoDiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)abertura.DiaSemana);
 
             return horario;
         }

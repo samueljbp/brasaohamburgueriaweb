@@ -7,6 +7,15 @@ using System.Globalization;
 
 namespace BrasaoHamburgueria.Model
 {
+    public class FuncionamentoEstabelecimentoViewModel
+    {
+        public DateTime Abertura { get; set; }
+        public DateTime Fechamento { get; set; }
+        public int DiaSemana { get; set; }
+        public String DescricaoDiaSemana { get; set; }
+        public bool TemDelivery { get; set; }
+    }
+
     [Table("FUNCIONAMENTO_ESTABELECIMENTO")]
     public class FuncionamentoEstabelecimento
     {

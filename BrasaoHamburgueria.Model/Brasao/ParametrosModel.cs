@@ -20,13 +20,6 @@ namespace BrasaoHamburgueria.Model
         public const string ROLE_ADMIN = "Administradores";
     }
 
-    public class HorarioFuncionamento
-    {
-        public DateTime Abertura { get; set;  }
-        public DateTime Fechamento { get; set; }
-        public String DiaSemana { get; set; }
-    }
-
     [Table("PARAMETRO_SISTEMA")]
     public class ParametrosSistema
     {

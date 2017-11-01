@@ -6,7 +6,7 @@
 @{
     NumberFormatInfo nfi = new NumberFormatInfo();
     nfi.NumberDecimalSeparator = ".";
-    var horarioFuncionamento = (HorarioFuncionamento)ParametroRepository.GetHorarioAbertura();
+    var horarioFuncionamento = (FuncionamentoEstabelecimentoViewModel)ParametroRepository.GetHorarioAbertura();
     bool modoAdm = false;
     string modoAdmStr = "";
     if (HttpContext.Current.Request.QueryString["ModoAdm"] != null)

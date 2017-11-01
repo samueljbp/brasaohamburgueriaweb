@@ -21,7 +21,6 @@
     }
 
     $scope.modalAlteracao = function (opcao) {
-        $('#formGravarOpcaoExtra')[0].reset();
         $('#formGravarOpcaoExtra').validator('destroy').validator();
 
         $scope.opcaoSelecionada = opcao;
@@ -30,7 +29,6 @@
     }
 
     $scope.modalInclusao = function () {
-        $('#formGravarOpcaoExtra')[0].reset();
         $('#formGravarOpcaoExtra').validator('destroy').validator();
 
         $scope.opcaoSelecionada = {};
