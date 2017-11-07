@@ -49,18 +49,19 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
             return retorno;
         }
 
-        private string RetornaStringDeExtras(List<ExtraItemPedidoViewModel> extras, bool comValor)
+        private string RetornaStringDeExtras(int qtdItemPedido, List<ExtraItemPedidoViewModel> extras, bool comValor)
         {
             string retorno = "";
             int i = 0;
 
             foreach (ExtraItemPedidoViewModel extra in extras)
             {
-                retorno = retorno + extra.DescricaoOpcaoExtra;
+                retorno = retorno + qtdItemPedido.ToString() + " => " + extra.DescricaoOpcaoExtra;
                 
                 if (comValor)
                 {
-                    retorno = retorno + " (" + extra.Preco.ToString("C")  + ")";
+                    var valor = qtdItemPedido * extra.Preco;
+                    retorno = retorno + " (" + valor.ToString("C") + ")";
                 }
                 
                 if (i < extras.Count - 1)
@@ -225,7 +226,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         }
                         if (item.extras != null && item.extras.Count > 0)
                         {
-                            var extrasString = RetornaStringDeExtras(item.extras, true);
+                            var extrasString = RetornaStringDeExtras(item.Quantidade, item.extras, true);
                             //ImpressaoBematech4200.FormataTX("EXTRAS: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
                             //ImpressaoBematech4200.FormataTX(extrasString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
                             //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
@@ -492,7 +493,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         }
                         if (item.extras != null && item.extras.Count > 0)
                         {
-                            var extrasString = RetornaStringDeExtras(item.extras, false);
+                            var extrasString = RetornaStringDeExtras(item.Quantidade, item.extras, false);
                             //ImpressaoBematech4200.FormataTX("EXTRAS: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
                             //ImpressaoBematech4200.FormataTX(extrasString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
                             //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);

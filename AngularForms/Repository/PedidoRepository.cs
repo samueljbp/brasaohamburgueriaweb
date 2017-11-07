@@ -6,6 +6,7 @@ using BrasaoHamburgueria.Model;
 using BrasaoHamburgueria.Web.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using BrasaoHamburgueria.Helper;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -114,6 +115,30 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<int> GravaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
         {
+            if (pedidoViewModel.DadosCliente.Telefone.Length < 14)
+            {
+                throw new Exception("O telefone não está preenchido corretamente");
+            }
+
+            if (pedidoViewModel.PedidoExterno && pedidoViewModel.CodPedido <= 0)
+            {
+                //var ped = _rep.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone).Result;
+                var ped = BrasaoHamburgueria.Helper.AsyncHelpers.RunSync<PedidoViewModel>(() => this.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone));
+
+                if (ped != null)
+                {
+                    throw new Exception("O cliente " + pedidoViewModel.DadosCliente.Telefone + " possui o pedido " + ped.CodPedido + " em aberto. Finalize-o antes de fazer outro pedido para este cliente.");
+                }
+            }
+
+            //primeiro verifica se a casa está aberta para delivery
+            if (!pedidoViewModel.PedidoExterno && !ParametroRepository.CasaAberta() && pedidoViewModel.CodPedido <= 0)
+            {
+                var horarioFuncionamento = ParametroRepository.GetHorarioAbertura();
+                throw new Exception("No momento estamos fechados. Abriremos " + horarioFuncionamento.DiaSemana + " das " + horarioFuncionamento.Abertura.ToString("HH:mm") + " às " + horarioFuncionamento.Fechamento.ToString("HH:mm") + ".");
+            }
+
+            //valida o valor do pedido contra a base de dados para evitar fraude por manipulação do JS
             if (!ValidaValorPedido(pedidoViewModel))
             {
                 throw new Exception("O valor do pedido ou dos itens foi manipulado durante a requisição. Favor tentar novamente.");
@@ -202,11 +227,56 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     dbContextTransaction.Commit();
 
+                    TrataDadosUsuario(pedidoViewModel);
+
                     return ped.CodPedido;
                 }
                 catch (Exception ex)
                 {
                     throw ex;
+                }
+            }
+        }
+
+        private void TrataDadosUsuario(PedidoViewModel pedidoViewModel)
+        {
+            if (pedidoViewModel.DadosCliente.ClienteNovo)
+            {
+                try
+                {
+                    ApplicationDbContext contexto = new ApplicationDbContext();
+                    Usuario usu = new Usuario();
+                    UsuarioViewModel usuVm = new UsuarioViewModel();
+                    PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
+                    UsuarioCopy.ViewModelToDB(usuVm, usu);
+                    usu.UsuarioExterno = true;
+                    contexto.DadosUsuarios.Add(usu);
+                    contexto.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+
+                    //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
+                }
+            }
+            else if (pedidoViewModel.DadosCliente.Salvar)
+            {
+                try
+                {
+                    ApplicationDbContext contexto = new ApplicationDbContext();
+                    string userName = System.Web.HttpContext.Current.User.Identity.Name;
+                    var usu = contexto.DadosUsuarios.Where(d => d.Email == userName).FirstOrDefault();
+                    if (usu != null)
+                    {
+                        UsuarioViewModel usuVm = new UsuarioViewModel();
+                        PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
+                        UsuarioCopy.ViewModelToDB(usuVm, usu);
+                        contexto.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
                 }
             }
         }

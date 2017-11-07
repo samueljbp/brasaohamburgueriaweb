@@ -67,7 +67,6 @@
             }
         </style>
     }
-    
 </head>
 <body>
     <div id="fb-root"></div>
@@ -139,25 +138,25 @@
         @RenderBody()
     </div>
 
-    
-        <footer class="nav-1 hidden-md hidden-lg nav-bottom text-center color-2 bg-1">
-            <ul class="list-unstyled list-inline">
-                <li class="col-xs-3">
-                    <a href="/" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
-                </li>
-                <li class="col-xs-3">
-                    <a href="/Institucional/Sobre" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
 
-                </li>
-                <li class="col-xs-3">
-                    <a href="/Cardapio/Listar" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
-                </li>
-                <li class="col-xs-3">
-                    <a href="/Institucional/HorarioFuncionamento" class="btn-4  text-lowercase"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i><br>Funcionamento</a>
-                </li>
-            </ul>
-        </footer>
-    
+    <footer class="nav-1 hidden-md hidden-lg nav-bottom text-center color-2 bg-1">
+        <ul class="list-unstyled list-inline">
+            <li class="col-xs-3">
+                <a href="/" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
+            </li>
+            <li class="col-xs-3">
+                <a href="/Institucional/Sobre" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
+
+            </li>
+            <li class="col-xs-3">
+                <a href="/Cardapio/Listar" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
+            </li>
+            <li class="col-xs-3">
+                <a href="/Institucional/HorarioFuncionamento" class="btn-4  text-lowercase"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i><br>Funcionamento</a>
+            </li>
+        </ul>
+    </footer>
+
 
     <footer class="nav-1 nav-bottom text-center hidden-xs hidden-sm" style="background-color: #D8C078;">
 
@@ -207,6 +206,12 @@
             $('li:has(a[href="' + currurl + '"])').children('a').removeClass('btn-4-active');
 
             var val = $('footer li:has([href="' + currurl + '"])').children().addClass('btn-4-active');
+
+            if (isMobile()) {
+                $('body').css('background-size', $(window).outerHeight() * 1.5 + 'px' + ' ' + $(window).outerHeight() + 'px');
+            } else {
+                $('body').css('background-size', $(window).outerHeight() * 2 + 'px' + ' ' + $(window).outerHeight() + 'px');
+            }
         });
     </script>
 </body>

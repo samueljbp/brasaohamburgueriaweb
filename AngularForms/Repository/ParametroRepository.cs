@@ -91,7 +91,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
             var diaSemana = (int)DateTime.Now.DayOfWeek;
 
-            var abertura = _contexto.FuncionamentosEstabelecimento.Where(p => p.DiaSemana >= diaSemana && p.TemDelivery).OrderBy(p => p.Abertura).FirstOrDefault();
+            var abertura = _contexto.FuncionamentosEstabelecimento.Where(p => p.DiaSemana >= diaSemana && p.TemDelivery).OrderBy(p => p.DiaSemana).FirstOrDefault();
 
             FuncionamentoEstabelecimentoViewModel horario = new FuncionamentoEstabelecimentoViewModel();
 
