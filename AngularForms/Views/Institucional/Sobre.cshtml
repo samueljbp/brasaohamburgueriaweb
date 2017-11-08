@@ -1,5 +1,247 @@
-﻿<div class="row">
-    <div class="col-sm-12">
-        <h2 class="text-primary"><span class="glyphicon glyphicon-alert" aria-hidden="true" /> EM CONSTRUÇÃO</h2>
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Model;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+        background-image: none !important;
+        background-color: white;
+    }
+
+    .linhaImagem {
+        margin-bottom: 10px;
+    }
+
+    .tituloSecaoImagem {
+        margin-top: 40px;
+        margin-bottom: -15px;
+    }
+</style>
+<div class="centro">
+    <h3>Conheça a nossa casa</h3>
+    <hr />
+    <p>Estamos localizados no coração de Cataguases, na Av Astolfo Dutra, 535 em um casarão cheio de charme e história.</p>
+    <p>Temos um ambiente moderno e aconchegante, pensado para proporcionar aos nossos clientes conforto e qualidade de atendimento. Nossa decoração tem inspiração musical e cada ambiente representa um gênero de música.</p>
+    <p>Para a alegria dos papais e dos pequenos, temos um espaço Kids super divertido. Temos também área externa para fumantes, com mesas no nosso charmoso jardim com vista para a avenida.</p>
+    <p><b>Confira abaixo algumas fotos!</b></p>
+    <h4 class="text-warning tituloSecaoImagem">Fachada</h4>
+    <hr class="linhaImagem" />
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada7.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada7.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada3.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada3.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada4.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada4.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada5.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada5.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-fachada6.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/fachada6.jpg" />
+            </a>
+        </div>
+    </div>
+    <h4 class="text-warning tituloSecaoImagem">Bar</h4>
+    <hr class="linhaImagem" />
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-bar.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/bar.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-bar1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/bar1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-bar2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/bar2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-bar3.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/bar3.jpg" />
+            </a>
+        </div>
+    </div>
+    <h4 class="text-warning tituloSecaoImagem">Ambientes</h4>
+    <hr class="linhaImagem" />
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes3.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes3.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes5.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes5.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes6.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes6.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes8.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes8.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-varanda.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/varanda.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-varanda1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/varanda1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-varanda2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/varanda2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes4.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes4.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes7.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes7.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-ambientes9.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/ambientes9.jpg" />
+            </a>
+        </div>
+    </div>
+    <h4 class="text-warning tituloSecaoImagem">Espaço Kids</h4>
+    <hr class="linhaImagem" />
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids3.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids3.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids4.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids4.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids5.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids5.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids6.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids6.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids7.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids7.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids8.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids8.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-kids9.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/kids9.jpg" />
+            </a>
+        </div>
+    </div>
+    <h4 class="text-warning tituloSecaoImagem">Palco (Música ao vivo)</h4>
+    <hr class="linhaImagem" />
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-palco.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/palco.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-palco1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/palco1.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-palco2.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/palco2.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-palco3.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/palco3.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-equipe.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/equipe.jpg" />
+            </a>
+            <a href="#" class="pop">
+                <img src="~/Content/img/institucional/mini-equipe1.jpg" class="img-thumbnail" />
+                <input type="hidden" value="~/Content/img/institucional/equipe1.jpg" />
+            </a>
+        </div>
+    </div>
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <img src="" class="imagepreview img-responsive" style="width: 100%;">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('.pop').on('click', function ($e) {
+            $e.preventDefault();
+            $('.imagepreview').attr('src', $(this).find('input').attr('value'));
+            $('#imagemodal').modal('show');
+        });
+    });
+</script>
