@@ -39,5 +39,11 @@ namespace BrasaoHamburgueria.Web.Context
         public DbSet<FuncionamentoEstabelecimento> FuncionamentosEstabelecimento { get; set; }
         public DbSet<ImpressoraProducao> ImpressorasProducao { get; set; }
         public DbSet<ItemCardapioImpressora> ImpressorasItens { get; set; }
+        public DbSet<ProgramaFidelidade> ProgramasFidelidade { get; set; }
+        public DbSet<UsuarioParticipanteProgramaFidelidade> UsuariosParticipantesProgramaFidelidade { get; set; }
+        public DbSet<TipoPontuacaoProgramaFidelidade> TiposPontuacaoProgramaFidelidade { get; set; }
+        public DbSet<ExtratoUsuarioProgramaFidelidade> ExtratosUsuariosProgramasFidelidade { get; set; }
+        public DbSet<SaldoUsuarioProgramaFidelidade> SaldosUsuariosProgramasFidelidade { get; set; }
+        public DbSet<PontuacaoDinheiroProgramaFidelidade> PontuacoesDinheiroProgramaFidelidade { get; set; }
     }
 }

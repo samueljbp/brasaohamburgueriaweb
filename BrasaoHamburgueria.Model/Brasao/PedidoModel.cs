@@ -42,6 +42,9 @@ namespace BrasaoHamburgueria.Model
         public double? ValorDesconto { get; set; }
         public string MotivoDesconto { get; set; }
         public int TempoMedioEspera { get; set; }
+        public bool UsaSaldoProgramaFidelidade { get; set; }
+        public decimal PontosAUtilizarProgramaRecompensa { get; set; }
+        public decimal DinheiroAUtilizarProgramaRecompensa { get; set; }
         public DadosClientePedidoViewModel DadosCliente { get; set; }
         public List<ItemPedidoViewModel> Itens { get; set; }
         public string PortaImpressaoComandaEntrega { get; set; }
@@ -205,6 +208,9 @@ namespace BrasaoHamburgueria.Model
         public string MotivoDesconto { get; set; }
 
         public virtual SituacaoPedido Situacao { get; set; }
+
+        [InverseProperty("Pedido")]
+        public virtual List<ExtratoUsuarioProgramaFidelidade> LancamentoExtrato { get; set; }
 
         [InverseProperty("Pedido")]
         public virtual List<ItemPedido> Itens { get; set; }

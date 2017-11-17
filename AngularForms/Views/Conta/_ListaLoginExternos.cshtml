@@ -8,7 +8,7 @@
     using (Html.BeginForm("LoginExterno", "Conta", new { ReturnUrl = Model.ReturnURL }))
     {
         @Html.AntiForgeryToken()
-        <div id="socialLoginList" class="col-sm-6">
+        <div id="socialLoginList" class="col-xs-12 col-lg-6">
             <p>
                 @foreach (AuthenticationDescription p in loginProviders)
                 {

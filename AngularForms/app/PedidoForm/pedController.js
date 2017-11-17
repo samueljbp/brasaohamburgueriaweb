@@ -230,12 +230,38 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 break;
             }
         }
-        atualizaValorTotalPedido();
+        atualizaValorTotalPedido(false);
         sessionStorage.pedido = JSON.stringify($scope.pedido);
     };
 
+    $scope.atualizaValoresComSaldoPrograma = function () {
+        atualizaValorTotalPedido(false);
+        $scope.pedido.usaSaldoProgramaFidelidade = false;
+        $scope.pedido.pontosAUtilizarProgramaRecompensa = 0.0;
+
+        var saldoDinheiro = $scope.programaFidelidade.saldo * $scope.programaFidelidade.valorDinheiroPorPontoParaResgate;
+
+        $scope.pedido.dinheiroAUtilizarProgramaRecompensa = parseFloat($scope.pedido.dinheiroAUtilizarProgramaRecompensa);
+
+        if ($scope.pedido.dinheiroAUtilizarProgramaRecompensa > saldoDinheiro) {
+            $scope.mensagem.erro = 'Valor informado superior ao saldo disponível.';
+            $scope.pedido.dinheiroAUtilizarProgramaRecompensa = 0;
+            $window.scrollTo(0, 0);
+            return;
+        }
+
+        if ($scope.pedido.dinheiroAUtilizarProgramaRecompensa > $scope.pedido.valorTotal) {
+            $scope.pedido.dinheiroAUtilizarProgramaRecompensa = $scope.pedido.valorTotal;
+        }
+
+        $scope.pedido.pontosAUtilizarProgramaRecompensa = $scope.pedido.dinheiroAUtilizarProgramaRecompensa / $scope.programaFidelidade.valorDinheiroPorPontoParaResgate;
+        $scope.pedido.usaSaldoProgramaFidelidade = true;
+
+        atualizaValorTotalPedido(true);
+    }
+
     //função que atualiza o valor total do pedido
-    function atualizaValorTotalPedido() {
+    function atualizaValorTotalPedido(consideraSaldoPrograma) {
         $scope.pedido.valorTotal = 0;
 
         if ($scope.pedido.itens != null && $scope.pedido.itens.length > 0) {
@@ -247,6 +273,10 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 }
 
             }
+        }
+
+        if (consideraSaldoPrograma && $scope.pedido.dinheiroAUtilizarProgramaRecompensa > 0) {
+            $scope.pedido.valorTotal = $scope.pedido.valorTotal - $scope.pedido.dinheiroAUtilizarProgramaRecompensa;
         }
     }
 
@@ -392,7 +422,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         $scope.pedido.itens.push($scope.novoItem);
 
         $scope.atualizaValorTotalItem();
-        atualizaValorTotalPedido();
+        atualizaValorTotalPedido(false);
 
         sessionStorage.pedido = JSON.stringify($scope.pedido);
 
@@ -565,7 +595,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             }
 
             $scope.pedido.trocoPara = parseFloat($scope.pedido.trocoPara);
-        } else if ($scope.pedido.formaPagamento == 'D' && $scope.pedido.trocoPara <= 0) {
+        } else if ($scope.pedido.formaPagamento == 'D' && $scope.pedido.trocoPara <= 0 && $scope.pedido.valorTotal > 0) {
             $scope.mensagem.erro = 'Informe como o pagamento em dinheiro será realizado.';
             $window.scrollTo(0, 0);
             return;
@@ -680,7 +710,77 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     }
     //FIM DA DECLARAÇÃO DE VARIÁVEIS
 
-    $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega) {
+    $scope.registrarAceiteProgramaFidelidade = function (acao) {
+
+        if (acao == 'R') {
+
+            $ngBootbox.confirm('Tem certeza que deseja recusar a participação no programa? Esta ação não poderá ser desfeita.')
+            .then(function () {
+
+                $scope.programaFidelidade.termosAceitos = false;
+                registraAceitePrograma();
+
+            }, function () {
+
+                return;
+
+            });
+
+        } else {
+
+            $ngBootbox.confirm('Confirma o aceite dos termos apresentados e a participação no programa?')
+            .then(function () {
+
+                $scope.programaFidelidade.termosAceitos = true;
+                registraAceitePrograma();
+
+            }, function () {
+
+                return;
+
+            });
+
+        }
+        
+    }
+
+    function registraAceitePrograma() {
+
+        $scope.promiseRegistraAceite = $http({
+            method: 'POST',
+            url: urlBase + 'ProgramaFidelidade/RegistraAceiteProgramaFidelidade',
+            data: $scope.programaFidelidade,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken
+            }
+        }).then(function (success) {
+            var retorno = genericSuccess(success);
+
+            if (retorno.succeeded) {
+
+                $scope.mensagem.sucesso = 'Ação registrada com sucesso.';
+                $('#modalTermosProgramaFidelidade').modal('hide');
+
+            }
+            else {
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+            }
+
+        }).catch(function (error) {
+            $scope.mensagem.erro = error.statusText;
+            $window.scrollTo(0, 0);
+        });
+
+    }
+
+    $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega, mostraTermosProgramaFidelidade, programaFidJson) {
+
+        $scope.programaFidelidade = null;
+        if (programaFidJson != '') {
+            $scope.programaFidelidade = JSON.parse(programaFidJson);
+        }
 
         $scope.modoAdm = { ativo: true };
         if (sessionStorage.getItem("modoAdm") == 'null' || sessionStorage.getItem("modoAdm") == null || sessionStorage.getItem("modoAdm") == 'N') {
@@ -716,9 +816,14 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             }
         }
 
-        atualizaValorTotalPedido();
+        atualizaValorTotalPedido(false);
 
         reiniciaVariaveisItem();
+
+        if (mostraTermosProgramaFidelidade) {
+            //$dialog.dialog({}).open('modalContent.html');
+            $('#modalTermosProgramaFidelidade').modal('show');
+        }
     }
     //FIM INICIALIZAÇÃO DE VARIÁVEIS
 });

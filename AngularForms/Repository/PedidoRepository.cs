@@ -7,6 +7,7 @@ using BrasaoHamburgueria.Web.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using BrasaoHamburgueria.Helper;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -70,12 +71,12 @@ namespace BrasaoHamburgueria.Web.Repository
             var valorTotalPedido = 0.0;
             var valorExtras = 0.0;
 
-            foreach(var item in pedidoViewModel.Itens)
+            foreach (var item in pedidoViewModel.Itens)
             {
                 valorExtras = 0;
                 if (item.extras != null && item.extras.Count > 0)
                 {
-                    foreach(var extra in item.extras)
+                    foreach (var extra in item.extras)
                     {
                         if (extra != null)
                         {
@@ -105,6 +106,11 @@ namespace BrasaoHamburgueria.Web.Repository
                 valorTotalPedido -= pedidoViewModel.ValorDesconto.Value;
             }
 
+            if (pedidoViewModel.DinheiroAUtilizarProgramaRecompensa > 0)
+            {
+                valorTotalPedido -= (double)pedidoViewModel.DinheiroAUtilizarProgramaRecompensa;
+            }
+
             if (pedidoViewModel.ValorTotal != valorTotalPedido)
             {
                 return false;
@@ -113,7 +119,7 @@ namespace BrasaoHamburgueria.Web.Repository
             return true;
         }
 
-        public async Task<int> GravaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
+        private void ValidaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
         {
             if (pedidoViewModel.DadosCliente.Telefone.Length < 14)
             {
@@ -143,6 +149,32 @@ namespace BrasaoHamburgueria.Web.Repository
             {
                 throw new Exception("O valor do pedido ou dos itens foi manipulado durante a requisição. Favor tentar novamente.");
             }
+
+            //valida uso do saldo do programa de recompensa
+            if (pedidoViewModel.UsaSaldoProgramaFidelidade)
+            {
+                using (ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository())
+                {
+                    var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario);
+
+                    if (programa == null || programa.LoginUsuario == null || !programa.TermosAceitos.Value)
+                    {
+                        throw new Exception("O usuário não está inscrito em nenhum programa de fidelidade no momento.");
+                    }
+
+                    if (pedidoViewModel.PontosAUtilizarProgramaRecompensa > programa.Saldo.Value)
+                    {
+                        throw new Exception("O usuário não possui saldo suficiente para a operação. O saldo disponível no programa para este usuário é de " + programa.Saldo.Value + " pontos.");
+                    }
+
+                    pedidoViewModel.DinheiroAUtilizarProgramaRecompensa = programa.ValorDinheiroPorPontoParaResgate * pedidoViewModel.PontosAUtilizarProgramaRecompensa;
+                }
+            }
+        }
+
+        public async Task<int> GravaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
+        {
+            ValidaPedido(pedidoViewModel, loginUsuario);
 
             using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
@@ -225,7 +257,59 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     await _contexto.SaveChangesAsync();
 
+                    decimal saldoAtualizadoPrograma = -1;
+
+                    ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository();
+                    var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario);
+
+                    if (programa != null && programa.LoginUsuario != null && programa.TermosAceitos != null && programa.TermosAceitos.Value && pedidoViewModel.ValorTotal > 0)
+                    {
+                        //credita pontos referentes ao pedido
+                        SaldoUsuarioProgramaFidelidade saldo = _contexto.SaldosUsuariosProgramasFidelidade.Where(s => s.CodProgramaFidelidade == programa.CodProgramaFidelidade && s.LoginUsuario == loginUsuario).FirstOrDefault();
+                        var pontosCreditar = (decimal)pedidoViewModel.ValorTotal * programa.PontosGanhosPorUnidadeMonetariaGasta;
+                        saldo.Saldo = saldo.Saldo + pontosCreditar;
+                        saldoAtualizadoPrograma = saldo.Saldo;
+
+                        ExtratoUsuarioProgramaFidelidade extrato = new ExtratoUsuarioProgramaFidelidade();
+                        extrato.CodPedido = ped.CodPedido;
+                        extrato.CodProgramaFidelidade = programa.CodProgramaFidelidade;
+                        extrato.DataHoraLancamento = DateTime.Now;
+                        extrato.DescricaoLancamento = "Crédito de " + pontosCreditar + " pontos referentes ao pedido " + ped.CodPedido + " de valor " + pedidoViewModel.ValorTotal.ToString("C");
+                        extrato.LoginUsuario = loginUsuario;
+                        extrato.SaldoPosLancamento = saldo.Saldo;
+                        extrato.ValorLancamento = pontosCreditar;
+                        _contexto.ExtratosUsuariosProgramasFidelidade.Add(extrato);
+
+                        _contexto.SaveChanges();
+                    }
+
+                    if (pedidoViewModel.UsaSaldoProgramaFidelidade)
+                    {
+                        if (programa == null)
+                        {
+                            throw new Exception("O usuário não está inscrito em nenhum programa de fidelidade no momento.");
+                        }
+
+                        SaldoUsuarioProgramaFidelidade saldo = _contexto.SaldosUsuariosProgramasFidelidade.Where(s => s.CodProgramaFidelidade == programa.CodProgramaFidelidade && s.LoginUsuario == loginUsuario).FirstOrDefault();
+                        saldo.Saldo = saldo.Saldo - pedidoViewModel.PontosAUtilizarProgramaRecompensa;
+                        saldoAtualizadoPrograma = saldo.Saldo;
+
+                        ExtratoUsuarioProgramaFidelidade extrato = new ExtratoUsuarioProgramaFidelidade();
+                        extrato.CodPedido = ped.CodPedido;
+                        extrato.CodProgramaFidelidade = programa.CodProgramaFidelidade;
+                        extrato.DataHoraLancamento = DateTime.Now;
+                        extrato.DescricaoLancamento = "Resgate de " + String.Format("{0:#.###.###,##}", pedidoViewModel.PontosAUtilizarProgramaRecompensa) + " pontos durante o registro do pedido " + ped.CodPedido;
+                        extrato.LoginUsuario = loginUsuario;
+                        extrato.SaldoPosLancamento = saldo.Saldo;
+                        extrato.ValorLancamento = -1 * pedidoViewModel.PontosAUtilizarProgramaRecompensa;
+                        _contexto.ExtratosUsuariosProgramasFidelidade.Add(extrato);
+
+                        _contexto.SaveChanges();
+                    }
+
                     dbContextTransaction.Commit();
+
+                    SessionData.ProgramaFidelidadeUsuario.Saldo = saldoAtualizadoPrograma;
 
                     TrataDadosUsuario(pedidoViewModel);
 

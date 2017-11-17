@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, $window, noteService) {
+﻿brasaoWebApp.controller('apController', function ($scope, $http, $filter, $ngBootbox, $interval, $window, $timeout, noteService) {
 
     $scope.promisesLoader = [];
 
@@ -49,6 +49,11 @@
 
 
     };
+
+    $scope.getTimeMs = function (data) {
+        var dataHora = new Date(data);
+        return dataHora.getTime();
+    }
 
     $scope.cancelaPedido = function () {
 

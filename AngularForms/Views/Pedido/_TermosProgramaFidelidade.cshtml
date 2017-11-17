@@ -1,0 +1,24 @@
+﻿@using BrasaoHamburgueria.Model;
+<div class="modal fade" id="modalTermosProgramaFidelidade" tabindex="-3" role="dialog" aria-labelledby="labelModalTermosProgramaFidelidade" style="overflow: scroll;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelModalTermosProgramaFidelidade">Programa de fidelidade - @Model.DescricaoProgramaFidelidade</h4>
+            </div>
+            <div class="modal-body">
+                <div cg-busy="{promise:promiseRegistraAceite,backdrop:false,delay:10,minDuration:1000}"></div>
+                <p>Olá! Já conhece o nosso programa de fidelização @Model.DescricaoProgramaFidelidade?</p>
+                <p>Notamos que você ainda não se inscreveu. Trata-se de um programa que permite o acúmulo de pontos a cada compra e resgate posterior conforme os termos apresentados abaixo:</p>
+                @{
+                    @Html.Raw(HttpUtility.HtmlDecode(Model.TermosAceite));
+                }
+            </div>
+            <div class="modal-footer">
+                <p>E então? Vamos participar?</p>
+                <button type="button" class="btn btn-danger" ng-click="registrarAceiteProgramaFidelidade('R')">Recusar</button>
+                <button type="button" class="btn btn-success" ng-click="registrarAceiteProgramaFidelidade('A')">Participar</button>
+            </div>
+        </div>
+    </div>
+</div>

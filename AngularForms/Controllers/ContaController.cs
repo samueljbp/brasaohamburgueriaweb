@@ -456,6 +456,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Sair()
         {
+            Session.Clear();
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }

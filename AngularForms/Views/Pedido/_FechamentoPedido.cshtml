@@ -1,4 +1,7 @@
-﻿<form role="form" id="formFechamento" class="form-horizontal" ng-if="pedido.situacao == 1">
+﻿@{
+    var saldoDinheiro = (decimal)Model;
+}
+<form role="form" id="formFechamento" class="form-horizontal" ng-if="pedido.situacao == 1">
     <div>
         <div class="row">
             <h3 class="text-info">Fechamento do pedido</h3>
@@ -11,6 +14,18 @@
                     <h4>Valor total: <span class="text-success">{{pedido.valorTotal | currency: "R$ "}}</span></h4>
                 </div>
             </div>
+            @if (saldoDinheiro > 0)
+            {
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 form-group" style="margin-left: 10px">
+                        <label for="trocoPara">Utilizar saldo (R$)</label>
+                        <input type='text' name="saldoProgramaFidelidadeUtilizar" autocomplete="off" id="trocoPara" format="number" class="form-control hidden-sm hidden-xs" ng-model="pedido.dinheiroAUtilizarProgramaRecompensa" ng-blur="atualizaValoresComSaldoPrograma()" />
+                        <input type='number' step="any" name="saldoProgramaFidelidadeUtilizar" autocomplete="off" id="trocoPara" class="form-control hidden-md hidden-lg" ng-model="pedido.dinheiroAUtilizarProgramaRecompensa" ng-blur="atualizaValoresComSaldoPrograma()" />
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="col-sm-9 text-left"><small>Informe o valor em R$ que deseja utilizar do seu saldo do programa Brasão Fidelidade</small></div>
+                </div>
+            }
             <div>
                 <div class="col-sm-4 form-group">
                     <label for="formaPagamento">Selecione a forma de pagamento</label>
@@ -24,13 +39,13 @@
                     <small ng-if="pedido.formaPagamento == 'A'">Levamos a máquina na sua casa</small>
                     <div class="help-block with-errors"></div>
                 </div>
-                <div class="col-sm-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
+                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
                     <label for="trocoPara">Pagar com</label>
                     <input type='text' name="trocoPara" autocomplete="off" id="trocoPara" format="number" class="form-control hidden-sm hidden-xs" ng-model="pedido.trocoPara" ng-blur="calculaTroco()" />
                     <input type='number' step="any" name="trocoPara" autocomplete="off" id="trocoPara" class="form-control hidden-md hidden-lg" ng-model="pedido.trocoPara" ng-blur="calculaTroco()" />
                     <div class="help-block with-errors"></div>
                 </div>
-                <div class="col-sm-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
+                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
                     <label for="troco">Troco</label>
                     <div class="form-control disabled">{{ (pedido.trocoPara > 0 && pedido.trocoPara >= pedido.valorTotal ? pedido.trocoPara - pedido.valorTotal : 0)  | currency: "R$ " }}</div>
                     @*<input type='text' name="troco" id="troco" class="form-control" maxlength="10" readonly ng-model="pedido.troco" />*@
@@ -58,11 +73,11 @@
                     <div class="help-block with-errors"></div>
                 </div>
                 @*<div ng-if="modoAdm.ativo" class="col-sm-1">
-                    <button type="button" class="btn btn-primary btn-sm" title="Buscar" ng-click="getDadosUsuarioByPhone(pedido.dadosCliente.telefone)">
-                        <span class=" glyphicon glyphicon-search" aria-hidden="true">
-                        </span>
-                    </button>
-                </div>*@
+                        <button type="button" class="btn btn-primary btn-sm" title="Buscar" ng-click="getDadosUsuarioByPhone(pedido.dadosCliente.telefone)">
+                            <span class=" glyphicon glyphicon-search" aria-hidden="true">
+                            </span>
+                        </button>
+                    </div>*@
                 <div class="alert alert-warning alert-dismissible fade in {{mensagem.informacao ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
                     <button type="button" class="close" aria-label="Close" ng-click="mensagem.informacao = ''"><span aria-hidden="true">×</span></button>
                     {{mensagem.informacao}}
@@ -91,14 +106,14 @@
 
             <div class="form-group">
                 <label for="estado" class="col-sm-2 control-label">Estado</label>
-                <div class="col-sm-1">
+                <div class="col-sm-3 col-md-2">
                     <input type="text" readonly id="estado" name="estado" class="form-control" value="MG" ng-model="pedido.dadosCliente.estado" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="cidade" class="col-sm-2 control-label">Cataguases</label>
-                <div class="col-sm-3">
+                <div class="col-sm-4 col-md-3">
                     <input type="text" readonly id="cidade" name="cidade" class="form-control" value="CATAGUASES" ng-model="pedido.dadosCliente.cidade" />
                 </div>
             </div>
@@ -113,7 +128,7 @@
 
             <div class="form-group">
                 <label for="numero" class="col-sm-2 control-label">Número</label>
-                <div class="col-sm-1">
+                <div class="col-sm-3 col-md-2">
                     <input type="text" required id="numero" name="numero" class="form-control" ng-model="pedido.dadosCliente.numero" maxlength="10" />
                     <div class="help-block with-errors"></div>
                 </div>

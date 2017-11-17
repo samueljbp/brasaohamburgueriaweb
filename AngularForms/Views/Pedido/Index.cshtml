@@ -2,6 +2,7 @@
 @using System.Globalization;
 @using BrasaoHamburgueria.Model;
 @using BrasaoHamburgueria.Web.Repository;
+@using BrasaoHamburgueria.Web.Helpers;
 @using System.Web;
 @{
     NumberFormatInfo nfi = new NumberFormatInfo();
@@ -14,10 +15,33 @@
         modoAdmStr = HttpContext.Current.Request.QueryString["ModoAdm"].ToString();
     }
     modoAdm = (modoAdmStr == "S");
+
+    var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
+    var mostraTermosProgramaFidelidade = false;
+    var inscritoProgramaFidelidade = false;
+    decimal saldoDinheiro = 0;
+    if (progFidelidade != null && progFidelidade.CodProgramaFidelidade > 0)
+    {
+        if (progFidelidade.LoginUsuario == null)
+        {
+            mostraTermosProgramaFidelidade = true;
+        }
+        
+        if (progFidelidade.LoginUsuario != null && progFidelidade.TermosAceitos != null && progFidelidade.TermosAceitos.Value)
+        {
+            inscritoProgramaFidelidade = true;
+            saldoDinheiro = progFidelidade.Saldo.Value * progFidelidade.ValorDinheiroPorPontoParaResgate;
+        }
+    }
+
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings 
+    { 
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() 
+    };
 }
 <div>
     <div class="col-xs-12 centro" style="margin-top: 20px">
-        <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)')">
+        <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)', @(mostraTermosProgramaFidelidade ? "true" : "false"), '@Newtonsoft.Json.JsonConvert.SerializeObject(progFidelidade, jsonSettings)')">
             @functions{
                 public string GetAntiForgeryToken()
                 {
@@ -32,36 +56,45 @@
             <div cg-busy="{promise:promiseFinalizaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
             @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
             <div class="row">
-                <h4>Meu pedido</h4>
-                <hr />
+                <div class="col-sm-6">
+                    <h4>Meu pedido</h4>
+                </div>
+                @if (inscritoProgramaFidelidade)
+                {
+                    <div class="col-sm-6 text-right">
+                        <h5>Saldo em pontos programa @progFidelidade.DescricaoProgramaFidelidade: <strong class="text-success">@progFidelidade.Saldo</strong></h5>
+                        <h5>Saldo em dinheiro programa @progFidelidade.DescricaoProgramaFidelidade: <strong class="text-success">@saldoDinheiro.ToString("C") </strong></h5>
+                    </div>
+                }
             </div>
+            <hr />
 
             @if (ParametroRepository.CasaAberta() || modoAdm)
             {
-                <div ng-if="pedidoAberto != null && pedidoAberto.codPedido > 0">
+                <div ng-show="pedidoAberto != null && pedidoAberto.codPedido > 0">
                     <h3 class="text-danger">ATENÇÃO</h3>
-                    <div ng-if="pedidoAberto.situacao == 4">
+                    <div ng-show="pedidoAberto.situacao == 4">
                         <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
                         <h5 class="text-info">Antes de iniciar um novo pedido você deve finalizá-lo.</h5>
                         <button type="button" class="btn btn-primary btn-default btn-lg" ng-click="finalizarPedidoAberto()">
                             <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Finalizar pedido {{pedidoAberto.codPedido}}
                         </button>
                     </div>
-                    <div ng-if="pedidoAberto.situacao < 4">
+                    <div ng-show="pedidoAberto.situacao < 4">
                         <h5 class="text-warning">Você possui o pedido {{pedidoAberto.codPedido}} do dia {{pedidoAberto.dataPedido | date:'dd/MM/yyyy'}} ainda em aberto.</h5>
                         <h5 class="text-info">Antes de iniciar um novo pedido você deve aguardar a finalização do mesmo. Se quiser fazer alterações nesse pedido por favor entre em contato por telefone.</h5>
                         <h5>Clique @Html.ActionLink("aqui", "AcompanharPedido", "Pedido") para acompanhar o andamento do pedido.</h5>
                     </div>
                     <hr />
                 </div>
-                <div ng-if="pedidoAberto == null || pedidoAberto.codPedido <= 0">
-                    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-if="pedido.situacao == 0">
-                        <div class="row" ng-if="pedido.itens == null || pedido.itens.length <= 0">
+                <div ng-show="pedidoAberto == null || pedidoAberto.codPedido <= 0">
+                    <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()" ng-show="pedido.situacao == 0">
+                        <div class="row" ng-show="pedido.itens == null || pedido.itens.length <= 0">
                             <h5 class="text-warning">Você ainda não adicionou nenhum item ao seu pedido.</h5>
                             <h5 class="text-warning">Para começar clique no botão Incluir item.</h5>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped" ng-if="pedido.itens != null && pedido.itens.length > 0">
+                            <table class="table table-striped" ng-show="pedido.itens != null && pedido.itens.length > 0">
                                 <thead>
                                     <tr>
                                         <th class="col-sm-1">
@@ -98,11 +131,11 @@
                                             <div class="row">
                                                 {{item.descricaoItem}}
                                             </div>
-                                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
-                                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
+                                            <div class="row" ng-show="item.obs != null && item.obs.length > 0">
+                                                <span ng-repeat="obs in item.obs track by $index" ng-show="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-show="$index < item.obs.length - 1">, </span></span>
                                             </div>
-                                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
-                                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{item.quantidade * extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
+                                            <div class="row" ng-show="item.extras != null && item.extras.length > 0">
+                                                <span ng-repeat="extra in item.extras track by $index" ng-show="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{item.quantidade * extra.preco | currency: "R$ "}}<span ng-show="$index < item.extras.length - 1">, </span></span>
                                             </div>
                                         </td>
                                         <td ng-class="(item.acaoRegistro == 3 ? 'texto-tachado' : '')">
@@ -118,7 +151,7 @@
                                             {{item.valorTotalItem | currency: "R$ "}}
                                         </td>
                                         <td>
-                                            <button type="button" ng-if="item.acaoRegistro == 0 || item.acaoRegistro == 1" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
+                                            <button type="button" ng-show="item.acaoRegistro == 0 || item.acaoRegistro == 1" class="btn btn-danger btn-sm" ng-bootbox-title="Atenção!" ng-bootbox-confirm="Tem certeza que deseja remover o item {{item.seqItem}} do pedido?"
                                                     ng-bootbox-confirm-action="confirmCallbackRemove(item.seqItem)">
                                                 <span class=" glyphicon glyphicon-remove" aria-hidden="true">
                                                 </span>
@@ -151,7 +184,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="row hidden-sm hidden-md hidden-lg" ng-if="pedido.itens != null && pedido.itens.length > 0" style="margin-top: -10px">
+                        <div class="row hidden-sm hidden-md hidden-lg" ng-show="pedido.itens != null && pedido.itens.length > 0" style="margin-top: -10px">
                             <div class="col-xs-12 text-right">
                                 <small>Arraste a tabela lateralmente</small>
                             </div>
@@ -178,7 +211,7 @@
                         </div>
                     </form>
                     @Html.Partial("_ModalIncluirItem")
-                    @Html.Partial("_FechamentoPedido")
+                    @Html.Partial("_FechamentoPedido", saldoDinheiro)
                     <hr />
                 </div>
             }
@@ -189,6 +222,10 @@
                 <h5 class="text-info">Que tal aproveitar e dar uma olhada no nosso cardápio?</h5>
                 @Html.ActionLink("Ver cardápio", "Listar", "Cardapio", null, new { @class = "btn btn-success" })
                 <hr />
+            }
+            @if (mostraTermosProgramaFidelidade)
+            {
+                @Html.Partial("~/Views/Pedido/_TermosProgramaFidelidade.cshtml", progFidelidade);
             }
         </div>
     </div>

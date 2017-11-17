@@ -64,7 +64,8 @@
                     </div>
                     <div ng-if="tempoMedioEspera > 0" class="row">
                         <div class="col-sm-12">
-                            <strong class="text-danger">O tempo médio de espera agora é de {{tempoMedioEspera}} minutos</strong>
+                            <strong class="text-danger">O tempo médio de espera agora é de {{tempoMedioEspera}} minutos.</strong>
+                            <h5 class="text-primary">Tempo decorrido: <timer start-time="getTimeMs(pedidoSelecionado.dataPedido)">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></h5>
                         </div>
                     </div>
                     <div>
