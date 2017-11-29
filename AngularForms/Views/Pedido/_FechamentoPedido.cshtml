@@ -16,7 +16,7 @@
             </div>
             @if (saldoDinheiro > 0)
             {
-                <div class="row">
+                <div class="row" ng-show="programaFidelidade.saldo >= programaFidelidade.quantidadeMinimaPontosParaResgate && !modoAdm.ativo">
                     <div class="col-sm-3 col-md-2 form-group" style="margin-left: 10px">
                         <label for="trocoPara">Utilizar saldo (R$)</label>
                         <input type='text' name="saldoProgramaFidelidadeUtilizar" autocomplete="off" id="trocoPara" format="number" class="form-control hidden-sm hidden-xs" ng-model="pedido.dinheiroAUtilizarProgramaRecompensa" ng-blur="atualizaValoresComSaldoPrograma()" />

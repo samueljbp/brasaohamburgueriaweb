@@ -1,4 +1,7 @@
 ﻿@using BrasaoHamburgueria.Model;
+@{
+    var progFidelidade = (ProgramaFidelidadeUsuarioViewModel)Model;
+}
 <div class="modal fade" id="modalTermosProgramaFidelidade" tabindex="-3" role="dialog" aria-labelledby="labelModalTermosProgramaFidelidade" style="overflow: scroll;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -11,13 +14,19 @@
                 <p>Olá! Já conhece o nosso programa de fidelização @Model.DescricaoProgramaFidelidade?</p>
                 <p>Notamos que você ainda não se inscreveu. Trata-se de um programa que permite o acúmulo de pontos a cada compra e resgate posterior conforme os termos apresentados abaixo:</p>
                 @{
-                    @Html.Raw(HttpUtility.HtmlDecode(Model.TermosAceite));
+                    @Html.Raw(HttpUtility.HtmlDecode(progFidelidade.TermosAceite));
                 }
             </div>
             <div class="modal-footer">
-                <p>E então? Vamos participar?</p>
-                <button type="button" class="btn btn-danger" ng-click="registrarAceiteProgramaFidelidade('R')">Recusar</button>
-                <button type="button" class="btn btn-success" ng-click="registrarAceiteProgramaFidelidade('A')">Participar</button>
+                @{
+                    if (progFidelidade != null && progFidelidade.CodProgramaFidelidade > 0 && progFidelidade.LoginUsuario == null)
+                    {
+                        <p>E então? Vamos participar?</p>
+                        <button type="button" class="btn btn-danger" ng-click="registrarAceiteProgramaFidelidade('R')">Recusar</button>
+                        <button type="button" class="btn btn-success" ng-click="registrarAceiteProgramaFidelidade('A')">Participar</button>
+                    }
+                }
+                
             </div>
         </div>
     </div>

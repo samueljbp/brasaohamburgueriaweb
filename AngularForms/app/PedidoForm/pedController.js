@@ -761,6 +761,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
                 $scope.mensagem.sucesso = 'Ação registrada com sucesso.';
                 $('#modalTermosProgramaFidelidade').modal('hide');
+                $window.location.reload();
 
             }
             else {

@@ -16,6 +16,9 @@
         $scope.getExtratoProgramaUsuario();
     }
 
+    $scope.verTermosAceite = function () {
+        $('#modalTermosProgramaFidelidade').modal('show');
+    }
 
     $scope.getExtratoProgramaUsuario = function () {
 

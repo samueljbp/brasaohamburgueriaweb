@@ -56,6 +56,14 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-3">
+                    
+                </div>
+                <div class="col-sm-9">
+                    <button type="button" class="btn btn-primary" ng-click="verTermosAceite()">Visualizar termos do programa</button>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-sm-3 text-right">
                     <h5>Início vigência:</h5>
                 </div>
@@ -131,4 +139,5 @@
             <small>No momento você não está inscrito em nenhum programa de fidelidade.</small>
         }
     </form>
+    @Html.Partial("~/Views/Pedido/_TermosProgramaFidelidade.cshtml", progFidelidade)
 </div>

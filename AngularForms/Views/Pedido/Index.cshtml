@@ -61,7 +61,7 @@
                 </div>
                 @if (inscritoProgramaFidelidade)
                 {
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6 text-right" ng-show="!modoAdm.ativo">
                         <h5>Saldo em pontos programa @progFidelidade.DescricaoProgramaFidelidade: <strong class="text-success">@progFidelidade.Saldo</strong></h5>
                         <h5>Saldo em dinheiro programa @progFidelidade.DescricaoProgramaFidelidade: <strong class="text-success">@saldoDinheiro.ToString("C") </strong></h5>
                     </div>
