@@ -3,26 +3,6 @@
     ViewBag.Title = "Brasão Hamburgueria - Sistema de pedidos online";
 }
 <h2 class="texto-branco">Bem vindo!</h2>
-<script>
-    function onSuccess(googleUser) {
-        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-    }
-    function onFailure(error) {
-        console.log(error);
-    }
-    function renderButton() {
-        gapi.signin2.render('my-signin2', {
-            'scope': 'profile email',
-            'width': 240,
-            //'height': 50,
-            'longtitle': true,
-            'theme': 'dark',
-            'onsuccess': onSuccess,
-            'onfailure': onFailure,
-            'title': 'aaa'
-        });
-    }
-</script>
 <div class="centro">
     <div class="row">
         <div class="col-sm-12">
@@ -44,13 +24,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-5 col-md-4">
             <br />
             <h4 class="text-primary">Já tem cadastro?</h4>
             Clique @Html.ActionLink("aqui", "Login", "Conta") e faça login.<br /><br />
             ou<br /><br />
-            @*<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" style="margin-bottom: 10px"></div>
-                <div id="my-signin2"></div>*@
             @Html.Partial("~/Views/Conta/_ListaLoginExternos.cshtml", new LoginExternoViewModel { ReturnURL = ViewBag.ReturnUrl })
         </div>
         <div class="col-sm-6">
