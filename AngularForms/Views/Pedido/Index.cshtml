@@ -33,6 +33,11 @@
             saldoDinheiro = progFidelidade.Saldo.Value * progFidelidade.ValorDinheiroPorPontoParaResgate;
         }
     }
+    
+    if (!ParametroRepository.CasaAberta())
+    {
+        mostraTermosProgramaFidelidade = false;
+    }
 
     var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings 
     { 

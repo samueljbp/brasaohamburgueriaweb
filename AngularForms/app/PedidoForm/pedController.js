@@ -821,7 +821,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
         reiniciaVariaveisItem();
 
-        if (mostraTermosProgramaFidelidade) {
+        if (mostraTermosProgramaFidelidade && !$scope.modoAdm.ativo) {
             //$dialog.dialog({}).open('modalContent.html');
             $('#modalTermosProgramaFidelidade').modal('show');
         }
