@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
+    <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
@@ -431,6 +432,9 @@
     <Content Include="Content\img\itens_cardapio\capital_inicial.jpg" />
     <Content Include="Content\img\itens_cardapio\carmen_miranda.jpg" />
     <Content Include="Content\img\itens_cardapio\chuck_berry.jpg" />
+    <Content Include="Content\img\itens_cardapio\colorado_appia.jpg" />
+    <Content Include="Content\img\itens_cardapio\colorado_demoiselle.jpg" />
+    <Content Include="Content\img\itens_cardapio\colorado_indica.jpg" />
     <Content Include="Content\img\itens_cardapio\engenheiros.jpg" />
     <Content Include="Content\img\itens_cardapio\henrique_juliano.jpg" />
     <Content Include="Content\img\itens_cardapio\ivete.jpg" />
@@ -465,6 +469,9 @@
     <Content Include="Content\img\itens_cardapio\mini-capital_inicial.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-carmen_miranda.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-chuck_berry.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-colorado_appia.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-colorado_demoiselle.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-colorado_indica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-engenheiros.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-henrique_juliano.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-ivete.jpg" />

@@ -12,7 +12,6 @@ namespace BrasaoHamburgueria.Web.Repository
     {
         private BrasaoContext _contexto = new BrasaoContext();
 
-
         #region Cadastros de opções extra
         public async Task<List<OpcaoExtraViewModel>> GetOpcoesExtra()
         {
@@ -100,7 +99,6 @@ namespace BrasaoHamburgueria.Web.Repository
             return "";
         }
         #endregion
-        
 
         #region Cadastros de observações
         public async Task<List<ObservacaoProducaoViewModel>> GetObservacoes()
@@ -129,7 +127,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (obs.CodObservacao <= 0)
                 {
                     obsIncluir.CodObservacao = 1;
-                    var cod = _contexto.Extras.Max(o => o.CodOpcaoExtra);
+                    var cod = _contexto.ObservacoesProducao.Max(o => o.CodObservacao);
                     if (cod != null)
                     {
                         obsIncluir.CodObservacao = cod + 1;
@@ -176,6 +174,121 @@ namespace BrasaoHamburgueria.Web.Repository
             if (obsExcluir != null)
             {
                 _contexto.ObservacoesProducao.Remove(obsExcluir);
+                await _contexto.SaveChangesAsync();
+            }
+            else
+            {
+                return "Registro não encontrado na base de dados.";
+            }
+
+            return "";
+        }
+        #endregion
+
+        #region Impressoras de produção
+
+        public async Task<List<ImpressoraProducaoViewModel>> GetImpressorasProducao()
+        {
+            return _contexto.ImpressorasProducao
+                .OrderBy(o => o.CodImpressora)
+                .Select(o => new ImpressoraProducaoViewModel
+                {
+                    CodImpressora = o.CodImpressora,
+                    Descricao = o.Descricao,
+                    Porta = o.Porta
+                }).ToList();
+        }
+
+        #endregion
+
+        #region Cadastros de classes de item de cardápio
+        public async Task<List<ClasseItemCardapioViewModel>> GetClassesItemCardapio()
+        {
+            return _contexto.Classes
+                .OrderBy(o => o.CodClasse)
+                .Select(o => new ClasseItemCardapioViewModel
+                {
+                    CodClasse = o.CodClasse,
+                    DescricaoClasse = o.DescricaoClasse,
+                    CodImpressoraPadrao = o.CodImpressoraPadrao,
+                    Sincronizar = o.Sincronizar,
+                    Imagem = o.Imagem,
+                    OrdemExibicao = o.OrdemExibicao,
+                    DescricaoImpressoraPadrao = _contexto.ImpressorasProducao.Where(i => i.CodImpressora == o.CodImpressoraPadrao).FirstOrDefault().Descricao
+                }).ToList();
+        }
+
+        public async Task<ClasseItemCardapioViewModel> GravarClasseItemCardapio(ClasseItemCardapioViewModel classe, String modoCadastro)
+        {
+            if (modoCadastro == "A") //alteração
+            {
+                var classeAlterar = _contexto.Classes.Find(classe.CodClasse);
+
+                if (classeAlterar != null)
+                {
+                    classeAlterar.DescricaoClasse = classe.DescricaoClasse;
+                    classeAlterar.CodImpressoraPadrao = classe.CodImpressoraPadrao;
+                    classeAlterar.Imagem = classe.Imagem;
+                    classeAlterar.OrdemExibicao = classe.OrdemExibicao;
+                    classeAlterar.Sincronizar = classe.Sincronizar;
+
+                    await _contexto.SaveChangesAsync();
+                }
+
+                return classe;
+            }
+            else if (modoCadastro == "I") //inclusão
+            {
+                var classeIncluir = new ClasseItemCardapio();
+                if (classe.CodClasse <= 0)
+                {
+                    classeIncluir.CodClasse = 1;
+                    var cod = _contexto.Classes.Max(o => o.CodClasse);
+                    if (cod != null)
+                    {
+                        classeIncluir.CodClasse = cod + 1;
+                    }
+                    classe.CodClasse = classeIncluir.CodClasse;
+                }
+                else
+                {
+                    var valida = _contexto.Classes.Find(classe.CodClasse);
+
+                    if (valida != null)
+                    {
+                        throw new Exception("Já existe uma classe de item de cardápio cadastrada com o código " + classe.CodClasse);
+                    }
+
+                    classeIncluir.CodClasse = classe.CodClasse;
+                }
+                classeIncluir.DescricaoClasse = classe.DescricaoClasse;
+                classeIncluir.CodImpressoraPadrao = classe.CodImpressoraPadrao;
+                classeIncluir.Imagem = classe.Imagem;
+                classeIncluir.OrdemExibicao = classe.OrdemExibicao;
+                classeIncluir.Sincronizar = classe.Sincronizar;
+
+                _contexto.Classes.Add(classeIncluir);
+
+                await _contexto.SaveChangesAsync();
+
+                return classe;
+            }
+
+            return null;
+        }
+
+        public async Task<string> ExcluiClasseItemCardapio(ClasseItemCardapioViewModel classe)
+        {
+            if (_contexto.ItensCardapio.Where(i => i.CodClasse == classe.CodClasse).Count() > 0)
+            {
+                return "Exclusão não permitida. Esta classe está associada a itens de cardápio.";
+            }
+
+            var classeExcluir = await _contexto.Classes.FindAsync(classe.CodClasse);
+
+            if (classeExcluir != null)
+            {
+                _contexto.Classes.Remove(classeExcluir);
                 await _contexto.SaveChangesAsync();
             }
             else

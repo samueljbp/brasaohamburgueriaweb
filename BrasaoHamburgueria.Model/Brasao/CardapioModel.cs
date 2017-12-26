@@ -7,6 +7,13 @@ using System.Globalization;
 
 namespace BrasaoHamburgueria.Model
 {
+    public class ImpressoraProducaoViewModel
+    {
+        public int CodImpressora { get; set; }
+        public string Descricao { get; set; }
+        public string Porta { get; set; }
+    }
+
     public class DadosItemCardapioViewModel
     {
         public int CodItemCardapio { get; set; }
@@ -20,6 +27,9 @@ namespace BrasaoHamburgueria.Model
         public string DescricaoClasse { get; set; }
         public bool Sincronizar { get; set; }
         public int? CodImpressoraPadrao { get; set; }
+        public string DescricaoImpressoraPadrao { get; set; }
+        public string Imagem { get; set; }
+        public int OrdemExibicao { get; set; }
         public List<ItemCardapioViewModel> Itens { get; set; }
     }
 

@@ -24,10 +24,98 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
         #endregion
 
+        #region Impressoras de produção
+        
+        public async Task<JsonResult> GetImpressorasProducao()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var impressoras = await _rep.GetImpressorasProducao();
+
+                result.data = impressoras;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
+
         #region Classe item cardápio
         public ActionResult ClasseItemCardapio()
         {
             return View();
+        }
+
+        public async Task<JsonResult> GetClassesItemCardapio()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var classes = await _rep.GetClassesItemCardapio();
+
+                result.data = classes;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiClasseItemCardapio(ClasseItemCardapioViewModel classe)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiClasseItemCardapio(classe);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarClasseItemCardapio(ClasseItemCardapioViewModel classe, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var observacao = await _rep.GravarClasseItemCardapio(classe, modoCadastro);
+                result.Succeeded = true;
+                result.data = classe;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
         }
         #endregion
 
