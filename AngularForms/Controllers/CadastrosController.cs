@@ -8,6 +8,7 @@ using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
 using BrasaoHamburgueria.Web.Repository;
 using BrasaoHamburgueria.Web.Filters;
+using System.Collections.Specialized;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -64,6 +65,47 @@ namespace BrasaoHamburgueria.Web.Controllers
                 var classes = await _rep.GetClassesItemCardapio();
 
                 result.data = classes;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadFile(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                result.data = _rep.GravarImagemClasse(file, Convert.ToInt32(nvc["codClasse"].ToString()), Server.MapPath("~"));
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagem(ClasseItemCardapioViewModel classe)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverImagemClasse(classe, Server.MapPath("~").ToString());
 
                 result.Succeeded = true;
             }

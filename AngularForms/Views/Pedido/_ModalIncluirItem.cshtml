@@ -41,6 +41,14 @@
             top: 0;
             left: 4px;
         }
+
+    .backgroundClasse {
+        background-image: url('../../Content/img/classes_cardapio/img_classe12.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        height: 100%;
+    }
 </style>
 <div class="modal fade" id="modalIncluirItem" tabindex="-1" role="dialog" aria-labelledby="labelModalIncluirItem" style="overflow: scroll;">
     <div class="modal-dialog modal-lg" role="document">
@@ -51,8 +59,8 @@
             </div>
             <div class="modal-body">
                 <div cg-busy="{promise:promiseGetDadosItemCardapio,backdrop:false,delay:10,minDuration:1000}"></div>
-                <div class="row">
-                    <div class="col-sm-8">
+                <div class="row backgroundClasse">
+                    <div class="col-sm-4">
                         <div class="dropdown" ng-if="itemCardapioSelecionado == null">
                             <button id="dLabel" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span id="dropdownText">{{comboClasse.descricaoClasse}}</span>
@@ -64,6 +72,9 @@
                                 </li>
                             </ul>
                         </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <img src="../{{classeSelecionada.imagemMini}}" alt="{{classeSelecionada.imagemMini}}" ng-show="classeSelecionada.imagem != null" style="max-width: 50%; height: auto; margin: 5px;" class="img-responsive" />
                     </div>
                     @*<div class="col-sm-4 text-right" ng-if="itemCardapioSelecionado != null">
                             <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="cancelaInclusaoItem()">Cancelar</button>
@@ -82,14 +93,14 @@
                         </div>
                         <div class="col-xs-6" ng-if="item.complemento != null && item.complemento.imagem != null">
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
-                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="height: auto;" class="img-circle">
+                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 80px; height: auto;" class="img-circle">
                             </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2 hidden-xs">
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
-                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 135px; max-height: 135px; height: auto;" class="img-circle">
+                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 100px; max-height: 135px; height: auto;" class="img-circle">
                             </a>
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento == null || item.complemento.imagem == null">
                                 @*<img src="~/Content/img/itens_cardapio/mini-sem_foto.jpeg" alt="Sem imagem" style="max-width: 90%; height: auto;" class="img-circle">*@

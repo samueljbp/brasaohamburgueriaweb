@@ -5,6 +5,7 @@ using System.Web;
 using BrasaoHamburgueria.Web.Context;
 using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -204,7 +205,7 @@ namespace BrasaoHamburgueria.Web.Repository
         #region Cadastros de classes de item de cardápio
         public async Task<List<ClasseItemCardapioViewModel>> GetClassesItemCardapio()
         {
-            return _contexto.Classes
+            var lista = _contexto.Classes
                 .OrderBy(o => o.CodClasse)
                 .Select(o => new ClasseItemCardapioViewModel
                 {
@@ -216,6 +217,85 @@ namespace BrasaoHamburgueria.Web.Repository
                     OrdemExibicao = o.OrdemExibicao,
                     DescricaoImpressoraPadrao = _contexto.ImpressorasProducao.Where(i => i.CodImpressora == o.CodImpressoraPadrao).FirstOrDefault().Descricao
                 }).ToList();
+
+            foreach(var classe in lista)
+            {
+                if (!String.IsNullOrEmpty(classe.Imagem))
+                {
+                    classe.ImagemMini = classe.Imagem.Replace("img_classe", "mini-img_classe");
+                }
+            }
+
+            return lista;
+        }
+
+        public bool ThumbnailCallback()
+        {
+            return false;
+        }
+
+        public void RemoverImagemClasse(ClasseItemCardapioViewModel classe, string serverPath)
+        {
+            var classeDb = _contexto.Classes.Find(classe.CodClasse);
+
+            var array = classe.Imagem.Split('/');
+            var imagem = serverPath + @"Content\img\classes_cardapio\" + array[array.Length - 1];
+
+            System.IO.File.Delete(imagem);
+
+            array = classe.ImagemMini.Split('/');
+            imagem = serverPath + @"Content\img\classes_cardapio\" + array[array.Length - 1];
+
+            System.IO.File.Delete(imagem);
+
+            if (classeDb != null)
+            {
+
+                classeDb.Imagem = null;
+                _contexto.SaveChanges();
+                
+            }
+        }
+
+        public string GravarImagemClasse(HttpPostedFileBase file, int codClasse, string serverPath)
+        {
+            var extensao = file.FileName.Split('.')[1].ToString();
+            var imgPath = serverPath + @"Content\img\classes_cardapio\" + "img_classe" + codClasse.ToString() + "." + extensao;
+            file.SaveAs(imgPath);
+
+            if (file.ContentLength > 500000)
+            {
+                throw new Exception("A imagem deve ter no máximo 500Kb.");
+            }
+
+            var thumbPath = serverPath + @"Content\img\classes_cardapio\" + "mini-img_classe" + codClasse.ToString() + "." + extensao;
+
+            //cria miniatura
+
+            Image.GetThumbnailImageAbort myCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
+
+            Image image = Image.FromFile(imgPath);
+
+            int height = 150;
+            int width = Convert.ToInt32(height * (Convert.ToDecimal(image.Width) / Convert.ToDecimal(image.Height)));
+
+            Image thumb = image.GetThumbnailImage(width, height, myCallback, IntPtr.Zero);
+            thumb.Save(thumbPath);
+
+            image.Dispose();
+
+            //grava caminho da imagem no registro da classe
+            var classe = _contexto.Classes.Find(codClasse);
+
+            if (classe != null)
+            {
+                classe.Imagem = @"Content/img/classes_cardapio/" + "img_classe" + codClasse.ToString() + "." + extensao;
+                _contexto.SaveChanges();
+
+                return classe.Imagem;
+            }
+
+            return "";
         }
 
         public async Task<ClasseItemCardapioViewModel> GravarClasseItemCardapio(ClasseItemCardapioViewModel classe, String modoCadastro)

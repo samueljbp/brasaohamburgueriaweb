@@ -56,6 +56,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 {
                     CodClasse = c.CodClasse,
                     DescricaoClasse = c.DescricaoClasse,
+                    Imagem = c.Imagem,
                     Itens = c.Itens.Select(i =>
                         new ItemCardapioViewModel
                         {
@@ -79,6 +80,10 @@ namespace BrasaoHamburgueria.Web.Repository
             foreach(var classe in retorno)
             {
                 classe.Itens = classe.Itens.Where(i => i.Ativo).ToList();
+                if (!String.IsNullOrEmpty(classe.Imagem))
+                {
+                    classe.ImagemMini = classe.Imagem.Replace("img_classe", "mini-img_classe");
+                }
             }
 
             return retorno;

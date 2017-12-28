@@ -11,9 +11,60 @@
     body {
         overflow-y: scroll;
     }
+
+    .containerAAA {
+        position: relative;
+        width: 150px;
+        height: 100%;
+    }
+
+    .overlayAAA {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .containerAAA:hover .overlayAAA {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .imgAAA {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        left: 0;
+    }
+
+    .buttonAAA {
+        position: absolute;
+        width: 150px;
+        left: 0;
+        top: 40%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+
+        .buttonAAA a {
+            width: 150px;
+            padding: 12px 48px;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .containerAAA:hover .buttonAAA {
+        opacity: 1;
+    }
 </style>
 <script src="~/app/CadastroClasseItemCardapioForm/cicController.js"></script>
-<div ng-controller="cicController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="cicController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro" nv-file-drop="" uploader="uploader">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetImpressorasProducao,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -53,7 +104,11 @@
                         <td>{{classe.codClasse}}</td>
                         <td>{{classe.descricaoClasse}}</td>
                         <td>{{classe.descricaoImpressoraPadrao}}</td>
-                        <td>{{classe.imagem}}</td>
+                        <td>
+                            @*{{classe.imagem}}*@
+                            <img src="../{{classe.imagemMini}}" alt="{{classe.imagemMini}}" ng-show="classe.imagem != null" style="max-width: 50%; height: auto;" class="img-thumbnail" />
+                            @*<input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />*@
+                        </td>
                         <td>{{classe.ordemExibicao}}</td>
                         <td>{{classe.sincronizar ? 'Sim' : 'Não'}}</td>
                         <td>
@@ -100,7 +155,7 @@
                     </div>
                     <div class="modal-body">
                         <div cg-busy="{promise:promiseGravarClasse,backdrop:false,delay:10,minDuration:1000}"></div>
-
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
                         <div class="form-group">
                             <label for="codClasse" class="col-sm-2 control-label">Código</label>
                             <div class="col-sm-2">
@@ -129,11 +184,70 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" ng-show="classeSelecionada.codClasse > 0">
                             <label for="numero" class="col-sm-2 control-label">Imagem</label>
-                            <div class="col-sm-6">
-                                <input type="text" id="imagem" name="imagem" class="form-control" ng-model="classeSelecionada.imagem" maxlength="200" />
-                                <div class="help-block with-errors"></div>
+                            <div class="col-sm-3">
+                                <div ng-show="uploader.isHTML5">
+                                    <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                    <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                        Arraste a imagem até aqui
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="table-responsive">
+
+                                    <div class="containerAAA" ng-show="classeSelecionada.imagem != null && uploader.queue.length == 0">
+                                        <img src="../{{classeSelecionada.imagemMini}}" alt="{{classeSelecionada.imagemMini}}" class="img-thumbnail" />
+                                        <div class="overlayAAA"></div>
+                                        <div class="buttonAAA">
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagem()">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <table class="table" ng-show="uploader.queue.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">Imagem</th>
+                                                <th width="15%" ng-show="uploader.isHTML5">Tamanho</th>
+                                                <th width="20%" ng-show="uploader.isHTML5">Progresso</th>
+                                                <th width="15%">Status</th>
+                                                <th width="20%">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in uploader.queue">
+                                                <td>
+                                                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                </td>
+                                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                <td ng-show="uploader.isHTML5">
+                                                    <div class="progress" style="margin-bottom: 0;">
+                                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                </td>
+                                                <td nowrap>
+                                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                        <span class="glyphicon glyphicon-upload"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                        <span class="glyphicon glyphicon-ban-circle"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 

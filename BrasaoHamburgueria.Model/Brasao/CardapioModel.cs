@@ -29,6 +29,7 @@ namespace BrasaoHamburgueria.Model
         public int? CodImpressoraPadrao { get; set; }
         public string DescricaoImpressoraPadrao { get; set; }
         public string Imagem { get; set; }
+        public string ImagemMini { get; set; }
         public int OrdemExibicao { get; set; }
         public List<ItemCardapioViewModel> Itens { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('cicController', function ($scope, $http, $filter, $ngBootbox, $window) {
+﻿brasaoWebApp.controller('cicController', function ($scope, $http, $filter, $ngBootbox, $window, FileUploader) {
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
         $scope.mensagem = {
@@ -6,6 +6,79 @@
             sucesso: '',
             informacao: ''
         }
+
+        var uploader = $scope.uploader = new FileUploader({
+            url: urlBase + 'Cadastros/UploadFile',
+            removeAfterUpload: true,
+            queueLimit: 1
+        });
+
+        uploader.filters.push({
+            name: 'imageFilter',
+            fn: function (item /*{File|FileLikeObject}*/, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                var size = item.size;
+                return ('|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1) && size < 500000;
+            }
+        });
+
+        // CALLBACKS
+
+        uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+            console.info('onWhenAddingFileFailed', item, filter, options);
+            $scope.mensagem.informacao = "Arquivo não permitido. Permitidos arquivos |jpg|png|jpeg|bmp|gif| e com tamanho de até 500kb.";
+        };
+        uploader.onAfterAddingFile = function (fileItem) {
+            console.info('onAfterAddingFile', fileItem);
+            fileItem.formData.push($scope.classeSelecionada);
+        };
+        uploader.onAfterAddingAll = function (addedFileItems) {
+            console.info('onAfterAddingAll', addedFileItems);
+        };
+        uploader.onBeforeUploadItem = function (item) {
+            console.info('onBeforeUploadItem', item);
+        };
+        uploader.onProgressItem = function (fileItem, progress) {
+            console.info('onProgressItem', fileItem, progress);
+        };
+        uploader.onProgressAll = function (progress) {
+            console.info('onProgressAll', progress);
+        };
+        uploader.onSuccessItem = function (fileItem, response, status, headers) {
+            console.info('onSuccessItem', fileItem, response, status, headers);
+        };
+        uploader.onErrorItem = function (fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (status != '' ? status : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        };
+        uploader.onCancelItem = function (fileItem, response, status, headers) {
+            console.info('onCancelItem', fileItem, response, status, headers);
+        };
+        uploader.onCompleteItem = function (fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+
+            if (response.succeeded) {
+
+                $scope.mensagem.sucesso = 'Imagem enviada com sucesso.';
+                $window.scrollTo(0, 0);
+                $scope.classeSelecionada.imagem = response.data;
+                $scope.classeSelecionada.imagemMini = $scope.classeSelecionada.imagem.replace("img_classe", "mini-img_classe");
+
+            } else {
+
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (response.errors[0] ? response.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+
+            }
+
+        };
+        uploader.onCompleteAll = function () {
+            console.info('onCompleteAll');
+        };
+
+        console.info('uploader', uploader);
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -28,8 +101,50 @@
 
     }
 
+    $scope.removerImagem = function () {
+
+        $ngBootbox.confirm('Confirma a exclusão da imagem?')
+            .then(function () {
+
+
+                $scope.promiseGravarClasse = $http({
+                    method: 'POST',
+                    url: urlBase + 'Cadastros/RemoverImagem',
+                    data: { classe: $scope.classeSelecionada },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.succeeded) {
+
+                        $scope.mensagem.sucesso = 'Imagem removida com sucesso.';
+                        $scope.classeSelecionada.imagem = null;
+                        $scope.classeSelecionada.imagemMini = null;
+
+                    }
+                    else {
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                    $window.scrollTo(0, 0);
+                });
+                
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+
+    }
+
     $scope.modalAlteracao = function (classe) {
         $('#formGravarClasse').validator('destroy').validator();
+        $scope.uploader.clearQueue();
 
         $scope.classeSelecionada = classe;
         $scope.modoCadastro = 'A';
@@ -38,6 +153,7 @@
 
     $scope.modalInclusao = function () {
         $('#formGravarClasse').validator('destroy').validator();
+        $scope.uploader.clearQueue();
 
         $scope.classeSelecionada = {};
         $scope.classeSelecionada.sincronizar = true;
@@ -52,6 +168,8 @@
         if (hasErrors) {
             return;
         }
+
+        var fechaPopup = true;
 
         $scope.promiseGravarClasse = $http({
             method: 'POST',
@@ -70,6 +188,17 @@
 
                 if ($scope.modoCadastro == 'I') {
                     $scope.rowCollection.push(retorno.data);
+
+
+                    $ngBootbox.confirm('Deseja carregar uma imagem para esta classe?')
+                        .then(function () {
+
+                            fechaPopup = false;
+
+                        }, function () {
+                            //console.log('Confirm dismissed!');
+                        });
+
                 }
 
             }
@@ -83,8 +212,10 @@
             $window.scrollTo(0, 0);
         });
 
-        $('#modalGravarClasse').modal('hide');
-        $scope.classeSelecionada = null;
+        if (fechaPopup) {
+            $('#modalGravarClasse').modal('hide');
+            $scope.classeSelecionada = null;
+        }
 
     }
 

@@ -408,6 +408,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     $scope.filtraClasse = function (codClasse) {
         $scope.comboClasse.codClasse = codClasse;
         var filtro = $filter('filter')($scope.classes, { codClasse: codClasse });
+        $scope.classeSelecionada = filtro[0];
         $scope.comboClasse.descricaoClasse = filtro[0].descricaoClasse;
         $scope.itensFiltrados = filtro[0].itens;
     };
@@ -790,6 +791,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         } else {
 
         }
+
+        $scope.classeSelecionada = {};
 
         noteService.connect();
         $scope.messages = [];
