@@ -70,7 +70,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
                             if (programa != null && programa.LoginUsuario != null && programa.TermosAceitos != null && programa.TermosAceitos.Value && linhasEstornar != null && linhasEstornar.Count > 0)
                             {
-                                foreach(var linhaEstornar in linhasEstornar)
+                                foreach (var linhaEstornar in linhasEstornar)
                                 {
                                     //credita pontos referentes ao pedido
                                     SaldoUsuarioProgramaFidelidade saldo = _contexto.SaldosUsuariosProgramasFidelidade.Where(s => s.CodProgramaFidelidade == programa.CodProgramaFidelidade && s.LoginUsuario == loginUsuario).FirstOrDefault();
@@ -90,7 +90,7 @@ namespace BrasaoHamburgueria.Web.Repository
                                     {
                                         extrato.DescricaoLancamento = "Devolução de " + Math.Abs(linhaEstornar.ValorLancamento).ToString("0.00") + " pontos resgatados referentes ao cancelamento do pedido " + ped.CodPedido;
                                     }
-                                    
+
                                     extrato.LoginUsuario = loginUsuario;
                                     extrato.SaldoPosLancamento = saldo.Saldo;
                                     extrato.ValorLancamento = -1 * linhaEstornar.ValorLancamento;
@@ -251,24 +251,30 @@ namespace BrasaoHamburgueria.Web.Repository
                         ped = _contexto.Pedidos.Find(pedidoViewModel.CodPedido);
                     }
 
-                    ped.BairroEntrega = pedidoViewModel.DadosCliente.Bairro;
+                    
                     ped.BandeiraCartao = pedidoViewModel.BandeiraCartao;
-                    ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;
-                    ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;
                     ped.FormaPagamento = pedidoViewModel.FormaPagamento;
-                    ped.LogradouroEntrega = pedidoViewModel.DadosCliente.Logradouro;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
-                    ped.NumeroEntrega = pedidoViewModel.DadosCliente.Numero;
-                    ped.ReferenciaEntrega = pedidoViewModel.DadosCliente.Referencia;
                     ped.TaxaEntrega = pedidoViewModel.TaxaEntrega;
                     ped.TelefoneCliente = pedidoViewModel.DadosCliente.Telefone;
                     ped.Troco = pedidoViewModel.Troco;
                     ped.TrocoPara = pedidoViewModel.TrocoPara;
-                    ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;
                     ped.ValorTotal = pedidoViewModel.ValorTotal;
                     ped.MotivoCancelamento = pedidoViewModel.MotivoCancelamento;
                     ped.FeedbackCliente = pedidoViewModel.FeedbackCliente;
                     ped.PedidoExterno = pedidoViewModel.PedidoExterno;
+                    ped.RetirarNaCasa = pedidoViewModel.RetirarNaCasa;
+
+                    if (!ped.RetirarNaCasa)
+                    {
+                        ped.BairroEntrega = pedidoViewModel.DadosCliente.Bairro;
+                        ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;
+                        ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;
+                        ped.LogradouroEntrega = pedidoViewModel.DadosCliente.Logradouro;
+                        ped.NumeroEntrega = pedidoViewModel.DadosCliente.Numero;
+                        ped.ReferenciaEntrega = pedidoViewModel.DadosCliente.Referencia;
+                        ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;
+                    }
 
                     if (pedidoViewModel.CodPedido <= 0)
                     {
@@ -501,27 +507,27 @@ namespace BrasaoHamburgueria.Web.Repository
                     MotivoDesconto = p.MotivoDesconto,
                     PortaImpressaoComandaEntrega = impressoraComanda,
                     Itens = p.Itens.Select(i => new ItemPedidoViewModel
+                    {
+                        CodItem = i.CodItemCardapio,
+                        SeqItem = i.SeqItem,
+                        DescricaoItem = i.ItemCardapio.Nome,
+                        Quantidade = i.Quantidade,
+                        PrecoUnitario = i.PrecoUnitario,
+                        ValorExtras = i.ValorExtras,
+                        ValorTotalItem = i.ValorTotal,
+                        ObservacaoLivre = i.ObservacaoLivre,
+                        Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
                         {
-                            CodItem = i.CodItemCardapio,
-                            SeqItem = i.SeqItem,
-                            DescricaoItem = i.ItemCardapio.Nome,
-                            Quantidade = i.Quantidade,
-                            PrecoUnitario = i.PrecoUnitario,
-                            ValorExtras = i.ValorExtras,
-                            ValorTotalItem = i.ValorTotal,
-                            ObservacaoLivre = i.ObservacaoLivre,
-                            Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
-                            {
-                                CodObservacao = o.CodObservacao,
-                                DescricaoObservacao = o.Observacao.DescricaoObservacao
-                            }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
-                            extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
-                            {
-                                CodOpcaoExtra = e.CodOpcaoExtra,
-                                DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
-                                Preco = e.Preco
-                            }).ToList()
-                        }).ToList().OrderBy(i => i.SeqItem).ToList()
+                            CodObservacao = o.CodObservacao,
+                            DescricaoObservacao = o.Observacao.DescricaoObservacao
+                        }).ToList().Union(new List<ObservacaoItemPedidoViewModel> { new ObservacaoItemPedidoViewModel { CodObservacao = (i.ObservacaoLivre != "" && i.ObservacaoLivre != null ? -1 : -2), DescricaoObservacao = i.ObservacaoLivre } }).ToList().Where(o => o.CodObservacao >= -1).ToList(),
+                        extras = i.Extras.Select(e => new ExtraItemPedidoViewModel
+                        {
+                            CodOpcaoExtra = e.CodOpcaoExtra,
+                            DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
+                            Preco = e.Preco
+                        }).ToList()
+                    }).ToList().OrderBy(i => i.SeqItem).ToList()
                 })
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
@@ -625,6 +631,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     TrocoPara = p.TrocoPara,
                     Usuario = p.Usuario,
                     PedidoExterno = p.PedidoExterno,
+                    RetirarNaCasa = p.RetirarNaCasa,
                     MotivoCancelamento = p.MotivoCancelamento,
                     FeedbackCliente = p.FeedbackCliente,
                     ValorDesconto = p.ValorDesconto,

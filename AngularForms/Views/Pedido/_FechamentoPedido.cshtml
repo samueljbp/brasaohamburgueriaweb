@@ -91,8 +91,12 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset>
-            <legend>Endereço</legend>
+        <fieldset ng-if="pedido.retirarNaCasa">
+            <legend>Endereço de entrega</legend>
+            <h5 class="text-danger">Vou retirar na casa</h5>
+        </fieldset>
+        <fieldset ng-if="!pedido.retirarNaCasa">
+            <legend>Endereço de entrega</legend>
 
             <div id="divCheckMudarSenha" class="form-group">
                 <div class="col-sm-2"></div>

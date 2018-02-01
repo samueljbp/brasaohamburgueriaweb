@@ -26,22 +26,22 @@
         {
             mostraTermosProgramaFidelidade = true;
         }
-        
+
         if (progFidelidade.LoginUsuario != null && progFidelidade.TermosAceitos != null && progFidelidade.TermosAceitos.Value)
         {
             inscritoProgramaFidelidade = true;
             saldoDinheiro = progFidelidade.Saldo.Value * progFidelidade.ValorDinheiroPorPontoParaResgate;
         }
     }
-    
+
     if (!ParametroRepository.CasaAberta())
     {
         mostraTermosProgramaFidelidade = false;
     }
 
-    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings 
-    { 
-        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() 
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
     };
 }
 <div>
@@ -210,7 +210,12 @@
                                     <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>Fechar pedido
                                 </button>
                             </div>
-                            <div class="col-lg-8 hidden-xs hidden-sm hidden-md">
+                            <div id="divCheckMudarSenha" class="col-lg-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="checkRetirarNaCasa" name="checkRetirarNaCasa" ng-model="pedido.retirarNaCasa" ng-change="checkRetirarNaCasa()" />Retirar na casa</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 hidden-xs hidden-sm hidden-md">
                                 <h4 class="text-primary col-sm-offset-6">Total: {{pedido.valorTotal | currency: "R$ "}}</h4>
                             </div>
                         </div>

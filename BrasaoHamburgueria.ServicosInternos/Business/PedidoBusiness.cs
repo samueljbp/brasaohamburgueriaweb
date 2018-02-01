@@ -178,24 +178,33 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     texto += comandoQuebraLinha;
                     texto += "Cliente: " + pedido.DadosCliente.Nome;
                     texto += comandoQuebraLinha;
-                    texto += "             NÃO É DOCUMENTO FISCAL             ";
-                    texto += comandoQuebraLinha;
-                    texto += "Endereco: " + pedido.DadosCliente.Logradouro + ", " + pedido.DadosCliente.Numero;
-                    texto += comandoQuebraLinha;
-                    if (!String.IsNullOrEmpty(pedido.DadosCliente.Complemento))
-                    {
-                        texto += "Complemento: " + pedido.DadosCliente.Complemento;
-                        texto += comandoQuebraLinha;
-                    }
-                    texto += "Bairro: " + pedido.DadosCliente.Bairro;
-                    texto += comandoQuebraLinha;
                     texto += "Telefone: " + pedido.DadosCliente.Telefone;
                     texto += comandoQuebraLinha;
-                    if (!String.IsNullOrEmpty(pedido.DadosCliente.Referencia))
+                    texto += "             NÃO É DOCUMENTO FISCAL             ";
+                    texto += comandoQuebraLinha;
+                    if (!pedido.RetirarNaCasa)
                     {
-                        texto += pedido.DadosCliente.Referencia;
+                        texto += "Endereco: " + pedido.DadosCliente.Logradouro + ", " + pedido.DadosCliente.Numero;
+                        texto += comandoQuebraLinha;
+                        if (!String.IsNullOrEmpty(pedido.DadosCliente.Complemento))
+                        {
+                            texto += "Complemento: " + pedido.DadosCliente.Complemento;
+                            texto += comandoQuebraLinha;
+                        }
+                        texto += "Bairro: " + pedido.DadosCliente.Bairro;
+                        texto += comandoQuebraLinha;
+                        if (!String.IsNullOrEmpty(pedido.DadosCliente.Referencia))
+                        {
+                            texto += pedido.DadosCliente.Referencia;
+                            texto += comandoQuebraLinha;
+                        }
+                    }
+                    else
+                    {
+                        texto += "    CLIENTE VAI RETIRAR O PEDIDO NA CASA    ";
                         texto += comandoQuebraLinha;
                     }
+                    
                     texto += "------------------------------------------------";
                     texto += comandoQuebraLinha;
                     texto += "QTD  DESCRICAO               P.UNIT    TOTAL    ";
@@ -211,14 +220,9 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         texto += FormataComEspacos(item.Quantidade.ToString("00"), 5) + FormataComEspacos(item.DescricaoItem, 24) + FormataComEspacos(item.PrecoUnitario.ToString("C"), 10) + FormataComEspacos(item.ValorTotalItem.ToString("C"), 9);
                         texto += comandoQuebraLinha;
 
-                        //ImpressaoBematech4200.FormataTX(item.DescricaoItem + RetornaEspacosCompletar(item.DescricaoItem) + item.Quantidade.ToString("00"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                        //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
                         if (item.Obs != null && item.Obs.Count > 0)
                         {
                             var obsString = RetornaStringDeObs(item.Obs);
-                            //ImpressaoBematech4200.FormataTX("OBSERVACAO: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                            //ImpressaoBematech4200.FormataTX(obsString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
 
                             texto += "     OBSERVACAO: ";
                             texto += obsString;
@@ -227,9 +231,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         if (item.extras != null && item.extras.Count > 0)
                         {
                             var extrasString = RetornaStringDeExtras(item.Quantidade, item.extras, true);
-                            //ImpressaoBematech4200.FormataTX("EXTRAS: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                            //ImpressaoBematech4200.FormataTX(extrasString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
 
                             texto += "     EXTRAS: ";
                             texto += extrasString;
@@ -239,9 +240,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
 
                         if (i < pedido.Itens.Count)
                         {
-                            //ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaComanda);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaComanda);
-
                             texto += "------------------------------------------------";
                             texto += comandoQuebraLinha;
                         }
@@ -439,7 +437,14 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     //CABECALHO
                     string texto = "================================================";
                     texto += comandoQuebraLinha;
-                    texto += "            PEDIDO DELIVERY NR " + pedido.CodPedido;
+                    if (!pedido.RetirarNaCasa)
+                    {
+                        texto += "            PEDIDO DELIVERY NR " + pedido.CodPedido;
+                    }
+                    else
+                    {
+                        texto += "           PEDIDO P/ VIAGEM NR " + pedido.CodPedido;
+                    }
                     texto += comandoQuebraLinha;
                     texto += "================================================";
                     texto += comandoQuebraLinha;
@@ -452,25 +457,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     texto += "------------------------------------------------";
                     texto += comandoQuebraLinha;
 
-                    //ImpressaoBematech4200.FormataTX("================================================", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.FormataTX("            PEDIDO DELIVERY NR " + pedido.CodPedido, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.FormataTX("================================================", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-                    ////iRetorno = ImpressaoBematech4200.FormataTX("Restaurante                  " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                    //ImpressaoBematech4200.FormataTX(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-                    ////iRetorno = ImpressaoBematech4200.FormataTX("Comanda: XXXX", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Ativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado);
-                    ////iRetorno = ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length);
-                    //ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-
-                    //ImpressaoBematech4200.FormataTX("Produto                                      Qtd", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                    //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-
                     int i = 0;
                     //ITENS
                     foreach (ItemPedidoViewModel item in portaPedido.Itens)
@@ -478,14 +464,9 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         texto += item.DescricaoItem + RetornaEspacosCompletar(item.DescricaoItem, PedidoBusiness.QtdMaximaCaracteresLinha, 2) + item.Quantidade.ToString("00");
                         texto += comandoQuebraLinha;
 
-                        //ImpressaoBematech4200.FormataTX(item.DescricaoItem + RetornaEspacosCompletar(item.DescricaoItem) + item.Quantidade.ToString("00"), (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                        //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
                         if (item.Obs != null && item.Obs.Count > 0)
                         {
                             var obsString = RetornaStringDeObs(item.Obs);
-                            //ImpressaoBematech4200.FormataTX("OBSERVACAO: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                            //ImpressaoBematech4200.FormataTX(obsString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
 
                             texto += "OBSERVACAO: ";
                             texto += obsString;
@@ -494,9 +475,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                         if (item.extras != null && item.extras.Count > 0)
                         {
                             var extrasString = RetornaStringDeExtras(item.Quantidade, item.extras, false);
-                            //ImpressaoBematech4200.FormataTX("EXTRAS: ", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                            //ImpressaoBematech4200.FormataTX(extrasString, (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Ativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
 
                             texto += "EXTRAS: ";
                             texto += extrasString;
@@ -506,9 +484,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
 
                         if (i < pedido.Itens.Count)
                         {
-                            //ImpressaoBematech4200.FormataTX("------------------------------------------------", (int)ImpressaoBematech4200.TipoLetraImpressao.Normal, (int)ImpressaoBematech4200.ItalicoImpressao.Desativado, (int)ImpressaoBematech4200.SublinhadoImpressao.Desativado, (int)ImpressaoBematech4200.ExpandidoImpressao.Desativado, (int)ImpressaoBematech4200.NegritoImpressao.Desativado).ValidaRetornoImpressora(portaPedido.Porta);
-                            //ImpressaoBematech4200.ComandoTX(comandoQuebraLinha, comandoQuebraLinha.Length).ValidaRetornoImpressora(portaPedido.Porta);
-
                             texto += "------------------------------------------------";
                             texto += comandoQuebraLinha;
                         }

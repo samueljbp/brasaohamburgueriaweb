@@ -34,6 +34,7 @@ namespace BrasaoHamburgueria.Model
         public string Usuario { get; set; }
         public string DescricaoSituacao { get; set; }
         public bool PedidoExterno { get; set; }
+        public bool RetirarNaCasa { get; set; }
         public bool Alterar { get; set; }
         public string MotivoCancelamento { get; set; }
         public string FeedbackCliente { get; set; }
@@ -133,6 +134,10 @@ namespace BrasaoHamburgueria.Model
         public bool PedidoExterno { get; set; }
 
         [Required]
+        [Column("RETIRAR_NA_CASA")]
+        public bool RetirarNaCasa { get; set; }
+
+        [Required]
         [Column("DATA_HORA")]
         public DateTime DataHora { get; set; }
 
@@ -165,27 +170,21 @@ namespace BrasaoHamburgueria.Model
         [Column("TELEFONE_CLIENTE")]
         public string TelefoneCliente { get; set; }
 
-        [Required]
         [Column("UF_ENTREGA")]
         public string UFEntrega { get; set; }
 
-        [Required]
         [Column("CIDADE_ENTREGA")]
         public string CidadeEntrega { get; set; }
 
-        [Required]
         [Column("LOGRADOURO_ENTREGA")]
         public string LogradouroEntrega { get; set; }
 
-        [Required]
         [Column("NUMERO_ENTREGA")]
         public string NumeroEntrega { get; set; }
 
-        [Required]
         [Column("COMPLEMENTO_ENTREGA")]
         public string ComplementoEntrega { get; set; }
 
-        [Required]
         [Column("BAIRRO_ENTREGA")]
         public string BairroEntrega { get; set; }
 

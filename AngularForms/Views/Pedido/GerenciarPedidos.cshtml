@@ -66,6 +66,9 @@
                                         <th class="text-left">
                                             Externo
                                         </th>
+                                        <th class="text-left">
+                                            Entregar
+                                        </th>
                                         <th>
                                             Cliente
                                         </th>
@@ -112,6 +115,10 @@
                                         <td class="text-left">
                                             <span ng-if="ped.pedidoExterno">Sim</span>
                                             <span ng-if="!ped.pedidoExterno">Não</span>
+                                        </td>
+                                        <td class="text-left">
+                                            <span ng-if="ped.retirarNaCasa">Não</span>
+                                            <span ng-if="!ped.retirarNaCasa">Sim</span>
                                         </td>
                                         <td class="text-left">
                                             {{ped.dadosCliente.nome}}

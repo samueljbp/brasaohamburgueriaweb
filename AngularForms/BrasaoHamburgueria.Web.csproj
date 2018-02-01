@@ -161,6 +161,7 @@
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
+    <Content Include="app\CadastroItemCardapioForm\citemController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
@@ -1569,6 +1570,10 @@
     <Compile Include="Migrations\Brasao\201711091832383_CriaTabelasProgramaFidelidade.Designer.cs">
       <DependentUpon>201711091832383_CriaTabelasProgramaFidelidade.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.cs" />
+    <Compile Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.Designer.cs">
+      <DependentUpon>201801311526353_RetirarPedidoNaCasa.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1625,6 +1630,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201711091832383_CriaTabelasProgramaFidelidade.resx">
       <DependentUpon>201711091832383_CriaTabelasProgramaFidelidade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.resx">
+      <DependentUpon>201801311526353_RetirarPedidoNaCasa.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

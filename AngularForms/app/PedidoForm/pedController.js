@@ -280,6 +280,16 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         }
     }
 
+    $scope.checkRetirarNaCasa = function () {
+        if ($scope.pedido.retirarNaCasa) {
+            $scope.pedido.taxaEntrega = 0;
+        } else {
+            $scope.pedido.taxaEntrega = $scope.taxaEntrega;
+        }
+
+        atualizaValorTotalPedido(false);
+    }
+
     //função que obtem o sequencial do próximo item do pedido
     function getNextSeqItemPedido() {
         var seqItem = 0;
@@ -326,6 +336,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             valorTotal: 0.0,
             situacao: 0,
             pedidoExterno: $scope.modoAdm.ativo,
+            retirarNaCasa: false,
             dadosCliente: {
                 salvar: false,
                 nome: '',
