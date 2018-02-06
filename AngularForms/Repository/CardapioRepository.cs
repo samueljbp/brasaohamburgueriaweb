@@ -84,6 +84,17 @@ namespace BrasaoHamburgueria.Web.Repository
                 {
                     classe.ImagemMini = classe.Imagem.Replace("img_classe", "mini-img_classe");
                 }
+
+                if (classe.Itens != null)
+                {
+                    foreach (var item in classe.Itens)
+                    {
+                        if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                        {
+                            item.Complemento.ImagemMini = item.Complemento.Imagem.Replace("img_item", "mini-img_item");
+                        }
+                    }
+                }
             }
 
             return retorno;

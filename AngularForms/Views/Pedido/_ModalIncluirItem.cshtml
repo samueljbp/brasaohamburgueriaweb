@@ -93,14 +93,14 @@
                         </div>
                         <div class="col-xs-6" ng-if="item.complemento != null && item.complemento.imagem != null">
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
-                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 80px; height: auto;" class="img-circle">
+                                <img src="~/{{item.complemento.imagemMini}}" alt="{{item.nome}}" style="max-width: 80px; height: auto;" class="img-circle">
                             </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-2 hidden-xs">
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento != null && item.complemento.imagem != null">
-                                <img src="~/Content/img/itens_cardapio/mini-{{item.complemento.imagem}}" alt="{{item.nome}}" style="max-width: 100px; max-height: 135px; height: auto;" class="img-circle">
+                                <img src="~/{{item.complemento.imagemMini}}" alt="{{item.nome}}" style="max-width: 100px; max-height: 135px; height: auto;" class="img-circle">
                             </a>
                             <a href="#" class="pop" ng-click="exibeImagemGrande(item.codItemCardapio)" ng-if="item.complemento == null || item.complemento.imagem == null">
                                 @*<img src="~/Content/img/itens_cardapio/mini-sem_foto.jpeg" alt="Sem imagem" style="max-width: 90%; height: auto;" class="img-circle">*@

@@ -212,7 +212,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     //função que abre uma imagem grande em popup a partir de um thumbnail
     $scope.exibeImagemGrande = function (codItemCardapio) {
         var imagem = $filter('filter')($scope.itensFiltrados, { codItemCardapio: codItemCardapio })[0].complemento.imagem;
-        $('#imagepreview').attr('src', urlBase + '/Content/img/itens_cardapio/' + imagem);
+        $('#imagepreview').attr('src', urlBase + '/' + imagem);
         $('#imagemodal').modal('show');
     }
 

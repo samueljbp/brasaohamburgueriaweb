@@ -196,8 +196,8 @@
                                         @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                         {
                                             <a href="#" class="pop">
-                                                <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
-                                                <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
+                                                <img src="~/@item.Complemento.Imagem.Replace("img_item", "mini-img_item")" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
+                                                <input type="hidden" value="~/@item.Complemento.Imagem" />
                                             </a>
                                         }
                                         else
@@ -210,8 +210,8 @@
                                     @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
                                     {
                                         <a href="#" class="pop">
-                                            <img src="~/Content/img/itens_cardapio/mini-@item.Complemento.Imagem" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
-                                            <input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />
+                                            <img src="~/@item.Complemento.Imagem.Replace("img_item", "mini-img_item")" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
+                                            <input type="hidden" value="~/@item.Complemento.Imagem" />
                                         </a>
                                     }
                                     <h5>

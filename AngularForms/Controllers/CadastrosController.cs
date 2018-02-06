@@ -133,6 +133,11 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         #region Impressoras de produção
 
+        public ActionResult ImpressoraProducao()
+        {
+            return View();
+        }
+
         public async Task<JsonResult> GetImpressorasProducao()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -144,6 +149,48 @@ namespace BrasaoHamburgueria.Web.Controllers
                 result.data = impressoras;
 
                 result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiImpressoraProducao(ImpressoraProducaoViewModel imp)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiImpressoraProducao(imp);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarImpressoraProducao(ImpressoraProducaoViewModel imp, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var observacao = await _rep.GravarImpressoraProducao(imp, modoCadastro);
+                result.Succeeded = true;
+                result.data = observacao;
             }
             catch (Exception ex)
             {

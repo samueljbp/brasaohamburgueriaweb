@@ -200,9 +200,89 @@ namespace BrasaoHamburgueria.Web.Repository
                 }).ToList();
         }
 
+        public async Task<ImpressoraProducaoViewModel> GravarImpressoraProducao(ImpressoraProducaoViewModel imp, String modoCadastro)
+        {
+            if (modoCadastro == "A") //alteração
+            {
+                var impAlterar = _contexto.ImpressorasProducao.Find(imp.CodImpressora);
+
+                if (impAlterar != null)
+                {
+                    impAlterar.Descricao = imp.Descricao;
+                    impAlterar.Porta = imp.Porta;
+
+                    await _contexto.SaveChangesAsync();
+                }
+
+                return imp;
+            }
+            else if (modoCadastro == "I") //inclusão
+            {
+                var impIncluir = new ImpressoraProducao();
+                if (imp.CodImpressora <= 0)
+                {
+                    impIncluir.CodImpressora = 1;
+                    var cod = _contexto.ImpressorasProducao.Max(o => o.CodImpressora);
+                    if (cod != null)
+                    {
+                        impIncluir.CodImpressora = cod + 1;
+                    }
+                    imp.CodImpressora = impIncluir.CodImpressora;
+                }
+                else
+                {
+                    var valida = _contexto.ImpressorasProducao.Find(imp.CodImpressora);
+
+                    if (valida != null)
+                    {
+                        throw new Exception("Já existe uma impressora cadastrada com o código " + imp.CodImpressora);
+                    }
+
+                    impIncluir.CodImpressora = imp.CodImpressora;
+                }
+                impIncluir.Descricao = imp.Descricao;
+                impIncluir.Porta = imp.Porta;
+
+                _contexto.ImpressorasProducao.Add(impIncluir);
+
+                await _contexto.SaveChangesAsync();
+
+                return imp;
+            }
+
+            return null;
+        }
+
+        public async Task<string> ExcluiImpressoraProducao(ImpressoraProducaoViewModel imp)
+        {
+            if (_contexto.ImpressorasItens.Where(i => i.CodImpressora == imp.CodImpressora).Count() > 0)
+            {
+                return "Exclusão não permitida. Esta impressora está associada a itens de cardápio.";
+            }
+
+            if (_contexto.Classes.Where(i => i.CodImpressoraPadrao == imp.CodImpressora).Count() > 0)
+            {
+                return "Exclusão não permitida. Esta impressora está associada a classes de itens de cardápio.";
+            }
+
+            var impExcluir = await _contexto.ImpressorasProducao.FindAsync(imp.CodImpressora);
+
+            if (impExcluir != null)
+            {
+                _contexto.ImpressorasProducao.Remove(impExcluir);
+                await _contexto.SaveChangesAsync();
+            }
+            else
+            {
+                return "Registro não encontrado na base de dados.";
+            }
+
+            return "";
+        }
+
         #endregion
 
-        #region Cadastros de classes de item de cardápio
+        #region Cadastros de item de cardápio
         public async Task<List<ItemCardapioViewModel>> GetItensCardapio()
         {
             var lista = (

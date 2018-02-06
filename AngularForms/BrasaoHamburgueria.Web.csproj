@@ -161,6 +161,7 @@
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
+    <Content Include="app\CadastroImpressoraProducao\cipController.js" />
     <Content Include="app\CadastroItemCardapioForm\citemController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
@@ -1491,6 +1492,7 @@
     <Content Include="Views\Pedido\_TermosProgramaFidelidade.cshtml" />
     <Content Include="Views\ProgramaFidelidade\Extrato.cshtml" />
     <Content Include="Scripts\smart-table.min.js.map" />
+    <Content Include="Views\Cadastros\ImpressoraProducao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
