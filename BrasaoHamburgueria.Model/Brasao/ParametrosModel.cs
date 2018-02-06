@@ -20,8 +20,15 @@ namespace BrasaoHamburgueria.Model
         public const string ROLE_ADMIN = "Administradores";
     }
 
+    public class ParametroSistemaViewModel
+    {
+        public int CodParametro { get; set; }
+        public string DescricaoParametro { get; set; }
+        public string ValorParametro { get; set; }
+    }
+
     [Table("PARAMETRO_SISTEMA")]
-    public class ParametrosSistema
+    public class ParametroSistema
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]

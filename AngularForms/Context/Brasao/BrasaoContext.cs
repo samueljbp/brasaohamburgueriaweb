@@ -35,7 +35,7 @@ namespace BrasaoHamburgueria.Web.Context
         public DbSet<ItemPedido> ItensPedidos { get; set; }
         public DbSet<ObservacaoItemPedido> ObservacoesItensPedidos { get; set; }
         public DbSet<ExtraItemPedido> ExtrasItensPedidos { get; set; }
-        public DbSet<ParametrosSistema> ParametrosSistema { get; set; }
+        public DbSet<ParametroSistema> ParametrosSistema { get; set; }
         public DbSet<FuncionamentoEstabelecimento> FuncionamentosEstabelecimento { get; set; }
         public DbSet<ImpressoraProducao> ImpressorasProducao { get; set; }
         public DbSet<ItemCardapioImpressora> ImpressorasItens { get; set; }

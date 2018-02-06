@@ -131,6 +131,57 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         #endregion
 
+        #region Parametros de sistema
+
+        public ActionResult ParametroSistema()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetParametrosSistema()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var parametros = await _rep.GetParametrosSistema();
+
+                result.data = parametros;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarParametroSistema(ParametroSistemaViewModel par, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var observacao = await _rep.GravarParametroSistema(par, modoCadastro);
+                result.Succeeded = true;
+                result.data = observacao;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
+
         #region Impressoras de produção
 
         public ActionResult ImpressoraProducao()

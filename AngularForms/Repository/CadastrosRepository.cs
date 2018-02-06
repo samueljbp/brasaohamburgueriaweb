@@ -186,6 +186,75 @@ namespace BrasaoHamburgueria.Web.Repository
         }
         #endregion
 
+        #region Parametros de sistema
+
+        public async Task<List<ParametroSistemaViewModel>> GetParametrosSistema()
+        {
+            return _contexto.ParametrosSistema
+                .OrderBy(o => o.CodParametro)
+                .Select(o => new ParametroSistemaViewModel
+                {
+                    CodParametro = o.CodParametro,
+                    DescricaoParametro = o.DescricaoParametro,
+                    ValorParametro = o.ValorParametro
+                }).ToList();
+        }
+
+        public async Task<ParametroSistemaViewModel> GravarParametroSistema(ParametroSistemaViewModel par, String modoCadastro)
+        {
+            if (modoCadastro == "A") //alteração
+            {
+                var parAlterar = _contexto.ParametrosSistema.Find(par.CodParametro);
+
+                if (parAlterar != null)
+                {
+                    parAlterar.DescricaoParametro = par.DescricaoParametro;
+                    parAlterar.ValorParametro = par.ValorParametro;
+
+                    await _contexto.SaveChangesAsync();
+                }
+
+                return par;
+            }
+            else if (modoCadastro == "I") //inclusão
+            {
+                var parIncluir = new ParametroSistema();
+                if (par.CodParametro <= 0)
+                {
+                    parIncluir.CodParametro = 1;
+                    var cod = _contexto.ParametrosSistema.Max(o => o.CodParametro);
+                    if (cod != null)
+                    {
+                        parIncluir.CodParametro = cod + 1;
+                    }
+                    par.CodParametro = parIncluir.CodParametro;
+                }
+                else
+                {
+                    var valida = _contexto.ParametrosSistema.Find(par.CodParametro);
+
+                    if (valida != null)
+                    {
+                        throw new Exception("Já existe um parâmetro cadastrado com o código " + par.CodParametro);
+                    }
+
+                    parIncluir.CodParametro = par.CodParametro;
+                }
+                parIncluir.DescricaoParametro = par.DescricaoParametro;
+                parIncluir.ValorParametro = par.ValorParametro;
+
+                _contexto.ParametrosSistema.Add(parIncluir);
+
+                await _contexto.SaveChangesAsync();
+
+                return par;
+            }
+
+            return null;
+        }
+
+        #endregion
+
         #region Impressoras de produção
 
         public async Task<List<ImpressoraProducaoViewModel>> GetImpressorasProducao()

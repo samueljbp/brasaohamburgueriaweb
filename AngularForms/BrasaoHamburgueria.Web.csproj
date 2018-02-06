@@ -165,6 +165,7 @@
     <Content Include="app\CadastroItemCardapioForm\citemController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
+    <Content Include="app\CadastroParametroSistema\cpsController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
     <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
@@ -1493,6 +1494,7 @@
     <Content Include="Views\ProgramaFidelidade\Extrato.cshtml" />
     <Content Include="Scripts\smart-table.min.js.map" />
     <Content Include="Views\Cadastros\ImpressoraProducao.cshtml" />
+    <Content Include="Views\Cadastros\ParametroSistema.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
