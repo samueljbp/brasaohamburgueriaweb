@@ -91,8 +91,6 @@
         $scope.itemsByPage = 10;
 
         $scope.impressorasProducao = [];
-
-        $scope.promiseGetClasses();
     }
 
     $scope.selecionaImpressora = function () {

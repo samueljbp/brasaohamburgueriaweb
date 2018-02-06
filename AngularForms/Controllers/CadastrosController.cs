@@ -23,10 +23,116 @@ namespace BrasaoHamburgueria.Web.Controllers
         {
             return View();
         }
+
+        public async Task<JsonResult> GetItensCardapio()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var classes = await _rep.GetItensCardapio();
+
+                result.data = classes;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiItemCardapio(ItemCardapioViewModel item)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiItemCardapio(item);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarItemCardapio(ItemCardapioViewModel item, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var observacao = await _rep.GravarItemCardapio(item, modoCadastro);
+                result.Succeeded = true;
+                result.data = item;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadImagemItemCardapio(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                result.data = _rep.GravarImagemItemCardapio(file, Convert.ToInt32(nvc["codItemCardapio"].ToString()), Server.MapPath("~"));
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagemItemCardapio(ItemCardapioViewModel item)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverImagemItemCardapio(item, Server.MapPath("~").ToString());
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
         #endregion
 
         #region Impressoras de produção
-        
+
         public async Task<JsonResult> GetImpressorasProducao()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

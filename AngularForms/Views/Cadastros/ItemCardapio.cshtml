@@ -64,12 +64,15 @@
     }
 </style>
 <script src="~/app/CadastroItemCardapioForm/citemController.js"></script>
-<div ng-controller="cicController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro" nv-file-drop="" uploader="uploader">
+<div ng-controller="citemController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro" nv-file-drop="" uploader="uploader">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetItens,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetImpressorasProducao,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseExcluirClasse,backdrop:false,delay:10,minDuration:1000}"></div>
-    <form role="form" id="formClasse" class="form-horizontal" ng-submit="submitForm()">
+    <div cg-busy="{promise:promiseRemoverImagem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGravarItem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirItem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formItemCardapio" class="form-horizontal" ng-submit="submitForm()">
         <h3>Item de cardápio - Cadastro</h3>
         <hr />
         <div ng-if="rowCollection.length <= 0">
@@ -79,47 +82,56 @@
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
                 <thead>
                     <tr>
-                        <th st-sort="codClasse" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="codItemCardapio" width="10%"><a href="#">Código</a></th>
                         <th st-sort="imagem" width="15%"><a href="#">Imagem</a></th>
-                        <th st-sort="descricaoClasse" width="20%"><a href="#">Nome</a></th>
-                        <th st-sort="descricaoImpressoraPadrao" width="15%"><a href="#">Preço</a></th>
-                        <th st-sort="ordemExibicao" width="10%"><a href="#">Ordem exibição</a></th>
-                        <th st-sort="sincronizar" width="10%"><a href="#">Sincronizar</a></th>
-                        <th st-sort="ativo" width="10%"><a href="#">Ativo</a></th>
+                        <th st-sort="nome" width="20%"><a href="#">Nome</a></th>
+                        <th st-sort="descricaoClasse" width="20%"><a href="#">Classe</a></th>
+                        <th st-sort="preco" width="10%"><a href="#">Preço</a></th>
+                        <th st-sort="ordemExibicao" width="5%"><a href="#">Ordem exibição</a></th>
+                        <th st-sort="sincronizar" width="5%"><a href="#">Sincronizar</a></th>
+                        <th st-sort="ativo" width="5%"><a href="#">Ativo</a></th>
                         <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
                     </tr>
                     <tr>
                         <th>
-                            <input st-search="codClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="codItemCardapio" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th></th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="descricaoClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
-                        <th colspan="6">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="2">
 
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="classe in displayedCollection">
-                        <td>{{classe.codClasse}}</td>
-                        <td>{{classe.descricaoClasse}}</td>
-                        <td>{{classe.descricaoImpressoraPadrao}}</td>
+                    <tr ng-repeat="item in displayedCollection">
+                        <td>{{item.codItemCardapio}}</td>
                         <td>
-                            @*{{classe.imagem}}*@
-                            <img src="../{{classe.imagemMini}}" alt="{{classe.imagemMini}}" ng-show="classe.imagem != null" style="max-width: 50%; height: auto;" class="img-thumbnail" />
-                            @*<input type="hidden" value="~/Content/img/itens_cardapio/@item.Complemento.Imagem" />*@
+                            <img src="../{{item.complemento.imagemMini}}" alt="{{item.complemento.imagemMini}}" ng-show="item.complemento && item.complemento.imagem != null" style="max-width: 50%; height: auto;" class="img-thumbnail" />
                         </td>
-                        <td>{{classe.ordemExibicao}}</td>
-                        <td>{{classe.sincronizar ? 'Sim' : 'Não'}}</td>
+                        <td>{{item.nome}}</td>
+                        <td>{{item.descricaoClasse}}</td>
+                        <td>{{item.preco | currency: "R$ "}}</td>
+                        <td>{{item.complemento.ordemExibicao}}</td>
+                        <td>{{item.sincronizar ? 'Sim' : 'Não'}}</td>
+                        <td>{{item.ativo ? 'Sim' : 'Não'}}</td>
                         <td>
-                            <button type="button" ng-click="confirmaExclusaoClasse(classe)" class="btn btn-sm btn-danger">
+                            <button type="button" ng-click="confirmaExclusaoItem(item)" class="btn btn-sm btn-danger">
                                 <i class="glyphicon glyphicon-remove">
                                 </i>
                             </button>
                         </td>
                         <td>
-                            <button type="button" ng-click="modalAlteracao(classe)" class="btn btn-sm btn-warning">
+                            <button type="button" ng-click="modalAlteracao(item)" class="btn btn-sm btn-warning">
                                 <i class="glyphicon glyphicon-edit">
                                 </i>
                             </button>
@@ -128,7 +140,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="8" class="text-right">
+                        <td colspan="10" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">
@@ -138,7 +150,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="8" class="text-center">
+                        <td colspan="10" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage"></div>
                         </td>
                     </tr>
@@ -146,46 +158,27 @@
             </table>
         </div>
     </form>
-    <form role="form" id="formGravarClasse" class="form-horizontal">
-        <div class="modal fade" id="modalGravarClasse" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarClasse" style="overflow: scroll;">
+    <form role="form" id="formGravarItem" class="form-horizontal">
+        <div class="modal fade" id="modalGravarItem" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarItem" style="overflow: scroll;">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="labelModalGravarClasse">Classe de item de cardápio - Manutenção</h4>
+                        <h4 class="modal-title" id="labelModalGravarItem">Item de cardápio - Manutenção</h4>
                     </div>
                     <div class="modal-body">
-                        <div cg-busy="{promise:promiseGravarClasse,backdrop:false,delay:10,minDuration:1000}"></div>
+                        <div cg-busy="{promise:promiseGravarItem,backdrop:false,delay:10,minDuration:1000}"></div>
                         @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
                         <div class="form-group">
-                            <label for="codClasse" class="col-sm-2 control-label">Código</label>
+                            <label for="codItemCardapio" class="col-sm-2 control-label">Código</label>
                             <div class="col-sm-2">
-                                <input type="text" id="codClasse" ng-disabled="modoCadastro == 'A'" name="codClasse" class="form-control" ng-model="classeSelecionada.codClasse" maxlength="5" />
+                                <input type="text" id="codItemCardapio" ng-disabled="modoCadastro == 'A'" name="codItemCardapio" class="form-control" ng-model="itemSelecionado.codItemCardapio" maxlength="5" />
                                 <div class="help-block with-errors"></div>
                             </div>
                             <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
                         </div>
 
-                        <div class="form-group">
-                            <label for="numero" class="col-sm-2 control-label">Descrição</label>
-                            <div class="col-sm-10">
-                                <input type="text" required id="numero" name="numero" class="form-control" ng-model="classeSelecionada.descricaoClasse" maxlength="200" />
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="numero" class="col-sm-2 control-label">Impressora padrão</label>
-                            <div class="col-sm-6">
-                                <select name="codImpressoraPadrao" id="codImpressoraPadrao" class="form-control" ng-model="classeSelecionada.codImpressoraPadrao" ng-change="selecionaImpressora()">
-                                    <option value="">(Selecione)</option>
-                                    <option ng-repeat="imp in impressorasProducao" ng-selected="classeSelecionada.codImpressoraPadrao == imp.codImpressora" value="{{imp.codImpressora}}">{{imp.descricao}}</option>
-                                </select>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" ng-show="classeSelecionada.codClasse > 0">
+                        <div class="form-group" ng-show="itemSelecionado.codItemCardapio > 0">
                             <label for="numero" class="col-sm-2 control-label">Imagem</label>
                             <div class="col-sm-3">
                                 <div ng-show="uploader.isHTML5">
@@ -198,8 +191,8 @@
                             <div class="col-sm-7">
                                 <div class="table-responsive">
 
-                                    <div class="containerAAA" ng-show="classeSelecionada.imagem != null && uploader.queue.length == 0">
-                                        <img src="../{{classeSelecionada.imagemMini}}" alt="{{classeSelecionada.imagemMini}}" class="img-thumbnail" />
+                                    <div class="containerAAA" ng-show="itemSelecionado.complemento.imagem != null && uploader.queue.length == 0">
+                                        <img src="../{{itemSelecionado.complemento.imagemMini}}" alt="{{itemSelecionado.complemento.imagemMini}}" class="img-thumbnail" />
                                         <div class="overlayAAA"></div>
                                         <div class="buttonAAA">
                                             <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagem()">
@@ -253,9 +246,56 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="numero" class="col-sm-2 control-label">Ordem exibição</label>
+                            <label for="nome" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-8">
+                                <input type="text" required id="numero" name="nome" class="form-control" ng-model="itemSelecionado.nome" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoLonga" class="col-sm-2 control-label">Descrição detalhada</label>
+                            <div class="col-sm-8">
+                                <textarea rows="4" cols="50" required id="descricaoLonga" name="descricaoLonga" class="form-control" ng-model="itemSelecionado.complemento.descricaoLonga" maxlength="400"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codClasse" class="col-sm-2 control-label">Classe</label>
                             <div class="col-sm-6">
-                                <input type="number" step="1" id="ordemExibicao" name="ordemExibicao" class="form-control" ng-model="classeSelecionada.ordemExibicao" maxlength="3" />
+                                <select name="codClasse" id="codClasse" required class="form-control" ng-model="itemSelecionado.codClasse" ng-change="selecionaClasse()">
+                                    <option value="">(Selecione)</option>
+                                    <option ng-repeat="classe in classes" ng-selected="itemSelecionado.codClasse == classe.codClasse" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codImpressoraProducao" class="col-sm-2 control-label">Impressora produção</label>
+                            <div class="col-sm-6">
+                                <select name="codImpressoraProducao" id="codImpressoraProducao" class="form-control" ng-model="itemSelecionado.codImpressoraProducao" ng-change="selecionaImpressora()">
+                                    <option value="">(Selecione)</option>
+                                    <option ng-repeat="imp in impressorasProducao" ng-selected="itemSelecionado.codImpressoraProducao == imp.codImpressora" value="{{imp.codImpressora}}">{{imp.descricao}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preco" class="col-sm-2 control-label">Preço</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="preco" autocomplete="off" id="preco" format="number" class="form-control hidden-sm hidden-xs" ng-model="itemSelecionado.preco" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="itemSelecionado.preco" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numero" class="col-sm-2 control-label">Ordem exibição</label>
+                            <div class="col-sm-3">
+                                <input type="number" step="1" id="ordemExibicao" name="ordemExibicao" class="form-control" ng-model="itemSelecionado.complemento.ordemExibicao" maxlength="3" />
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -264,7 +304,17 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-2">
                                 <div class="checkbox">
-                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="classeSelecionada.sincronizar" />Sincronizar</label>
+                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="itemSelecionado.sincronizar" />Sincronizar</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div id="divCheckAtivo" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="itemSelecionado.ativo" />Ativo</label>
                                 </div>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -273,7 +323,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" ng-click="gravarClasse()">Salvar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarItem()">Salvar</button>
                     </div>
                 </div>
             </div>

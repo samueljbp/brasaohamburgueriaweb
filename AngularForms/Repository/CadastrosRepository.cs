@@ -203,6 +203,271 @@ namespace BrasaoHamburgueria.Web.Repository
         #endregion
 
         #region Cadastros de classes de item de cardápio
+        public async Task<List<ItemCardapioViewModel>> GetItensCardapio()
+        {
+            var lista = (
+                from itens in _contexto.ItensCardapio
+                from classes in _contexto.Classes.Where(c => c.CodClasse == itens.CodClasse)
+                from complementos in _contexto.ComplementosItens
+                    .Where(c => c.CodItemCardapio == itens.CodItemCardapio).DefaultIfEmpty()
+                from imps in _contexto.ImpressorasItens
+                    .Where(i => i.CodItemCardapio == itens.CodItemCardapio).Take(1).DefaultIfEmpty()
+                select new ItemCardapioViewModel
+                {
+                    CodItemCardapio = itens.CodItemCardapio,
+                    CodClasse = itens.CodClasse,
+                    DescricaoClasse = classes.DescricaoClasse,
+                    CodImpressoraProducao = imps.CodImpressora,
+                    Complemento = new ComplementoItemCardapioViewModel
+                    {
+                        DescricaoLonga = complementos.DescricaoLonga,
+                        Imagem = complementos.Imagem,
+                        OrdemExibicao = complementos.OrdemExibicao
+                    },
+                    Nome = itens.Nome,
+                    Preco = itens.Preco,
+                    Sincronizar = itens.Sincronizar,
+                    Ativo = itens.Ativo
+                }
+                ).ToList();
+
+            foreach (var item in lista)
+            {
+                if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                {
+                    item.Complemento.ImagemMini = item.Complemento.Imagem.Replace("img_item", "mini-img_item");
+                }
+            }
+
+            return lista;
+        }
+
+        public async Task<string> ExcluiItemCardapio(ItemCardapioViewModel item)
+        {
+            if (_contexto.ItensPedidos.Where(i => i.CodItemCardapio == item.CodItemCardapio).Count() > 0)
+            {
+                return "Exclusão não permitida. Este item está associado a pedidos realizados.";
+            }
+
+            var itemExcluir = await _contexto.ItensCardapio.FindAsync(item.CodItemCardapio);
+
+            if (itemExcluir != null)
+            {
+                var complementoExcluir = await _contexto.ComplementosItens.FindAsync(item.CodItemCardapio);
+
+                if (complementoExcluir != null)
+                {
+                    _contexto.ComplementosItens.Remove(complementoExcluir);
+                }
+
+                var impressorasExcluir = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
+                if (impressorasExcluir != null)
+                {
+                    foreach (var imp in impressorasExcluir)
+                    {
+                        _contexto.ImpressorasItens.Remove(imp);
+                    }
+                }
+
+                _contexto.ItensCardapio.Remove(itemExcluir);
+                await _contexto.SaveChangesAsync();
+            }
+            else
+            {
+                return "Registro não encontrado na base de dados.";
+            }
+
+            return "";
+        }
+
+        public async Task<ItemCardapioViewModel> GravarItemCardapio(ItemCardapioViewModel item, String modoCadastro)
+        {
+            if (modoCadastro == "A") //alteração
+            {
+                var itemAlterar = _contexto.ItensCardapio.Find(item.CodItemCardapio);
+
+                if (itemAlterar != null)
+                {
+                    if (item.Preco <= 0)
+                    {
+                        throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
+                    }
+
+                    itemAlterar.Nome = item.Nome;
+                    itemAlterar.Preco = item.Preco;
+                    itemAlterar.Sincronizar = item.Sincronizar;
+                    itemAlterar.Ativo = item.Ativo;
+                    itemAlterar.CodClasse = item.CodClasse;
+
+                    var complementoAlterar = _contexto.ComplementosItens.Find(item.CodItemCardapio);
+
+                    if (complementoAlterar != null)
+                    {
+                        complementoAlterar.DescricaoLonga = item.Complemento.DescricaoLonga;
+                        complementoAlterar.Imagem = item.Complemento.Imagem;
+                        if (item.Complemento.OrdemExibicao != null)
+                        {
+                            complementoAlterar.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
+                        }
+                    }
+
+                    var impressorasProducaoItem = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
+                    if (impressorasProducaoItem != null)
+                    {
+                        foreach (var imp in impressorasProducaoItem)
+                        {
+                            _contexto.ImpressorasItens.Remove(imp);
+                        }
+                    }
+
+                    if (item.CodImpressoraProducao != null)
+                    {
+                        var impressoraProducaoItem = new ItemCardapioImpressora();
+                        impressoraProducaoItem.CodItemCardapio = item.CodItemCardapio;
+                        impressoraProducaoItem.CodImpressora = item.CodImpressoraProducao.Value;
+
+                        _contexto.ImpressorasItens.Add(impressoraProducaoItem);
+                    }
+
+                    await _contexto.SaveChangesAsync();
+                }
+
+                return item;
+            }
+            else if (modoCadastro == "I") //inclusão
+            {
+                var itemIncluir = new ItemCardapio();
+                if (item.CodItemCardapio <= 0)
+                {
+                    itemIncluir.CodItemCardapio = 1;
+                    var cod = _contexto.ItensCardapio.Max(o => o.CodItemCardapio);
+                    if (cod != null)
+                    {
+                        itemIncluir.CodItemCardapio = cod + 1;
+                    }
+                    item.CodItemCardapio = itemIncluir.CodItemCardapio;
+                }
+                else
+                {
+                    var valida = _contexto.ItensCardapio.Find(item.CodItemCardapio);
+
+                    if (valida != null)
+                    {
+                        throw new Exception("Já existe um item de cardápio cadastrado com o código " + item.CodItemCardapio);
+                    }
+
+                    itemIncluir.CodItemCardapio = item.CodItemCardapio;
+                }
+
+                if (item.Preco <= 0)
+                {
+                    throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
+                }
+
+                itemIncluir.Nome = item.Nome;
+                itemIncluir.Preco = item.Preco;
+                itemIncluir.Sincronizar = item.Sincronizar;
+                itemIncluir.Ativo = item.Ativo;
+                itemIncluir.CodClasse = item.CodClasse;
+
+                ComplementoItemCardapio complementoIncluir = new ComplementoItemCardapio();
+
+                complementoIncluir.CodItemCardapio = item.CodItemCardapio;
+                complementoIncluir.DescricaoLonga = item.Complemento.DescricaoLonga;
+                complementoIncluir.Imagem = item.Complemento.Imagem;
+                if (item.Complemento.OrdemExibicao != null)
+                {
+                    complementoIncluir.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
+                }
+
+                _contexto.ItensCardapio.Add(itemIncluir);
+                _contexto.ComplementosItens.Add(complementoIncluir);
+
+                if (item.CodImpressoraProducao != null)
+                {
+                    var impressoraProducaoItem = new ItemCardapioImpressora();
+                    impressoraProducaoItem.CodItemCardapio = item.CodItemCardapio;
+                    impressoraProducaoItem.CodImpressora = item.CodImpressoraProducao.Value;
+
+                    _contexto.ImpressorasItens.Add(impressoraProducaoItem);
+                }
+
+                await _contexto.SaveChangesAsync();
+
+                return item;
+            }
+
+            return null;
+        }
+
+        public string GravarImagemItemCardapio(HttpPostedFileBase file, int codItemCardapio, string serverPath)
+        {
+            var extensao = file.FileName.Split('.')[1].ToString();
+            var imgPath = serverPath + @"Content\img\itens_cardapio\" + "img_item" + codItemCardapio.ToString() + "." + extensao;
+            file.SaveAs(imgPath);
+
+            if (file.ContentLength > 500000)
+            {
+                throw new Exception("A imagem deve ter no máximo 500Kb.");
+            }
+
+            var thumbPath = serverPath + @"Content\img\itens_cardapio\" + "mini-img_item" + codItemCardapio.ToString() + "." + extensao;
+
+            //cria miniatura
+
+            Image.GetThumbnailImageAbort myCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
+
+            Image image = Image.FromFile(imgPath);
+
+            int height = 150;
+            int width = Convert.ToInt32(height * (Convert.ToDecimal(image.Width) / Convert.ToDecimal(image.Height)));
+
+            Image thumb = image.GetThumbnailImage(width, height, myCallback, IntPtr.Zero);
+            thumb.Save(thumbPath);
+
+            image.Dispose();
+
+            //grava caminho da imagem no registro da classe
+            var complemento = _contexto.ComplementosItens.Find(codItemCardapio);
+
+            if (complemento != null)
+            {
+                complemento.Imagem = @"Content/img/itens_cardapio/" + "img_item" + codItemCardapio.ToString() + "." + extensao;
+                _contexto.SaveChanges();
+
+                return complemento.Imagem;
+            }
+
+            return "";
+        }
+
+        public void RemoverImagemItemCardapio(ItemCardapioViewModel item, string serverPath)
+        {
+            var complementoDb = _contexto.ComplementosItens.Find(item.CodItemCardapio);
+
+            if (complementoDb == null || String.IsNullOrEmpty(complementoDb.Imagem))
+            {
+                return;
+            }
+
+            var array = complementoDb.Imagem.Split('/');
+            var imagem = serverPath + @"Content\img\itens_cardapio\" + array[array.Length - 1];
+
+            System.IO.File.Delete(imagem);
+
+            array = item.Complemento.ImagemMini.Split('/');
+            imagem = serverPath + @"Content\img\classes_cardapio\" + array[array.Length - 1];
+
+            System.IO.File.Delete(imagem);
+
+            complementoDb.Imagem = null;
+            _contexto.SaveChanges();
+
+        }
+
+        #endregion
+
+        #region Cadastros de classes de item de cardápio
         public async Task<List<ClasseItemCardapioViewModel>> GetClassesItemCardapio()
         {
             var lista = _contexto.Classes
@@ -218,7 +483,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     DescricaoImpressoraPadrao = _contexto.ImpressorasProducao.Where(i => i.CodImpressora == o.CodImpressoraPadrao).FirstOrDefault().Descricao
                 }).ToList();
 
-            foreach(var classe in lista)
+            foreach (var classe in lista)
             {
                 if (!String.IsNullOrEmpty(classe.Imagem))
                 {
@@ -253,7 +518,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 classeDb.Imagem = null;
                 _contexto.SaveChanges();
-                
+
             }
         }
 

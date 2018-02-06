@@ -38,10 +38,13 @@ namespace BrasaoHamburgueria.Model
     {
         public int CodItemCardapio { get; set; }
         public int CodClasse { get; set; }
+        public string DescricaoClasse { get; set; }
         public string Nome { get; set; }
         public double Preco { get; set; }
         public bool Ativo { get; set; }
         public bool Sincronizar { get; set; }
+        public int? CodImpressoraProducao { get; set; }
+        public string DescricaoImpressoraProducao { get; set; }
         public ComplementoItemCardapioViewModel Complemento { get; set; }
         public List<ObservacaoProducaoViewModel> ObservacoesPermitidas { get; set; }
         public List<OpcaoExtraViewModel> ExtrasPermitidos { get; set; }
@@ -64,6 +67,8 @@ namespace BrasaoHamburgueria.Model
     {
         public string DescricaoLonga { get; set; }
         public string Imagem { get; set; }
+        public string ImagemMini { get; set; }
+        public int? OrdemExibicao { get; set; }
     }
 
     [Table("CLASSE_ITEM_CARDAPIO")]
