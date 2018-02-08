@@ -27,6 +27,7 @@
     <link href="~/Content/angular-busy.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-social.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/bower_components/angular-auto-complete/angular-auto-complete.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.2.1.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
@@ -39,10 +40,13 @@
     <script src="~/Scripts/ngBootbox.js"></script>
     <script src="~/Scripts/angular-animate.min.js"></script>
     <script src="~/Scripts/angular-busy.min.js"></script>
-    <script src="~/bower_components/angular-timer/dist/assets/js/angular-timer-all.min.js"></script>
+    <script src="~/bower_components/angular-timer/dist/angular-timer.min.js"></script>
     <script src="~/Scripts/smart-table.min.js"></script>
     <script src="~/app/util.js"></script>
     <script src="~/Scripts/angular-file-upload.min.js"></script>
+    <script src="~/bower_components/underscore/underscore-min.js"></script>
+    <script src="~/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="~/bower_components/angular-auto-complete/angular-auto-complete.js"></script>
     <script src="~/app/brasaoWebApp.js"></script>
     <script src="~/app/NavbarForm/nbController.js"></script>
     @if (Request.IsAuthenticated)
@@ -128,6 +132,8 @@
                                         <li>@Html.ActionLink("Opções extras", "OpcaoExtra", "Cadastros")</li>
                                         <li role="separator" class="divider"></li>
                                         <li>@Html.ActionLink("Parâmetros de sistema", "ParametroSistema", "Cadastros")</li>
+                                        <li role="separator" class="divider"></li>
+                                        <li>@Html.ActionLink("Perfil de usuário", "PerfilUsuario", "Conta")</li>
                                     </ul>
                                 </li>
                             }

@@ -1,0 +1,39 @@
+{
+  "name": "angular-auto-complete",
+  "version": "1.6.1",
+  "description": "AngularJS auto-complete plugin",
+  "main": "angular-auto-complete.js",
+  "homepage": "http://www.vickram.me/angular-auto-complete",
+  "authors": [
+    "Vickram Ravichandran (http://www.vickram.me)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "angularJS",
+    "auto complete",
+    "auto suggest",
+    "directive",
+    "plugin",
+    "dropdown"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "angular": "^1.5.3",
+    "angular-sanitize": "^1.6.2"
+  },
+  "_release": "1.6.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.6.1",
+    "commit": "5c681551a5468bcb0e7aa6e05062b294a61888f1"
+  },
+  "_source": "https://github.com/vickramravichandran/angular-auto-complete.git",
+  "_target": "v1.6.1",
+  "_originalSource": "angular-auto-complete",
+  "_direct": true
+}

@@ -1,0 +1,120 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+
+    div.auto-complete-container {
+        border: 1px solid lightsteelblue;
+        background-color: #F0F0D8;
+        white-space: nowrap;
+    }
+
+        div.auto-complete-container ul.auto-complete-results li.auto-complete-item {
+            list-style-type: none;
+            padding: 8px 5px;
+            background-color: #D8C078;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            div.auto-complete-container ul.auto-complete-results li.auto-complete-item:hover {
+                background-color: #F0D8A8;
+                color: #000000;
+            }
+
+        div.auto-complete-container ul.auto-complete-results li.auto-complete-item-selected {
+            background-color: #F0D8A8;
+            color: #000000;
+        }
+</style>
+<script src="~/app/PerfilUsuarioForm/puController.js"></script>
+<div ng-controller="puController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetRoles,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseIncluirPerfil,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirPerfil,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPerfil" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Perfil de usuário - Manutenção</h3>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="usuario" class="col-sm-2 control-label">Usuário</label>
+            <div class="col-sm-10">
+                <div>
+                    <input type="text"
+                           required
+                           ng-model="usuario.nome"
+                           class="form-control"
+                           placeholder="Digite parte do nome"
+                           auto-complete="autoCompleteOptions" />
+                </div>
+                <div id="dropdownParent"
+                     class="inline-auto-complete-container">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="roleid" class="col-sm-2 control-label">Perfil</label>
+            <div class="col-sm-6">
+                <select name="roleid" required id="roleid" class="form-control" ng-model="usuario.roleid" ng-change="selecionaPerfil()">
+                    <option value="">(Selecione)</option>
+                    <option ng-repeat="role in roles" ng-selected="usuario.roleid == role.id" value="{{role.id}}">{{role.name}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 text-left">
+                <button type="button" class="btn btn-success" ng-click="incluirPerfil()">Incluir</button>
+            </div>
+        </div>
+
+
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+                <thead>
+                    <tr>
+                        <th st-sort="id" width="10%"><a href="#">Id</a></th>
+                        <th st-sort="nome" width="80%"><a href="#">Descrição</a></th>
+                        <th st-sort="" width="10%"></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="perfil in displayedCollection">
+                        <td>{{perfil.id}}</td>
+                        <td>{{perfil.nome}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoPerfil(perfil)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </form>
+</div>

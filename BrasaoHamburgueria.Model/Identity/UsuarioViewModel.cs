@@ -44,6 +44,20 @@ namespace BrasaoHamburgueria.Model
         }
     }
 
+    public class PerfilViewModel
+    {
+        public string id { get; set; }
+        public string nome { get; set; }
+    }
+
+    public class UsuarioPerfisViewModel
+    {
+        public string Id { get; set; }
+        public String Email { get; set; }
+        public String Nome { get; set; }
+        public List<PerfilViewModel> Perfis { get; set; }
+    }
+
     public class UsuarioViewModel
     {
         public int Id { get; set; }

@@ -461,6 +461,129 @@ namespace BrasaoHamburgueria.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        public ActionResult PerfilUsuario()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        public async Task<JsonNetResult> GetUsuarioByNome(string nome)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                ApplicationDbContext contexto = new ApplicationDbContext();
+
+                var users = (from u in contexto.Users
+                             where u.DadosUsuario.Nome.Contains(nome)
+                             select new UsuarioPerfisViewModel { Id = u.Id, Nome = u.DadosUsuario.Nome, Email = u.DadosUsuario.Email, Perfis = u.Roles.Select(p => new PerfilViewModel { id = p.RoleId }).ToList() }).Take(10).ToList();
+
+                result.data = users;
+            }
+            catch(Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        public async Task<JsonNetResult> GetRoles()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            ApplicationDbContext contexto = new ApplicationDbContext();
+            result.data = contexto.Roles.OrderBy(r => r.Name).ToList();
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> IncluirPerfilUsuario(string idPerfil, string idUsuario)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                ApplicationDbContext contexto = new ApplicationDbContext();
+
+                var user = contexto.Users.Find(idUsuario);
+
+                if (user != null)
+                {
+                    if (user.Roles.Where(r => r.RoleId == idPerfil).Count() > 0)
+                    {
+                        result.Succeeded = false;
+                        result.Errors.Add("O usuário já possui este perfil em seu cadastro.");
+                    }
+                    else
+                    {
+                        IdentityUserRole role = new IdentityUserRole();
+                        role.RoleId = idPerfil;
+                        role.UserId = idUsuario;
+                        user.Roles.Add(role);
+
+                        result.data = user.Roles.ToList().Select(r => new PerfilViewModel { id = r.RoleId });
+
+                        contexto.SaveChanges();
+                    }
+                }
+                else
+                {
+                    result.Succeeded = false;
+                    result.Errors.Add("Usuário não encontrado.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluirPerfilUsuario(string idPerfil, string idUsuario)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                ApplicationDbContext contexto = new ApplicationDbContext();
+
+                var user = contexto.Users.Find(idUsuario);
+
+                var role = user.Roles.Where(r => r.RoleId == idPerfil).FirstOrDefault();
+
+                if (role != null)
+                {
+                    user.Roles.Remove(role);
+                    contexto.SaveChanges();
+
+                    var retorno = new List<PerfilViewModel>();
+
+                    result.data = user.Roles.ToList().Select(r => new PerfilViewModel { id = r.RoleId });
+                }
+            }
+            catch(Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
         #region Helpers
 
         private const string XsrfKey = "XsrfId";
