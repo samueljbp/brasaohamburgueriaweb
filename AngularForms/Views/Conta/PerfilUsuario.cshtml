@@ -11,30 +11,6 @@
     body {
         overflow-y: scroll;
     }
-
-    div.auto-complete-container {
-        border: 1px solid lightsteelblue;
-        background-color: #F0F0D8;
-        white-space: nowrap;
-    }
-
-        div.auto-complete-container ul.auto-complete-results li.auto-complete-item {
-            list-style-type: none;
-            padding: 8px 5px;
-            background-color: #D8C078;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-            div.auto-complete-container ul.auto-complete-results li.auto-complete-item:hover {
-                background-color: #F0D8A8;
-                color: #000000;
-            }
-
-        div.auto-complete-container ul.auto-complete-results li.auto-complete-item-selected {
-            background-color: #F0D8A8;
-            color: #000000;
-        }
 </style>
 <script src="~/app/PerfilUsuarioForm/puController.js"></script>
 <div ng-controller="puController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">

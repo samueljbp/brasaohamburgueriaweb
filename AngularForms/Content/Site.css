@@ -20,6 +20,35 @@
 
 
 
+
+div.auto-complete-container {
+    border: 1px solid lightsteelblue;
+    background-color: #F0F0D8;
+    white-space: nowrap;
+}
+
+    div.auto-complete-container ul.auto-complete-results li.auto-complete-item {
+        list-style-type: none;
+        padding: 8px 5px;
+        background-color: #D8C078;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        div.auto-complete-container ul.auto-complete-results li.auto-complete-item:hover {
+            background-color: #F0D8A8;
+            color: #000000;
+        }
+
+    div.auto-complete-container ul.auto-complete-results li.auto-complete-item-selected {
+        background-color: #F0D8A8;
+        color: #000000;
+    }
+
+
+
+
+
 .st-sort-ascent:before {
     content: '\25B2';
 }
@@ -66,6 +95,19 @@ body {
 .casaFechada {
     font-weight: bold;
     background: #D89000;
+}
+
+
+
+
+.panel-info > .panel-heading {
+    color: #807718;
+    background-color: #F0D8A8;
+    border-color: #807718;
+}
+
+.panel-info {
+    border-color: #807718;
 }
 
 
@@ -431,3 +473,50 @@ a, a:hover {
 .linkRodape {
     color: white;
 }
+
+
+
+
+
+
+
+
+
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop into it once it's empty
+ */
+.multiDemo ul[dnd-list] {
+    min-height: 42px;
+    padding-left: 0px;
+}
+
+    /**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+    .multiDemo ul[dnd-list] .dndPlaceholder {
+        background-color: #ddd;
+        display: block;
+        min-height: 42px;
+    }
+
+    .multiDemo ul[dnd-list] li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        display: block;
+        margin-bottom: -1px;
+        padding: 10px 15px;
+    }
+
+        /**
+ * Show selected elements in green
+ */
+        .multiDemo ul[dnd-list] li.selected {
+            background-color: #807718;
+            color: white;
+        }

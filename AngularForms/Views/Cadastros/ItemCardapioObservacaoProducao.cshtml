@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/CadastroObservacoesItemForm/coiController.js"></script>
+<div ng-controller="coiController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetObservacoesProducao,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseSalvarObservacoes,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPerfil" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Associação de observações a itens de cardápio</h3>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="item" class="col-sm-2 control-label">Item de cardápio</label>
+            <div class="col-sm-10">
+                <div>
+                    <input type="text"
+                           required
+                           ng-model="associacao.nome"
+                           class="form-control"
+                           placeholder="Digite parte do nome"
+                           auto-complete="autoCompleteOptions" />
+                </div>
+                <div id="dropdownParent"
+                     class="inline-auto-complete-container">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div ng-show="associacao.codItemCardapio > 0">
+            <div class="multiDemo row" >
+                <div ng-repeat="list in models" class="col-sm-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{list.listName}}</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <ul dnd-list dnd-drop="onDrop(list, item, index)">
+                                <li ng-repeat="item in list.items"
+                                    dnd-draggable="getSelectedItemsIncluding(list, item)"
+                                    dnd-dragstart="onDragstart(list, event)"
+                                    dnd-moved="onMoved(list)"
+                                    dnd-dragend="list.dragging = false"
+                                    dnd-selected="item.selected = !item.selected"
+                                    ng-class="{'selected': item.selected}"
+                                    ng-hide="list.dragging && item.selected">
+                                    {{item.descricaoObservacao}}
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                    <button type="button" class="btn btn-success" ng-click="salvarObservacoes()">Salvar</button>
+                </div>
+            </div>
+        </div>
+        
+
+    </form>
+</div>

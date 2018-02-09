@@ -18,10 +18,40 @@ namespace BrasaoHamburgueria.Web.Controllers
     {
         private CadastrosRepository _rep = new CadastrosRepository();
 
+        #region Associação de observações a itens de cardápio
+
+        public ActionResult ItemCardapioObservacaoProducao()
+        {
+            return View();
+        }
+
+        #endregion
+
         #region Item cardápio
         public ActionResult ItemCardapio()
         {
             return View();
+        }
+
+        public async Task<JsonResult> GetItensCardapioByNome(string chave)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var itens = await _rep.GetItensCardapioByNome(chave);
+
+                result.data = itens;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
         }
 
         public async Task<JsonResult> GetItensCardapio()
@@ -30,9 +60,9 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var classes = await _rep.GetItensCardapio();
+                var itens = await _rep.GetItensCardapio();
 
-                result.data = classes;
+                result.data = itens;
 
                 result.Succeeded = true;
             }
@@ -494,6 +524,27 @@ namespace BrasaoHamburgueria.Web.Controllers
                 var observacao = await _rep.GravarObservacao(obs, modoCadastro);
                 result.Succeeded = true;
                 result.data = observacao;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                await _rep.GravarObservacoesItens(obs, codItemCardapio);
+                result.Succeeded = true;
             }
             catch (Exception ex)
             {

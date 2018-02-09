@@ -6,12 +6,17 @@ using BrasaoHamburgueria.Web.Context;
 using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Data.Entity;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
     public class CadastrosRepository
     {
         private BrasaoContext _contexto = new BrasaoContext();
+
+        #region Associação de observações a itens de cardápio
+
+        #endregion
 
         #region Cadastros de opções extra
         public async Task<List<OpcaoExtraViewModel>> GetOpcoesExtra()
@@ -156,6 +161,21 @@ namespace BrasaoHamburgueria.Web.Repository
             }
 
             return null;
+        }
+
+        public async Task GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio)
+        {
+            try
+            {
+                _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Where(o => o.CodItemCardapio == codItemCardapio));
+                _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = codItemCardapio, CodObservacao = o.CodObservacao }));
+                await _contexto.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
+            }
+            
         }
 
         public async Task<string> ExcluiObservacao(ObservacaoProducaoViewModel obs)
@@ -352,6 +372,21 @@ namespace BrasaoHamburgueria.Web.Repository
         #endregion
 
         #region Cadastros de item de cardápio
+        public async Task<List<DadosItemCardapioViewModel>> GetItensCardapioByNome(string chave)
+        {
+            return _contexto.ItensCardapio
+                .Where(i => i.Nome.Contains(chave))
+                .Include(i => i.ObservacoesPermitidas)
+                .Include(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao))
+                .OrderBy(i => i.Nome).Take(10)
+                .Select(i => new DadosItemCardapioViewModel
+                {
+                    CodItemCardapio = i.CodItemCardapio,
+                    Nome = i.Nome,
+                    Observacoes = i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList(),
+                }).ToList();
+        }
+
         public async Task<List<ItemCardapioViewModel>> GetItensCardapio()
         {
             var lista = (

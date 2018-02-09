@@ -47,6 +47,7 @@
     <script src="~/bower_components/underscore/underscore-min.js"></script>
     <script src="~/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="~/bower_components/angular-auto-complete/angular-auto-complete.js"></script>
+    <script src="~/bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
     <script src="~/app/brasaoWebApp.js"></script>
     <script src="~/app/NavbarForm/nbController.js"></script>
     @if (Request.IsAuthenticated)
@@ -124,12 +125,13 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Classes de cardápio", "ClasseItemCardapio", "Cadastros")</li>
-                                        <li>@Html.ActionLink("Itens de cardápio", "ItemCardapio", "Cadastros")</li>
-                                        <li role="separator" class="divider"></li>
                                         <li>@Html.ActionLink("Impressoras de produção", "ImpressoraProducao", "Cadastros")</li>
                                         <li>@Html.ActionLink("Observações de produção", "ObservacaoProducao", "Cadastros")</li>
                                         <li>@Html.ActionLink("Opções extras", "OpcaoExtra", "Cadastros")</li>
+                                        <li role="separator" class="divider"></li>
+                                        <li>@Html.ActionLink("Classes de cardápio", "ClasseItemCardapio", "Cadastros")</li>
+                                        <li>@Html.ActionLink("Itens de cardápio", "ItemCardapio", "Cadastros")</li>
+                                        <li>@Html.ActionLink("Associação observação x item", "ItemCardapioObservacaoProducao", "Cadastros")</li>
                                         <li role="separator" class="divider"></li>
                                         <li>@Html.ActionLink("Parâmetros de sistema", "ParametroSistema", "Cadastros")</li>
                                         <li role="separator" class="divider"></li>

@@ -164,6 +164,7 @@
     <Content Include="app\CadastroImpressoraProducao\cipController.js" />
     <Content Include="app\CadastroItemCardapioForm\citemController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
+    <Content Include="app\CadastroObservacoesItemForm\coiController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
     <Content Include="app\CadastroParametroSistema\cpsController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
@@ -185,6 +186,8 @@
     <Content Include="bower_components\angular-auto-complete\angular-auto-complete.css" />
     <Content Include="bower_components\angular-auto-complete\angular-auto-complete.js" />
     <Content Include="bower_components\angular-auto-complete\gulpfile.js" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\angular-drag-and-drop-lists.js" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\angular-drag-and-drop-lists.min.js" />
     <Content Include="bower_components\angular-sanitize\angular-sanitize.js" />
     <Content Include="bower_components\angular-sanitize\angular-sanitize.min.js" />
     <Content Include="bower_components\angular-sanitize\index.js" />
@@ -334,6 +337,7 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\icons\ic_drag_drop.png" />
     <Content Include="Content\img\background_inicio.jpg" />
     <Content Include="Content\img\background_logado.jpg" />
     <Content Include="Content\img\institucional\ambientes.jpg" />
@@ -1370,6 +1374,11 @@
     <Content Include="bower_components\underscore\LICENSE" />
     <Content Include="bower_components\underscore\README.md" />
     <Content Include="bower_components\underscore\underscore-min.map" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\.bower.json" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\bower.json" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\CHANGELOG.md" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\LICENSE" />
+    <Content Include="bower_components\angular-drag-and-drop-lists\README.md" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
@@ -1521,6 +1530,7 @@
     <Content Include="Views\Cadastros\ImpressoraProducao.cshtml" />
     <Content Include="Views\Cadastros\ParametroSistema.cshtml" />
     <Content Include="Views\Conta\PerfilUsuario.cshtml" />
+    <Content Include="Views\Cadastros\ItemCardapioObservacaoProducao.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
