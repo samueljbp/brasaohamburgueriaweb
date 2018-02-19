@@ -12,6 +12,12 @@ function isMobile() {
 
 }
 
+function removeDuplicates(myArr, prop) {
+    return myArr.filter((obj, pos, arr) => {
+        return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+    });
+}
+
 /* Máscaras ER */
 function mascara(o, f) {
     v_obj = o

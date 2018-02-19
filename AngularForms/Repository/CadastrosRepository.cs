@@ -16,6 +16,64 @@ namespace BrasaoHamburgueria.Web.Repository
 
         #region Associação de observações a itens de cardápio
 
+        public async Task GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio, int codClasse)
+        {
+            try
+            {
+                if (codClasse > 0)
+                {
+                    _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
+                    var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
+                    foreach (var item in itens)
+                    {
+                        _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = item.CodItemCardapio, CodObservacao = o.CodObservacao }));
+                    }
+                }
+
+                if (codItemCardapio > 0)
+                {
+                    _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Where(o => o.CodItemCardapio == codItemCardapio));
+                    _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = codItemCardapio, CodObservacao = o.CodObservacao }));
+                }
+
+                await _contexto.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
+            }
+
+        }
+
+        public async Task GravarOpcoesExtraItens(List<OpcaoExtraViewModel> opcoes, int codItemCardapio, int codClasse)
+        {
+            try
+            {
+                if (codClasse > 0)
+                {
+                    _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
+                    var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
+                    foreach (var item in itens)
+                    {
+                        _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = item.CodItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                    }
+                }
+
+                if (codItemCardapio > 0)
+                {
+                    _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Where(o => o.CodItemCardapio == codItemCardapio));
+                    _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = codItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                }
+
+                await _contexto.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
+            }
+
+        }
+
         #endregion
 
         #region Cadastros de opções extra
@@ -161,21 +219,6 @@ namespace BrasaoHamburgueria.Web.Repository
             }
 
             return null;
-        }
-
-        public async Task GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio)
-        {
-            try
-            {
-                _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Where(o => o.CodItemCardapio == codItemCardapio));
-                _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = codItemCardapio, CodObservacao = o.CodObservacao }));
-                await _contexto.SaveChangesAsync();
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
-            }
-            
         }
 
         public async Task<string> ExcluiObservacao(ObservacaoProducaoViewModel obs)
@@ -378,12 +421,15 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Where(i => i.Nome.Contains(chave))
                 .Include(i => i.ObservacoesPermitidas)
                 .Include(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao))
+                .Include(i => i.ExtrasPermitidos)
+                .Include(i => i.ExtrasPermitidos.Select(o => o.OpcaoExtra))
                 .OrderBy(i => i.Nome).Take(10)
                 .Select(i => new DadosItemCardapioViewModel
                 {
                     CodItemCardapio = i.CodItemCardapio,
                     Nome = i.Nome,
                     Observacoes = i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList(),
+                    Extras = i.ExtrasPermitidos.Select(o => new OpcaoExtraViewModel { CodOpcaoExtra = o.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = o.OpcaoExtra.DescricaoOpcaoExtra, Preco = o.OpcaoExtra.Preco }).ToList()
                 }).ToList();
         }
 
@@ -665,7 +711,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     Imagem = o.Imagem,
                     OrdemExibicao = o.OrdemExibicao,
                     DescricaoImpressoraPadrao = _contexto.ImpressorasProducao.Where(i => i.CodImpressora == o.CodImpressoraPadrao).FirstOrDefault().Descricao
-                }).ToList();
+                }).OrderBy(c => c.DescricaoClasse).ToList();
 
             foreach (var classe in lista)
             {

@@ -161,6 +161,7 @@
   <ItemGroup>
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
+    <Content Include="app\CadastroExtrasItemForm\ceiController.js" />
     <Content Include="app\CadastroImpressoraProducao\cipController.js" />
     <Content Include="app\CadastroItemCardapioForm\citemController.js" />
     <Content Include="app\CadastroObservacaoProducaoForm\copController.js" />
@@ -1531,6 +1532,7 @@
     <Content Include="Views\Cadastros\ParametroSistema.cshtml" />
     <Content Include="Views\Conta\PerfilUsuario.cshtml" />
     <Content Include="Views\Cadastros\ItemCardapioObservacaoProducao.cshtml" />
+    <Content Include="Views\Cadastros\ItemCardapioOpcaoExtra.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

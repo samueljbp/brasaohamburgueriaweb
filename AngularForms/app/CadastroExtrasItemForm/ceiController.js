@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('coiController', function ($scope, $http, $filter, $ngBootbox, $window) {
+﻿brasaoWebApp.controller('ceiController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
         $scope.mensagem = {
@@ -12,18 +12,18 @@
         $scope.antiForgeryToken = antiForgeryToken;
 
         $scope.models = [
-            { listName: "Observações disponíveis", items: [], dragging: false },
-            { listName: "Observações incluídas", items: [], dragging: false }
+            { listName: "Extras disponíveis", items: [], dragging: false },
+            { listName: "Extras incluídos", items: [], dragging: false }
         ];
 
-        $scope.promiseGetObservacoesProducao = $http({
+        $scope.promiseGetOpcoesExtra = $http({
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,
                 'RequestVerificationToken': 'XMLHttpRequest',
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Cadastros/GetObservacoes'
+            url: urlBase + 'Cadastros/GetOpcoesExtra'
         })
             .then(function (response) {
 
@@ -31,7 +31,7 @@
 
                 if (retorno.succeeded) {
 
-                    $scope.observacoesProducao = retorno.data;
+                    $scope.opcoesExtra = retorno.data;
                     $scope.models[0].items = $scope.models[0].items.concat(retorno.data);
                 }
                 else {
@@ -81,7 +81,7 @@
 
 
 
-        
+
 
         /**
          * dnd-dragging determines what data gets serialized and send to the receiver
@@ -118,7 +118,7 @@
             list.items = list.items.slice(0, index)
                 .concat(items)
                 .concat(list.items.slice(index));
-            list.items = removeDuplicates(list.items, 'codObservacao');
+            list.items = removeDuplicates(list.items, 'codOpcaoExtra');
             return true;
         }
 
@@ -198,17 +198,17 @@
             $scope.associacao.codItemCardapio = e.item.codItemCardapio;
             $scope.associacao.nome = e.item.nome;
             $scope.models[1].items = [];
-            $scope.models[1].items = $scope.models[1].items.concat(e.item.observacoes);
+            $scope.models[1].items = $scope.models[1].items.concat(e.item.extras);
 
         }
     };
 
-    $scope.salvarObservacoes = function () {
+    $scope.salvarExtras = function () {
 
-        $scope.promiseSalvarObservacoes = $http({
+        $scope.promiseSalvarExtras = $http({
             method: 'POST',
-            url: urlBase + 'Cadastros/GravarObservacoesItens',
-            data: { obs: $scope.models[1].items, codItemCardapio: $scope.associacao.codItemCardapio, codClasse: $scope.associacao.codClasse },
+            url: urlBase + 'Cadastros/GravarOpcoesItens',
+            data: { opcoes: $scope.models[1].items, codItemCardapio: $scope.associacao.codItemCardapio, codClasse: $scope.associacao.codClasse },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'RequestVerificationToken': $scope.antiForgeryToken

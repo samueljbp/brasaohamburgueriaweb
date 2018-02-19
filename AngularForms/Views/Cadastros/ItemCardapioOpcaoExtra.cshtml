@@ -12,14 +12,14 @@
         overflow-y: scroll;
     }
 </style>
-<script src="~/app/CadastroObservacoesItemForm/coiController.js"></script>
-<div ng-controller="coiController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<script src="~/app/CadastroExtrasItemForm/ceiController.js"></script>
+<div ng-controller="ceiController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
-    <div cg-busy="{promise:promiseGetObservacoesProducao,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetOpcoesExtra,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseSalvarObservacoes,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseSalvarExtras,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPerfil" class="form-horizontal" ng-submit="submitForm()">
-        <h3>Associação de observações a itens de cardápio</h3>
+        <h3>Associação de opções extra a itens de cardápio</h3>
         <hr />
         <div class="row">
             <div class="col-sm-12">
@@ -46,7 +46,7 @@
                     <option value="">(Selecione)</option>
                     <option ng-repeat="classe in classes" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
                 </select>
-                <small>Todos os itens da classe ficarão apenas com as observações selecionadas. Outras observações serão perdidas.</small>
+                <small>Todos os itens da classe ficarão apenas com os extras selecionados. Outras associações serão perdidas.</small>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
@@ -87,7 +87,7 @@
                                     dnd-selected="item.selected = !item.selected"
                                     ng-class="{'selected': item.selected}"
                                     ng-hide="list.dragging && item.selected">
-                                    {{item.descricaoObservacao}}
+                                    {{item.descricaoOpcaoExtra}} - {{item.preco | currency: "R$ "}}
                                 </li>
                             </ul>
 
@@ -98,7 +98,7 @@
 
             <div class="form-group">
                 <div class="col-sm-12 text-center">
-                    <button type="button" class="btn btn-success" ng-click="salvarObservacoes()">Salvar</button>
+                    <button type="button" class="btn btn-success" ng-click="salvarExtras()">Salvar</button>
                 </div>
             </div>
         </div>

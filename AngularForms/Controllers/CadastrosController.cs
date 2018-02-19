@@ -25,6 +25,55 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio, int codClasse)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                await _rep.GravarObservacoesItens(obs, codItemCardapio, codClasse);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
+
+        #region Associação de opções extra a itens de cardápio
+
+        public ActionResult ItemCardapioOpcaoExtra()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarOpcoesItens(List<OpcaoExtraViewModel> opcoes, int codItemCardapio, int codClasse)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                await _rep.GravarOpcoesExtraItens(opcoes, codItemCardapio, codClasse);
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
         #endregion
 
         #region Item cardápio
@@ -535,25 +584,6 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
 
 
-        [HttpPost]
-        [MyValidateAntiForgeryToken]
-        public async Task<JsonResult> GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio)
-        {
-            var result = new ServiceResultViewModel(true, new List<string>(), null);
-
-            try
-            {
-                await _rep.GravarObservacoesItens(obs, codItemCardapio);
-                result.Succeeded = true;
-            }
-            catch (Exception ex)
-            {
-                result.Succeeded = false;
-                result.Errors.Add(ex.Message);
-            }
-
-            return new JsonNetResult { Data = result };
-        }
         #endregion
     }
 }
