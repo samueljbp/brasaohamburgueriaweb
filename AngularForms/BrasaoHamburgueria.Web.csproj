@@ -168,6 +168,7 @@
     <Content Include="app\CadastroObservacoesItemForm\coiController.js" />
     <Content Include="app\CadastroOpcaoExtraForm\coeController.js" />
     <Content Include="app\CadastroParametroSistema\cpsController.js" />
+    <Content Include="app\CadastroProgramaFidelidadeForm\cpfController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
     <Content Include="app\ConsultarPedidos\cpController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
@@ -1533,6 +1534,7 @@
     <Content Include="Views\Conta\PerfilUsuario.cshtml" />
     <Content Include="Views\Cadastros\ItemCardapioObservacaoProducao.cshtml" />
     <Content Include="Views\Cadastros\ItemCardapioOpcaoExtra.cshtml" />
+    <Content Include="Views\ProgramaFidelidade\CadastroProgramaFidelidade.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1580,6 +1582,7 @@
     <Compile Include="Controllers\PedidoController.cs" />
     <Compile Include="Controllers\ProgramaFidelidadeController.cs" />
     <Compile Include="Extentions\AllowCrossSiteJsonAttribute.cs" />
+    <Compile Include="Extentions\GenericExtensions.cs" />
     <Compile Include="Extentions\JsonNetResult.cs" />
     <Compile Include="Filters\MyValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">

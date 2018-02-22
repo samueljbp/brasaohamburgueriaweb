@@ -7,8 +7,13 @@ using System.Globalization;
 
 namespace BrasaoHamburgueria.Model
 {
-    #region "View Model"
+    public enum TipoPontuacaoProgramaFidelidadeEnum
+    {
+        PontuacaoDinheiro = 1
+    }
 
+    #region "View Model"
+    
     public class ProgramaFidelidadeUsuarioViewModel
     {
         public string LoginUsuario { get; set; }

@@ -13,7 +13,7 @@ using BrasaoHamburgueria.Web.Extentions;
 namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
-    [Authorize]
+    [Authorize(Roles = Constantes.ROLE_ADMIN)]
     public class ConsultasController : Controller
     {
         private PedidoRepository _rep = new PedidoRepository();

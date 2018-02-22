@@ -154,6 +154,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public async Task<JsonResult> AplicaDesconto(PedidoViewModel pedido)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

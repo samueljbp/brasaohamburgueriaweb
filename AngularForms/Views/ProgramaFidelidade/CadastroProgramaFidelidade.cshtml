@@ -1,0 +1,256 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+
+    .containerAAA {
+        position: relative;
+        width: 150px;
+        height: 100%;
+    }
+
+    .overlayAAA {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .containerAAA:hover .overlayAAA {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .imgAAA {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        left: 0;
+    }
+
+    .buttonAAA {
+        position: absolute;
+        width: 150px;
+        left: 0;
+        top: 40%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+
+        .buttonAAA a {
+            width: 150px;
+            padding: 12px 48px;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .containerAAA:hover .buttonAAA {
+        opacity: 1;
+    }
+</style>
+<script src="~/app/CadastroProgramaFidelidadeForm/cpfController.js"></script>
+<div ng-controller="cpfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro" nv-file-drop="" uploader="uploader">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetProgramas,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirPrograma,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPrograma" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Programas de fidelidade - Cadastro</h3>
+        <hr />
+        <div ng-if="rowCollection.length <= 0">
+            <small>Nenhum item cadastrado</small>
+        </div>
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+                <thead>
+                    <tr>
+                        <th st-sort="codProgramaFidelidade" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="descricaoProgramaFidelidade" width="30%"><a href="#">Descrição</a></th>
+                        <th st-sort="inicioVigencia" width="20%"><a href="#">Início</a></th>
+                        <th st-sort="terminoVigencia" width="20%"><a href="#">Término</a></th>
+                        <th st-sort="programaAtivo" width="10%"><a href="#">Ativo</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codProgramaFidelidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoProgramaFidelidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="inicioVigencia" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="terminoVigencia" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="programaAtivo" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="prog in displayedCollection">
+                        <td>{{prog.codProgramaFidelidade}}</td>
+                        <td>{{prog.descricaoProgramaFidelidade}}</td>
+                        <td>{{prog.inicioVigencia | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{prog.terminoVigencia | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{prog.programaAtivo ? 'Sim' : 'Não'}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoPrograma(prog)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(prog)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarPrograma" class="form-horizontal">
+        <div class="modal fade" id="modalGravarPrograma" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarPrograma" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarPrograma">Programa de fidelidade - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarPrograma,backdrop:false,delay:10,minDuration:1000}"></div>
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+                        <div class="form-group">
+                            <label for="codProgramaFidelidade" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codProgramaFidelidade" ng-disabled="modoCadastro == 'A'" name="codProgramaFidelidade" class="form-control" ng-model="programaSelecionado.codProgramaFidelidade" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoProgramaFidelidade" class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="descricaoProgramaFidelidade" name="descricaoProgramaFidelidade" class="form-control" ng-model="programaSelecionado.descricaoProgramaFidelidade" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="termosAceite" class="col-sm-2 control-label">Termos de aceite</label>
+                            <div class="col-sm-10">
+                                <textarea rows="4" cols="50" required id="termosAceite" name="termosAceite" class="form-control" ng-model="programaSelecionado.termosAceite" maxlength="4000"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inicioVigencia" class="col-sm-2 control-label">Início vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compInicioVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtInicioVigencia" required ng-model="programaSelecionado.inicioVigencia" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="terminoVigencia" class="col-sm-2 control-label">Término vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compTerminoVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtTerminoVigencia" ng-model="programaSelecionado.terminoVigencia" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="divCheckProgramaAtivo" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="programaSelecionado.programaAtivo" />Programa ativo</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(programaSelecionado.pontosGanhosPorUnidadeMonetariaGasta<=0.0) ? 'has-error' : ''">
+                            <label for="pontosGanhosPorUnidadeMonetariaGasta" class="col-sm-2 control-label">Pontos ganhos por $</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="pontosGanhosPorUnidadeMonetariaGasta" autocomplete="off" id="pontosGanhosPorUnidadeMonetariaGasta" format="number" class="form-control hidden-sm hidden-xs" ng-model="programaSelecionado.pontosGanhosPorUnidadeMonetariaGasta" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="programaSelecionado.pontosGanhosPorUnidadeMonetariaGasta" />
+                                <div class="help-block with-errors" ng-show="programaSelecionado.pontosGanhosPorUnidadeMonetariaGasta <= 0.0">Preencha este campo</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(programaSelecionado.valorDinheiroPorPontoParaResgate<=0.0) ? 'has-error' : ''">
+                            <label for="valorDinheiroPorPontoParaResgate" class="col-sm-2 control-label">Recompensa $ por ponto</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="valorDinheiroPorPontoParaResgate" autocomplete="off" id="valorDinheiroPorPontoParaResgate" format="number" class="form-control hidden-sm hidden-xs" ng-model="programaSelecionado.valorDinheiroPorPontoParaResgate" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="programaSelecionado.valorDinheiroPorPontoParaResgate" />
+                                <div class="help-block with-errors" ng-show="programaSelecionado.valorDinheiroPorPontoParaResgate <= 0.0">Preencha este campo</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(programaSelecionado.quantidadeMinimaPontosParaResgate<=0.0) ? 'has-error' : ''">
+                            <label for="quantidadeMinimaPontosParaResgate" class="col-sm-2 control-label">Mínimo pontos para resgate</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="quantidadeMinimaPontosParaResgate" autocomplete="off" id="quantidadeMinimaPontosParaResgate" format="number" class="form-control hidden-sm hidden-xs" ng-model="programaSelecionado.quantidadeMinimaPontosParaResgate" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="programaSelecionado.quantidadeMinimaPontosParaResgate" />
+                                <div class="help-block with-errors" ng-show="programaSelecionado.quantidadeMinimaPontosParaResgate <= 0.0">Preencha este campo</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarPrograma()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

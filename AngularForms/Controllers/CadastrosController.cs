@@ -13,7 +13,7 @@ using System.Collections.Specialized;
 namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
-    [Authorize]
+    [Authorize(Roles = Constantes.ROLE_ADMIN)]
     public class CadastrosController : Controller
     {
         private CadastrosRepository _rep = new CadastrosRepository();
