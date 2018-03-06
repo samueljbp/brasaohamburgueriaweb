@@ -15,7 +15,9 @@ insert into CLASSE_ITEM_CARDAPIO values (7, 'Cervejas especiais', null, 7);
 insert into CLASSE_ITEM_CARDAPIO values (9, 'Vinhos', null, 9);
 insert into CLASSE_ITEM_CARDAPIO values (10, 'Águas', null, 10);
 
-
+--tipos de desconto
+insert into tipo_aplicacao_desconto_promocao values (1, 'Item de cardápio');
+insert into tipo_aplicacao_desconto_promocao values (2, 'Classe de item de cardápio');
 
 --complementos de item
 insert into COMPLEMENTO_ITEM_CARDAPIO (COD_ITEM_CARDAPIO, DESCRICAO, IMAGEM, ORDEM_EXIBICAO)

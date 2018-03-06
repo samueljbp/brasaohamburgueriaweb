@@ -14,64 +14,304 @@ namespace BrasaoHamburgueria.Web.Repository
     {
         private BrasaoContext _contexto = new BrasaoContext();
 
+        #region Cadastros de promoções de venda
+
+        public async Task<List<TipoAplicacaoDescontoPromocaoViewModel>> GetTiposAplicacaoDesconto()
+        {
+            return await _contexto.TiposDescontoPromocao
+                .OrderBy(d => d.CodTipoAplicacaoDesconto)
+                .Select(d => new TipoAplicacaoDescontoPromocaoViewModel
+                {
+                    CodTipoAplicacaoDesconto = d.CodTipoAplicacaoDesconto,
+                    Descricao = d.Descricao
+                }).ToListAsync();
+        }
+
+        public async Task<List<PromocaoVendaViewModel>> GetPromocoesVenda()
+        {
+            var programas = await (from promos in _contexto.PromocoesVenda
+                                    .Include(p => p.DiasAssociados)
+                                    .Include(p => p.ClassesAssociadas)
+                                    .Include(p => p.ClassesAssociadas.Select(c => c.Classe))
+                                    .Include(p => p.ItensAssociados)
+                                    .Include(p => p.ItensAssociados.Select(i => i.Item))
+                                   join tipo in _contexto.TiposDescontoPromocao on promos.CodTipoAplicacaoDesconto equals tipo.CodTipoAplicacaoDesconto
+                                   where promos.PromocaoAtiva
+                                   orderby promos.CodPromocaoVenda
+                                   select new PromocaoVendaViewModel
+                                   {
+                                       CodPromocaoVenda = promos.CodPromocaoVenda,
+                                       DescricaoPromocao = promos.DescricaoPromocao,
+                                       DataHoraInicio = promos.DataHoraInicio,
+                                       DataHoraFim = promos.DataHoraFim,
+                                       CodTipoAplicacaoDesconto = promos.CodTipoAplicacaoDesconto,
+                                       DescricaoTipoAplicacaoDesconto = tipo.Descricao,
+                                       PercentualDesconto = promos.PercentualDesconto,
+                                       PromocaoAtiva = promos.PromocaoAtiva,
+                                       DiasAssociados = promos.DiasAssociados.Select(d => new DiaSemanaViewModel
+                                       {
+                                           NumDiaSemana = d.DiaSemana
+                                       }).ToList(),
+                                       ClassesAssociadas = promos.ClassesAssociadas.Select(c => new ClasseItemCardapioPromocaoVendaViewModel
+                                       {
+                                           CodClasse = c.CodClasse,
+                                           CodPromocaoVenda = promos.CodPromocaoVenda,
+                                           DescricaoClasse = c.Classe.DescricaoClasse
+                                       }).ToList(),
+                                       ItensAssociados = promos.ItensAssociados.Select(i => new ItemCardapioPromocaoVendaViewModel
+                                       {
+                                           CodPromocaoVenda = promos.CodPromocaoVenda,
+                                           CodItemCardapio = i.CodItemCardapio,
+                                           Nome = i.Item.Nome
+                                       }).ToList()
+                                   }).ToListAsync();
+
+            foreach (var promo in programas)
+            {
+                promo.DataInicio = promo.DataHoraInicio.ToString("dd/MM/yyyy");
+                promo.HoraInicio = promo.DataHoraInicio.ToString("HH:mm");
+                promo.DataFim = promo.DataHoraFim.ToString("dd/MM/yyyy");
+                promo.HoraFim = promo.DataHoraFim.ToString("HH:mm");
+            }
+
+            return programas;
+        }
+
+        public async Task<string> ExcluiPromocaoVenda(PromocaoVendaViewModel promo)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    var promoExcluir = await _contexto.PromocoesVenda.FindAsync(promo.CodPromocaoVenda);
+
+                    if (promoExcluir != null)
+                    {
+                        var diasSemanaExcluir = await _contexto.DiasSemanaPromocaoVenda.Where(d => d.CodPromocaoVenda == promo.CodPromocaoVenda).ToListAsync();
+                        if (diasSemanaExcluir != null)
+                        {
+                            _contexto.DiasSemanaPromocaoVenda.RemoveRange(diasSemanaExcluir);
+                        }
+
+                        var classesExcluir = await _contexto.ClassesPromocaoVenda.Where(c => c.CodPromocaoVenda == promo.CodPromocaoVenda).ToListAsync();
+                        if (classesExcluir != null)
+                        {
+                            _contexto.ClassesPromocaoVenda.RemoveRange(classesExcluir);
+                        }
+
+                        var itensExcluir = await _contexto.ItensPromocaoVenda.Where(i => i.CodPromocaoVenda == promo.CodPromocaoVenda).ToListAsync();
+                        if (itensExcluir != null)
+                        {
+                            _contexto.ItensPromocaoVenda.RemoveRange(itensExcluir);
+                        }
+
+                        _contexto.PromocoesVenda.Remove(promoExcluir);
+                        await _contexto.SaveChangesAsync();
+
+                        dbContextTransaction.Commit();
+                    }
+                    else
+                    {
+                        return "Registro não encontrado na base de dados.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+
+            }
+
+
+            return "";
+        }
+
+
+        public async Task<PromocaoVendaViewModel> GravarPromocaoVenda(PromocaoVendaViewModel promocao, String modoCadastro)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    promocao.DataHoraInicio = Convert.ToDateTime(promocao.DataInicio.Substring(0, 2) + "/" + promocao.DataInicio.Substring(3, 2) + "/" + promocao.DataInicio.Substring(6) + " " + promocao.HoraInicio.Substring(0, 2) + ":" + promocao.HoraInicio.Substring(3));
+                    promocao.DataHoraFim = Convert.ToDateTime(promocao.DataFim.Substring(0, 2) + "/" + promocao.DataFim.Substring(3, 2) + "/" + promocao.DataFim.Substring(6) + " " + promocao.HoraFim.Substring(0, 2) + ":" + promocao.HoraFim.Substring(3));
+
+                    if (promocao.DataHoraFim < promocao.DataHoraInicio)
+                    {
+                        throw new Exception("O término da vigência não pode ser anterior ao início.");
+                    }
+
+                    if (modoCadastro == "A") //alteração
+                    {
+                        var promocaoAlterar = _contexto.PromocoesVenda.Find(promocao.CodPromocaoVenda);
+
+                        if (promocaoAlterar != null)
+                        {
+                            if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorClasse && promocao.ClassesAssociadas != null)
+                            {
+                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE CLASSE_ITEM_CARDAPIO_PROMOCAO_VENDA");
+                                //_contexto.ClassesPromocaoVenda.RemoveRange(_contexto.ClassesPromocaoVenda.ToList());
+                                _contexto.ClassesPromocaoVenda.AddRange(promocao.ClassesAssociadas.Select(o => new ClasseItemCardapioPromocaoVenda { CodClasse = o.CodClasse, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                            }
+                            else if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorItem && promocao.ItensAssociados != null)
+                            {
+                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE ITEM_CARDAPIO_PROMOCAO_VENDA");
+                                //_contexto.ItensPromocaoVenda.RemoveRange(_contexto.ItensPromocaoVenda.ToList());
+                                _contexto.ItensPromocaoVenda.AddRange(promocao.ItensAssociados.Select(o => new ItemCardapioPromocaoVenda { CodItemCardapio = o.CodItemCardapio, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                            }
+
+                            if (promocao.DiasAssociados != null)
+                            {
+                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE DIA_SEMANA_PROMOCAO_VENDA");
+                                //_contexto.DiasSemanaPromocaoVenda.RemoveRange(_contexto.DiasSemanaPromocaoVenda.ToList());
+                                _contexto.DiasSemanaPromocaoVenda.AddRange(promocao.DiasAssociados.Select(o => new DiaSemanaPromocaoVenda { DiaSemana = o.NumDiaSemana, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                            }
+
+                            promocaoAlterar.DescricaoPromocao = promocao.DescricaoPromocao;
+                            promocaoAlterar.CodTipoAplicacaoDesconto = promocao.CodTipoAplicacaoDesconto;
+                            promocaoAlterar.PromocaoAtiva = promocao.PromocaoAtiva;
+                            promocaoAlterar.PercentualDesconto = promocao.PercentualDesconto;
+                            promocaoAlterar.DataHoraInicio = promocao.DataHoraInicio;
+                            promocaoAlterar.DataHoraFim = promocao.DataHoraFim;
+
+                            await _contexto.SaveChangesAsync();
+                            dbContextTransaction.Commit();
+                        }
+
+                        return promocao;
+                    }
+                    else if (modoCadastro == "I") //inclusão
+                    {
+                        var promocaoIncluir = new PromocaoVenda();
+                        if (promocao.CodPromocaoVenda <= 0)
+                        {
+                            promocaoIncluir.CodPromocaoVenda = 1;
+                            var cod = _contexto.PromocoesVenda.Select(o => o.CodPromocaoVenda).DefaultIfEmpty(-1).Max();
+                            if (cod > 0)
+                            {
+                                promocaoIncluir.CodPromocaoVenda = cod + 1;
+                            }
+                            promocao.CodPromocaoVenda = promocaoIncluir.CodPromocaoVenda;
+                        }
+                        else
+                        {
+                            var valida = _contexto.PromocoesVenda.Find(promocao.CodPromocaoVenda);
+
+                            if (valida != null)
+                            {
+                                throw new Exception("Já existe uma promoção cadastrada com o código " + promocao.CodPromocaoVenda);
+                            }
+
+                            promocaoIncluir.CodPromocaoVenda = promocao.CodPromocaoVenda;
+                        }
+
+                        promocaoIncluir.DescricaoPromocao = promocao.DescricaoPromocao;
+                        promocaoIncluir.CodTipoAplicacaoDesconto = promocao.CodTipoAplicacaoDesconto;
+                        promocaoIncluir.PromocaoAtiva = promocao.PromocaoAtiva;
+                        promocaoIncluir.PercentualDesconto = promocao.PercentualDesconto;
+                        promocaoIncluir.DataHoraInicio = promocao.DataHoraInicio;
+                        promocaoIncluir.DataHoraFim = promocao.DataHoraFim;
+
+                        _contexto.PromocoesVenda.Add(promocaoIncluir);
+
+                        if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorClasse && promocao.ClassesAssociadas != null)
+                        {
+                            _contexto.ClassesPromocaoVenda.AddRange(promocao.ClassesAssociadas.Select(o => new ClasseItemCardapioPromocaoVenda { CodClasse = o.CodClasse, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                        }
+                        else if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorItem && promocao.ItensAssociados != null)
+                        {
+                            _contexto.ItensPromocaoVenda.AddRange(promocao.ItensAssociados.Select(o => new ItemCardapioPromocaoVenda { CodItemCardapio = o.CodItemCardapio, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                        }
+
+                        if (promocao.DiasAssociados != null)
+                        {
+                            _contexto.DiasSemanaPromocaoVenda.AddRange(promocao.DiasAssociados.Select(o => new DiaSemanaPromocaoVenda { DiaSemana = o.NumDiaSemana, CodPromocaoVenda = promocao.CodPromocaoVenda }));
+                        }
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+
+                        return promocao;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+
+            return null;
+        }
+
+
+        #endregion
+
         #region Associação de observações a itens de cardápio
 
         public async Task GravarObservacoesItens(List<ObservacaoProducaoViewModel> obs, int codItemCardapio, int codClasse)
         {
-            try
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                if (codClasse > 0)
+                try
                 {
-                    _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
-                    var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
-                    foreach (var item in itens)
+                    if (codClasse > 0)
                     {
-                        _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = item.CodItemCardapio, CodObservacao = o.CodObservacao }));
+                        _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
+                        var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
+                        foreach (var item in itens)
+                        {
+                            _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = item.CodItemCardapio, CodObservacao = o.CodObservacao }));
+                        }
                     }
-                }
 
-                if (codItemCardapio > 0)
+                    if (codItemCardapio > 0)
+                    {
+                        _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Where(o => o.CodItemCardapio == codItemCardapio));
+                        _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = codItemCardapio, CodObservacao = o.CodObservacao }));
+                    }
+
+                    await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
                 {
-                    _contexto.ObservacoesPermitidas.RemoveRange(_contexto.ObservacoesPermitidas.Where(o => o.CodItemCardapio == codItemCardapio));
-                    _contexto.ObservacoesPermitidas.AddRange(obs.Select(o => new ObservacaoProducaoPermitidaItemCardapio { CodItemCardapio = codItemCardapio, CodObservacao = o.CodObservacao }));
+                    throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
                 }
-
-                await _contexto.SaveChangesAsync();
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
-            }
-
         }
 
         public async Task GravarOpcoesExtraItens(List<OpcaoExtraViewModel> opcoes, int codItemCardapio, int codClasse)
         {
-            try
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                if (codClasse > 0)
+                try
                 {
-                    _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
-                    var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
-                    foreach (var item in itens)
+                    if (codClasse > 0)
                     {
-                        _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = item.CodItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                        _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Include(o => o.Item).Where(o => o.Item.CodClasse == codClasse));
+                        var itens = _contexto.ItensCardapio.Where(i => i.CodClasse == codClasse).ToList();
+                        foreach (var item in itens)
+                        {
+                            _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = item.CodItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                        }
                     }
-                }
 
-                if (codItemCardapio > 0)
+                    if (codItemCardapio > 0)
+                    {
+                        _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Where(o => o.CodItemCardapio == codItemCardapio));
+                        _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = codItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                    }
+
+                    await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
                 {
-                    _contexto.ExtrasPermitidos.RemoveRange(_contexto.ExtrasPermitidos.Where(o => o.CodItemCardapio == codItemCardapio));
-                    _contexto.ExtrasPermitidos.AddRange(opcoes.Select(o => new OpcaoExtraItemCardapio { CodItemCardapio = codItemCardapio, CodOpcaoExtra = o.CodOpcaoExtra }));
+                    throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
                 }
-
-                await _contexto.SaveChangesAsync();
             }
-            catch (Exception ex)
-            {
-                throw new Exception("Ocorreu uma falha durante a execução da operação com a seguinte mensagem: " + ex.Message);
-            }
-
         }
 
         #endregion
@@ -84,53 +324,58 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<OpcaoExtraViewModel> GravarOpcaoExtra(OpcaoExtraViewModel opcao, String modoCadastro)
         {
-            if (modoCadastro == "A") //alteração
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                var opcaoAlterar = _contexto.Extras.Find(opcao.CodOpcaoExtra);
-
-                if (opcaoAlterar != null)
+                if (modoCadastro == "A") //alteração
                 {
-                    opcaoAlterar.DescricaoOpcaoExtra = opcao.DescricaoOpcaoExtra;
-                    opcaoAlterar.Preco = opcao.Preco;
+                    var opcaoAlterar = _contexto.Extras.Find(opcao.CodOpcaoExtra);
+
+                    if (opcaoAlterar != null)
+                    {
+                        opcaoAlterar.DescricaoOpcaoExtra = opcao.DescricaoOpcaoExtra;
+                        opcaoAlterar.Preco = opcao.Preco;
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+                    }
+
+                    return opcao;
+                }
+                else if (modoCadastro == "I") //inclusão
+                {
+                    var opcaoIncluir = new OpcaoExtra();
+                    if (opcao.CodOpcaoExtra <= 0)
+                    {
+                        opcaoIncluir.CodOpcaoExtra = 1;
+                        int? cod = _contexto.Extras.Max(o => o.CodOpcaoExtra);
+                        if (cod != null)
+                        {
+                            opcaoIncluir.CodOpcaoExtra = cod.Value + 1;
+                        }
+                        opcao.CodOpcaoExtra = opcaoIncluir.CodOpcaoExtra;
+                    }
+                    else
+                    {
+                        var valida = _contexto.Extras.Find(opcao.CodOpcaoExtra);
+
+                        if (valida != null)
+                        {
+                            throw new Exception("Já existe uma opção extra cadastrada com o código " + opcao.CodOpcaoExtra);
+                        }
+
+                        opcaoIncluir.CodOpcaoExtra = opcao.CodOpcaoExtra;
+                    }
+
+                    opcaoIncluir.DescricaoOpcaoExtra = opcao.DescricaoOpcaoExtra;
+                    opcaoIncluir.Preco = opcao.Preco;
+
+                    _contexto.Extras.Add(opcaoIncluir);
 
                     await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+
+                    return opcao;
                 }
-
-                return opcao;
-            }
-            else if (modoCadastro == "I") //inclusão
-            {
-                var opcaoIncluir = new OpcaoExtra();
-                if (opcao.CodOpcaoExtra <= 0)
-                {
-                    opcaoIncluir.CodOpcaoExtra = 1;
-                    var cod = _contexto.Extras.Max(o => o.CodOpcaoExtra);
-                    if (cod != null)
-                    {
-                        opcaoIncluir.CodOpcaoExtra = cod + 1;
-                    }
-                    opcao.CodOpcaoExtra = opcaoIncluir.CodOpcaoExtra;
-                }
-                else
-                {
-                    var valida = _contexto.Extras.Find(opcao.CodOpcaoExtra);
-
-                    if (valida != null)
-                    {
-                        throw new Exception("Já existe uma opção extra cadastrada com o código " + opcao.CodOpcaoExtra);
-                    }
-
-                    opcaoIncluir.CodOpcaoExtra = opcao.CodOpcaoExtra;
-                }
-
-                opcaoIncluir.DescricaoOpcaoExtra = opcao.DescricaoOpcaoExtra;
-                opcaoIncluir.Preco = opcao.Preco;
-
-                _contexto.Extras.Add(opcaoIncluir);
-
-                await _contexto.SaveChangesAsync();
-
-                return opcao;
             }
 
             return null;
@@ -191,10 +436,10 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (obs.CodObservacao <= 0)
                 {
                     obsIncluir.CodObservacao = 1;
-                    var cod = _contexto.ObservacoesProducao.Max(o => o.CodObservacao);
+                    int? cod = _contexto.ObservacoesProducao.Max(o => o.CodObservacao);
                     if (cod != null)
                     {
-                        obsIncluir.CodObservacao = cod + 1;
+                        obsIncluir.CodObservacao = cod.Value + 1;
                     }
                     obs.CodObservacao = obsIncluir.CodObservacao;
                 }
@@ -285,10 +530,10 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (par.CodParametro <= 0)
                 {
                     parIncluir.CodParametro = 1;
-                    var cod = _contexto.ParametrosSistema.Max(o => o.CodParametro);
+                    int? cod = _contexto.ParametrosSistema.Max(o => o.CodParametro);
                     if (cod != null)
                     {
-                        parIncluir.CodParametro = cod + 1;
+                        parIncluir.CodParametro = cod.Value + 1;
                     }
                     par.CodParametro = parIncluir.CodParametro;
                 }
@@ -354,10 +599,10 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (imp.CodImpressora <= 0)
                 {
                     impIncluir.CodImpressora = 1;
-                    var cod = _contexto.ImpressorasProducao.Max(o => o.CodImpressora);
+                    int? cod = _contexto.ImpressorasProducao.Max(o => o.CodImpressora);
                     if (cod != null)
                     {
-                        impIncluir.CodImpressora = cod + 1;
+                        impIncluir.CodImpressora = cod.Value + 1;
                     }
                     imp.CodImpressora = impIncluir.CodImpressora;
                 }
@@ -474,37 +719,41 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<string> ExcluiItemCardapio(ItemCardapioViewModel item)
         {
-            if (_contexto.ItensPedidos.Where(i => i.CodItemCardapio == item.CodItemCardapio).Count() > 0)
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                return "Exclusão não permitida. Este item está associado a pedidos realizados.";
-            }
-
-            var itemExcluir = await _contexto.ItensCardapio.FindAsync(item.CodItemCardapio);
-
-            if (itemExcluir != null)
-            {
-                var complementoExcluir = await _contexto.ComplementosItens.FindAsync(item.CodItemCardapio);
-
-                if (complementoExcluir != null)
+                if (_contexto.ItensPedidos.Where(i => i.CodItemCardapio == item.CodItemCardapio).Count() > 0)
                 {
-                    _contexto.ComplementosItens.Remove(complementoExcluir);
+                    return "Exclusão não permitida. Este item está associado a pedidos realizados.";
                 }
 
-                var impressorasExcluir = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
-                if (impressorasExcluir != null)
+                var itemExcluir = await _contexto.ItensCardapio.FindAsync(item.CodItemCardapio);
+
+                if (itemExcluir != null)
                 {
-                    foreach (var imp in impressorasExcluir)
+                    var complementoExcluir = await _contexto.ComplementosItens.FindAsync(item.CodItemCardapio);
+
+                    if (complementoExcluir != null)
                     {
-                        _contexto.ImpressorasItens.Remove(imp);
+                        _contexto.ComplementosItens.Remove(complementoExcluir);
                     }
-                }
 
-                _contexto.ItensCardapio.Remove(itemExcluir);
-                await _contexto.SaveChangesAsync();
-            }
-            else
-            {
-                return "Registro não encontrado na base de dados.";
+                    var impressorasExcluir = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
+                    if (impressorasExcluir != null)
+                    {
+                        foreach (var imp in impressorasExcluir)
+                        {
+                            _contexto.ImpressorasItens.Remove(imp);
+                        }
+                    }
+
+                    _contexto.ItensCardapio.Remove(itemExcluir);
+                    await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+                }
+                else
+                {
+                    return "Registro não encontrado na base de dados.";
+                }
             }
 
             return "";
@@ -512,43 +761,109 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<ItemCardapioViewModel> GravarItemCardapio(ItemCardapioViewModel item, String modoCadastro)
         {
-            if (modoCadastro == "A") //alteração
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                var itemAlterar = _contexto.ItensCardapio.Find(item.CodItemCardapio);
-
-                if (itemAlterar != null)
+                if (modoCadastro == "A") //alteração
                 {
+                    var itemAlterar = _contexto.ItensCardapio.Find(item.CodItemCardapio);
+
+                    if (itemAlterar != null)
+                    {
+                        if (item.Preco <= 0)
+                        {
+                            throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
+                        }
+
+                        itemAlterar.Nome = item.Nome;
+                        itemAlterar.Preco = item.Preco;
+                        itemAlterar.Sincronizar = item.Sincronizar;
+                        itemAlterar.Ativo = item.Ativo;
+                        itemAlterar.CodClasse = item.CodClasse;
+
+                        var complementoAlterar = _contexto.ComplementosItens.Find(item.CodItemCardapio);
+
+                        if (complementoAlterar != null)
+                        {
+                            complementoAlterar.DescricaoLonga = item.Complemento.DescricaoLonga;
+                            complementoAlterar.Imagem = item.Complemento.Imagem;
+                            if (item.Complemento.OrdemExibicao != null)
+                            {
+                                complementoAlterar.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
+                            }
+                        }
+
+                        var impressorasProducaoItem = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
+                        if (impressorasProducaoItem != null)
+                        {
+                            foreach (var imp in impressorasProducaoItem)
+                            {
+                                _contexto.ImpressorasItens.Remove(imp);
+                            }
+                        }
+
+                        if (item.CodImpressoraProducao != null)
+                        {
+                            var impressoraProducaoItem = new ItemCardapioImpressora();
+                            impressoraProducaoItem.CodItemCardapio = item.CodItemCardapio;
+                            impressoraProducaoItem.CodImpressora = item.CodImpressoraProducao.Value;
+
+                            _contexto.ImpressorasItens.Add(impressoraProducaoItem);
+                        }
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+                    }
+
+                    return item;
+                }
+                else if (modoCadastro == "I") //inclusão
+                {
+                    var itemIncluir = new ItemCardapio();
+                    if (item.CodItemCardapio <= 0)
+                    {
+                        itemIncluir.CodItemCardapio = 1;
+                        int? cod = _contexto.ItensCardapio.Max(o => o.CodItemCardapio);
+                        if (cod != null)
+                        {
+                            itemIncluir.CodItemCardapio = cod.Value + 1;
+                        }
+                        item.CodItemCardapio = itemIncluir.CodItemCardapio;
+                    }
+                    else
+                    {
+                        var valida = _contexto.ItensCardapio.Find(item.CodItemCardapio);
+
+                        if (valida != null)
+                        {
+                            throw new Exception("Já existe um item de cardápio cadastrado com o código " + item.CodItemCardapio);
+                        }
+
+                        itemIncluir.CodItemCardapio = item.CodItemCardapio;
+                    }
+
                     if (item.Preco <= 0)
                     {
                         throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
                     }
 
-                    itemAlterar.Nome = item.Nome;
-                    itemAlterar.Preco = item.Preco;
-                    itemAlterar.Sincronizar = item.Sincronizar;
-                    itemAlterar.Ativo = item.Ativo;
-                    itemAlterar.CodClasse = item.CodClasse;
+                    itemIncluir.Nome = item.Nome;
+                    itemIncluir.Preco = item.Preco;
+                    itemIncluir.Sincronizar = item.Sincronizar;
+                    itemIncluir.Ativo = item.Ativo;
+                    itemIncluir.CodClasse = item.CodClasse;
 
-                    var complementoAlterar = _contexto.ComplementosItens.Find(item.CodItemCardapio);
+                    ComplementoItemCardapio complementoIncluir = new ComplementoItemCardapio();
 
-                    if (complementoAlterar != null)
+                    complementoIncluir.CodItemCardapio = item.CodItemCardapio;
+                    complementoIncluir.DescricaoLonga = item.Complemento.DescricaoLonga;
+                    complementoIncluir.Imagem = item.Complemento.Imagem;
+                    if (item.Complemento.OrdemExibicao != null)
                     {
-                        complementoAlterar.DescricaoLonga = item.Complemento.DescricaoLonga;
-                        complementoAlterar.Imagem = item.Complemento.Imagem;
-                        if (item.Complemento.OrdemExibicao != null)
-                        {
-                            complementoAlterar.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
-                        }
+                        complementoIncluir.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
                     }
 
-                    var impressorasProducaoItem = _contexto.ImpressorasItens.Where(i => i.CodItemCardapio == item.CodItemCardapio).ToList();
-                    if (impressorasProducaoItem != null)
-                    {
-                        foreach (var imp in impressorasProducaoItem)
-                        {
-                            _contexto.ImpressorasItens.Remove(imp);
-                        }
-                    }
+                    _contexto.ItensCardapio.Add(itemIncluir);
+                    _contexto.ComplementosItens.Add(complementoIncluir);
 
                     if (item.CodImpressoraProducao != null)
                     {
@@ -560,71 +875,10 @@ namespace BrasaoHamburgueria.Web.Repository
                     }
 
                     await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+
+                    return item;
                 }
-
-                return item;
-            }
-            else if (modoCadastro == "I") //inclusão
-            {
-                var itemIncluir = new ItemCardapio();
-                if (item.CodItemCardapio <= 0)
-                {
-                    itemIncluir.CodItemCardapio = 1;
-                    var cod = _contexto.ItensCardapio.Max(o => o.CodItemCardapio);
-                    if (cod != null)
-                    {
-                        itemIncluir.CodItemCardapio = cod + 1;
-                    }
-                    item.CodItemCardapio = itemIncluir.CodItemCardapio;
-                }
-                else
-                {
-                    var valida = _contexto.ItensCardapio.Find(item.CodItemCardapio);
-
-                    if (valida != null)
-                    {
-                        throw new Exception("Já existe um item de cardápio cadastrado com o código " + item.CodItemCardapio);
-                    }
-
-                    itemIncluir.CodItemCardapio = item.CodItemCardapio;
-                }
-
-                if (item.Preco <= 0)
-                {
-                    throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
-                }
-
-                itemIncluir.Nome = item.Nome;
-                itemIncluir.Preco = item.Preco;
-                itemIncluir.Sincronizar = item.Sincronizar;
-                itemIncluir.Ativo = item.Ativo;
-                itemIncluir.CodClasse = item.CodClasse;
-
-                ComplementoItemCardapio complementoIncluir = new ComplementoItemCardapio();
-
-                complementoIncluir.CodItemCardapio = item.CodItemCardapio;
-                complementoIncluir.DescricaoLonga = item.Complemento.DescricaoLonga;
-                complementoIncluir.Imagem = item.Complemento.Imagem;
-                if (item.Complemento.OrdemExibicao != null)
-                {
-                    complementoIncluir.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
-                }
-
-                _contexto.ItensCardapio.Add(itemIncluir);
-                _contexto.ComplementosItens.Add(complementoIncluir);
-
-                if (item.CodImpressoraProducao != null)
-                {
-                    var impressoraProducaoItem = new ItemCardapioImpressora();
-                    impressoraProducaoItem.CodItemCardapio = item.CodItemCardapio;
-                    impressoraProducaoItem.CodImpressora = item.CodImpressoraProducao.Value;
-
-                    _contexto.ImpressorasItens.Add(impressoraProducaoItem);
-                }
-
-                await _contexto.SaveChangesAsync();
-
-                return item;
             }
 
             return null;
@@ -818,10 +1072,10 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (classe.CodClasse <= 0)
                 {
                     classeIncluir.CodClasse = 1;
-                    var cod = _contexto.Classes.Max(o => o.CodClasse);
+                    int? cod = _contexto.Classes.Max(o => o.CodClasse);
                     if (cod != null)
                     {
-                        classeIncluir.CodClasse = cod + 1;
+                        classeIncluir.CodClasse = cod.Value + 1;
                     }
                     classe.CodClasse = classeIncluir.CodClasse;
                 }

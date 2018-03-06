@@ -72,11 +72,8 @@
     <form role="form" id="formClasse" class="form-horizontal" ng-submit="submitForm()">
         <h3>Classes de item de cardápio - Cadastro</h3>
         <hr />
-        <div ng-if="rowCollection.length <= 0">
-            <small>Nenhum item cadastrado</small>
-        </div>
         <div class="table-responsive">
-            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
                         <th st-sort="codClasse" width="10%"><a href="#">Código</a></th>
@@ -100,7 +97,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="classe in displayedCollection">
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="8">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="classe in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{classe.codClasse}}</td>
                         <td>{{classe.descricaoClasse}}</td>
                         <td>{{classe.descricaoImpressoraPadrao}}</td>

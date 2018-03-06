@@ -75,11 +75,8 @@
     <form role="form" id="formItemCardapio" class="form-horizontal" ng-submit="submitForm()">
         <h3>Item de cardápio - Cadastro</h3>
         <hr />
-        <div ng-if="rowCollection.length <= 0">
-            <small>Nenhum item cadastrado</small>
-        </div>
         <div class="table-responsive">
-            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
                         <th st-sort="codItemCardapio" width="10%"><a href="#">Código</a></th>
@@ -113,7 +110,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in displayedCollection">
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="10">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="item in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{item.codItemCardapio}}</td>
                         <td>
                             <img src="../{{item.complemento.imagemMini}}" alt="{{item.complemento.imagemMini}}" ng-show="item.complemento && item.complemento.imagem != null" style="max-width: 50%; height: auto;" class="img-thumbnail" />

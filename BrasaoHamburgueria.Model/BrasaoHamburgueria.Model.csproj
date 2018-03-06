@@ -43,9 +43,10 @@
   <ItemGroup>
     <Compile Include="Brasao\CardapioModel.cs" />
     <Compile Include="Brasao\FidelidadeModel.cs" />
-    <Compile Include="Brasao\Institucional.cs" />
+    <Compile Include="Brasao\InstitucionalModel.cs" />
     <Compile Include="Brasao\ParametrosModel.cs" />
     <Compile Include="Brasao\PedidoModel.cs" />
+    <Compile Include="Brasao\PromocaoModel.cs" />
     <Compile Include="Comum.cs" />
     <Compile Include="Identity\EsqueciMinhaSenhaViewModel.cs" />
     <Compile Include="Identity\LoginViewModel.cs" />

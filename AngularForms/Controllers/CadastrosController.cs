@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BrasaoHamburgueria.Web.Repository;
 using BrasaoHamburgueria.Web.Filters;
 using System.Collections.Specialized;
+using System.Globalization;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -17,6 +18,117 @@ namespace BrasaoHamburgueria.Web.Controllers
     public class CadastrosController : Controller
     {
         private CadastrosRepository _rep = new CadastrosRepository();
+
+        #region Promoções de venda
+
+        public ActionResult PromocaoVenda()
+        {
+            return View();
+        }
+        public async Task<JsonResult> GetPromocoesVenda()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var promocoes = await _rep.GetPromocoesVenda();
+
+                result.data = promocoes;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetTiposAplicacaoDesconto()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var tiposDesconto = await _rep.GetTiposAplicacaoDesconto();
+
+                result.data = tiposDesconto;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetDiasSemana()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                result.data = await ParametroRepository.GetDiasSemana();
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiPromocaoVenda(PromocaoVendaViewModel promo)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiPromocaoVenda(promo);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarPromocaoVenda(PromocaoVendaViewModel promocao, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var promo = await _rep.GravarPromocaoVenda(promocao, modoCadastro);
+                result.Succeeded = true;
+                result.data = promo;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
 
         #region Associação de observações a itens de cardápio
 

@@ -71,11 +71,8 @@
     <form role="form" id="formPrograma" class="form-horizontal" ng-submit="submitForm()">
         <h3>Programas de fidelidade - Cadastro</h3>
         <hr />
-        <div ng-if="rowCollection.length <= 0">
-            <small>Nenhum item cadastrado</small>
-        </div>
         <div class="table-responsive">
-            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
                         <th st-sort="codProgramaFidelidade" width="10%"><a href="#">Código</a></th>
@@ -107,7 +104,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="prog in displayedCollection">
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="7">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="prog in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{prog.codProgramaFidelidade}}</td>
                         <td>{{prog.descricaoProgramaFidelidade}}</td>
                         <td>{{prog.inicioVigencia | date:'dd/MM/yyyy HH:mm'}}</td>

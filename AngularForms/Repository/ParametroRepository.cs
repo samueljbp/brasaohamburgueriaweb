@@ -21,6 +21,21 @@ namespace BrasaoHamburgueria.Web.Repository
 
     public static class ParametroRepository
     {
+        public static async Task<List<DiaSemanaViewModel>> GetDiasSemana()
+        {
+            List<DiaSemanaViewModel> dias = new List<DiaSemanaViewModel>();
+
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Sunday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Sunday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Monday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Monday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Tuesday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Tuesday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Wednesday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Wednesday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Thursday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Thursday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Friday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Friday)));
+            dias.Add(new DiaSemanaViewModel((int)DayOfWeek.Saturday, new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)DayOfWeek.Saturday)));
+
+            return dias;
+        }
+
         public static double GetTaxaEntrega()
         {
             BrasaoContext _contexto = new BrasaoContext();

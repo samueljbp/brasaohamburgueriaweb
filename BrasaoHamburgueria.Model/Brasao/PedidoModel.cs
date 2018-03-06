@@ -247,6 +247,15 @@ namespace BrasaoHamburgueria.Model
         [Column("VALOR_EXTRAS")]
         public double ValorExtras { get; set; }
 
+        [Column("COD_PROMOCAO_VENDA")]
+        public double? CodPromocaoVenda { get; set; }
+
+        [Column("PERCENTUAL_DESCONTO")]
+        public double PercentualDesconto { get; set; }
+
+        [Column("VALOR_DESCONTO")]
+        public double ValorDesconto { get; set; }
+
         [Required]
         [Column("VALOR_TOTAL")]
         public double ValorTotal { get; set; }

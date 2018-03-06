@@ -7,6 +7,22 @@ using System.Globalization;
 
 namespace BrasaoHamburgueria.Model
 {
+    public class DiaSemanaViewModel
+    {
+        public DiaSemanaViewModel(int num, string nome)
+        {
+            this.NumDiaSemana = num;
+            this.NomeDiaSemana = nome;
+        }
+
+        public DiaSemanaViewModel()
+        {
+        }
+
+        public int NumDiaSemana { get; set; }
+        public string NomeDiaSemana { get; set; }
+    }
+
     public static class CodigosParametros
     {
         public const int COD_PARAMETRO_TAXA_ENTREGA = 1;

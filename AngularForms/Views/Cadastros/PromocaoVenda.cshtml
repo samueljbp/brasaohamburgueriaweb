@@ -1,0 +1,262 @@
+﻿@using BrasaoHamburgueria;
+@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/CadastroPromocaoVendaForm/cpvController.js"></script>
+<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetPromocoes,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirPromocao,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetTiposDesconto,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formPromocao" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Promoções de venda - Cadastro</h3>
+        <hr />
+
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="codPromocaoVenda" width="6%"><a href="#">Código</a></th>
+                        <th st-sort="descricaoPromocao" width="25%"><a href="#">Descrição</a></th>
+                        <th st-sort="dataHoraInicio" width="14%"><a href="#">Início</a></th>
+                        <th st-sort="dataHoraFim" width="14%"><a href="#">Término</a></th>
+                        <th st-sort="descricaoTipoAplicacaoDesconto" width="15%"><a href="#">Tipo desconto</a></th>
+                        <th st-sort="percentualDesconto" width="10%"><a href="#">% desconto</a></th>
+                        <th st-sort="promocaoAtiva" width="6%"><a href="#">Ativa</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codPromocaoVenda" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoPromocao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
+
+                        </th>
+                        <th>
+                            <input st-search="descricaoTipoAplicacaoDesconto" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="percentualDesconto" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="3">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="9">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="promo in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{promo.codPromocaoVenda}}</td>
+                        <td>{{promo.descricaoPromocao}}</td>
+                        <td>{{promo.dataHoraInicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{promo.dataHoraFim | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{promo.descricaoTipoAplicacaoDesconto}}</td>
+                        <td>{{promo.percentualDesconto | currency: ""}}</td>
+                        <td>{{promo.promocaoAtiva ? 'Sim' : 'Não'}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoPromocao(promo)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(promo)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarPromocao" class="form-horizontal">
+        <div class="modal fade" id="modalGravarPromocao" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarPromocao" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarPromocao">Promoção de venda - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarPromocao,backdrop:false,delay:10,minDuration:1000}"></div>
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+                        <div class="form-group">
+                            <label for="codPromocaoVenda" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codPromocaoVenda" ng-disabled="modoCadastro == 'A'" name="codPromocaoVenda" class="form-control" ng-model="promocaoSelecionada.codPromocaoVenda" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div id="divCheckPromocaoAtiva" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="promocaoAtiva" name="promocaoAtiva" ng-model="promocaoSelecionada.promocaoAtiva" />Promoção ativa</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoPromocao" class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="descricaoPromocao" name="descricaoPromocao" class="form-control" ng-model="promocaoSelecionada.descricaoPromocao" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inicioVigencia" class="col-sm-2 control-label">Início vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compInicioVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtInicioVigencia" required ng-model="promocaoSelecionada.dataInicio" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compHoraInicio'>
+                                    <input type='text' class="form-control" id="txtHoraInicio" required ng-model="promocaoSelecionada.horaInicio" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="terminoVigencia" class="col-sm-2 control-label">Término vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compTerminoVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtTerminoVigencia" required ng-model="promocaoSelecionada.dataFim" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compHoraFim'>
+                                    <input type='text' class="form-control" id="txtHoraFim" required ng-model="promocaoSelecionada.horaFim" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroCampoDesconto) ? 'has-error' : ''">
+                            <label for="percentualDesconto" class="col-sm-2 control-label">% desconto</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="percentualDesconto" autocomplete="off" id="percentualDesconto" format="number" class="form-control hidden-sm hidden-xs" ng-model="promocaoSelecionada.percentualDesconto" />
+                                <input type='number' step="any" name="percentualDesconto" autocomplete="off" id="percentualDesconto" class="form-control hidden-md hidden-lg" ng-model="promocaoSelecionada.percentualDesconto" />
+                                <div class="help-block with-errors" ng-show="mensagem.erroCampoDesconto">Preencha este campo</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroDiasSemana) ? 'has-error' : ''">
+                            <label for="diaSemana" class="col-sm-2 control-label">Dias semana</label>
+                            <div class="col-sm-10">
+                                <label ng-repeat="dia in diasSemana" style="margin-right: 15px">
+                                    <input type="checkbox"
+                                           name="diasSelecionados[]"
+                                           value="{{dia.numDiaSemana}}"
+                                           ng-checked="diasSelecionados.indexOf(dia.numDiaSemana) > -1"
+                                           ng-click="toggleSelection(dia.numDiaSemana)"> {{dia.nomeDiaSemana}}
+                                </label>
+                                <div class="help-block with-errors" ng-show="mensagem.erroDiasSemana">Selecione pelo menos um dia da semana</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codTipoAplicacaoDesconto" class="col-sm-2 control-label">Tipo desconto</label>
+                            <div class="col-sm-6">
+                                <select name="codTipoAplicacaoDesconto" id="codTipoAplicacaoDesconto" required class="form-control" ng-model="promocaoSelecionada.codTipoAplicacaoDesconto" ng-change="selecionaTipoDesconto()">
+                                    <option value="">(Selecione)</option>
+                                    <option ng-repeat="tipo in tiposDesconto" ng-selected="promocaoSelecionada.codTipoAplicacaoDesconto == tipo.codTipoAplicacaoDesconto" value="{{tipo.codTipoAplicacaoDesconto}}">{{tipo.descricao}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroListasDragDrop) ? 'has-error' : ''">
+                            <div class="col-sm-12">
+                                <div class="help-block with-errors" ng-show="mensagem.erroListasDragDrop">Você não selecionou nenhum item</div>
+                                <div class="multiDemo row">
+                                    <div ng-repeat="list in models" class="col-sm-6">
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">{{list.listName}}</h3>
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <ul dnd-list dnd-drop="onDrop(list, item, index)">
+                                                    <li ng-repeat="item in list.items| orderBy : (promocaoSelecionada.codTipoAplicacaoDesconto == 2 ? 'descricaoClasse' : 'nome')"
+                                                        dnd-draggable="getSelectedItemsIncluding(list, item)"
+                                                        dnd-dragstart="onDragstart(list, event)"
+                                                        dnd-moved="onMoved(list)"
+                                                        dnd-dragend="list.dragging = false"
+                                                        dnd-selected="item.selected = !item.selected"
+                                                        ng-class="{'selected': item.selected}"
+                                                        ng-hide="list.dragging && item.selected">
+                                                        {{(promocaoSelecionada.codTipoAplicacaoDesconto == 2 ? item.descricaoClasse : item.nome)}}
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarPromocao()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

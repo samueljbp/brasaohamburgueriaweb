@@ -112,6 +112,9 @@ namespace BrasaoHamburgueria.Model
         [InverseProperty("Classe")]
         public virtual List<ItemCardapio> Itens { get; set; }
 
+        [InverseProperty("Classe")]
+        public virtual List<ClasseItemCardapioPromocaoVenda> Promocoes { get; set; }
+
         public virtual ImpressoraProducao ImpressoraPadrao { get; set; }
     }
 
@@ -162,6 +165,9 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("Item")]
         public virtual List<ItemCardapioImpressora> ImpressorasAssociadas { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual List<ItemCardapioPromocaoVenda> PromocoesAssociadas { get; set; }
 
         [InverseProperty("ItemCardapio")]
         public virtual List<ItemPedido> ItensPedidos { get; set; }

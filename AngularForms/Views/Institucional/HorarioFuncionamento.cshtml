@@ -28,11 +28,8 @@
     <form role="form" id="formFuncionamento" class="form-horizontal" ng-submit="submitForm()">
         <h3>Horários de funcionamento</h3>
         <hr />
-        <div ng-if="rowCollection.length <= 0">
-            <small>Nenhum item cadastrado</small>
-        </div>
         <div class="table-responsive">
-            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
                         <th st-sort="descricaoDiaSemana" width="40%"><a href="#">Dia da semana</a></th>
@@ -46,7 +43,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="dia in displayedCollection">
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="6">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="dia in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{dia.descricaoDiaSemana}}</td>
                         <td>{{dia.abertura | date:'HH:mm'}}</td>
                         <td>{{dia.fechamento | date:'HH:mm'}}</td>
