@@ -520,3 +520,11 @@ a, a:hover {
             background-color: #807718;
             color: white;
         }
+
+
+
+
+
+.tachado {
+    text-decoration: line-through;
+}

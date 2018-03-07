@@ -80,8 +80,12 @@ namespace BrasaoHamburgueria.Model
         public List<ExtraItemPedidoViewModel> extras { get; set; }
         public int Quantidade { get; set; }
         public double PrecoUnitario { get; set; }
+        public double PrecoUnitarioComDesconto { get; set; }
         public double ValorExtras { get; set; }
         public double ValorTotalItem { get; set; }
+        public double? CodPromocaoVenda { get; set; }
+        public double PercentualDesconto { get; set; }
+        public double ValorDesconto { get; set; }
         public int AcaoRegistro { get; set; }
         public List<String> PortasImpressaoProducao { get; set; }
     }

@@ -67,7 +67,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dLabel">
-                                <li ng-repeat="classe in classes">
+                                <li ng-repeat="classe in classes | orderBy : 'ordemExibicao'">
                                     <a href="#" ng-click="filtraClasse(classe.codClasse)">{{classe.descricaoClasse}}</a>
                                 </li>
                             </ul>
@@ -83,7 +83,7 @@
                 </div>
                 <hr />
                 <h5 class="text-warning" ng-if="(itensFiltrados == null || itensFiltrados.length == 0) && comboClasse.codClasse > 0">Nenhum item encontrado para esta classe.</h5>
-                <div ng-repeat="item in itensFiltrados" ng-if="(itensFiltrados != null && itensFiltrados.length > 0) && itemCardapioSelecionado == null">
+                <div ng-repeat="item in itensFiltrados | orderBy : ['-percentualDesconto','+preco']" ng-if="(itensFiltrados != null && itensFiltrados.length > 0) && itemCardapioSelecionado == null">
                     <div class="row hidden-sm hidden-md hidden-lg">
                         <div class="col-xs-6 text-left">
                             <a href="#" class="btn btn-sq-sm btn-default" ng-click="selecionaItemParaInclusao(item.codItemCardapio)">
@@ -106,13 +106,19 @@
                                 @*<img src="~/Content/img/itens_cardapio/mini-sem_foto.jpeg" alt="Sem imagem" style="max-width: 90%; height: auto;" class="img-circle">*@
                             </a>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <h4>{{item.nome}}</h4>
                             <h6 ng-if="item.complemento != null && item.complemento.descricaoLonga != null">{{item.complemento.descricaoLonga}}</h6>
                             <h6 ng-if="item.complemento == null || item.complemento.descricaoLonga == null">{{item.nome}}</h6>
                         </div>
-                        <div class="col-sm-2">
-                            <h4>{{item.preco | currency: "R$ "}}</h4>
+                        <div class="col-sm-3">
+                            <div ng-show="item.percentualDesconto > 0">
+                                <h4 class="tachado" style="margin-bottom: 0px">{{item.preco | currency: "R$ "}}</h4><br />
+                                <h4 style="margin-top: 0px" class="text-success"><strong>{{item.percentualDesconto | currency: ""}}% off - Por {{item.precoComDesconto | currency: "R$ "}}</strong></h4>
+                            </div>
+                            <div ng-show="item.percentualDesconto <= 0">
+                                <h4>{{item.preco | currency: "R$ "}}</h4>
+                            </div>
                         </div>
                         <div class="col-sm-2 text-center hidden-xs">
                             <a href="#" class="btn btn-sq-sm btn-default" ng-click="selecionaItemParaInclusao(item.codItemCardapio)">
@@ -125,11 +131,17 @@
                 </div>
                 <div ng-if="itemCardapioSelecionado != null">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-7">
                             <h2 style="margin-top: 0px">{{itemCardapioSelecionado.nome}}</h2>
                         </div>
-                        <div class="col-sm-2">
-                            <h4>{{itemCardapioSelecionado.preco | currency: "R$ "}}</h4>
+                        <div class="col-sm-3">
+                            <div ng-show="itemCardapioSelecionado.percentualDesconto > 0">
+                                <h4 class="tachado" style="margin-bottom: 0px">{{itemCardapioSelecionado.preco | currency: "R$ "}}</h4><br />
+                                <h4 style="margin-top: 0px" class="text-success"><strong>{{itemCardapioSelecionado.percentualDesconto | currency: ""}}% off - Por {{itemCardapioSelecionado.precoComDesconto | currency: "R$ "}}</strong></h4>
+                            </div>
+                            <div ng-show="itemCardapioSelecionado.percentualDesconto <= 0">
+                                <h4>{{itemCardapioSelecionado.preco | currency: "R$ "}}</h4>
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             @*https://codepen.io/Thomas-Lebeau/pen/csHqx*@

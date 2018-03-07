@@ -394,7 +394,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     $scope.atualizaValorTotalItem = function () {
         var valor = 0.0;
 
-        valor = valor + ($scope.novoItem.quantidade * $scope.novoItem.precoUnitario);
+        if ($scope.novoItem.percentualDesconto <= 0) {
+            valor = valor + ($scope.novoItem.quantidade * $scope.novoItem.precoUnitario);
+        } else {
+            valor = valor + ($scope.novoItem.quantidade * $scope.novoItem.precoUnitarioComDesconto);
+        }
 
         $scope.novoItem.valorExtras = calculaValorTotalExtras();
 
@@ -495,6 +499,9 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                     extras: [],
                     quantidade: 1,
                     precoUnitario: $scope.itemCardapioSelecionado.preco,
+                    precoUnitarioComDesconto: $scope.itemCardapioSelecionado.precoComDesconto,
+                    percentualDesconto: $scope.itemCardapioSelecionado.percentualDesconto,
+                    codPromocaoVenda: $scope.itemCardapioSelecionado.codPromocaoVenda,
                     valorExtras: 0.0,
                     valorTotal: 0.0,
                     acaoRegistro: acaoRegistro.incluir
@@ -690,6 +697,9 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     //configura a modal de inclusão de item
     $scope.modalIncluirItem = function () {
         reiniciaVariaveisItem();
+        if (!($scope.classeSelecionada.codClasse > 0)) {
+            $scope.filtraClasse(-1);
+        }
         $('#modalIncluirItem').modal('show');
     }
     //FIM CONFIGURAÇÃO DE CONTROLES

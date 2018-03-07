@@ -353,6 +353,7 @@
 
     function montaArrayDias() {
 
+        $scope.diasSelecionados = [];
         angular.forEach($scope.promocaoSelecionada.diasAssociados, function (item) { $scope.diasSelecionados.push(item.numDiaSemana); });
 
 

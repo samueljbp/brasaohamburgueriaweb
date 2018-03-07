@@ -11,6 +11,8 @@ namespace BrasaoHamburgueria.Helper
     /// </summary>
     public static class PropertyCopy
     {
+        public static bool IgnoreExceptions { get; set; }
+
         /// <summary>
         /// Copies all public, readable properties from the source object to the
         /// target. The target type does not have to have a parameterless constructor,
@@ -123,8 +125,10 @@ namespace BrasaoHamburgueria.Helper
         {
             ParameterExpression sourceParameter = Expression.Parameter(typeof(TSource), "source");
             var bindings = new List<MemberBinding>();
+            bool hasException = false;
             foreach (PropertyInfo sourceProperty in typeof(TSource).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
+                hasException = false;
                 if (!sourceProperty.CanRead)
                 {
                     continue;
@@ -132,23 +136,46 @@ namespace BrasaoHamburgueria.Helper
                 PropertyInfo targetProperty = typeof(TTarget).GetProperty(sourceProperty.Name);
                 if (targetProperty == null)
                 {
-                    throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " + typeof(TTarget).FullName);
+                    hasException = true;
+                    if (!PropertyCopy.IgnoreExceptions)
+                    {
+                        throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " + typeof(TTarget).FullName);
+                    }
                 }
+
                 if (!targetProperty.CanWrite)
                 {
-                    throw new ArgumentException("Property " + sourceProperty.Name + " is not writable in " + typeof(TTarget).FullName);
+                    hasException = true;
+                    if (!PropertyCopy.IgnoreExceptions)
+                    {
+                        throw new ArgumentException("Property " + sourceProperty.Name + " is not writable in " + typeof(TTarget).FullName);
+                    }
                 }
+
                 if ((targetProperty.GetSetMethod().Attributes & MethodAttributes.Static) != 0)
                 {
-                    throw new ArgumentException("Property " + sourceProperty.Name + " is static in " + typeof(TTarget).FullName);
+                    hasException = true;
+                    if (!PropertyCopy.IgnoreExceptions)
+                    {
+                        throw new ArgumentException("Property " + sourceProperty.Name + " is static in " + typeof(TTarget).FullName);
+                    }
                 }
+
                 if (!targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
                 {
-                    throw new ArgumentException("Property " + sourceProperty.Name + " has an incompatible type in " + typeof(TTarget).FullName);
+                    hasException = true;
+                    if (!PropertyCopy.IgnoreExceptions)
+                    {
+                        throw new ArgumentException("Property " + sourceProperty.Name + " has an incompatible type in " + typeof(TTarget).FullName);
+                    }
                 }
-                bindings.Add(Expression.Bind(targetProperty, Expression.Property(sourceParameter, sourceProperty)));
-                sourceProperties.Add(sourceProperty);
-                targetProperties.Add(targetProperty);
+
+                if (!hasException)
+                {
+                    bindings.Add(Expression.Bind(targetProperty, Expression.Property(sourceParameter, sourceProperty)));
+                    sourceProperties.Add(sourceProperty);
+                    targetProperties.Add(targetProperty);
+                }
             }
             Expression initializer = Expression.MemberInit(Expression.New(typeof(TTarget)), bindings);
             return Expression.Lambda<Func<TSource, TTarget>>(initializer, sourceParameter).Compile();

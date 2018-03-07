@@ -217,7 +217,15 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     //ITENS
                     foreach (ItemPedidoViewModel item in pedido.Itens)
                     {
-                        texto += FormataComEspacos(item.Quantidade.ToString("00"), 5) + FormataComEspacos(item.DescricaoItem, 24) + FormataComEspacos(item.PrecoUnitario.ToString("C"), 10) + FormataComEspacos(item.ValorTotalItem.ToString("C"), 9);
+                        if (item.CodPromocaoVenda != null)
+                        {
+                            texto += FormataComEspacos(item.Quantidade.ToString("00"), 5) + FormataComEspacos(item.DescricaoItem, 24) + FormataComEspacos(item.PrecoUnitarioComDesconto.ToString("C"), 10) + FormataComEspacos(item.ValorTotalItem.ToString("C"), 9);
+                        }
+                        else
+                        {
+                            texto += FormataComEspacos(item.Quantidade.ToString("00"), 5) + FormataComEspacos(item.DescricaoItem, 24) + FormataComEspacos(item.PrecoUnitario.ToString("C"), 10) + FormataComEspacos(item.ValorTotalItem.ToString("C"), 9);
+                        }
+                        
                         texto += comandoQuebraLinha;
 
                         if (item.Obs != null && item.Obs.Count > 0)

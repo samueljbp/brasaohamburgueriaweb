@@ -49,6 +49,9 @@ namespace BrasaoHamburgueria.Model
         public string DescricaoClasse { get; set; }
         public string Nome { get; set; }
         public double Preco { get; set; }
+        public int? CodPromocaoVenda { get; set; }
+        public double PercentualDesconto { get; set; }
+        public double PrecoComDesconto { get; set; }
         public bool Ativo { get; set; }
         public bool Sincronizar { get; set; }
         public int? CodImpressoraProducao { get; set; }

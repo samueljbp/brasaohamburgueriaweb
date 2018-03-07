@@ -128,6 +128,12 @@ namespace BrasaoHamburgueria.Web.Repository
             var valorTotalPedido = 0.0;
             var valorExtras = 0.0;
 
+            var numDiaHoje = (int)DateTime.Now.DayOfWeek;
+            var promocoesAtivas = (from promos in _contexto.PromocoesVenda.Include(p => p.ClassesAssociadas).Include(p => p.ItensAssociados).Include(p => p.DiasAssociados)
+                                   where promos.PromocaoAtiva && promos.DataHoraInicio <= DateTime.Now && promos.DataHoraFim >= DateTime.Now
+                                   && promos.DiasAssociados.Select(d => d.DiaSemana).Contains(numDiaHoje)
+                                   select promos).ToList();
+
             foreach (var item in pedidoViewModel.Itens)
             {
                 valorExtras = 0;
@@ -148,9 +154,22 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 var itemBase = _contexto.ItensCardapio.Find(item.CodItem);
 
+                var percentualDesconto = 0.0;
                 if (itemBase != null)
                 {
-                    valorTotalPedido += item.Quantidade * itemBase.Preco;
+                    if (promocoesAtivas != null && promocoesAtivas.Count > 0)
+                    {
+                        foreach (var promo in promocoesAtivas.OrderBy(p => p.PercentualDesconto).ToList())
+                        {
+                            if ((promo.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorClasse && promo.ClassesAssociadas.Select(c => c.CodClasse).Contains(itemBase.CodClasse)) ||
+                                (promo.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorItem && promo.ItensAssociados.Select(i => i.CodItemCardapio).Contains(itemBase.CodItemCardapio)))
+                            {
+                                percentualDesconto = (double)promo.PercentualDesconto;
+                            }
+                        }
+                    }
+
+                    valorTotalPedido += item.Quantidade * ((1 - (percentualDesconto / 100)) * itemBase.Preco);
                 }
 
                 valorTotalPedido += valorExtras;
@@ -251,7 +270,7 @@ namespace BrasaoHamburgueria.Web.Repository
                         ped = _contexto.Pedidos.Find(pedidoViewModel.CodPedido);
                     }
 
-                    
+
                     ped.BandeiraCartao = pedidoViewModel.BandeiraCartao;
                     ped.FormaPagamento = pedidoViewModel.FormaPagamento;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
@@ -298,6 +317,14 @@ namespace BrasaoHamburgueria.Web.Repository
                             item.SeqItem = itemViewModel.SeqItem;
                             item.ValorExtras = itemViewModel.ValorExtras;
                             item.ValorTotal = itemViewModel.ValorTotalItem;
+
+                            if (itemViewModel.CodPromocaoVenda != null)
+                            {
+                                item.CodPromocaoVenda = itemViewModel.CodPromocaoVenda;
+                                item.PercentualDesconto = itemViewModel.PercentualDesconto;
+                                item.ValorDesconto = itemViewModel.Quantidade * (itemViewModel.PrecoUnitario - itemViewModel.PrecoUnitarioComDesconto);
+                            }
+
                             _contexto.ItensPedidos.Add(item);
 
                             if (itemViewModel.Obs != null)
@@ -659,6 +686,10 @@ namespace BrasaoHamburgueria.Web.Repository
                         PrecoUnitario = i.PrecoUnitario,
                         ValorExtras = i.ValorExtras,
                         ValorTotalItem = i.ValorTotal,
+                        CodPromocaoVenda = i.CodPromocaoVenda,
+                        PercentualDesconto = i.PercentualDesconto,
+                        PrecoUnitarioComDesconto = (1 - i.PercentualDesconto / 100) * i.PrecoUnitario,
+                        ValorDesconto = i.ValorDesconto,
                         ObservacaoLivre = i.ObservacaoLivre,
                         AcaoRegistro = (int)Comum.AcaoRegistro.Nenhuma,
                         PortasImpressaoProducao = i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao.Porta).ToList(),

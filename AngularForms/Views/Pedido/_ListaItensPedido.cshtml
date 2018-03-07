@@ -46,7 +46,13 @@
                             {{item.quantidade}}
                         </td>
                         <td>
-                            {{item.precoUnitario | currency: "R$ "}}
+                            <div ng-show="item.percentualDesconto > 0">
+                                <span class="tachado" style="margin-bottom: 0px">{{item.precoUnitario | currency: "R$ "}}</span><br />
+                                <span style="margin-top: 0px" class="text-success"><strong>{{item.percentualDesconto | currency: ""}}% off - Por {{item.precoUnitarioComDesconto | currency: "R$ "}}</strong></span>
+                            </div>
+                            <div ng-show="item.percentualDesconto <= 0">
+                                {{item.precoUnitario | currency: "R$ "}}
+                            </div>
                         </td>
                         <td>
                             {{item.valorExtras | currency: "R$ "}}
