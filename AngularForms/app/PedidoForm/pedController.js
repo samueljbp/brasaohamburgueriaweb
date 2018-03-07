@@ -26,28 +26,28 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             },
             url: urlBase + 'Cardapio/GetCardapio'
         })
-        .then(function (response) {
-            var retorno = genericSuccess(response);
+            .then(function (response) {
+                var retorno = genericSuccess(response);
 
-            if (retorno.succeeded) {
+                if (retorno.succeeded) {
 
-                $scope.classes = retorno.data;
+                    $scope.classes = retorno.data;
+                    $scope.itensFiltrados = null;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+            }, function (error) {
+                console.log(error);
+                $scope.classes = null;
                 $scope.itensFiltrados = null;
 
-            }
-            else {
-                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
-            }
-
-        }, function (error) {
-            console.log(error);
-            $scope.classes = null;
-            $scope.itensFiltrados = null;
-
-            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
-        });
+            });
 
         $scope.promisesLoader.push($scope.promiseGetCardapio);
 
@@ -75,23 +75,23 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             },
             url: urlBase + 'Pedido/GetPedidoAberto?loginUsuario=' + loginUsuario
         })
-        .then(function (response) {
-            var retorno = genericSuccess(response);
+            .then(function (response) {
+                var retorno = genericSuccess(response);
 
-            if (retorno.succeeded) {
+                if (retorno.succeeded) {
 
-                $scope.pedidoAberto = retorno.data;
+                    $scope.pedidoAberto = retorno.data;
 
-            }
-            else {
-                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
-            }
-
-        }, function (error) {
-            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
-        });
+            });
 
         $scope.promisesLoader.push($scope.promiseGetPedidoAberto);
 
@@ -125,27 +125,27 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 method: 'GET',
                 url: urlBase + 'Conta/GetUsuario'
             })
-            .then(function (response) {
+                .then(function (response) {
 
-                $scope.usuario = response.data;
+                    $scope.usuario = response.data;
 
-                $scope.pedido.dadosCliente = {
-                    nome: $scope.usuario.nome,
-                    telefone: $scope.usuario.telefone,
-                    estado: $scope.usuario.estado,
-                    cidade: $scope.usuario.cidade,
-                    logradouro: $scope.usuario.logradouro,
-                    numero: $scope.usuario.numero,
-                    complemento: $scope.usuario.complemento,
-                    bairro: $scope.usuario.bairro,
-                    referencia: $scope.usuario.referencia,
-                    clienteNovo: false
-                };
+                    $scope.pedido.dadosCliente = {
+                        nome: $scope.usuario.nome,
+                        telefone: $scope.usuario.telefone,
+                        estado: $scope.usuario.estado,
+                        cidade: $scope.usuario.cidade,
+                        logradouro: $scope.usuario.logradouro,
+                        numero: $scope.usuario.numero,
+                        complemento: $scope.usuario.complemento,
+                        bairro: $scope.usuario.bairro,
+                        referencia: $scope.usuario.referencia,
+                        clienteNovo: false
+                    };
 
-            }, function (error) {
-                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-                $window.scrollTo(0, 0);
-            });
+                }, function (error) {
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                    $window.scrollTo(0, 0);
+                });
 
             $scope.promisesLoader.push($scope.promiseDadosUsuario);
         }
@@ -163,48 +163,48 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             method: 'GET',
             url: urlBase + 'Conta/GetUsuarioByPhone?telefone=' + telefone
         })
-        .then(function (response) {
+            .then(function (response) {
 
-            var retorno = genericSuccess(response);
+                var retorno = genericSuccess(response);
 
-            if (retorno.succeeded) {
-                $scope.mensagem.erro = '';
-                $scope.mensagem.sucesso = '';
-                if (retorno.data != null && retorno.data != '') {
-                    $scope.usuario = retorno.data;
+                if (retorno.succeeded) {
+                    $scope.mensagem.erro = '';
+                    $scope.mensagem.sucesso = '';
+                    if (retorno.data != null && retorno.data != '') {
+                        $scope.usuario = retorno.data;
 
-                    $scope.pedido.dadosCliente = {
-                        nome: $scope.usuario.nome,
-                        telefone: $scope.usuario.telefone,
-                        estado: $scope.usuario.estado,
-                        cidade: $scope.usuario.cidade,
-                        logradouro: $scope.usuario.logradouro,
-                        numero: $scope.usuario.numero,
-                        complemento: $scope.usuario.complemento,
-                        bairro: $scope.usuario.bairro,
-                        referencia: $scope.usuario.referencia,
-                        clienteNovo: $scope.usuario.clienteNovo,
-                        salvar: $scope.usuario.salvar
-                    }
+                        $scope.pedido.dadosCliente = {
+                            nome: $scope.usuario.nome,
+                            telefone: $scope.usuario.telefone,
+                            estado: $scope.usuario.estado,
+                            cidade: $scope.usuario.cidade,
+                            logradouro: $scope.usuario.logradouro,
+                            numero: $scope.usuario.numero,
+                            complemento: $scope.usuario.complemento,
+                            bairro: $scope.usuario.bairro,
+                            referencia: $scope.usuario.referencia,
+                            clienteNovo: $scope.usuario.clienteNovo,
+                            salvar: $scope.usuario.salvar
+                        }
 
-                    if ($scope.usuario.id <= 0) {
-                        $scope.mensagem.informacao = 'Cliente não cadastrado.';
+                        if ($scope.usuario.id <= 0) {
+                            $scope.mensagem.informacao = 'Cliente não cadastrado.';
 
+                        }
+                    } else {
+                        $scope.mensagem.informacao = 'Cliente não encontrado.';
                     }
                 } else {
-                    $scope.mensagem.informacao = 'Cliente não encontrado.';
+                    $scope.mensagem.informacao = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
                 }
-            } else {
-                $scope.mensagem.informacao = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+
+
+
+            }, function (error) {
+                $scope.mensagem.informacao = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
-            }
-
-
-
-        }, function (error) {
-            $scope.mensagem.informacao = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
-        });
+            });
 
         $scope.promisesLoader.push($scope.promiseDadosUsuarioByPhone);
     }
@@ -423,9 +423,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     $scope.filtraClasse = function (codClasse) {
         $scope.comboClasse.codClasse = codClasse;
         var filtro = $filter('filter')($scope.classes, { codClasse: codClasse });
-        $scope.classeSelecionada = filtro[0];
-        $scope.comboClasse.descricaoClasse = filtro[0].descricaoClasse;
-        $scope.itensFiltrados = filtro[0].itens;
+        if (filtro.length > 0) {
+            $scope.classeSelecionada = filtro[0];
+            $scope.comboClasse.descricaoClasse = filtro[0].descricaoClasse;
+            $scope.itensFiltrados = filtro[0].itens;
+        }
     };
 
     //função que confirma a inclusão de um item no pedido
@@ -481,48 +483,48 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             },
             url: urlBase + 'Cardapio/GetDadosItemCardapio?codItemCardapio=' + codItemCardapio
         })
-        .then(function (response) {
-            var retorno = genericSuccess(response);
+            .then(function (response) {
+                var retorno = genericSuccess(response);
 
-            if (retorno.succeeded) {
+                if (retorno.succeeded) {
 
-                $scope.dadosItemCardapio = retorno.data;
+                    $scope.dadosItemCardapio = retorno.data;
 
-                $scope.itemCardapioSelecionado = $filter('filter')($scope.itensFiltrados, { codItemCardapio: codItemCardapio })[0];
+                    $scope.itemCardapioSelecionado = $filter('filter')($scope.itensFiltrados, { codItemCardapio: codItemCardapio })[0];
 
-                $scope.novoItem = {
-                    seqItem: getNextSeqItemPedido(),
-                    codItem: $scope.itemCardapioSelecionado.codItemCardapio,
-                    descricaoItem: $scope.itemCardapioSelecionado.nome,
-                    obs: [],
-                    observacaoLivre: '',
-                    extras: [],
-                    quantidade: 1,
-                    precoUnitario: $scope.itemCardapioSelecionado.preco,
-                    precoUnitarioComDesconto: $scope.itemCardapioSelecionado.precoComDesconto,
-                    percentualDesconto: $scope.itemCardapioSelecionado.percentualDesconto,
-                    codPromocaoVenda: $scope.itemCardapioSelecionado.codPromocaoVenda,
-                    valorExtras: 0.0,
-                    valorTotal: 0.0,
-                    acaoRegistro: acaoRegistro.incluir
+                    $scope.novoItem = {
+                        seqItem: getNextSeqItemPedido(),
+                        codItem: $scope.itemCardapioSelecionado.codItemCardapio,
+                        descricaoItem: $scope.itemCardapioSelecionado.nome,
+                        obs: [],
+                        observacaoLivre: '',
+                        extras: [],
+                        quantidade: 1,
+                        precoUnitario: $scope.itemCardapioSelecionado.preco,
+                        precoUnitarioComDesconto: $scope.itemCardapioSelecionado.precoComDesconto,
+                        percentualDesconto: $scope.itemCardapioSelecionado.percentualDesconto,
+                        codPromocaoVenda: $scope.itemCardapioSelecionado.codPromocaoVenda,
+                        valorExtras: 0.0,
+                        valorTotal: 0.0,
+                        acaoRegistro: acaoRegistro.incluir
+                    }
+
+                    $scope.atualizaValorTotalItem();
+
+                    $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
                 }
 
-                $scope.atualizaValorTotalItem();
+            }, function (error) {
+                console.log(error);
 
-                $timeout(function () { $("#modalIncluirItem").animate({ scrollTop: 0 }, "fast"); });
-
-            }
-            else {
-                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
-            }
-
-        }, function (error) {
-            console.log(error);
-
-            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
-        });
+            });
 
     }
 
@@ -737,33 +739,33 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         if (acao == 'R') {
 
             $ngBootbox.confirm('Tem certeza que deseja recusar a participação no programa? Esta ação não poderá ser desfeita.')
-            .then(function () {
+                .then(function () {
 
-                $scope.programaFidelidade.termosAceitos = false;
-                registraAceitePrograma();
+                    $scope.programaFidelidade.termosAceitos = false;
+                    registraAceitePrograma();
 
-            }, function () {
+                }, function () {
 
-                return;
+                    return;
 
-            });
+                });
 
         } else {
 
             $ngBootbox.confirm('Confirma o aceite dos termos apresentados e a participação no programa?')
-            .then(function () {
+                .then(function () {
 
-                $scope.programaFidelidade.termosAceitos = true;
-                registraAceitePrograma();
+                    $scope.programaFidelidade.termosAceitos = true;
+                    registraAceitePrograma();
 
-            }, function () {
+                }, function () {
 
-                return;
+                    return;
 
-            });
+                });
 
         }
-        
+
     }
 
     function registraAceitePrograma() {

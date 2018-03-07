@@ -457,6 +457,7 @@
     <Content Include="Content\img\itens_cardapio\colorado_indica.jpg" />
     <Content Include="Content\img\itens_cardapio\engenheiros.jpg" />
     <Content Include="Content\img\itens_cardapio\henrique_juliano.jpg" />
+    <Content Include="Content\img\itens_cardapio\img_item1.jpg" />
     <Content Include="Content\img\itens_cardapio\ivete.jpg" />
     <Content Include="Content\img\itens_cardapio\johnny.jpg" />
     <Content Include="Content\img\itens_cardapio\madonna.jpg" />
@@ -494,6 +495,7 @@
     <Content Include="Content\img\itens_cardapio\mini-colorado_indica.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-engenheiros.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-henrique_juliano.jpg" />
+    <Content Include="Content\img\itens_cardapio\mini-img_item1.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-ivete.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-johnny.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-madonna.jpg" />
@@ -508,7 +510,6 @@
     <Content Include="Content\img\itens_cardapio\mini-roberto_carlos.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-salada_brasao.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-sem_foto.jpeg" />
-    <Content Include="Content\img\itens_cardapio\mini-skank.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-tilapia.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-tim.jpg" />
     <Content Include="Content\img\itens_cardapio\mini-tom.jpg" />
@@ -522,7 +523,6 @@
     <Content Include="Content\img\itens_cardapio\red_hot.jpg" />
     <Content Include="Content\img\itens_cardapio\roberto_carlos.jpg" />
     <Content Include="Content\img\itens_cardapio\salada_brasao.jpg" />
-    <Content Include="Content\img\itens_cardapio\skank.jpg" />
     <Content Include="Content\img\itens_cardapio\tilapia.jpg" />
     <Content Include="Content\img\itens_cardapio\tim.jpg" />
     <Content Include="Content\img\itens_cardapio\tom.jpg" />
