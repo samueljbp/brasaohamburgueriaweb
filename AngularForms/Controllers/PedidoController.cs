@@ -57,13 +57,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View("ConsultarPedidos");
         }
 
-        public async Task<JsonResult> GetPedido(int codPedido)
+        public async Task<JsonResult> GetPedido(int codPedido, bool paraConsulta)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var peds = await _rep.GetPedidosAbertos(codPedido);
+                var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta);
                 var ped = peds.FirstOrDefault();
                 ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
 
@@ -86,7 +86,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                result.data = await _rep.GetPedidosAbertos(null);
+                result.data = await _rep.GetPedidosAbertos(null, false);
 
                 foreach (var ped in result.data)
                 {

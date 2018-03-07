@@ -629,12 +629,12 @@ namespace BrasaoHamburgueria.Web.Repository
             return pedidos;
         }
 
-        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido)
+        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido, bool paraConsulta)
         {
             var dataHora = DateTime.Now.AddDays(-2);
             var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
 
-            var pedidos = await _contexto.Pedidos.Where(p => !(new List<int> { 5, 9 }).Contains(p.CodSituacao) && (p.DataHora > dataHora || p.CodSituacao < 4) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido))
+            var pedidos = await _contexto.Pedidos.Where(p => (!(new List<int> { 5, 9 }).Contains(p.CodSituacao) && (p.DataHora > dataHora || p.CodSituacao < 4) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido) && !paraConsulta) || (paraConsulta && codPedido != null && p.CodPedido == codPedido))
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))

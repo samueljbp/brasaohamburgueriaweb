@@ -16,6 +16,7 @@
 <div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetPedidosRealizados,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
         <h3>Pedidos realizados</h3>
         <hr />
@@ -78,9 +79,10 @@
                         <th st-sort="codPedido" width="5%"><a href="#">Nº</a></th>
                         <th st-sort="codPedido" width="5%"><a href="#">Externo</a></th>
                         <th st-sort="dataPedido" width="15%"><a href="#">Data/Hora</a></th>
-                        <th st-sort="nome" width="40%"><a href="#">Cliente</a></th>
+                        <th st-sort="nome" width="35%"><a href="#">Cliente</a></th>
                         <th st-sort="descricaoFormaPagamento" width="20%"><a href="#">Forma pagamento</a></th>
                         <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
+                        <th width="5%"><a href="#"></a></th>
                     </tr>
                     <tr>
                         <th>
@@ -98,7 +100,7 @@
                         <th>
                             <input st-search="descricaoFormaPagamento" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
-                        <th>
+                        <th colspan="2">
 
                         </th>
                     </tr>
@@ -111,44 +113,56 @@
                         <td>{{ped.dadosCliente.nome}}</td>
                         <td>{{ped.descricaoFormaPagamento}}</td>
                         <td>{{ped.valorTotal - ped.valorDesconto | currency: "R$ "}}</td>
-                        @*<td>
-                                <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-warning">
-                                    <i class="glyphicon glyphicon-list">
-                                    </i>
-                                </button>
-                            </td>*@
+                        <td>
+                            <button type="button" ng-click="getPedido(ped.codPedido)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-list">
+                                </i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-left">
-                            <div class="row">
-                                <div class="col-sm-2"><small>Qtd peds: <span class="text-success">{{totais.qtdPeds}}</span></small></div>
-                                <div class="col-sm-2">
-                                    <small>Débito: <span class="text-primary">{{totais.debito | currency: "R$ "}}</span></small>
-                                </div>
-                                <div class="col-sm-2">
-                                    <small>Crédito: <span class="text-primary">{{totais.credito | currency: "R$ "}}</span></small>
-                                </div>
-                                <div class="col-sm-2">
-                                    <small>Dinheiro: <span class="text-primary">{{totais.dinheiro | currency: "R$ "}}</span></small>
-                                </div>
-                                <div class="col-sm-2">
-                                    <small>Ticket: <span class="text-primary">{{totais.ticket | currency: "R$ "}}</span></small>
-                                </div>
-                                <div class="col-sm-2">
-                                    <small>Total: <span class="text-success">{{totais.debito + totais.credito + totais.dinheiro + totais.ticket | currency: "R$ "}}</span></small>
-                                </div>
+                        <td colspan="7" class="text-left">
+                            <div class="col-sm-2"><small>Qtd peds: <span class="text-success">{{totais.qtdPeds}}</span></small></div>
+                            <div class="col-sm-2">
+                                <small>Débito: <span class="text-primary">{{totais.debito | currency: "R$ "}}</span></small>
+                            </div>
+                            <div class="col-sm-2">
+                                <small>Crédito: <span class="text-primary">{{totais.credito | currency: "R$ "}}</span></small>
+                            </div>
+                            <div class="col-sm-2">
+                                <small>Dinheiro: <span class="text-primary">{{totais.dinheiro | currency: "R$ "}}</span></small>
+                            </div>
+                            <div class="col-sm-2">
+                                <small>Ticket: <span class="text-primary">{{totais.ticket | currency: "R$ "}}</span></small>
+                            </div>
+                            <div class="col-sm-2">
+                                <small>Total: <span class="text-success">{{totais.debito + totais.credito + totais.dinheiro + totais.ticket | currency: "R$ "}}</span></small>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="7" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+        <div class="modal fade" id="modalDetalhesPedido" tabindex="-1" role="dialog" aria-labelledby="labelModalDetalhesPedido" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalDetalhesPedido">Detalhes do pedido</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("~/Views/Pedido/_CabecalhoPedido.cshtml")<hr />
+                        @Html.Partial("~/Views/Pedido/_ListaItensPedido.cshtml")
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

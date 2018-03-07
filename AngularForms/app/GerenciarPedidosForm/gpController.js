@@ -109,7 +109,7 @@
                 'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Pedido/GetPedido?CodPedido=' + codPedido
+            url: urlBase + 'Pedido/GetPedido?CodPedido=' + codPedido + '&paraConsulta=false'
         })
         .then(function (response) {
 
