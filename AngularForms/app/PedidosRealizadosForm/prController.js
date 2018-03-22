@@ -186,6 +186,8 @@
             horaFim: ''
         }
 
+        $scope.acao = { ehConsulta: true }
+
         $(function () {
             $('#compDataInicio').datetimepicker({
                 locale: 'pt-BR',

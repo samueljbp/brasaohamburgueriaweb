@@ -19,6 +19,78 @@ namespace BrasaoHamburgueria.Web.Controllers
     {
         private CadastrosRepository _rep = new CadastrosRepository();
 
+        #region Combo de cardápio
+
+        public ActionResult ComboCardapio()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetCombos()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var combos = await _rep.GetCombos();
+
+                result.data = combos;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarCombo(ComboViewModel combo, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var promo = await _rep.GravarCombo(combo, modoCadastro);
+                result.Succeeded = true;
+                result.data = promo;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiCombo(ComboViewModel combo)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiCombo(combo);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
+
         #region Promoções de venda
 
         public ActionResult PromocaoVenda()

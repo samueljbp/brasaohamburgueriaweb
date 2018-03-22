@@ -22,11 +22,13 @@ namespace BrasaoHamburgueria.Web.Controllers
         {
             var context = new BrasaoContext();
 
-            var classes = context.Classes.Include(c => c.Itens)
-                .Include(c => c.Itens.Select(i => i.Classe))
-                .Include(c => c.Itens.Select(i => i.Complemento))
-                .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
-                .ToList();
+            //var classes = context.Classes.Include(c => c.Itens)
+            //    .Include(c => c.Itens.Select(i => i.Classe))
+            //    .Include(c => c.Itens.Select(i => i.Complemento))
+            //    .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
+            //    .ToList();
+
+            var classes = _rep.GetCardapio();
 
             ViewBag.Classes = classes;
 

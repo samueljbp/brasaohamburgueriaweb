@@ -83,9 +83,12 @@ namespace BrasaoHamburgueria.Model
         public double PrecoUnitarioComDesconto { get; set; }
         public double ValorExtras { get; set; }
         public double ValorTotalItem { get; set; }
-        public double? CodPromocaoVenda { get; set; }
+        public int? CodPromocaoVenda { get; set; }
         public double PercentualDesconto { get; set; }
         public double ValorDesconto { get; set; }
+        public int? CodCombo { get; set; }
+        public double PrecoCombo { get; set; }
+        public string DescricaoCombo { get; set; }
         public int AcaoRegistro { get; set; }
         public List<String> PortasImpressaoProducao { get; set; }
     }
@@ -252,13 +255,19 @@ namespace BrasaoHamburgueria.Model
         public double ValorExtras { get; set; }
 
         [Column("COD_PROMOCAO_VENDA")]
-        public double? CodPromocaoVenda { get; set; }
+        public int? CodPromocaoVenda { get; set; }
 
         [Column("PERCENTUAL_DESCONTO")]
         public double PercentualDesconto { get; set; }
 
         [Column("VALOR_DESCONTO")]
         public double ValorDesconto { get; set; }
+
+        [Column("COD_COMBO")]
+        public int? CodCombo { get; set; }
+
+        [Column("PRECO_COMBO")]
+        public double PrecoCombo { get; set; }
 
         [Required]
         [Column("VALOR_TOTAL")]

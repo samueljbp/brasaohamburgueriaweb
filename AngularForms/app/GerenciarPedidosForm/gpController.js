@@ -8,7 +8,7 @@
     $scope.pedidos = [];
     $scope.promisesLoader = [];
     $scope.pedidoSelecionado = [];
-    $scope.acao = { ehGestao: true, atualizacaoAutomatica: true, alertaSonoro: true, pedidoSelecionado: null };
+    $scope.acao = { ehGestao: true, ehConsulta: false, atualizacaoAutomatica: true, alertaSonoro: true, pedidoSelecionado: null };
 
     $scope.checkAtualizacaoAutomatica = function () {
         if ($scope.acao.atualizacaoAutomatica) {

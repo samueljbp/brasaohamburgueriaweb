@@ -471,6 +471,11 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     {
                         texto += item.DescricaoItem + RetornaEspacosCompletar(item.DescricaoItem, PedidoBusiness.QtdMaximaCaracteresLinha, 2) + item.Quantidade.ToString("00");
                         texto += comandoQuebraLinha;
+                        if (item.CodCombo != null)
+                        {
+                            texto += "Itens: " + item.DescricaoCombo;
+                            texto += comandoQuebraLinha;
+                        }
 
                         if (item.Obs != null && item.Obs.Count > 0)
                         {

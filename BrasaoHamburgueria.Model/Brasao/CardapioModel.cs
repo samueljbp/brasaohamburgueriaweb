@@ -48,10 +48,13 @@ namespace BrasaoHamburgueria.Model
         public int CodClasse { get; set; }
         public string DescricaoClasse { get; set; }
         public string Nome { get; set; }
+        public string Descricao { get; set; }
         public double Preco { get; set; }
         public int? CodPromocaoVenda { get; set; }
         public double PercentualDesconto { get; set; }
         public double PrecoComDesconto { get; set; }
+        public int? CodCombo { get; set; }
+        public double PrecoCombo { get; set; }
         public bool Ativo { get; set; }
         public bool Sincronizar { get; set; }
         public int? CodImpressoraProducao { get; set; }
@@ -59,6 +62,12 @@ namespace BrasaoHamburgueria.Model
         public ComplementoItemCardapioViewModel Complemento { get; set; }
         public List<ObservacaoProducaoViewModel> ObservacoesPermitidas { get; set; }
         public List<OpcaoExtraViewModel> ExtrasPermitidos { get; set; }
+    }
+
+    public class ComboViewModel : ItemCardapioViewModel
+    {
+        public int CodCombo { get; set; }
+        public List<ComboItemCardapioViewModel> Itens { get; set; }
     }
 
     public class ObservacaoProducaoViewModel
@@ -80,6 +89,64 @@ namespace BrasaoHamburgueria.Model
         public string Imagem { get; set; }
         public string ImagemMini { get; set; }
         public int? OrdemExibicao { get; set; }
+    }
+
+    public class ComboItemCardapioViewModel
+    {
+        public int CodCombo { get; set; }
+        public int CodItemCardapio { get; set; }
+        public string Nome { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    [Table("COMBO")]
+    public class Combo
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_COMBO")]
+        public int CodCombo { get; set; }
+
+        [Required]
+        [Column("NOME_COMBO")]
+        public string NomeCombo { get; set; }
+
+        [Required]
+        [Column("DESCRICAO_COMBO")]
+        public string DescricaoCombo { get; set; }
+
+        [Required]
+        [Column("PRECO_COMBO")]
+        public double PrecoCombo { get; set; }
+
+        [Required]
+        [Column("ATIVO")]
+        public bool Ativo { get; set; }
+
+        [InverseProperty("Combo")]
+        public virtual List<ComboItemCardapio> Itens { get; set; }
+    }
+
+    [Table("COMBO_ITEM_CARDAPIO")]
+    public class ComboItemCardapio
+    {
+        [Key, ForeignKey("Combo")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COB_COMBO", Order = 1)]
+        public int CodCombo { get; set; }
+
+        [Key, ForeignKey("Item")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_ITEM_CARDAPIO", Order = 2)]
+        public int CodItemCardapio { get; set; }
+
+        [Required]
+        [Column("QUANTIDADE")]
+        public int Quantidade { get; set; }
+
+        public virtual Combo Combo { get; set; }
+
+        public virtual ItemCardapio Item { get; set; }
     }
 
     [Table("CLASSE_ITEM_CARDAPIO")]
@@ -171,6 +238,9 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("Item")]
         public virtual List<ItemCardapioPromocaoVenda> PromocoesAssociadas { get; set; }
+
+        [InverseProperty("Item")]
+        public virtual List<ComboItemCardapio> CombosAssociados { get; set; }
 
         [InverseProperty("ItemCardapio")]
         public virtual List<ItemPedido> ItensPedidos { get; set; }

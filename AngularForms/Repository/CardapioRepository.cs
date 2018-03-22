@@ -128,12 +128,44 @@ namespace BrasaoHamburgueria.Web.Repository
                 {
                     var item = new ItemCardapioViewModel();
                     PropertyCopy.Copy(l, item);
+                    item.CodClasse = -1;
                     ofertas.Itens.Add(item);
                 });
 
                 if (ofertas.Itens.Count > 0)
                 {
                     retorno.Add(ofertas);
+                }
+            }
+
+            CadastrosRepository cadRep = new CadastrosRepository();
+            var combosDB = cadRep.GetCombosDB();
+
+            if (combosDB != null && combosDB.Where(c => c.Ativo).Count() > 0)
+            {
+                var combos = new ClasseItemCardapioViewModel();
+                combos.CodClasse = -2;
+                combos.CodImpressoraPadrao = -1;
+                combos.DescricaoClasse = "--------------> COMBOS";
+                combos.Imagem = "";
+                combos.ImagemMini = "";
+                combos.OrdemExibicao = 0;
+                combos.Itens = combosDB.Where(c => c.Ativo).Select(c => new ItemCardapioViewModel
+                {
+                    CodItemCardapio = -1 * c.CodItemCardapio,
+                    Nome = c.Nome,
+                    Descricao = c.Descricao,
+                    Preco = c.Preco,
+                    CodCombo = c.CodCombo,
+                    PrecoCombo = c.PrecoCombo,
+                    CodClasse = -2,
+                    Ativo = c.Ativo,
+                    CodImpressoraProducao = -1
+                }).ToList();
+
+                if (combos.Itens.Count > 0)
+                {
+                    retorno.Add(combos);
                 }
             }
 

@@ -109,7 +109,8 @@
                         <div class="col-sm-5">
                             <h4>{{item.nome}}</h4>
                             <h6 ng-if="item.complemento != null && item.complemento.descricaoLonga != null">{{item.complemento.descricaoLonga}}</h6>
-                            <h6 ng-if="item.complemento == null || item.complemento.descricaoLonga == null">{{item.nome}}</h6>
+                            <h6 ng-if="(item.complemento == null || item.complemento.descricaoLonga == null) && !(item.codCombo > 0)">{{item.nome}}</h6>
+                            <h6 ng-if="(item.complemento == null || item.complemento.descricaoLonga == null) && item.codCombo > 0">{{item.descricao}}</h6>
                         </div>
                         <div class="col-sm-3">
                             <div ng-show="item.percentualDesconto > 0">

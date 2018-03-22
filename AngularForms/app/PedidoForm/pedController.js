@@ -504,6 +504,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                         precoUnitarioComDesconto: $scope.itemCardapioSelecionado.precoComDesconto,
                         percentualDesconto: $scope.itemCardapioSelecionado.percentualDesconto,
                         codPromocaoVenda: $scope.itemCardapioSelecionado.codPromocaoVenda,
+                        codCombo: $scope.itemCardapioSelecionado.codCombo,
+                        precoCombo: $scope.itemCardapioSelecionado.precoCombo,
                         valorExtras: 0.0,
                         valorTotal: 0.0,
                         acaoRegistro: acaoRegistro.incluir

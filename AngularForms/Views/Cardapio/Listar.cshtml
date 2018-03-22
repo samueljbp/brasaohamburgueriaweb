@@ -142,13 +142,13 @@
     </div>
     <hr />
     @{
-        List<ClasseItemCardapio> classes = ViewBag.Classes;
+        List<ClasseItemCardapioViewModel> classes = ViewBag.Classes;
         var cont = 0;
         var tamanhoColunaNome = "col-sm-11";
-        var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21 };
+        var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21, -1, -2 };
     }
     <ul class="nav nav-tabs">
-        @foreach (ClasseItemCardapio classe in classes)
+        @foreach (ClasseItemCardapioViewModel classe in classes.Where(c => c.Itens.Count > 0))
         {
             <li class="small @(cont == 0 ? "active" : "")"><a data-toggle="pill" href="#@classe.CodClasse">@classe.DescricaoClasse</a></li>
             cont++;
@@ -157,10 +157,24 @@
 
     <div class="tab-content">
         @{ cont = 0; }
-        @foreach (ClasseItemCardapio classe in classes)
+        @foreach (ClasseItemCardapioViewModel classe in classes.Where(c => c.Itens.Count > 0))
         {
-            tamanhoColunaNome = "col-sm-11";
-            <div id="@classe.CodClasse" class="tab-pane fade @(cont == 0 ? "in active" : "")">
+            tamanhoColunaNome = "col-sm-10";
+
+            string ativa = "";
+            var mostraOfertas = Request.QueryString["mostrarOfertas"];
+            if (mostraOfertas != null)
+            {
+                if (classe.CodClasse == -1)
+                {
+                    ativa = "in active";
+                }
+            } else if (cont == 0)
+            {
+                ativa = "in active";
+            }
+
+            <div id="@classe.CodClasse" class="tab-pane fade @ativa">
                 <br />
                 <table class="table table-striped">
                     <thead>
@@ -177,17 +191,17 @@
                             </th>
                             @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                             {
-                                <th class="col-sm-8">
+                                <th class="col-sm-7">
                                     Descrição
                                 </th>
                             }
-                            <th class="col-sm-1">
+                            <th class="col-sm-2">
                                 Preço
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (ItemCardapio item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
+                        @foreach (ItemCardapioViewModel item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
                         {
                             <tr>
                                 @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
@@ -216,26 +230,46 @@
                                     }
                                     <h5>
                                         @item.Nome
+                                        @if (!String.IsNullOrEmpty(item.Descricao))
+                                        {
+                                            <br />
+                                            <strong>@item.Descricao</strong>
+                                        }
                                     </h5>
                                 </td>
                                 <td class="hidden-xs">
                                     <h5>
                                         @item.Nome
+                                        @if (!String.IsNullOrEmpty(item.Descricao))
+                                        {
+                                            <br />
+                                            <strong>@item.Descricao</strong>
+                                        }
                                     </h5>
                                 </td>
                                 @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
                                 {
                                     <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
                                 }
-                                <td>@item.Preco.ToString("C")</td>
+                                <td>
+                                    @if (item.PercentualDesconto > 0)
+                                    {
+                                        <span class="tachado" style="margin-bottom: 0px">@item.Preco.ToString("C")</span><br />
+                                        <span style="margin-top: 0px" class="text-success"><strong>@item.PercentualDesconto.ToString()% off - Por @item.PrecoComDesconto.ToString("C")</strong></span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Preco.ToString("C")</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-                        {
-                            cont = cont + 1;
-                        }
+            {
+                cont = cont + 1;
+            }
         }
 
         <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

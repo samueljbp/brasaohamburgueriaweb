@@ -191,7 +191,7 @@
         }
 
         $scope.pedidoSelecionado = { usuario: '', codPedido: 1, situacao: 0 };
-        $scope.acao = { ehGestao: false };
+        $scope.acao = { ehGestao: false, ehConsulta: false };
 
         $interval(function () {
             $scope.getPedidoAberto($scope.loginUsuario);

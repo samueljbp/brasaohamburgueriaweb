@@ -14,6 +14,162 @@ namespace BrasaoHamburgueria.Web.Repository
     {
         private BrasaoContext _contexto = new BrasaoContext();
 
+        #region Cadastros de combo de cardápio
+
+        public List<ComboViewModel> GetCombosDB()
+        {
+            var combos = (from cmb in _contexto.Combos
+                               .Include(c => c.Itens)
+                               .Include(c => c.Itens.Select(i => i.Item))
+                          select new ComboViewModel
+                          {
+                              CodCombo = cmb.CodCombo,
+                              Nome = cmb.NomeCombo,
+                              Descricao = cmb.DescricaoCombo,
+                              Preco = cmb.PrecoCombo,
+                              PrecoCombo = cmb.PrecoCombo,
+                              Ativo = cmb.Ativo,
+                              Itens = cmb.Itens.Select(i => new ComboItemCardapioViewModel
+                              {
+                                  CodCombo = cmb.CodCombo,
+                                  CodItemCardapio = i.CodItemCardapio,
+                                  Quantidade = i.Quantidade,
+                                  Nome = i.Item.Nome
+                              }).ToList()
+                          }
+                                ).OrderBy(c => c.CodCombo).ToList();
+
+            return combos;
+        }
+
+        public async Task<List<ComboViewModel>> GetCombos()
+        {
+            return GetCombosDB();
+        }
+
+        public async Task<ComboViewModel> GravarCombo(ComboViewModel combo, String modoCadastro)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (modoCadastro == "A") //alteração
+                    {
+                        var comboAlterar = _contexto.Combos.Find(combo.CodCombo);
+
+                        if (comboAlterar != null)
+                        {
+                            if (combo.Itens != null)
+                            {
+                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE COMBO_ITEM_CARDAPIO");
+                                //_contexto.ItensPromocaoVenda.RemoveRange(_contexto.ItensPromocaoVenda.ToList());
+                                _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                            }
+
+                            comboAlterar.NomeCombo = combo.Nome;
+                            comboAlterar.DescricaoCombo = combo.Descricao;
+                            comboAlterar.Ativo = combo.Ativo;
+                            comboAlterar.PrecoCombo = combo.Preco;
+
+                            await _contexto.SaveChangesAsync();
+                            dbContextTransaction.Commit();
+                        }
+
+                        return combo;
+                    }
+                    else if (modoCadastro == "I") //inclusão
+                    {
+                        var comboIncluir = new Combo();
+                        if (combo.CodCombo <= 0)
+                        {
+                            comboIncluir.CodCombo = 1;
+                            var cod = _contexto.Combos.Select(o => o.CodCombo).DefaultIfEmpty(-1).Max();
+                            if (cod > 0)
+                            {
+                                comboIncluir.CodCombo = cod + 1;
+                            }
+                            combo.CodCombo = comboIncluir.CodCombo;
+                        }
+                        else
+                        {
+                            var valida = _contexto.Combos.Find(combo.CodCombo);
+
+                            if (valida != null)
+                            {
+                                throw new Exception("Já existe um combo cadastrado com o código " + combo.CodCombo);
+                            }
+
+                            comboIncluir.CodCombo = combo.CodCombo;
+                        }
+
+                        comboIncluir.NomeCombo = combo.Nome;
+                        comboIncluir.DescricaoCombo = combo.Descricao;
+                        comboIncluir.Ativo = combo.Ativo;
+                        comboIncluir.PrecoCombo = combo.Preco;
+
+                        _contexto.Combos.Add(comboIncluir);
+
+                        if (combo.Itens != null)
+                        {
+                            _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                        }
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+
+                        return combo;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+
+            return null;
+        }
+
+        public async Task<string> ExcluiCombo(ComboViewModel combo)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    var comboExcluir = await _contexto.Combos.FindAsync(combo.CodCombo);
+
+                    if (comboExcluir != null)
+                    {
+                        var itensExcluir = await _contexto.ItensCombo.Where(i => i.CodCombo == combo.CodCombo).ToListAsync();
+                        if (itensExcluir != null)
+                        {
+                            _contexto.ItensCombo.RemoveRange(itensExcluir);
+                        }
+
+                        _contexto.Combos.Remove(comboExcluir);
+                        await _contexto.SaveChangesAsync();
+
+                        dbContextTransaction.Commit();
+                    }
+                    else
+                    {
+                        return "Registro não encontrado na base de dados.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+
+            }
+
+
+            return "";
+        }
+
+        #endregion
+
         #region Cadastros de promoções de venda
 
         public async Task<List<TipoAplicacaoDescontoPromocaoViewModel>> GetTiposAplicacaoDesconto()

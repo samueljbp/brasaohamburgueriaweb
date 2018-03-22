@@ -1,0 +1,200 @@
+﻿@using BrasaoHamburgueria;
+@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/CadastroComboCardapio/cccController.js"></script>
+<div ng-controller="cccController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetCombos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirCombo,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetItens,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formCombo" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Combo de item de cardápio - Cadastro</h3>
+        <hr />
+
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="codCombo" width="5%"><a href="#">Código</a></th>
+                        <th st-sort="nome" width="15%"><a href="#">Nome</a></th>
+                        <th st-sort="descricao" width="45%"><a href="#">Descricao</a></th>
+                        <th st-sort="preco" width="15%"><a href="#">Preço</a></th>
+                        <th st-sort="ativo" width="10%"><a href="#">Ativo</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codCombo" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="preco" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="ativo" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="7">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="combo in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{combo.codCombo}}</td>
+                        <td>{{combo.nome}}</td>
+                        <td>{{combo.descricao}}</td>
+                        <td>{{combo.preco | currency: ""}}</td>
+                        <td>{{combo.ativo ? 'Sim' : 'Não'}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoCombo(combo)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(combo)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarCombo" class="form-horizontal">
+        <div class="modal fade" id="modalGravarCombo" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarCombo" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarCombo">Combo de item de cardápio - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarCombo,backdrop:false,delay:10,minDuration:1000}"></div>
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+                        <div class="form-group">
+                            <label for="codCombo" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codCombo" ng-disabled="modoCadastro == 'A'" name="codCombo" class="form-control" ng-model="comboSelecionado.codCombo" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div id="divCheckComboAtivo" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="comboAtivo" name="comboAtivo" ng-model="comboSelecionado.ativo" />Combo ativo</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nomeCombo" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="nomeCombo" name="nomeCombo" class="form-control" ng-model="comboSelecionado.nome" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoLonga" class="col-sm-2 control-label">Descrição</label>
+                            <div class="col-sm-8">
+                                <textarea rows="4" cols="50" required id="descricaoLonga" name="descricaoLonga" class="form-control" ng-model="comboSelecionado.descricao" maxlength="400"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroCampoPreco) ? 'has-error' : ''">
+                            <label for="preco" class="col-sm-2 control-label">Preço</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="preco" autocomplete="off" id="preco" format="number" class="form-control hidden-sm hidden-xs" ng-model="comboSelecionado.preco" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="comboSelecionado.preco" />
+                                <div class="help-block with-errors" ng-show="mensagem.erroCampoPreco">Preencha este campo</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroListasDragDrop) ? 'has-error' : ''">
+                            <div class="col-sm-12">
+                                <div class="help-block with-errors" ng-show="mensagem.erroListasDragDrop">Você não selecionou nenhum item</div>
+                                <div class="multiDemo row">
+                                    <div ng-repeat="list in models" class="col-sm-6">
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">{{list.listName}}<input type="text" id="pesquisaItem" name="pesquisaItem" class="form-control" ng-model="pesquisaItem.chave" ng-keyup="pesquisaItens()" ng-show="$index == 0" maxlength="10" style="margin-top: 10px" /></h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul dnd-list dnd-drop="onDrop(list, item, index)">
+                                                    <li ng-repeat="item in list.items| orderBy: 'nome'"
+                                                        dnd-draggable="getSelectedItemsIncluding(list, item)"
+                                                        dnd-dragstart="onDragstart(list, event)"
+                                                        dnd-moved="onMoved(list)"
+                                                        dnd-dragend="list.dragging = false"
+                                                        dnd-selected="item.selected = !item.selected"
+                                                        ng-class="{'selected': item.selected}"
+                                                        ng-hide="list.dragging && item.selected">
+                                                        {{item.nome}} - {{item.quantidade}}
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarCombo()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

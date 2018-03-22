@@ -28,7 +28,7 @@
 
         $scope.diasSelecionados = [];
 
-
+        $scope.pesquisaItem = { chave: '' };
 
 
         $('#compInicioVigencia').datetimepicker({
@@ -248,6 +248,17 @@
 
 
 
+
+    }
+
+    $scope.pesquisaItens = function () {
+
+        if ($scope.pesquisaItem.chave == '') {
+            $scope.models[0].items = $scope.itensCardapio;
+            return;
+        }
+
+        $scope.models[0].items = $filter('filter')($scope.itensCardapio, { nome: $scope.pesquisaItem.chave });
 
     }
 

@@ -226,7 +226,7 @@
                                     <div ng-repeat="list in models" class="col-sm-6">
                                         <div class="panel panel-info">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title">{{list.listName}}</h3>
+                                                <h3 class="panel-title">{{list.listName}}<input type="text" id="pesquisaItem" name="pesquisaItem" class="form-control" ng-model="pesquisaItem.chave" ng-keyup="pesquisaItens()" ng-show="$index == 0 && promocaoSelecionada.codTipoAplicacaoDesconto == 1" maxlength="10" style="margin-top: 10px" /></h3>
                                             </div>
                                             <div class="panel-body">
 

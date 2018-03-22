@@ -171,6 +171,14 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     valorTotalPedido += item.Quantidade * ((1 - (percentualDesconto / 100)) * itemBase.Preco);
                 }
+                else if (item.CodCombo != null)
+                {
+                    var comboBase = _contexto.Combos.Find(item.CodCombo.Value);
+                    if (comboBase != null)
+                    {
+                        valorTotalPedido += item.Quantidade * comboBase.PrecoCombo;
+                    }
+                }
 
                 valorTotalPedido += valorExtras;
             }
@@ -303,7 +311,33 @@ namespace BrasaoHamburgueria.Web.Repository
                     await _contexto.SaveChangesAsync();
 
                     ItemPedido item;
-                    foreach (var itemViewModel in pedidoViewModel.Itens)
+
+                    var itens = pedidoViewModel.Itens.Where(i => i.CodCombo == null).ToList();
+
+                    //combos são explodidos em itens e tem seus itens gravados individualmente. A forma de identificar é a coluna cod_combo. Na hora de recuperar os itens precisa agrupar novamente
+                    var combos = pedidoViewModel.Itens.Where(i => i.CodCombo != null);
+                    var maxSeqItem = pedidoViewModel.Itens.Max(i => i.SeqItem);
+                    foreach (var combo in combos)
+                    {
+                        var itensCombo = _contexto.ItensCombo.Include(i => i.Item).Where(c => c.CodCombo == combo.CodCombo.Value);
+                        foreach (var ic in itensCombo)
+                        {
+                            maxSeqItem += 1;
+                            ItemPedidoViewModel icPedido = new ItemPedidoViewModel();
+                            icPedido.CodItem = ic.CodItemCardapio;
+                            icPedido.ObservacaoLivre = combo.ObservacaoLivre;
+                            icPedido.PrecoUnitario = ic.Item.Preco;
+                            icPedido.Quantidade = combo.Quantidade;
+                            icPedido.SeqItem = maxSeqItem;
+                            icPedido.ValorExtras = combo.ValorExtras;
+                            icPedido.ValorTotalItem = icPedido.Quantidade * icPedido.PrecoUnitario;
+                            icPedido.CodCombo = combo.CodCombo;
+                            icPedido.PrecoCombo = combo.PrecoCombo;
+                            itens.Add(icPedido);
+                        }
+                    }
+
+                    foreach (var itemViewModel in itens)
                     {
                         if (itemViewModel.AcaoRegistro == (int)Comum.AcaoRegistro.Incluir)
                         {
@@ -317,6 +351,8 @@ namespace BrasaoHamburgueria.Web.Repository
                             item.SeqItem = itemViewModel.SeqItem;
                             item.ValorExtras = itemViewModel.ValorExtras;
                             item.ValorTotal = itemViewModel.ValorTotalItem;
+                            item.CodCombo = itemViewModel.CodCombo;
+                            item.PrecoCombo = itemViewModel.PrecoCombo;
 
                             if (itemViewModel.CodPromocaoVenda != null)
                             {
@@ -514,6 +550,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
+                .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas))
+                .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao)))
                 .Include(c => c.Itens.Select(i => i.Observacoes))
                 .Include(c => c.Itens.Select(i => i.Observacoes.Select(o => o.Observacao)))
                 .Include(c => c.Itens.Select(i => i.Extras))
@@ -543,6 +581,8 @@ namespace BrasaoHamburgueria.Web.Repository
                         ValorExtras = i.ValorExtras,
                         ValorTotalItem = i.ValorTotal,
                         ObservacaoLivre = i.ObservacaoLivre,
+                        CodCombo = i.CodCombo,
+                        PrecoCombo = i.PrecoCombo,
                         Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
                         {
                             CodObservacao = o.CodObservacao,
@@ -553,11 +593,14 @@ namespace BrasaoHamburgueria.Web.Repository
                             CodOpcaoExtra = e.CodOpcaoExtra,
                             DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra,
                             Preco = e.Preco
-                        }).ToList()
+                        }).ToList(),
+                        PortasImpressaoProducao = i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao.Porta).ToList()
                     }).ToList().OrderBy(i => i.SeqItem).ToList()
                 })
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
+
+            AgrupaItensComboPedido(pedidos);
 
             return pedidos;
         }
@@ -691,6 +734,8 @@ namespace BrasaoHamburgueria.Web.Repository
                         PrecoUnitarioComDesconto = (1 - i.PercentualDesconto / 100) * i.PrecoUnitario,
                         ValorDesconto = i.ValorDesconto,
                         ObservacaoLivre = i.ObservacaoLivre,
+                        CodCombo = i.CodCombo,
+                        PrecoCombo = i.PrecoCombo,
                         AcaoRegistro = (int)Comum.AcaoRegistro.Nenhuma,
                         PortasImpressaoProducao = i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao.Porta).ToList(),
                         Obs = i.Observacoes.Select(o => new ObservacaoItemPedidoViewModel
@@ -709,7 +754,50 @@ namespace BrasaoHamburgueria.Web.Repository
                 .OrderBy(p => p.DataPedido)
                 .ToListAsync();
 
+            AgrupaItensComboPedido(pedidos);
+
             return pedidos;
+        }
+
+        public void AgrupaItensComboPedido(List<PedidoViewModel> pedidos)
+        {
+            var itensCombo = new List<ItemPedidoViewModel>();
+            foreach (var ped in pedidos)
+            {
+                itensCombo = new List<ItemPedidoViewModel>();
+                foreach (var item in ped.Itens.Where(i => i.CodCombo != null).ToList().OrderByDescending(i => i.PortasImpressaoProducao.Count))
+                {
+                    var comboDb = _contexto.Combos.Find(item.CodCombo.Value);
+                    if (comboDb != null && item.PortasImpressaoProducao.Count > 0 && itensCombo.Where(ic => ic.CodCombo == item.CodCombo).Count() == 0)
+                    {
+                        ItemPedidoViewModel itemCombo = new ItemPedidoViewModel();
+                        itemCombo.CodItem = -1;
+                        itemCombo.SeqItem = ped.Itens.Where(i => i.CodCombo == item.CodCombo.Value).OrderByDescending(i => i.SeqItem).FirstOrDefault().SeqItem;
+                        itemCombo.DescricaoItem = comboDb.NomeCombo;
+                        itemCombo.Quantidade = item.Quantidade;
+                        itemCombo.PrecoUnitario = item.PrecoCombo;
+                        itemCombo.ValorExtras = 0;
+                        itemCombo.ValorTotalItem = itemCombo.Quantidade * itemCombo.PrecoUnitario;
+                        itemCombo.CodPromocaoVenda = null;
+                        itemCombo.PercentualDesconto = 0;
+                        itemCombo.PrecoUnitario = comboDb.PrecoCombo;
+                        itemCombo.ValorDesconto = 0;
+                        itemCombo.ObservacaoLivre = item.ObservacaoLivre;
+                        itemCombo.AcaoRegistro = (int)Comum.AcaoRegistro.Nenhuma;
+                        itemCombo.PortasImpressaoProducao = item.PortasImpressaoProducao;
+                        itemCombo.Obs = item.Obs;
+                        itemCombo.extras = item.extras;
+                        itemCombo.CodCombo = item.CodCombo;
+                        itemCombo.PrecoCombo = item.PrecoCombo;
+                        itemCombo.DescricaoCombo = comboDb.DescricaoCombo;
+                        itensCombo.Add(itemCombo);
+                    }
+
+                    ped.Itens.Remove(item);
+                }
+
+                ped.Itens.AddRange(itensCombo);
+            }
         }
     }
 }
