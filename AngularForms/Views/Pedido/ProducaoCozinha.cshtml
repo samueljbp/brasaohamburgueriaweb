@@ -1,0 +1,56 @@
+﻿@using BrasaoHamburgueria;
+@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/ProducaoCozinhaForm/pcController.js"></script>
+<div ng-controller="cccController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetPedidos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formProducaoCozinha" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Produção de pedidos - Cozinha</h3>
+        <hr />
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="multiDemo row">
+                    <div ng-repeat="list in models" class="col-sm-6">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{list.listName}}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul dnd-list dnd-drop="onDrop(list, item, index)">
+                                    <li ng-repeat="item in list.items| orderBy: 'nome'"
+                                        dnd-draggable="getSelectedItemsIncluding(list, item)"
+                                        dnd-dragstart="onDragstart(list, event)"
+                                        dnd-moved="onMoved(list)"
+                                        dnd-dragend="list.dragging = false"
+                                        dnd-selected="item.selected = !item.selected"
+                                        ng-class="{'selected': item.selected}"
+                                        ng-hide="list.dragging && item.selected">
+                                        {{item.nome}} - {{item.quantidade}}
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+    
+</div>

@@ -16,7 +16,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         #region Cadastros de combo de cardápio
 
-        public List<ComboViewModel> GetCombosDB()
+        public List<ComboViewModel> GetCombosDB(bool combosDoDia)
         {
             var combos = (from cmb in _contexto.Combos
                                .Include(c => c.Itens)
@@ -29,22 +29,48 @@ namespace BrasaoHamburgueria.Web.Repository
                               Preco = cmb.PrecoCombo,
                               PrecoCombo = cmb.PrecoCombo,
                               Ativo = cmb.Ativo,
+                              DataHoraInicio = cmb.DataHoraInicio,
+                              DataHoraFim = cmb.DataHoraFim,
                               Itens = cmb.Itens.Select(i => new ComboItemCardapioViewModel
                               {
                                   CodCombo = cmb.CodCombo,
                                   CodItemCardapio = i.CodItemCardapio,
                                   Quantidade = i.Quantidade,
                                   Nome = i.Item.Nome
-                              }).ToList()
+                              }).ToList(),
+                              DiasAssociados = cmb.DiasAssociados.Select(d => new DiaSemanaViewModel
+                              {
+                                  NumDiaSemana = d.DiaSemana
+                              }).ToList(),
                           }
                                 ).OrderBy(c => c.CodCombo).ToList();
+
+            foreach (var combo in combos)
+            {
+                combo.DataInicio = combo.DataHoraInicio.ToString("dd/MM/yyyy");
+                combo.HoraInicio = combo.DataHoraInicio.ToString("HH:mm");
+                combo.DataFim = combo.DataHoraFim.ToString("dd/MM/yyyy");
+                combo.HoraFim = combo.DataHoraFim.ToString("HH:mm");
+            }
+
+            if (combosDoDia)
+            {
+                var numDiaHoje = (int)DateTime.Now.DayOfWeek;
+
+                return (from cmbs in combos
+                        where cmbs.Ativo &&
+                              cmbs.DataHoraInicio <= DateTime.Now &&
+                              cmbs.DataHoraFim >= DateTime.Now &&
+                              cmbs.DiasAssociados.Select(d => d.NumDiaSemana).Contains(numDiaHoje)
+                        select cmbs).ToList();
+            }
 
             return combos;
         }
 
         public async Task<List<ComboViewModel>> GetCombos()
         {
-            return GetCombosDB();
+            return GetCombosDB(false);
         }
 
         public async Task<ComboViewModel> GravarCombo(ComboViewModel combo, String modoCadastro)
@@ -53,6 +79,14 @@ namespace BrasaoHamburgueria.Web.Repository
             {
                 try
                 {
+                    combo.DataHoraInicio = Convert.ToDateTime(combo.DataInicio.Substring(0, 2) + "/" + combo.DataInicio.Substring(3, 2) + "/" + combo.DataInicio.Substring(6) + " " + combo.HoraInicio.Substring(0, 2) + ":" + combo.HoraInicio.Substring(3));
+                    combo.DataHoraFim = Convert.ToDateTime(combo.DataFim.Substring(0, 2) + "/" + combo.DataFim.Substring(3, 2) + "/" + combo.DataFim.Substring(6) + " " + combo.HoraFim.Substring(0, 2) + ":" + combo.HoraFim.Substring(3));
+
+                    if (combo.DataHoraFim < combo.DataHoraInicio)
+                    {
+                        throw new Exception("O término da vigência não pode ser anterior ao início.");
+                    }
+
                     if (modoCadastro == "A") //alteração
                     {
                         var comboAlterar = _contexto.Combos.Find(combo.CodCombo);
@@ -61,15 +95,22 @@ namespace BrasaoHamburgueria.Web.Repository
                         {
                             if (combo.Itens != null)
                             {
-                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE COMBO_ITEM_CARDAPIO");
-                                //_contexto.ItensPromocaoVenda.RemoveRange(_contexto.ItensPromocaoVenda.ToList());
-                                _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                                _contexto.ItensCombo.RemoveRange(_contexto.ItensCombo.Where(c => c.CodCombo == combo.CodCombo.Value).ToList());
+                                _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo.Value, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                            }
+
+                            if (combo.DiasAssociados != null)
+                            {
+                                _contexto.DiasSemanaCombo.RemoveRange(_contexto.DiasSemanaCombo.Where(c => c.CodCombo == combo.CodCombo.Value).ToList());
+                                _contexto.DiasSemanaCombo.AddRange(combo.DiasAssociados.Select(o => new DiaSemanaCombo { DiaSemana = o.NumDiaSemana, CodCombo = combo.CodCombo.Value }));
                             }
 
                             comboAlterar.NomeCombo = combo.Nome;
                             comboAlterar.DescricaoCombo = combo.Descricao;
                             comboAlterar.Ativo = combo.Ativo;
                             comboAlterar.PrecoCombo = combo.Preco;
+                            comboAlterar.DataHoraInicio = combo.DataHoraInicio;
+                            comboAlterar.DataHoraFim = combo.DataHoraFim;
 
                             await _contexto.SaveChangesAsync();
                             dbContextTransaction.Commit();
@@ -80,7 +121,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     else if (modoCadastro == "I") //inclusão
                     {
                         var comboIncluir = new Combo();
-                        if (combo.CodCombo <= 0)
+                        if (combo.CodCombo == null)
                         {
                             comboIncluir.CodCombo = 1;
                             var cod = _contexto.Combos.Select(o => o.CodCombo).DefaultIfEmpty(-1).Max();
@@ -99,19 +140,26 @@ namespace BrasaoHamburgueria.Web.Repository
                                 throw new Exception("Já existe um combo cadastrado com o código " + combo.CodCombo);
                             }
 
-                            comboIncluir.CodCombo = combo.CodCombo;
+                            comboIncluir.CodCombo = combo.CodCombo.Value;
                         }
 
                         comboIncluir.NomeCombo = combo.Nome;
                         comboIncluir.DescricaoCombo = combo.Descricao;
                         comboIncluir.Ativo = combo.Ativo;
                         comboIncluir.PrecoCombo = combo.Preco;
+                        comboIncluir.DataHoraInicio = combo.DataHoraInicio;
+                        comboIncluir.DataHoraFim = combo.DataHoraFim;
 
                         _contexto.Combos.Add(comboIncluir);
 
                         if (combo.Itens != null)
                         {
-                            _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                            _contexto.ItensCombo.AddRange(combo.Itens.GroupBy(i => i.CodItemCardapio).Select(o => new ComboItemCardapio { CodCombo = combo.CodCombo.Value, CodItemCardapio = o.First().CodItemCardapio, Quantidade = o.Sum(x => x.Quantidade) }));
+                        }
+
+                        if (combo.DiasAssociados != null)
+                        {
+                            _contexto.DiasSemanaCombo.AddRange(combo.DiasAssociados.Select(o => new DiaSemanaCombo { DiaSemana = o.NumDiaSemana, CodCombo = combo.CodCombo.Value }));
                         }
 
                         await _contexto.SaveChangesAsync();
@@ -140,11 +188,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     if (comboExcluir != null)
                     {
-                        var itensExcluir = await _contexto.ItensCombo.Where(i => i.CodCombo == combo.CodCombo).ToListAsync();
-                        if (itensExcluir != null)
-                        {
-                            _contexto.ItensCombo.RemoveRange(itensExcluir);
-                        }
+                        _contexto.ItensCombo.RemoveRange(_contexto.ItensCombo.Where(i => i.CodCombo == combo.CodCombo).ToList());
+                        _contexto.DiasSemanaCombo.RemoveRange(_contexto.DiasSemanaCombo.Where(i => i.CodCombo == combo.CodCombo).ToList());
 
                         _contexto.Combos.Remove(comboExcluir);
                         await _contexto.SaveChangesAsync();
@@ -306,21 +351,18 @@ namespace BrasaoHamburgueria.Web.Repository
                         {
                             if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorClasse && promocao.ClassesAssociadas != null)
                             {
-                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE CLASSE_ITEM_CARDAPIO_PROMOCAO_VENDA");
-                                //_contexto.ClassesPromocaoVenda.RemoveRange(_contexto.ClassesPromocaoVenda.ToList());
+                                _contexto.ClassesPromocaoVenda.RemoveRange(_contexto.ClassesPromocaoVenda.Where(c => c.CodPromocaoVenda == promocao.CodPromocaoVenda).ToList());
                                 _contexto.ClassesPromocaoVenda.AddRange(promocao.ClassesAssociadas.Select(o => new ClasseItemCardapioPromocaoVenda { CodClasse = o.CodClasse, CodPromocaoVenda = promocao.CodPromocaoVenda }));
                             }
                             else if (promocao.CodTipoAplicacaoDesconto == (int)TipoAplicacaoDescontoEnum.DescontoPorItem && promocao.ItensAssociados != null)
                             {
-                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE ITEM_CARDAPIO_PROMOCAO_VENDA");
-                                //_contexto.ItensPromocaoVenda.RemoveRange(_contexto.ItensPromocaoVenda.ToList());
+                                _contexto.ItensPromocaoVenda.RemoveRange(_contexto.ItensPromocaoVenda.Where(i => i.CodPromocaoVenda == promocao.CodPromocaoVenda).ToList());
                                 _contexto.ItensPromocaoVenda.AddRange(promocao.ItensAssociados.Select(o => new ItemCardapioPromocaoVenda { CodItemCardapio = o.CodItemCardapio, CodPromocaoVenda = promocao.CodPromocaoVenda }));
                             }
 
                             if (promocao.DiasAssociados != null)
                             {
-                                _contexto.Database.ExecuteSqlCommand("TRUNCATE TABLE DIA_SEMANA_PROMOCAO_VENDA");
-                                //_contexto.DiasSemanaPromocaoVenda.RemoveRange(_contexto.DiasSemanaPromocaoVenda.ToList());
+                                _contexto.DiasSemanaPromocaoVenda.RemoveRange(_contexto.DiasSemanaPromocaoVenda.Where(d => d.CodPromocaoVenda == promocao.CodPromocaoVenda).ToList());
                                 _contexto.DiasSemanaPromocaoVenda.AddRange(promocao.DiasAssociados.Select(o => new DiaSemanaPromocaoVenda { DiaSemana = o.NumDiaSemana, CodPromocaoVenda = promocao.CodPromocaoVenda }));
                             }
 

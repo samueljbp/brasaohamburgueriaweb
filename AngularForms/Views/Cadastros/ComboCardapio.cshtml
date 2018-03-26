@@ -19,6 +19,7 @@
     <div cg-busy="{promise:promiseGetCombos,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirCombo,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetItens,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetDiasSemana,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formCombo" class="form-horizontal" ng-submit="submitForm()">
         <h3>Combo de item de cardápio - Cadastro</h3>
         <hr />
@@ -29,9 +30,11 @@
                     <tr>
                         <th st-sort="codCombo" width="5%"><a href="#">Código</a></th>
                         <th st-sort="nome" width="15%"><a href="#">Nome</a></th>
-                        <th st-sort="descricao" width="45%"><a href="#">Descricao</a></th>
-                        <th st-sort="preco" width="15%"><a href="#">Preço</a></th>
-                        <th st-sort="ativo" width="10%"><a href="#">Ativo</a></th>
+                        <th st-sort="descricao" width="26%"><a href="#">Descricao</a></th>
+                        <th st-sort="dataHoraInicio" width="12%"><a href="#">Início</a></th>
+                        <th st-sort="dataHoraFim" width="12%"><a href="#">Término</a></th>
+                        <th st-sort="preco" width="12%"><a href="#">Preço</a></th>
+                        <th st-sort="ativo" width="8%"><a href="#">Ativo</a></th>
                         <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
                     </tr>
                     <tr>
@@ -44,6 +47,7 @@
                         <th>
                             <input st-search="descricao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
+                        <th colspan="2"></th>
                         <th>
                             <input st-search="preco" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
@@ -57,7 +61,7 @@
                 </thead>
                 <tbody>
                     <tr ng-if="rowCollection.length <= 0">
-                        <td colspan="7">
+                        <td colspan="9">
                             <div>
                                 <small>Nenhum item cadastrado</small>
                             </div>
@@ -67,7 +71,9 @@
                         <td>{{combo.codCombo}}</td>
                         <td>{{combo.nome}}</td>
                         <td>{{combo.descricao}}</td>
-                        <td>{{combo.preco | currency: ""}}</td>
+                        <td>{{combo.dataHoraInicio | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{combo.dataHoraFim | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{combo.preco | currency: "R$ "}}</td>
                         <td>{{combo.ativo ? 'Sim' : 'Não'}}</td>
                         <td>
                             <button type="button" ng-click="confirmaExclusaoCombo(combo)" class="btn btn-sm btn-danger">
@@ -85,7 +91,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="7" class="text-right">
+                        <td colspan="9" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">
@@ -95,7 +101,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="9" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage"></div>
                         </td>
                     </tr>
@@ -149,6 +155,60 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="inicioVigencia" class="col-sm-2 control-label">Início vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compInicioVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtInicioVigencia" required ng-model="comboSelecionado.dataInicio" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compHoraInicio'>
+                                    <input type='text' class="form-control" id="txtHoraInicio" required ng-model="comboSelecionado.horaInicio" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="terminoVigencia" class="col-sm-2 control-label">Término vigência</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compTerminoVigencia'>
+                                    <input type='text' class="form-control" maxlength="10" id="txtTerminoVigencia" required ng-model="comboSelecionado.dataFim" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compHoraFim'>
+                                    <input type='text' class="form-control" id="txtHoraFim" required ng-model="comboSelecionado.horaFim" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="(mensagem.erroDiasSemana) ? 'has-error' : ''">
+                            <label for="diaSemana" class="col-sm-2 control-label">Dias semana</label>
+                            <div class="col-sm-10">
+                                <label ng-repeat="dia in diasSemana" style="margin-right: 15px">
+                                    <input type="checkbox"
+                                           name="diasSelecionados[]"
+                                           value="{{dia.numDiaSemana}}"
+                                           ng-checked="diasSelecionados.indexOf(dia.numDiaSemana) > -1"
+                                           ng-click="toggleSelection(dia.numDiaSemana)"> {{dia.nomeDiaSemana}}
+                                </label>
+                                <div class="help-block with-errors" ng-show="mensagem.erroDiasSemana">Selecione pelo menos um dia da semana</div>
+                            </div>
+                        </div>
+
                         <div class="form-group" ng-class="(mensagem.erroCampoPreco) ? 'has-error' : ''">
                             <label for="preco" class="col-sm-2 control-label">Preço</label>
                             <div class="col-sm-4">
@@ -177,7 +237,7 @@
                                                         dnd-selected="item.selected = !item.selected"
                                                         ng-class="{'selected': item.selected}"
                                                         ng-hide="list.dragging && item.selected">
-                                                        {{item.nome}} - {{item.quantidade}}
+                                                        {{item.nome}}{{(item.preco > 0 ? ' - R$ ' + item.preco : '')}}{{(item.quantidade > 0 ? ' - ' + item.quantidade : '')}}
                                                     </li>
                                                 </ul>
 

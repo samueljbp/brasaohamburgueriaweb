@@ -61,6 +61,7 @@
 
             $('#compTerminoVigencia').data("DateTimePicker").minDate(e.date);
             $scope.promocaoSelecionada.dataInicio = $("#txtInicioVigencia").val();
+            $scope.promocaoSelecionada.dataHoraInicio = $scope.promocaoSelecionada.dataInicio + " " + $scope.promocaoSelecionada.horaInicio;
 
         });
 
@@ -68,6 +69,7 @@
 
             $('#compInicioVigencia').data("DateTimePicker").maxDate(e.date);
             $scope.promocaoSelecionada.dataFim = $("#txtTerminoVigencia").val();
+            $scope.promocaoSelecionada.dataHoraFim = $scope.promocaoSelecionada.dataFim + " " + $scope.promocaoSelecionada.horaFim;
 
         });
 
@@ -75,6 +77,7 @@
 
             $scope.selecteddate = $("#datetimepicker").val();
             $scope.promocaoSelecionada.horaInicio = $("#txtHoraInicio").val();
+            $scope.promocaoSelecionada.dataHoraInicio = $scope.promocaoSelecionada.dataInicio + " " + $scope.promocaoSelecionada.horaInicio;
 
         });
 
@@ -82,6 +85,7 @@
 
             $scope.selecteddate = $("#datetimepicker").val();
             $scope.promocaoSelecionada.horaFim = $("#txtHoraFim").val();
+            $scope.promocaoSelecionada.dataHoraFim = $scope.promocaoSelecionada.dataFim + " " + $scope.promocaoSelecionada.horaFim;
 
         });
 
@@ -185,7 +189,7 @@
             });
 
 
-        $scope.promiseGetTiposDesconto = $http({
+        $scope.promiseGetDiasSemana = $http({
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,

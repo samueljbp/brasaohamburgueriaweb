@@ -66,8 +66,14 @@ namespace BrasaoHamburgueria.Model
 
     public class ComboViewModel : ItemCardapioViewModel
     {
-        public int CodCombo { get; set; }
+        public DateTime DataHoraInicio { get; set; }
+        public DateTime DataHoraFim { get; set; }
+        public string DataInicio { get; set; }
+        public string DataFim { get; set; }
+        public string HoraInicio { get; set; }
+        public string HoraFim { get; set; }
         public List<ComboItemCardapioViewModel> Itens { get; set; }
+        public List<DiaSemanaViewModel> DiasAssociados { get; set; }
     }
 
     public class ObservacaoProducaoViewModel
@@ -123,8 +129,19 @@ namespace BrasaoHamburgueria.Model
         [Column("ATIVO")]
         public bool Ativo { get; set; }
 
+        [Required]
+        [Column("DATA_INICIO")]
+        public DateTime DataHoraInicio { get; set; }
+
+        [Required]
+        [Column("DATA_FIM")]
+        public DateTime DataHoraFim { get; set; }
+
         [InverseProperty("Combo")]
         public virtual List<ComboItemCardapio> Itens { get; set; }
+
+        [InverseProperty("Combo")]
+        public virtual List<DiaSemanaCombo> DiasAssociados { get; set; }
     }
 
     [Table("COMBO_ITEM_CARDAPIO")]
@@ -147,6 +164,22 @@ namespace BrasaoHamburgueria.Model
         public virtual Combo Combo { get; set; }
 
         public virtual ItemCardapio Item { get; set; }
+    }
+
+    [Table("DIA_SEMANA_COMBO")]
+    public class DiaSemanaCombo
+    {
+        [Key, ForeignKey("Combo")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_COMBO", Order = 1)]
+        public int CodCombo { get; set; }
+
+        [Key]
+        [Required]
+        [Column("DIA_SEMANA", Order = 2)]
+        public int DiaSemana { get; set; }
+
+        public virtual Combo Combo { get; set; }
     }
 
     [Table("CLASSE_ITEM_CARDAPIO")]

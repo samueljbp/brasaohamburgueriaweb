@@ -36,6 +36,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             }
         }
 
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_COZINHA)]
+        public ActionResult ProducaoCozinha()
+        {
+            return View("PedidoRegistrado");
+        }
+
         public ActionResult PedidoRegistrado()
         {
             return View("PedidoRegistrado");

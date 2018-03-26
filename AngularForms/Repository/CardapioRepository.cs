@@ -139,7 +139,7 @@ namespace BrasaoHamburgueria.Web.Repository
             }
 
             CadastrosRepository cadRep = new CadastrosRepository();
-            var combosDB = cadRep.GetCombosDB();
+            var combosDB = cadRep.GetCombosDB(true);
 
             if (combosDB != null && combosDB.Where(c => c.Ativo).Count() > 0)
             {

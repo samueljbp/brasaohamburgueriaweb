@@ -185,6 +185,7 @@
     <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
     <Content Include="app\PedidosRealizadosForm\prController.js" />
     <Content Include="app\PerfilUsuarioForm\puController.js" />
+    <Content Include="app\ProducaoCozinhaForm\pcController.js" />
     <Content Include="app\RedefinirSenha\rdSenhaController.js" />
     <Content Include="app\util.js" />
     <Content Include="bower_components\angular-auto-complete\angular-auto-complete.css" />
@@ -1539,6 +1540,7 @@
     <Content Include="Views\ProgramaFidelidade\CadastroProgramaFidelidade.cshtml" />
     <Content Include="Views\Cadastros\PromocaoVenda.cshtml" />
     <Content Include="Views\Cadastros\ComboCardapio.cshtml" />
+    <Content Include="Views\Pedido\ProducaoCozinha.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1635,6 +1637,10 @@
     <Compile Include="Migrations\Brasao\201803091332580_ComboCardapio.Designer.cs">
       <DependentUpon>201803091332580_ComboCardapio.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201803261213276_ValidadeCombo.cs" />
+    <Compile Include="Migrations\Brasao\201803261213276_ValidadeCombo.Designer.cs">
+      <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1703,6 +1709,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201803091332580_ComboCardapio.resx">
       <DependentUpon>201803091332580_ComboCardapio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201803261213276_ValidadeCombo.resx">
+      <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

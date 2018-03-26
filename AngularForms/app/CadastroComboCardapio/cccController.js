@@ -6,7 +6,8 @@
             sucesso: '',
             informacao: '',
             erroCampoPreco: false,
-            erroListasDragDrop: false
+            erroListasDragDrop: false,
+            erroDiasSemana: false
         }
 
         // I: inclusão, A: alteração
@@ -16,15 +17,74 @@
         $scope.antiForgeryToken = antiForgeryToken;
 
         $scope.comboSelecionado = {};
+        $scope.comboSelecionado.diasAssociados = [];
 
         $scope.rowCollection = [];
         $scope.itemsByPage = 10;
 
         $scope.itensCardapio = [];
 
+        $scope.diasSemana = [];
 
+        $scope.diasSelecionados = [];
 
+        $('#compInicioVigencia').datetimepicker({
+            locale: 'pt-BR',
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
 
+        $('#compHoraInicio').datetimepicker({
+            locale: 'pt-BR',
+            format: 'LT'
+        });
+
+        $('#compTerminoVigencia').datetimepicker({
+            locale: 'pt-BR',
+            format: 'DD/MM/YYYY',
+            useCurrent: false
+        });
+
+        $('#compHoraFim').datetimepicker({
+            locale: 'pt-BR',
+            format: 'LT'
+        });
+
+        $('#compTerminoVigencia').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+
+        $("#compInicioVigencia").on("dp.change", function (e) {
+
+            $('#compTerminoVigencia').data("DateTimePicker").minDate(e.date);
+            $scope.comboSelecionado.dataInicio = $("#txtInicioVigencia").val();
+            $scope.comboSelecionado.dataHoraInicio = $scope.comboSelecionado.dataInicio + " " + $scope.comboSelecionado.horaInicio;
+
+        });
+
+        $("#compTerminoVigencia").on("dp.change", function (e) {
+
+            $('#compInicioVigencia').data("DateTimePicker").maxDate(e.date);
+            $scope.comboSelecionado.dataFim = $("#txtTerminoVigencia").val();
+            $scope.comboSelecionado.dataHoraFim = $scope.comboSelecionado.dataFim + " " + $scope.comboSelecionado.horaFim;
+
+        });
+
+        $("#compHoraInicio").on("dp.change", function () {
+
+            $scope.selecteddate = $("#datetimepicker").val();
+            $scope.comboSelecionado.horaInicio = $("#txtHoraInicio").val();
+            $scope.comboSelecionado.dataHoraInicio = $scope.comboSelecionado.dataInicio + " " + $scope.comboSelecionado.horaInicio;
+
+        });
+
+        $("#compHoraFim").on("dp.change", function () {
+
+            $scope.selecteddate = $("#datetimepicker").val();
+            $scope.comboSelecionado.horaFim = $("#txtHoraFim").val();
+            $scope.comboSelecionado.dataHoraFim = $scope.comboSelecionado.dataFim + " " + $scope.comboSelecionado.horaFim;
+
+        });
 
         
 
@@ -95,6 +155,58 @@
 
 
 
+        $scope.promiseGetDiasSemana = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cadastros/GetDiasSemana'
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.diasSemana = retorno.data;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
+
+
+    }
+
+    $scope.toggleSelection = function toggleSelection(numDia) {
+        var idx = $scope.diasSelecionados.indexOf(numDia);
+
+        // Is currently selected
+        if (idx > -1) {
+            $scope.diasSelecionados.splice(idx, 1);
+        }
+
+        // Is newly selected
+        else {
+            $scope.diasSelecionados.push(numDia);
+        }
+    }
+
+    function montaArrayDias() {
+
+        $scope.diasSelecionados = [];
+        angular.forEach($scope.comboSelecionado.diasAssociados, function (item) { $scope.diasSelecionados.push(item.numDiaSemana); });
+
 
     }
 
@@ -125,6 +237,7 @@
                 .concat(items)
                 .concat(list.items.slice(index));
             //list.items = removeDuplicates(list.items, 'codItemCardapio');
+            $scope.$apply();
             return true;
         }
 
@@ -157,6 +270,9 @@
 
         $scope.comboSelecionado = combo;
 
+        montaArrayDias();
+
+        $scope.models[1].items = [];
         $scope.models[1].items = $scope.models[1].items.concat($scope.comboSelecionado.itens);
         angular.forEach($scope.models[1].items, function (item) { item.selected = false; });
 
@@ -178,14 +294,22 @@
         $scope.comboSelecionado = {};
         $scope.comboSelecionado.ativo = true;
         $scope.comboSelecionado.itens = [];
+        $scope.comboSelecionado.diasAssociados = [];
         $scope.models[1].items = [];
-        angular.forEach($scope.models[1].items, function (item) { item.selected = false; });
+        angular.forEach($scope.models[1].items, function (item) { item.selected = false });
 
         $scope.modoCadastro = 'I';
         $('#modalGravarCombo').modal('show');
     }
 
     $scope.gravarCombo = function () {
+
+        $scope.comboSelecionado.dataInicio = $("#txtInicioVigencia").val();
+        $scope.comboSelecionado.dataFim = $("#txtTerminoVigencia").val();
+        $scope.comboSelecionado.horaInicio = $("#txtHoraInicio").val();
+        $scope.comboSelecionado.horaFim = $("#txtHoraFim").val();
+        $scope.comboSelecionado.dataHoraInicio = $scope.comboSelecionado.dataInicio + " " + $scope.comboSelecionado.horaInicio;
+        $scope.comboSelecionado.dataHoraFim = $scope.comboSelecionado.dataFim + " " + $scope.comboSelecionado.horaFim;
 
         $('#formGravarCombo').validator('destroy').validator();
 
@@ -196,6 +320,22 @@
             return;
 
         } else { $scope.comboSelecionado.preco = parseFloat($scope.comboSelecionado.preco); }
+
+        $scope.mensagem.erroDiasSemana = false;
+        if ($scope.diasSelecionados.length <= 0) {
+
+            $scope.mensagem.erroDiasSemana = true;
+            return;
+
+        }
+
+        $scope.comboSelecionado.diasAssociados = [];
+        for (i = 0; i < $scope.diasSelecionados.length; i++) {
+
+            var numDia = $scope.diasSelecionados[i];
+            $scope.comboSelecionado.diasAssociados.push({ numDiaSemana: numDia });
+
+        }
 
         var hasErrors = $('#formGravarCombo').validator('validate').has('.has-error').length;
 
