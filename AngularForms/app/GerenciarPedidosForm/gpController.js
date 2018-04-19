@@ -148,7 +148,7 @@
                 'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Pedido/GetPedidosAbertos'
+            url: urlBase + 'Pedido/GetPedidosAbertos?somenteProducao=false'
         })
         .then(function (response) {
 
@@ -254,11 +254,14 @@
     };
 
 
-    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera) {
+    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera, imprimeComandaCozinha, portaImpressoraCozinha) {
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
 
         $scope.tempoMedioEspera = parseInt(tempoMedioEspera);
+
+        $scope.portaImpressoraCozinha = portaImpressoraCozinha;
+        $scope.imprimeComandaCozinha = imprimeComandaCozinha;
 
         $scope.getPedidosPendentes(false, true);
 
@@ -397,6 +400,8 @@
                     }
                 }
 
+                noteService.sendMessage($scope.acao.pedidoSelecionado.usuario, $scope.acao.pedidoSelecionado.codPedido, 9);
+
                 $scope.mensagem.sucesso = 'Pedido cancelado com sucesso';
 
                 $scope.acao.pedidoSelecionado = null;
@@ -491,9 +496,9 @@
                         for (i = 0; i < $scope.pedidos.length; i++) {
                             if ($scope.pedidos[i].codPedido == pedido.codPedido) {
 
-                                if (!pedido.pedidoExterno) {
+                                //if (!pedido.pedidoExterno) {
                                     noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
-                                }
+                                //}
 
                                 $scope.pedidos[i].situacao = proximaSituacao;
                                 $scope.pedidos[i].descricaoSituacao = descricaoProximaSituacao;
@@ -533,7 +538,9 @@
             crossDomain: true,
             dataType: 'json',
             url: urlWebAPIBase + 'Impressao/ImprimePedido',
-            data: pedido
+            data: {
+                pedido: pedido, imprimeComandaCozinha: $scope.imprimeComandaCozinha, portaImpressoraCozinha: $scope.portaImpressoraCozinha
+            }
         }).then(function (success) {
             var retorno = genericSuccess(success);
 

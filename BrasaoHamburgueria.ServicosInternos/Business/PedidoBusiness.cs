@@ -378,7 +378,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
         }
 
         //Este método já recebe o pedido com os itens filtrados somente para a porta desejada
-        public ServiceResultViewModel ImprimeItensProducao(PedidoViewModel pedido)
+        public ServiceResultViewModel ImprimeItensProducao(PedidoViewModel pedido, bool imprimeComandaCozinha, string portaImpressoraCozinha)
         {
             //declaração da variável para retorno das funções
             int iRetorno = 0;
@@ -404,6 +404,11 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
 
                 foreach (var portaPedido in portasPedido)
                 {
+                    if (!imprimeComandaCozinha && portaPedido.Porta == portaImpressoraCozinha)
+                    {
+                        continue;
+                    }
+
                     bool sucesso = false;
                     int count = 0;
                     //Abrindo a porta

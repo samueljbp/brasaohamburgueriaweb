@@ -10,9 +10,11 @@
 }
 @{
     var tempoMedioEspera = ParametroRepository.GetTempoMedioEspera();
+    var imprimeComandaCozinha = ParametroRepository.GetImprimeComandaCozinha();
+    var portaImpressoraCozinha = ParametroRepository.GetPortaImpressoraCozinha();
 }
 <script src="~/app/GerenciarPedidosForm/gpController.js"></script>
-<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@tempoMedioEspera')" class="centro">
+<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@tempoMedioEspera', @imprimeComandaCozinha.ToString().ToLower(), '@portaImpressoraCozinha.ToString()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravaPedido,backdrop:false,delay:10,minDuration:1000}"></div>

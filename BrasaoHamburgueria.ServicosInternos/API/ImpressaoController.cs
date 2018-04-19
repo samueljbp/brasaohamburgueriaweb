@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
 using BrasaoHamburgueria.Model;
+using Newtonsoft.Json.Linq;
 
 namespace BrasaoHamburgueria.ServicosInternos
 {
@@ -15,13 +16,17 @@ namespace BrasaoHamburgueria.ServicosInternos
 
         [Route("api/Impressao/ImprimePedido")]
         [HttpPost] // There are HttpGet, HttpPost, HttpPut, HttpDelete.
-        public ServiceResultViewModel ImprimePedido(PedidoViewModel model)
+        public ServiceResultViewModel ImprimePedido([FromBody]JObject data)
         {
-            var retorno = bo.ImprimeComandaPedido(model);
+            PedidoViewModel pedido = data["pedido"].ToObject<PedidoViewModel>();
+            bool imprimeComandaCozinha = data["imprimeComandaCozinha"].ToObject<bool>();
+            string portaImpressoraCozinha = data["portaImpressoraCozinha"].ToObject<string>();
+
+            var retorno = bo.ImprimeComandaPedido(pedido);
 
             if (retorno.Succeeded)
             {
-                retorno = bo.ImprimeItensProducao(model);
+                retorno = bo.ImprimeItensProducao(pedido, imprimeComandaCozinha, portaImpressoraCozinha);
             }
 
             return retorno;

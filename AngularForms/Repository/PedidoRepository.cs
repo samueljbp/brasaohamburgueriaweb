@@ -672,10 +672,11 @@ namespace BrasaoHamburgueria.Web.Repository
             return pedidos;
         }
 
-        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido, bool paraConsulta)
+        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido, bool paraConsulta, bool somenteItensProducao)
         {
             var dataHora = DateTime.Now.AddDays(-2);
             var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
+            var portaImpressaoCozinha = ParametroRepository.GetPortaImpressoraCozinha();
 
             var pedidos = await _contexto.Pedidos.Where(p => (!(new List<int> { 5, 9 }).Contains(p.CodSituacao) && (p.DataHora > dataHora || p.CodSituacao < 4) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido) && !paraConsulta) || (paraConsulta && codPedido != null && p.CodPedido == codPedido))
                 .Include(s => s.Situacao)
@@ -720,7 +721,7 @@ namespace BrasaoHamburgueria.Web.Repository
                         Referencia = p.ReferenciaEntrega,
                         Telefone = p.TelefoneCliente
                     },
-                    Itens = p.Itens.Where(i => !i.Cancelado).Select(i => new ItemPedidoViewModel
+                    Itens = p.Itens.Where(i => !i.Cancelado && (!somenteItensProducao || (i.ItemCardapio.ImpressorasAssociadas.Where(a => a.ImpressoraProducao.Porta == portaImpressaoCozinha).Count() > 0))).Select(i => new ItemPedidoViewModel
                     {
                         CodItem = i.CodItemCardapio,
                         SeqItem = i.SeqItem,
@@ -756,7 +757,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
             AgrupaItensComboPedido(pedidos);
 
-            return pedidos;
+            return pedidos.Where(p => p.Itens.Count > 0).ToList();
         }
 
         public void AgrupaItensComboPedido(List<PedidoViewModel> pedidos)

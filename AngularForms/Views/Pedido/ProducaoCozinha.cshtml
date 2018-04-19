@@ -14,9 +14,11 @@
     }
 </style>
 <script src="~/app/ProducaoCozinhaForm/pcController.js"></script>
-<div ng-controller="cccController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="pcController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetPedidos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseAvancaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+    <audio id="play" src="~/Content/sounds/beep.wav"></audio>
     <form role="form" id="formProducaoCozinha" class="form-horizontal" ng-submit="submitForm()">
         <h3>Produção de pedidos - Cozinha</h3>
         <hr />
@@ -24,22 +26,61 @@
         <div class="form-group">
             <div class="col-sm-12">
                 <div class="multiDemo row">
-                    <div ng-repeat="list in models" class="col-sm-6">
+                    <div ng-repeat="list in models" class="col-xs-4">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h3 class="panel-title">{{list.listName}}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul dnd-list dnd-drop="onDrop(list, item, index)">
-                                    <li ng-repeat="item in list.items| orderBy: 'nome'"
+                                    <li ng-repeat="item in list.items| orderBy : (item.situacao == 2 ? 'dataPedido' : 'dataPedido')"
                                         dnd-draggable="getSelectedItemsIncluding(list, item)"
                                         dnd-dragstart="onDragstart(list, event)"
                                         dnd-moved="onMoved(list)"
                                         dnd-dragend="list.dragging = false"
-                                        dnd-selected="item.selected = !item.selected"
-                                        ng-class="{'selected': item.selected}"
+                                        dnd-selected="models.selected = item"
                                         ng-hide="list.dragging && item.selected">
-                                        {{item.nome}} - {{item.quantidade}}
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    Pedido: {{item.codPedido}}
+                                                </div>
+                                                <div class="col-sm-8 text-right">
+                                                    <strong class="text-warning"><timer start-time="getTimeMs(item.dataPedido)">{{hhours}}:{{mminutes}}:{{sseconds}}</timer></strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    {{item.dadosCliente.nome}}
+                                                </div>
+                                                <div class="col-sm-6 text-right">
+                                                    {{item.dadosCliente.telefone}}
+                                                </div>
+                                            </div>
+                                            <div ng-repeat="pedItem in item.itens track by $index">
+                                                <div ng-class="determinaEstiloLinha($index)">
+                                                    <div class="col-sm-10">
+                                                        {{pedItem.descricaoItem}}
+                                                        <div ng-if="pedItem.obs != null && pedItem.obs.length > 0">
+                                                            <span ng-repeat="obs in pedItem.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < pedItem.obs.length - 1">, </span></span>
+                                                        </div>
+                                                        <div ng-if="pedItem.extras != null && pedItem.extras.length > 0">
+                                                            <span ng-repeat="extra in pedItem.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}<span ng-if="$index < pedItem.extras.length - 1">, </span></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2 text-right">
+                                                        {{pedItem.quantidade}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top: 10px">
+                                                <div class="col-sm-12">
+                                                    <button type="button" class="btn btn-block btn-primary" ng-click="avancarPedido(item)">
+                                                        <span class="glyphicon glyphicon-arrow-right"></span> Avançar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                 </ul>
 
@@ -52,5 +93,5 @@
 
 
     </form>
-    
+
 </div>

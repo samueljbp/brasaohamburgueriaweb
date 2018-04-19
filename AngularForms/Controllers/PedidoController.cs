@@ -40,7 +40,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         [Authorize(Roles = Constantes.ROLE_COZINHA)]
         public ActionResult ProducaoCozinha()
         {
-            return View("PedidoRegistrado");
+            return View("ProducaoCozinha");
         }
 
         public ActionResult PedidoRegistrado()
@@ -70,7 +70,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta);
+                var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta, false);
                 var ped = peds.FirstOrDefault();
                 ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
 
@@ -87,13 +87,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
-        public async Task<JsonResult> GetPedidosAbertos()
+        public async Task<JsonResult> GetPedidosAbertos(bool somenteProducao)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                result.data = await _rep.GetPedidosAbertos(null, false);
+                result.data = await _rep.GetPedidosAbertos(null, false, somenteProducao);
 
                 foreach (var ped in result.data)
                 {

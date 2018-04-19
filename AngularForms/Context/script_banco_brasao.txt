@@ -1,6 +1,7 @@
 --no banco do identity
 insert into AspNetRoles values (1, 'Clientes');
 insert into AspNetRoles values (2, 'Administradores');
+insert into AspNetRoles values (3, 'Cozinha');
 
 
 --classes

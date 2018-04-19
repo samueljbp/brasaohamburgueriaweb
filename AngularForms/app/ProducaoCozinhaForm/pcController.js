@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('pcController', function ($scope, $http, $filter, $ngBootbox, $window) {
+﻿brasaoWebApp.controller('pcController', function ($scope, $http, $filter, $ngBootbox, $window, noteService, $interval) {
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
         $scope.mensagem = {
@@ -11,35 +11,29 @@
 
         $scope.antiForgeryToken = antiForgeryToken;
 
+        $scope.pedidos = [];
 
-        $scope.pedidosConfirmados = [{
-            codPedido: 1,
-            nomeCliente: 'Samuel João Barbosa Pinto',
-            telefoneCliente: '(32) 98467-9315',
-            dataHoraPedido: '23/03/2018 11:29',
-            itens: [{
-                codItemCardapio: 1,
-                nome: 'Skank',
-                quantidade: 1,
-                observacaoLivre: 'Bem passado',
-                obs: [{ codObservacaoProducao: 1, descricaoObservacao: 'Mal passado' }, { codObservacaoProducao: 2, descricaoObservacao: 'Sem maionese' }],
-                extras: [{ codOpcaoExtra: 1, descricao: 'Bacon extra' }, { codOpcaoExtra: 2, descricao: 'Batata extra' }]
-            }]
-        }];
-        $scope.pedidosEmPreparacao = [];
-        $scope.pedidosEmAguardandoEntrega = [];
+        configuraDndLists();
 
+        $scope.getPedidosPendentes();
 
+        $interval(function () {
+            $scope.getPedidosPendentes(true, false);
+        }, 60000);
+    }
 
+    $scope.getPedidosPendentes = function (confereAlerta, mostraErro) {
+
+        //var accesstoken = sessionStorage.getItem('accessToken');
 
         $scope.promiseGetPedidos = $http({
             method: 'GET',
             headers: {
                 //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
+                'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Cadastros/GetCombos'
+            url: urlBase + 'Pedido/GetPedidosAbertos?somenteProducao=true'
         })
             .then(function (response) {
 
@@ -47,34 +41,69 @@
 
                 if (retorno.succeeded) {
 
-                    $scope.rowCollection = retorno.data;
+                    $scope.pedidos = retorno.data;
+
+                    var pedidosConfirmadosNovo = $filter('filter')(retorno.data, { situacao: 2 });
+                    var pedidosEmPreparacao = $filter('filter')(retorno.data, { situacao: 3 });
+                    var pedidosAguardandoEntrega = $filter('filter')(retorno.data, { situacao: 4 });
+
+                    if (confereAlerta) {
+                        if (pedidosConfirmadosNovo.length != $scope.models[0].items.length && pedidosConfirmadosNovo.length > 0) {
+                            playSound();
+                        }
+                    }
+
+                    $scope.models[0].items = [];
+                    $scope.models[0].items = $scope.models[0].items.concat(pedidosConfirmadosNovo);
+
+                    $scope.models[1].items = [];
+                    $scope.models[1].items = $scope.models[1].items.concat(pedidosEmPreparacao);
+
+                    $scope.models[2].items = [];
+                    $scope.models[2].items = $scope.models[2].items.concat(pedidosAguardandoEntrega);
+
+                    angular.forEach($scope.models[0].items, function (item) { item.selected = false; });
+                    angular.forEach($scope.models[1].items, function (item) { item.selected = false; });
+                    angular.forEach($scope.models[2].items, function (item) { item.selected = false; });
+
+                    //verificaTemposPedidos();
 
                 }
                 else {
-                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
-                    $window.scrollTo(0, 0);
+                    if (mostraErro) {
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
                 }
 
 
 
             }, function (error) {
-                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-                $window.scrollTo(0, 0);
+                if (mostraErro) {
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                    $window.scrollTo(0, 0);
+                }
             });
 
 
+    };
 
+    function playSound() {
+        document.getElementById('play').play();
     }
 
-    $scope.pesquisaItens = function () {
+    $scope.getTimeMs = function (data) {
+        var dataHora = new Date(data);
+        return dataHora.getTime();
+    }
 
-        if ($scope.pesquisaItem.chave == '') {
-            $scope.models[0].items = $scope.itensCardapio;
-            return;
+    $scope.determinaEstiloLinha = function (index) {
+        var resto = index % 2;
+        if (resto == 0) {
+            return "row bg-info";
         }
 
-        $scope.models[0].items = $filter('filter')($scope.itensCardapio, { nome: $scope.pesquisaItem.chave });
-
+        return "row bg-success";
     }
 
     function configuraDndLists() {
@@ -86,13 +115,8 @@
         ];
 
         $scope.models[0].items = [];
-        $scope.models[0].items = $scope.models[0].items.concat($scope.pedidosConfirmados);
-
         $scope.models[1].items = [];
-        $scope.models[1].items = $scope.models[1].items.concat($scope.pedidosEmPreparacao);
-
         $scope.models[2].items = [];
-        $scope.models[2].items = $scope.models[2].items.concat($scope.pedidosEmAguardandoEntrega);
 
         angular.forEach($scope.models[0].items, function (item) { item.selected = false; });
         angular.forEach($scope.models[1].items, function (item) { item.selected = false; });
@@ -103,7 +127,9 @@
             list.items = list.items.slice(0, index)
                 .concat(items)
                 .concat(list.items.slice(index));
-            //list.items = removeDuplicates(list.items, 'codItemCardapio');
+
+            $scope.avancarPedido(items[0]);
+
             return true;
         }
 
@@ -127,41 +153,19 @@
 
     }
 
-    $scope.gravarCombo = function () {
+    $scope.avancarPedido = function (pedido) {
 
-        $('#formGravarCombo').validator('destroy').validator();
+        var proximaSituacao = getProximaSituacaoPedido(pedido.situacao);
+        var descricaoProximaSituacao = getDescricaoSituacaoPedido(proximaSituacao);
 
-        $scope.mensagem.erroCampoPreco = false;
-        if ($scope.comboSelecionado.preco <= 0.0 || isNaN($scope.comboSelecionado.preco)) {
 
-            $scope.mensagem.erroCampoPreco = true;
-            return;
 
-        } else { $scope.comboSelecionado.preco = parseFloat($scope.comboSelecionado.preco); }
+        pedido.situacao = proximaSituacao;
 
-        var hasErrors = $('#formGravarCombo').validator('validate').has('.has-error').length;
-
-        if (hasErrors) {
-            return;
-        }
-
-        $scope.mensagem.erroListasDragDrop = false;
-        if ($scope.models[1].items.length == 0) {
-
-            $scope.mensagem.erroListasDragDrop = true;
-            return;
-
-        }
-
-        $scope.comboSelecionado.itens = [];
-        $scope.comboSelecionado.itens = $scope.models[1].items;
-
-        //angular.forEach($scope.comboSelecionado.itens, function (item) { if (!item.quantidade > 0) { item.quantidade = 1; } });
-
-        $scope.promiseGravarCombo = $http({
+        $scope.promiseAvancaPedido = $http({
             method: 'POST',
-            url: urlBase + 'Cadastros/GravarCombo',
-            data: { combo: $scope.comboSelecionado, modoCadastro: $scope.modoCadastro },
+            url: urlBase + 'Pedido/AvancarPedido',
+            data: pedido,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'RequestVerificationToken': $scope.antiForgeryToken
@@ -171,14 +175,34 @@
 
             if (retorno.succeeded) {
 
-                $scope.mensagem.sucesso = 'Dados gravados com sucesso.';
+                noteService.sendMessage(pedido.usuario, pedido.codPedido, proximaSituacao);
 
-                if ($scope.modoCadastro == 'I') {
-                    $scope.rowCollection.push(retorno.data);
+                if (proximaSituacao == 3) {
+
+                    for (i = 0; i < $scope.models[0].items.length; i++) {
+                        if ($scope.models[0].items[i].codPedido == pedido.codPedido) {
+
+                            $scope.models[0].items.splice(i, 1);
+                            $scope.models[1].items.push(pedido);
+
+                            break;
+                        }
+                    }
+
+                } else if (proximaSituacao == 4) {
+
+                    for (i = 0; i < $scope.models[1].items.length; i++) {
+                        if ($scope.models[1].items[i].codPedido == pedido.codPedido) {
+
+                            $scope.models[1].items.splice(i, 1);
+                            $scope.models[2].items.push(pedido);
+
+                            break;
+                        }
+                    }
 
                 }
 
-                $('#modalGravarCombo').modal('hide');
 
             }
             else {
@@ -187,11 +211,115 @@
             }
 
         }).catch(function (error) {
-            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+            $scope.mensagem.erro = error.statusText;
             $window.scrollTo(0, 0);
         });
 
     }
+
+    function addPedido(lista, pedido) {
+        lista.items.push(pedido);
+        angular.forEach(lista.items, function (item) { item.selected = false; });
+        $scope.$apply();
+    }
+
+    $scope.getPedido = function (codPedido, situacao) {
+
+        $scope.promiseGetPedido = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': $scope.antiForgeryToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Pedido/GetPedido?CodPedido=' + codPedido + '&paraConsulta=false'
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.pedidos.push(retorno.data);
+
+                    if (situacao == 2) {
+                        addPedido($scope.models[0], retorno.data);
+                    }
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
+
+        $scope.promisesLoader.push($scope.promiseGetPedido);
+
+
+    }
+
+    noteService.connect();
+    $scope.messages = [];
+
+    $scope.$on('messageAdded', function (event, codPedido, situacao) {
+
+        //mensagens de pedidos feito pelo usuario logado.
+        if (situacao == 2) {
+            var existente = $filter('filter')($scope.pedidos, { codPedido: codPedido })[0];
+            if (existente == null) {
+                $scope.getPedido(codPedido, situacao);
+                playSound();
+            } else if (existente.situacao == 1) {
+                existente.situacao = 2;
+                addPedido($scope.models[0], existente);
+                playSound();
+            }
+        } else if (situacao == 9) {
+
+            for (i = 0; i < $scope.models[0].items.length; i++) {
+                if ($scope.models[0].items[i].codPedido == codPedido) {
+
+                    $scope.models[0].items.splice(i, 1);
+
+                    $scope.$apply();
+                    return;
+                }
+            }
+
+            for (i = 0; i < $scope.models[1].items.length; i++) {
+                if ($scope.models[1].items[i].codPedido == codPedido) {
+
+                    $scope.models[1].items.splice(i, 1);
+
+                    $scope.$apply();
+                    return;
+                }
+            }
+
+            for (i = 0; i < $scope.models[2].items.length; i++) {
+                if ($scope.models[2].items[i].codPedido == codPedido) {
+
+                    $scope.models[2].items.splice(i, 1);
+
+                    $scope.$apply();
+                    return;
+                }
+            }
+
+        }
+
+
+    });
+
+    $scope.sendMessage = function () {
+        noteService.sendMessage($scope.pedido.usuario, $scope.pedido.codPedido, $scope.pedido.situacao);
+    };
 
 
 });

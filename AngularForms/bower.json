@@ -13,6 +13,7 @@
     "angular-timer": "v1.3.5",
     "angular-auto-complete": "v1.6.1",
     "underscore": "1.8.3",
-    "angular-drag-and-drop-lists": "dndLists#v1.4.0"
+    "angular-drag-and-drop-lists": "dndLists#v1.4.0",
+    "mobile-drag-drop": "drag-drop-webkit-mobile#v2.2.0"
   }
 }

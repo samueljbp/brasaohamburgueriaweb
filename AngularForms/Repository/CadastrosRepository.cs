@@ -718,6 +718,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     parAlterar.ValorParametro = par.ValorParametro;
 
                     await _contexto.SaveChangesAsync();
+                    BrasaoHamburgueria.Web.Helpers.SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.ParametrosSistema);
                 }
 
                 return par;
@@ -752,6 +753,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 _contexto.ParametrosSistema.Add(parIncluir);
 
                 await _contexto.SaveChangesAsync();
+                BrasaoHamburgueria.Web.Helpers.SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.ParametrosSistema);
 
                 return par;
             }
@@ -979,6 +981,13 @@ namespace BrasaoHamburgueria.Web.Repository
                         itemAlterar.CodClasse = item.CodClasse;
 
                         var complementoAlterar = _contexto.ComplementosItens.Find(item.CodItemCardapio);
+                        var semComplemento = false;
+                        if (complementoAlterar == null)
+                        {
+                            complementoAlterar = new ComplementoItemCardapio();
+                            complementoAlterar.CodItemCardapio = itemAlterar.CodItemCardapio;
+                            semComplemento = true;
+                        }
 
                         if (complementoAlterar != null)
                         {
@@ -987,6 +996,11 @@ namespace BrasaoHamburgueria.Web.Repository
                             if (item.Complemento.OrdemExibicao != null)
                             {
                                 complementoAlterar.OrdemExibicao = item.Complemento.OrdemExibicao.Value;
+                            }
+
+                            if (semComplemento)
+                            {
+                                _contexto.ComplementosItens.Add(complementoAlterar);
                             }
                         }
 

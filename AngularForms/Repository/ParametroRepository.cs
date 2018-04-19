@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Threading;
 using System.Globalization;
 using System.Configuration;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -36,11 +37,16 @@ namespace BrasaoHamburgueria.Web.Repository
             return dias;
         }
 
-        public static double GetTaxaEntrega()
+        public static List<ParametroSistemaViewModel> GetParametrosSistema()
         {
             BrasaoContext _contexto = new BrasaoContext();
 
-            var par = _contexto.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_TAXA_ENTREGA).FirstOrDefault();
+            return _contexto.ParametrosSistema.Select(p => new ParametroSistemaViewModel { CodParametro = p.CodParametro, DescricaoParametro = p.DescricaoParametro, ValorParametro = p.ValorParametro }).OrderBy(p => p.CodParametro).ToList();
+        }
+
+        public static double GetTaxaEntrega()
+        {
+            var par = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_TAXA_ENTREGA).FirstOrDefault();
             if (par != null)
             {
                 return Convert.ToDouble(par.ValorParametro);
@@ -60,14 +66,14 @@ namespace BrasaoHamburgueria.Web.Repository
                 parCasaAberta.ValorParametro = (aberta ? "1" : "0");
 
                 await _contexto.SaveChangesAsync();
+
+                SessionData.RefreshParam(SessionData.ParametrosSistema);
             }
         }
 
         public static bool CasaAberta()
         {
-            BrasaoContext _contexto = new BrasaoContext();
-
-            var parCasaAberta = _contexto.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CASA_ABERTA).FirstOrDefault();
+            var parCasaAberta = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CASA_ABERTA).FirstOrDefault();
 
             if (parCasaAberta != null)
             {
@@ -81,7 +87,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
             var diaSemana = (int)DateTime.Now.DayOfWeek;
 
-            var horarios = _contexto.FuncionamentosEstabelecimento.Where(p => p.DiaSemana == diaSemana && p.TemDelivery).OrderBy(p => p.Abertura).ToList();
+            var horarios = SessionData.FuncionamentosEstabelecimento.Where(p => p.DiaSemana == diaSemana && p.TemDelivery).OrderBy(p => p.Abertura).ToList();
 
             if (horarios != null)
             {
@@ -102,11 +108,9 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public static FuncionamentoEstabelecimentoViewModel GetHorarioAbertura()
         {
-            BrasaoContext _contexto = new BrasaoContext();
-
             var diaSemana = (int)DateTime.Now.DayOfWeek;
 
-            var abertura = _contexto.FuncionamentosEstabelecimento.Where(p => p.DiaSemana >= diaSemana && p.TemDelivery).OrderBy(p => p.DiaSemana).FirstOrDefault();
+            var abertura = SessionData.FuncionamentosEstabelecimento.Where(p => p.DiaSemana >= diaSemana && p.TemDelivery).OrderBy(p => p.DiaSemana).FirstOrDefault();
 
             FuncionamentoEstabelecimentoViewModel horario = new FuncionamentoEstabelecimentoViewModel();
 
@@ -153,9 +157,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public static string GetEnderecoImpressoraComanda()
         {
-            BrasaoContext _contexto = new BrasaoContext();
-
-            var par = _contexto.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CODIGO_IMPRESSORA_COMANDA).FirstOrDefault();
+            var par = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CODIGO_IMPRESSORA_COMANDA).FirstOrDefault();
 
             if (par != null)
             {
@@ -163,6 +165,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 if (codImpressora > 0)
                 {
+                    BrasaoContext _contexto = new BrasaoContext();
+
                     var impressora = _contexto.ImpressorasProducao.Find(codImpressora);
 
                     if (impressora != null)
@@ -177,9 +181,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public static int GetTempoMedioEspera()
         {
-            BrasaoContext _contexto = new BrasaoContext();
-
-            var par = _contexto.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_TEMPO_MEDIO_ESPERA).FirstOrDefault();
+            var par = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_TEMPO_MEDIO_ESPERA).FirstOrDefault();
 
             if (par != null)
             {
@@ -187,6 +189,30 @@ namespace BrasaoHamburgueria.Web.Repository
             }
 
             return 0;
+        }
+
+        public static string GetPortaImpressoraCozinha()
+        {
+            var par = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_PORTA_IMPRESSORA_COZINHA).FirstOrDefault();
+
+            if (par != null)
+            {
+                return par.ValorParametro;
+            }
+
+            return "";
+        }
+
+        public static bool GetImprimeComandaCozinha()
+        {
+            var par = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_IMPRIME_COMANDA_COZINHA).FirstOrDefault();
+
+            if (par != null)
+            {
+                return (par.ValorParametro == "1");
+            }
+
+            return false;
         }
 
         public static async Task AlteraTempoMedioEspera(int tempo)
@@ -200,6 +226,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 parTempo.ValorParametro = tempo.ToString();
 
                 await _contexto.SaveChangesAsync();
+
+                SessionData.RefreshParam(SessionData.FuncionamentosEstabelecimento);
             }
         }
     }
