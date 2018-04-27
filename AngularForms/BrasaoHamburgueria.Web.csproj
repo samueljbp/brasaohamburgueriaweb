@@ -175,6 +175,7 @@
     <Content Include="app\CadastroProgramaFidelidadeForm\cpfController.js" />
     <Content Include="app\CadastroPromocaoVendaForm\cpvController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
+    <Content Include="app\ConsultarTaxasEntregaForm\cteController.js" />
     <Content Include="app\ConsultarUltimosPedidosForm\cpController.js" />
     <Content Include="app\ConsultarProdutosVendidosForm\cpvController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
@@ -1563,6 +1564,7 @@
     <Content Include="Views\Cadastros\Entregador.cshtml" />
     <Content Include="Views\Pedido\_ModalSelecionaEntregador.cshtml" />
     <Content Include="Views\Consultas\ProdutosVendidos.cshtml" />
+    <Content Include="Views\Consultas\TaxasEntrega.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

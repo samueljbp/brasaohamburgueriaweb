@@ -21,6 +21,40 @@ namespace BrasaoHamburgueria.Web.Repository
             _contexto = new BrasaoContext();
         }
 
+        public async Task<List<TaxasEntregaViewModel>> GetTaxasEntrega(DateTime? inicio, DateTime? fim, int? codEntregador)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            if (codEntregador.HasValue)
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_entregador", codEntregador.Value));
+            }
+            else
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_entregador", DBNull.Value));
+            }
+
+            if (inicio.HasValue)
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("data_inicio", inicio.Value));
+            }
+            else
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("data_inicio", DBNull.Value));
+            }
+
+            if (fim.HasValue)
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("data_fim", fim.Value));
+            }
+            else
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("data_fim", DBNull.Value));
+            }
+
+            return await _contexto.Database.SqlQuery<TaxasEntregaViewModel>(Queries.QUERY_TAXAS_ENTREGA, parametros.ToArray()).ToListAsync();
+        }
+
         public async Task<List<ProdutosVendidosViewModel>> GetProdutosVendidos(DateTime? inicio, DateTime? fim, int? codClasse)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();

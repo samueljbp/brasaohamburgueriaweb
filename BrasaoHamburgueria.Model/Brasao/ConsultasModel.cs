@@ -15,4 +15,12 @@ namespace BrasaoHamburgueria.Model
         public int Quantidade { get; set; }
         public double ValorTotal { get; set;  }
     }
+
+    public class TaxasEntregaViewModel
+    {
+        public int CodEntregador { get; set; }
+        public string Nome { get; set; }
+        public int QtdPedidos { get; set; }
+        public decimal TotalTaxasEntrega { get; set; }
+    }
 }

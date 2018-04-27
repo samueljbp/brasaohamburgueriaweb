@@ -12,20 +12,20 @@
         overflow-y: scroll;
     }
 </style>
-<script src="~/app/ConsultarProdutosVendidosForm/cpvController.js"></script>
-<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<script src="~/app/ConsultarTaxasEntregaForm/cteController.js"></script>
+<div ng-controller="cteController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
-    <div cg-busy="{promise:promiseGetProdutosVendidos,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
-    <form role="form" id="formProdutosVendidos" class="form-horizontal" ng-submit="submitForm()">
-        <h3>Produtos vendidos</h3>
+    <div cg-busy="{promise:promiseGetTaxasEntrega,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetEntregadores,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formTaxaEntrega" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Taxas de entrega</h3>
         <hr />
         <div class="form-group">
-            <label for="codClasse" class="col-sm-1 col-xs-12 control-label">Classe</label>
+            <label for="codEntregador" class="col-sm-1 col-xs-12 control-label">Entregador</label>
             <div class="col-md-5 col-xs-12">
-                <select name="codClasse" id="codClasse" required class="form-control" ng-model="filtros.codClasse">
+                <select name="codEntregador" id="codEntregador" required class="form-control" ng-model="filtros.codEntregador">
                     <option value="" selected>(Selecione)</option>
-                    <option ng-repeat="classe in classes" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
+                    <option ng-repeat="entregador in entregadores" value="{{entregador.codEntregador}}">{{entregador.nome}}</option>
                 </select>
                 <div class="help-block with-errors"></div>
             </div>
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="col-md-2 col-xs-12">
-                <button type="button" class="btn btn-success" ng-click="getProdutosVendidos()">
+                <button type="button" class="btn btn-success" ng-click="getTaxasEntrega()">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Consultar
                 </button>
             </div>
@@ -82,52 +82,47 @@
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
                 <thead>
                     <tr>
-                        <th st-sort="codItemCardapio" width="5%"><a href="#">Cod Item</a></th>
-                        <th st-sort="nome" width="35%"><a href="#">Item</a></th>
-                        <th st-sort="descricaoClasse" width="30%"><a href="#">Classe</a></th>
-                        <th st-sort="quantidade" width="15%"><a href="#">Quantidade</a></th>
-                        <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
+                        <th st-sort="codEntregador" width="10%"><a href="#">Cod Entregador</a></th>
+                        <th st-sort="nome" width="50%"><a href="#">Nome</a></th>
+                        <th st-sort="qtdPedidos" width="20%"><a href="#">Qtd Entregas</a></th>
+                        <th st-sort="totalTaxasEntrega" width="20%"><a href="#">Total taxas</a></th>
                     </tr>
                     <tr>
                         <th>
-                            <input st-search="codItemCardapio" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="codEntregador" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-                            <input st-search="descricaoClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="qtdPedidos" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-                            <input st-search="quantidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                        </th>
-                        <th>
-                            <input st-search="valorTotal" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="totalTaxasEntrega" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in displayedCollection">
-                        <td>{{item.codItemCardapio}}</td>
-                        <td>{{item.nome}}</td>
-                        <td>{{item.descricaoClasse}}</td>
-                        <td>{{item.quantidade}}</td>
-                        <td>{{item.valorTotal | currency: "R$ "}}</td>
+                    <tr ng-repeat="taxa in displayedCollection">
+                        <td>{{taxa.codEntregador}}</td>
+                        <td>{{taxa.nome}}</td>
+                        <td>{{taxa.qtdPedidos}}</td>
+                        <td>{{taxa.totalTaxasEntrega | currency: "R$ "}}</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-left">
-                            <div class="col-sm-2">
-                                <small>Quantidade total: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
+                        <td colspan="4" class="text-left">
+                            <div class="col-sm-4">
+                                <small>Quantidade total entregas: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
                             </div>
-                            <div class="col-sm-2">
-                                <small>Valor total: <span class="text-success">{{totais.valorTotal | currency: "R$ "}}</span></small>
+                            <div class="col-sm-4">
+                                <small>Valor total taxas: <span class="text-success">{{totais.valorTotal | currency: "R$ "}}</span></small>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="4" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>

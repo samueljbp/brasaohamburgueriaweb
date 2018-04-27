@@ -20,6 +20,34 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         // GET: Consultas
 
+        #region Taxa Entrega
+        public ActionResult TaxasEntrega()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetTaxasEntrega(DateTime? dataInicio, DateTime? dataFim, int? codEntregador)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var taxas = await _rep.GetTaxasEntrega(dataInicio, dataFim, codEntregador);
+
+                result.data = taxas;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+        #endregion
+
         #region Produtos vendidos
         public ActionResult ProdutosVendidos()
         {
