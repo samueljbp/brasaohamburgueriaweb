@@ -16,9 +16,39 @@ namespace BrasaoHamburgueria.Web.Controllers
     [Authorize(Roles = Constantes.ROLE_ADMIN)]
     public class ConsultasController : Controller
     {
-        private PedidoRepository _rep = new PedidoRepository();
+        private ConsultasRepository _rep = new ConsultasRepository();
 
         // GET: Consultas
+
+        #region Produtos vendidos
+        public ActionResult ProdutosVendidos()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetProdutosVendidos(DateTime? dataInicio, DateTime? dataFim, int? codClasse)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var prods = await _rep.GetProdutosVendidos(dataInicio, dataFim, codClasse);
+
+                result.data = prods;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+        #endregion
+
+        #region Pedidos realizados
         [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public ActionResult PedidosRealizados()
         {
@@ -50,5 +80,6 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             return new JsonNetResult { Data = result };
         }
+        #endregion
     }
 }

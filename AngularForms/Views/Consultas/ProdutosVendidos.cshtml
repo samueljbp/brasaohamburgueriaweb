@@ -12,19 +12,27 @@
         overflow-y: scroll;
     }
 </style>
-<script src="~/app/ConsultarPedidosRealizadosForm/cpController.js"></script>
-<div ng-controller="prController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<script src="~/app/ConsultarProdutosVendidosForm/cpvController.js"></script>
+<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
-    <div cg-busy="{promise:promiseGetPedidosRealizados,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseGetPedido,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetProdutosVendidos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPedido" class="form-horizontal" ng-submit="submitForm()">
-        <h3>Pedidos realizados</h3>
+        <h3>Produtos vendidos</h3>
         <hr />
-        <div class="row">
-            <div class="col-sm-1">
-                <label for="compDataInicio" class="control-label">Início</label>
+        <div class="form-group">
+            <label for="codClasse" class="col-sm-1 col-xs-12 control-label">Classe</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codClasse" id="codClasse" required class="form-control" ng-model="filtros.codClasse">
+                    <option value="" selected>(Selecione)</option>
+                    <option ng-repeat="classe in classes" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
             </div>
-            <div class="col-sm-3">
+        </div>
+        <div class="form-group">
+            <label for="compDataInicio" class="col-md-1 col-xs-12 control-label">Início</label>
+            <div class="col-md-3 col-xs-12">
                 <div class='input-group date' id='compDataInicio'>
                     <input type='text' class="form-control" maxlength="10" id="txtDataInicio" />
                     <span class="input-group-addon">
@@ -32,7 +40,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-md-2 col-xs-12">
                 <div class='input-group date' id='compHoraInicio'>
                     <input type='text' class="form-control" id="txtHoraInicio" />
                     <span class="input-group-addon">
@@ -42,11 +50,9 @@
             </div>
         </div>
         <br />
-        <div class="row">
-            <div class="col-sm-1">
-                <label for="compDataFim" class="control-label">Fim</label>
-            </div>
-            <div class="col-sm-3">
+        <div class="form-group">
+            <label for="compDataFim" class="col-md-1 col-xs-12 control-label">Fim</label>
+            <div class="col-md-3 col-xs-12">
                 <div class='input-group date' id='compDataFim'>
                     <input type='text' class="form-control" maxlength="10" id="txtDataFim" />
                     <span class="input-group-addon">
@@ -54,7 +60,7 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-md-2 col-xs-12">
                 <div class='input-group date' id='compHoraFim'>
                     <input type='text' class="form-control" id="txtHoraFim" />
                     <span class="input-group-addon">
@@ -62,8 +68,8 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <button type="button" class="btn btn-success" ng-click="getPedidosRealizados()">
+            <div class="col-md-2 col-xs-12">
+                <button type="button" class="btn btn-success" ng-click="getProdutosVendidos()">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Consultar
                 </button>
             </div>
@@ -76,69 +82,47 @@
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
                 <thead>
                     <tr>
-                        <th st-sort="codPedido" width="5%"><a href="#">Nº</a></th>
-                        <th st-sort="codPedido" width="5%"><a href="#">Externo</a></th>
-                        <th st-sort="dataPedido" width="15%"><a href="#">Data/Hora</a></th>
-                        <th st-sort="nome" width="35%"><a href="#">Cliente</a></th>
-                        <th st-sort="descricaoFormaPagamento" width="20%"><a href="#">Forma pagamento</a></th>
+                        <th st-sort="codItemCardapio" width="5%"><a href="#">Cod Item</a></th>
+                        <th st-sort="nome" width="35%"><a href="#">Item</a></th>
+                        <th st-sort="descricaoClasse" width="30%"><a href="#">Classe</a></th>
+                        <th st-sort="quantidade" width="15%"><a href="#">Quantidade</a></th>
                         <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
-                        <th width="5%"><a href="#"></a></th>
                     </tr>
                     <tr>
                         <th>
-                            <input st-search="codPedido" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="codItemCardapio" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-
+                            <input st-search="descricaoClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-                            <input st-search="dadosCliente.nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                            <input st-search="quantidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
-                            <input st-search="descricaoFormaPagamento" placeholder="Pesquisar" class="input-sm form-control" type="search" />
-                        </th>
-                        <th colspan="2">
-
+                            <input st-search="valorTotal" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="ped in displayedCollection">
-                        <td>{{ped.codPedido}}</td>
-                        <td>{{(ped.pedidoExterno ? 'Sim' : 'Não')}}</td>
-                        <td>{{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}</td>
-                        <td>{{ped.dadosCliente.nome}}</td>
-                        <td>{{ped.descricaoFormaPagamento}}</td>
-                        <td>{{ped.valorTotal - ped.valorDesconto | currency: "R$ "}}</td>
-                        <td>
-                            <button type="button" ng-click="getPedido(ped.codPedido)" class="btn btn-sm btn-warning">
-                                <i class="glyphicon glyphicon-list">
-                                </i>
-                            </button>
-                        </td>
+                    <tr ng-repeat="item in displayedCollection">
+                        <td>{{item.codItemCardapio}}</td>
+                        <td>{{item.nome}}</td>
+                        <td>{{item.descricaoClasse}}</td>
+                        <td>{{item.quantidade}}</td>
+                        <td>{{item.valorTotal | currency: "R$ "}}</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="7" class="text-left">
-                            <div class="col-sm-2"><small>Qtd peds: <span class="text-success">{{totais.qtdPeds}}</span></small></div>
                             <div class="col-sm-2">
-                                <small>Débito: <span class="text-primary">{{totais.debito | currency: "R$ "}}</span></small>
+                                <small>Quantidade total: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
                             </div>
                             <div class="col-sm-2">
-                                <small>Crédito: <span class="text-primary">{{totais.credito | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Dinheiro: <span class="text-primary">{{totais.dinheiro | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Ticket: <span class="text-primary">{{totais.ticket | currency: "R$ "}}</span></small>
-                            </div>
-                            <div class="col-sm-2">
-                                <small>Total: <span class="text-success">{{totais.debito + totais.credito + totais.dinheiro + totais.ticket | currency: "R$ "}}</span></small>
+                                <small>Valor total: <span class="text-success">{{totais.valorTotal | currency: "R$ "}}</span></small>
                             </div>
                         </td>
                     </tr>

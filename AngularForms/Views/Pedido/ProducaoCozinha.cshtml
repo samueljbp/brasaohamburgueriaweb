@@ -16,6 +16,9 @@
 <script src="~/app/ProducaoCozinhaForm/pcController.js"></script>
 <div ng-controller="pcController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <form role="form" id="formEntregador" class="form-inline">
+        @Html.Partial("~/Views/Pedido/_ModalSelecionaEntregador.cshtml")
+    </form>
     <div cg-busy="{promise:promiseGetPedidos,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseAvancaPedido,backdrop:false,delay:10,minDuration:1000}"></div>
     <audio id="play" src="~/Content/sounds/beep.wav"></audio>

@@ -274,6 +274,43 @@
         $interval(function () {
             verificaTemposPedidos();
         }, 60000);
+
+
+
+
+        $scope.promiseGetEntregadores = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cadastros/GetEntregadores'
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.entregadores = retorno.data;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
+
+
+
+
     }
 
     $scope.getTimeMs = function (data) {
@@ -470,10 +507,32 @@
             });
     }
 
+    $scope.confirmaEntregador = function() {
+
+        var hasErrors = $('#formEntregador').validator('validate').has('.has-error').length;
+
+        if (hasErrors) {
+            return;
+        }
+
+        $('#modalSelecionaEntregador').modal('hide');
+
+        $scope.avancarPedido($scope.pedidoSelecionado);
+
+    }
+
     $scope.avancarPedido = function (pedido) {
+
+        $scope.pedidoSelecionado = pedido;
 
         var proximaSituacao = getProximaSituacaoPedido(pedido.situacao);
         var descricaoProximaSituacao = getDescricaoSituacaoPedido(proximaSituacao);
+
+        if (!pedido.retirarNaCasa && proximaSituacao == 4 && !($scope.pedidoSelecionado.codEntregador > 0)) {
+            $('#modalSelecionaEntregador').modal('show');
+
+            return;
+        }
 
         $ngBootbox.confirm('Deseja avançar o pedido ' + pedido.codPedido + ' para a situação "' + descricaoProximaSituacao + '"?')
             .then(function () {

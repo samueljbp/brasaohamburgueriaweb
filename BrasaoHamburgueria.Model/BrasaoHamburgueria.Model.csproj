@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Brasao\CardapioModel.cs" />
+    <Compile Include="Brasao\ConsultasModel.cs" />
     <Compile Include="Brasao\FidelidadeModel.cs" />
     <Compile Include="Brasao\InstitucionalModel.cs" />
     <Compile Include="Brasao\ParametrosModel.cs" />

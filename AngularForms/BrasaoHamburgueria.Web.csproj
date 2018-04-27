@@ -164,6 +164,7 @@
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
     <Content Include="app\CadastroComboCardapio\cccController.js" />
+    <Content Include="app\CadastroEntregador\ceController.js" />
     <Content Include="app\CadastroExtrasItemForm\ceiController.js" />
     <Content Include="app\CadastroImpressoraProducao\cipController.js" />
     <Content Include="app\CadastroItemCardapioForm\citemController.js" />
@@ -174,7 +175,8 @@
     <Content Include="app\CadastroProgramaFidelidadeForm\cpfController.js" />
     <Content Include="app\CadastroPromocaoVendaForm\cpvController.js" />
     <Content Include="app\ConfirmacaoLoginExternoForm\ceController.js" />
-    <Content Include="app\ConsultarPedidos\cpController.js" />
+    <Content Include="app\ConsultarUltimosPedidosForm\cpController.js" />
+    <Content Include="app\ConsultarProdutosVendidosForm\cpvController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\ExtratoFidelidadeForm\efController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
@@ -185,7 +187,7 @@
     <Content Include="app\NavbarForm\nbController.js" />
     <Content Include="app\PedidoForm\pedController.js" />
     <Content Include="app\PedidoRegistradoForm\pedRegistradoController.js" />
-    <Content Include="app\PedidosRealizadosForm\prController.js" />
+    <Content Include="app\ConsultarPedidosRealizadosForm\prController.js" />
     <Content Include="app\PerfilUsuarioForm\puController.js" />
     <Content Include="app\ProducaoCozinhaForm\pcController.js" />
     <Content Include="app\RedefinirSenha\rdSenhaController.js" />
@@ -1558,6 +1560,9 @@
     <Content Include="Views\Cadastros\PromocaoVenda.cshtml" />
     <Content Include="Views\Cadastros\ComboCardapio.cshtml" />
     <Content Include="Views\Pedido\ProducaoCozinha.cshtml" />
+    <Content Include="Views\Cadastros\Entregador.cshtml" />
+    <Content Include="Views\Pedido\_ModalSelecionaEntregador.cshtml" />
+    <Content Include="Views\Consultas\ProdutosVendidos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1658,6 +1663,10 @@
     <Compile Include="Migrations\Brasao\201803261213276_ValidadeCombo.Designer.cs">
       <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201804251234316_CriacaoEntregador.cs" />
+    <Compile Include="Migrations\Brasao\201804251234316_CriacaoEntregador.Designer.cs">
+      <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1669,6 +1678,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Repository\CardapioRepository.cs" />
+    <Compile Include="Repository\ConsultasRepository.cs" />
     <Compile Include="Repository\InstitucionalRepository.cs" />
     <Compile Include="Repository\IntegracoesRepository.cs" />
     <Compile Include="Repository\CadastrosRepository.cs" />
@@ -1729,6 +1739,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201803261213276_ValidadeCombo.resx">
       <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804251234316_CriacaoEntregador.resx">
+      <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

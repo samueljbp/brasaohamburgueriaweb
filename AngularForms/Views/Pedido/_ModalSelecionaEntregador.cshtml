@@ -1,0 +1,28 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="modalSelecionaEntregador" tabindex="-1" role="dialog" aria-labelledby="labelModalSelecionaEntregador" style="overflow: scroll;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelModalSelecionaEntregador">Selecione o entregador</h4>
+            </div>
+            <div class="modal-body">
+                <div cg-busy="{promise:promiseConfirmaEntregador,backdrop:false,delay:10,minDuration:1000}"></div>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <select name="codEntregador" id="codEntregador" required class="form-control" ng-model="pedidoSelecionado.codEntregador">
+                            <option value="">(Selecione)</option>
+                            <option ng-repeat="entregador in entregadores" value="{{entregador.codEntregador}}">{{entregador.nome}}</option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" ng-click="confirmaEntregador()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -46,6 +46,7 @@
     <Compile Include="AsyncHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyCopy.cs" />
+    <Compile Include="Queries.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

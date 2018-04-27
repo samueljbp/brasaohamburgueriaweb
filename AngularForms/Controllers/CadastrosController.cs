@@ -19,6 +19,78 @@ namespace BrasaoHamburgueria.Web.Controllers
     {
         private CadastrosRepository _rep = new CadastrosRepository();
 
+        #region Entregador
+
+        public ActionResult Entregador()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> GetEntregadores()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var entregadores = await _rep.GetEntregadores();
+
+                result.data = entregadores;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiEntregador(EntregadorViewModel entregador)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiEntregador(entregador);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarEntregador(EntregadorViewModel entregador, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var entreg = await _rep.GravarEntregador(entregador, modoCadastro);
+                result.Succeeded = true;
+                result.data = entreg;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
+
         #region Combo de cardápio
 
         public ActionResult ComboCardapio()

@@ -26,6 +26,8 @@ namespace BrasaoHamburgueria.Model
         public string FormaPagamento { get; set; }
         public string DescricaoFormaPagamento { get; set; }
         public double TaxaEntrega { get; set; }
+        public int? CodEntregador { get; set; }
+        public string NomeEntregador { get; set; }
         public double? TrocoPara { get; set; }
         public double? Troco { get; set; }
         public string BandeiraCartao { get; set; }
@@ -105,6 +107,22 @@ namespace BrasaoHamburgueria.Model
         public string DescricaoOpcaoExtra { get; set; }
         public double Preco { get; set; }
     }
+
+    public class EntregadorViewModel
+    {
+        public int CodEntregador { get; set; }
+        public string Nome { get; set; }
+        public string Sexo { get; set; }
+        public string TelefoneFixo { get; set; }
+        public string TelefoneCelular { get; set; }
+        public string Email { get; set; }
+        public string EnderecoCompleto { get; set; }
+        public string CPF { get; set; }
+        public string Observacao { get; set; }
+        public int OrdemAcionamento { get; set; }
+        public decimal? ValorPorEntrega { get; set; }
+    }
+
     #endregion
 
     [Table("SITUACAO_PEDIDO")]
@@ -151,6 +169,10 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("TAXA_ENTREGA")]
         public double TaxaEntrega { get; set; }
+
+        [ForeignKey("Entregador")]
+        [Column("COD_ENTREGADOR")]
+        public int? CodEntregador { get; set; }
 
         [Required]
         [Column("FORMA_PAGAMENTO")]
@@ -214,6 +236,8 @@ namespace BrasaoHamburgueria.Model
         public string MotivoDesconto { get; set; }
 
         public virtual SituacaoPedido Situacao { get; set; }
+
+        public virtual Entregador Entregador { get; set; }
 
         [InverseProperty("Pedido")]
         public virtual List<ExtratoUsuarioProgramaFidelidade> LancamentoExtrato { get; set; }
@@ -341,5 +365,47 @@ namespace BrasaoHamburgueria.Model
         public virtual ItemPedido ItemPedido { get; set; }
 
         public virtual OpcaoExtra OpcaoExtra { get; set; }
+    }
+
+    [Table("ENTREGADOR")]
+    public class Entregador
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [Column("COD_ENTREGADOR")]
+        public int CodEntregador { get; set; }
+
+        [Required]
+        [Column("NOME")]
+        public string Nome { get; set; }
+
+        [Required]
+        [Column("SEXO")]
+        public string Sexo { get; set; }
+
+        [Column("TELEFONE_FIXO")]
+        public string TelefoneFixo { get; set; }
+
+        [Column("TELEFONE_CELULAR")]
+        public string TelefoneCelular { get; set; }
+
+        [Column("EMAIL")]
+        public string Email { get; set; }
+
+        [Column("ENDERECO_COMPLETO")]
+        public string EnderecoCompleto { get; set; }
+
+        [Column("CPF")]
+        public string CPF { get; set; }
+
+        [Column("OBSERVACAO")]
+        public string Observacao { get; set; }
+
+        [Required]
+        [Column("ORDEM_ACIONAMENTO")]
+        public int OrdemAcionamento { get; set; }
+
+        [Column("VALOR_POR_ENTREGA")]
+        public decimal? ValorPorEntrega { get; set; }
     }
 }

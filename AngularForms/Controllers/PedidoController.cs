@@ -208,7 +208,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                await _rep.AlteraSituacaoPedido(pedido.CodPedido, pedido.Situacao, pedido.MotivoCancelamento, pedido.FeedbackCliente, User.Identity.GetUserName());
+                await _rep.AlteraSituacaoPedido(pedido, User.Identity.GetUserName());
                 result.Succeeded = true;
             }
             catch (Exception ex)

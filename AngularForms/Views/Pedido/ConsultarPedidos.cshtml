@@ -7,7 +7,7 @@
         return cookieToken + ":" + formToken;
     }
 }
-<script src="~/app/ConsultarPedidos/cpController.js"></script>
+<script src="~/app/ConsultarUltimosPedidosForm/cpController.js"></script>
 <div ng-controller="cpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promisesLoader,backdrop:false,delay:10,minDuration:1000}"></div>

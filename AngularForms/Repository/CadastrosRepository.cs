@@ -14,6 +14,127 @@ namespace BrasaoHamburgueria.Web.Repository
     {
         private BrasaoContext _contexto = new BrasaoContext();
 
+        #region Entregadores
+
+        public async Task<List<EntregadorViewModel>> GetEntregadores()
+        {
+            return _contexto.Entregadores.OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
+            {
+                CodEntregador = o.CodEntregador,
+                Nome = o.Nome,
+                Sexo = o.Sexo,
+                CPF = o.CPF,
+                Email = o.Email,
+                TelefoneCelular = o.TelefoneCelular,
+                TelefoneFixo = o.TelefoneFixo,
+                EnderecoCompleto = o.EnderecoCompleto,
+                Observacao = o.Observacao,
+                OrdemAcionamento = o.OrdemAcionamento,
+                ValorPorEntrega = o.ValorPorEntrega
+            }).ToList();
+        }
+
+        public async Task<EntregadorViewModel> GravarEntregador(EntregadorViewModel entregador, String modoCadastro)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                if (modoCadastro == "A") //alteração
+                {
+                    var entregadorAlterar = _contexto.Entregadores.Find(entregador.CodEntregador);
+
+                    if (entregadorAlterar != null)
+                    {
+                        entregadorAlterar.Nome = entregador.Nome;
+                        entregadorAlterar.Sexo = entregador.Sexo;
+                        entregadorAlterar.CPF = entregador.CPF;
+                        entregadorAlterar.Email = entregador.Email;
+                        entregadorAlterar.TelefoneCelular = entregador.TelefoneCelular;
+                        entregadorAlterar.TelefoneFixo = entregador.TelefoneFixo;
+                        entregadorAlterar.EnderecoCompleto = entregador.EnderecoCompleto;
+                        entregadorAlterar.Observacao = entregador.Observacao;
+                        entregadorAlterar.OrdemAcionamento = entregador.OrdemAcionamento;
+                        entregadorAlterar.ValorPorEntrega = entregador.ValorPorEntrega;
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+                    }
+
+                    return entregador;
+                }
+                else if (modoCadastro == "I") //inclusão
+                {
+                    var entregadorIncluir = new Entregador();
+                    if (entregador.CodEntregador <= 0)
+                    {
+                        entregadorIncluir.CodEntregador = 1;
+
+                        var cod = _contexto.Entregadores.Select(o => o.CodEntregador).DefaultIfEmpty(-1).Max();
+                        if (cod > 0)
+                        {
+                            entregadorIncluir.CodEntregador = cod + 1;
+                        }
+
+                        entregador.CodEntregador = entregadorIncluir.CodEntregador;
+                    }
+                    else
+                    {
+                        var valida = _contexto.Entregadores.Find(entregador.CodEntregador);
+
+                        if (valida != null)
+                        {
+                            throw new Exception("Já existe um entregador cadastrado com o código " + entregador.CodEntregador);
+                        }
+
+                        entregadorIncluir.CodEntregador = entregador.CodEntregador;
+                    }
+
+                    entregadorIncluir.Nome = entregador.Nome;
+                    entregadorIncluir.Sexo = entregador.Sexo;
+                    entregadorIncluir.CPF = entregador.CPF;
+                    entregadorIncluir.Email = entregador.Email;
+                    entregadorIncluir.TelefoneCelular = entregador.TelefoneCelular;
+                    entregadorIncluir.TelefoneFixo = entregador.TelefoneFixo;
+                    entregadorIncluir.EnderecoCompleto = entregador.EnderecoCompleto;
+                    entregadorIncluir.Observacao = entregador.Observacao;
+                    entregadorIncluir.OrdemAcionamento = entregador.OrdemAcionamento;
+                    entregadorIncluir.ValorPorEntrega = entregador.ValorPorEntrega;
+
+                    _contexto.Entregadores.Add(entregadorIncluir);
+
+                    await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+
+                    return entregador;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<string> ExcluiEntregador(EntregadorViewModel entregador)
+        {
+            if (_contexto.Pedidos.Where(i => i.CodEntregador.Value == entregador.CodEntregador).Count() > 0)
+            {
+                return "Exclusão não permitida. Este entregador está associado a pedidos registrados na base.";
+            }
+
+            var entregadorExcluir = await _contexto.Entregadores.FindAsync(entregador.CodEntregador);
+
+            if (entregadorExcluir != null)
+            {
+                _contexto.Entregadores.Remove(entregadorExcluir);
+                await _contexto.SaveChangesAsync();
+            }
+            else
+            {
+                return "Registro não encontrado na base de dados.";
+            }
+
+            return "";
+        }
+
+        #endregion
+
         #region Cadastros de combo de cardápio
 
         public List<ComboViewModel> GetCombosDB(bool combosDoDia)
@@ -545,11 +666,13 @@ namespace BrasaoHamburgueria.Web.Repository
                     if (opcao.CodOpcaoExtra <= 0)
                     {
                         opcaoIncluir.CodOpcaoExtra = 1;
-                        int? cod = _contexto.Extras.Max(o => o.CodOpcaoExtra);
-                        if (cod != null)
+
+                        var cod = _contexto.Extras.Select(o => o.CodOpcaoExtra).DefaultIfEmpty(-1).Max();
+                        if (cod > 0)
                         {
-                            opcaoIncluir.CodOpcaoExtra = cod.Value + 1;
+                            opcaoIncluir.CodOpcaoExtra = cod + 1;
                         }
+
                         opcao.CodOpcaoExtra = opcaoIncluir.CodOpcaoExtra;
                     }
                     else
@@ -634,11 +757,13 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (obs.CodObservacao <= 0)
                 {
                     obsIncluir.CodObservacao = 1;
-                    int? cod = _contexto.ObservacoesProducao.Max(o => o.CodObservacao);
-                    if (cod != null)
+
+                    var cod = _contexto.ObservacoesProducao.Select(o => o.CodObservacao).DefaultIfEmpty(-1).Max();
+                    if (cod > 0)
                     {
-                        obsIncluir.CodObservacao = cod.Value + 1;
+                        obsIncluir.CodObservacao = cod + 1;
                     }
+
                     obs.CodObservacao = obsIncluir.CodObservacao;
                 }
                 else
@@ -729,11 +854,14 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (par.CodParametro <= 0)
                 {
                     parIncluir.CodParametro = 1;
-                    int? cod = _contexto.ParametrosSistema.Max(o => o.CodParametro);
-                    if (cod != null)
+
+                    var cod = _contexto.ParametrosSistema.Select(o => o.CodParametro).DefaultIfEmpty(-1).Max();
+                    if (cod > 0)
                     {
-                        parIncluir.CodParametro = cod.Value + 1;
+                        parIncluir.CodParametro = cod + 1;
                     }
+
+
                     par.CodParametro = parIncluir.CodParametro;
                 }
                 else
@@ -799,11 +927,13 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (imp.CodImpressora <= 0)
                 {
                     impIncluir.CodImpressora = 1;
-                    int? cod = _contexto.ImpressorasProducao.Max(o => o.CodImpressora);
-                    if (cod != null)
+
+                    var cod = _contexto.ImpressorasProducao.Select(o => o.CodImpressora).DefaultIfEmpty(-1).Max();
+                    if (cod > 0)
                     {
-                        impIncluir.CodImpressora = cod.Value + 1;
+                        impIncluir.CodImpressora = cod + 1;
                     }
+
                     imp.CodImpressora = impIncluir.CodImpressora;
                 }
                 else
@@ -1034,11 +1164,13 @@ namespace BrasaoHamburgueria.Web.Repository
                     if (item.CodItemCardapio <= 0)
                     {
                         itemIncluir.CodItemCardapio = 1;
-                        int? cod = _contexto.ItensCardapio.Max(o => o.CodItemCardapio);
-                        if (cod != null)
+
+                        var cod = _contexto.ItensCardapio.Select(o => o.CodItemCardapio).DefaultIfEmpty(-1).Max();
+                        if (cod > 0)
                         {
-                            itemIncluir.CodItemCardapio = cod.Value + 1;
+                            itemIncluir.CodItemCardapio = cod + 1;
                         }
+
                         item.CodItemCardapio = itemIncluir.CodItemCardapio;
                     }
                     else
@@ -1284,11 +1416,13 @@ namespace BrasaoHamburgueria.Web.Repository
                 if (classe.CodClasse <= 0)
                 {
                     classeIncluir.CodClasse = 1;
-                    int? cod = _contexto.Classes.Max(o => o.CodClasse);
-                    if (cod != null)
+
+                    var cod = _contexto.Classes.Select(o => o.CodClasse).DefaultIfEmpty(-1).Max();
+                    if (cod > 0)
                     {
-                        classeIncluir.CodClasse = cod.Value + 1;
+                        classeIncluir.CodClasse = cod + 1;
                     }
+
                     classe.CodClasse = classeIncluir.CodClasse;
                 }
                 else

@@ -53,5 +53,6 @@ namespace BrasaoHamburgueria.Web.Context
         public DbSet<DiaSemanaCombo> DiasSemanaCombo { get; set; }
         public DbSet<Combo> Combos { get; set; }
         public DbSet<ComboItemCardapio> ItensCombo { get; set; }
+        public DbSet<Entregador> Entregadores { get; set; }
     }
 }

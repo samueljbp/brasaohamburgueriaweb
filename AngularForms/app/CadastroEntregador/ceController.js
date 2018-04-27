@@ -1,4 +1,4 @@
-﻿brasaoWebApp.controller('coeController', function ($scope, $http, $filter, $ngBootbox, $window) {
+﻿brasaoWebApp.controller('ceController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
         $scope.mensagem = {
@@ -12,7 +12,7 @@
 
         $scope.antiForgeryToken = antiForgeryToken;
 
-        $scope.opcaoSelecionada = {};
+        $scope.entregadorSelecionado = {};
 
         $scope.rowCollection = [];
         $scope.itemsByPage = 10;
@@ -20,45 +20,45 @@
         $scope.promiseGetOpcoesExtra();
     }
 
-    $scope.modalAlteracao = function (opcao) {
-        $('#formGravarOpcaoExtra').validator('destroy').validator();
+    $scope.modalAlteracao = function (entregador) {
+        $('#formGravarEntregador').validator('destroy').validator();
 
-        $scope.opcaoSelecionada = opcao;
+        $scope.entregadorSelecionado = entregador;
         $scope.modoCadastro = 'A';
-        $('#modalGravarOpcaoExtra').modal('show');
+        $('#modalGravarEntregador').modal('show');
     }
 
     $scope.modalInclusao = function () {
-        $('#formGravarOpcaoExtra').validator('destroy').validator();
+        $('#formGravarEntregador').validator('destroy').validator();
 
-        $scope.opcaoSelecionada = {};
+        $scope.entregadorSelecionado = {};
         $scope.modoCadastro = 'I';
-        $('#modalGravarOpcaoExtra').modal('show');
+        $('#modalGravarEntregador').modal('show');
     }
 
-    $scope.gravarOpcaoExtra = function () {
+    $scope.gravarEntregador = function () {
 
-        var hasErrors = $('#formGravarOpcaoExtra').validator('validate').has('.has-error').length;
+        var hasErrors = $('#formGravarEntregador').validator('validate').has('.has-error').length;
 
         if (hasErrors) {
             return;
         }
 
-        if ($scope.opcaoSelecionada.preco) {
-            preco = parseFloat($scope.opcaoSelecionada.preco);
+        if ($scope.entregadorSelecionado.valorPorEntrega) {
+            valor = parseFloat($scope.entregadorSelecionado.valorPorEntrega);
         }
 
-        if (!isNaN(preco) || preco > 0) {
-            $scope.opcaoSelecionada.preco = preco;
+        if (!isNaN(valor) || valor > 0) {
+            $scope.entregadorSelecionado.valorPorEntrega = valor;
         }
         else {
-            $scope.opcaoSelecionada.preco = 0.0;
+            $scope.entregadorSelecionado.valorPorEntrega = 0.0;
         }
 
-        $scope.promiseGravarOpcaoExtra = $http({
+        $scope.promiseGravarEntregador = $http({
             method: 'POST',
-            url: urlBase + 'Cadastros/GravarOpcaoExtra',
-            data: { opcao: $scope.opcaoSelecionada, modoCadastro: $scope.modoCadastro },
+            url: urlBase + 'Cadastros/GravarEntregador',
+            data: { entregador: $scope.entregadorSelecionado, modoCadastro: $scope.modoCadastro },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'RequestVerificationToken': $scope.antiForgeryToken
@@ -85,17 +85,17 @@
             $window.scrollTo(0, 0);
         });
 
-        $('#modalGravarOpcaoExtra').modal('hide');
+        $('#modalGravarEntregador').modal('hide');
         $scope.opcaoSelecionada = null;
 
     }
 
-    $scope.confirmaExclusaoOpcaoExtra = function (opcao) {
+    $scope.confirmaExclusaoEntregador = function (entregador) {
 
-        $ngBootbox.confirm('Confirma a exclusão da opção extra ' + opcao.codOpcaoExtra + '?')
+        $ngBootbox.confirm('Confirma a exclusão do entregador ' + entregador.codEntregador + '?')
             .then(function () {
-                $scope.opcaoSelecionada = opcao;
-                $scope.executaExclusaoOpcaoExtra();
+                $scope.entregadorSelecionado = entregador;
+                $scope.executaExclusaoEntregador();
 
             }, function () {
                 //console.log('Confirm dismissed!');
@@ -103,12 +103,12 @@
 
     }
 
-    $scope.executaExclusaoOpcaoExtra = function () {
+    $scope.executaExclusaoEntregador = function () {
 
-        $scope.promiseExcluirOpcaoExtra = $http({
+        $scope.promiseExcluirEntregador = $http({
             method: 'POST',
-            url: urlBase + 'Cadastros/ExcluiOpcaoExtra',
-            data: $scope.opcaoSelecionada,
+            url: urlBase + 'Cadastros/ExcluiEntregador',
+            data: $scope.entregadorSelecionado,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'RequestVerificationToken': $scope.antiForgeryToken
@@ -119,10 +119,10 @@
             if (retorno.succeeded) {
 
                 if (retorno.data == '') {
-                    $scope.mensagem.sucesso = 'Opção extra excluída com sucesso.';
+                    $scope.mensagem.sucesso = 'Entregador excluído com sucesso.';
 
                     for (i = 0; i < $scope.rowCollection.length; i++) {
-                        if ($scope.rowCollection[i].codOpcaoExtra == $scope.opcaoSelecionada.codOpcaoExtra) {
+                        if ($scope.rowCollection[i].codEntregador == $scope.entregadorSelecionado.codEntregador) {
                             $scope.rowCollection.splice(i, 1);
 
                             return;
@@ -141,7 +141,7 @@
                 $window.scrollTo(0, 0);
             }
 
-            $scope.opcaoSelecionada = null;
+            $scope.entregadorSelecionado = null;
 
         }).catch(function (error) {
             $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
@@ -152,14 +152,14 @@
 
     }
 
-    $scope.promiseGetOpcoesExtra = $http({
+    $scope.promiseGetEntregadores = $http({
         method: 'GET',
         headers: {
             //'Authorization': 'Bearer ' + accesstoken,
             'RequestVerificationToken': 'XMLHttpRequest',
             'X-Requested-With': 'XMLHttpRequest',
         },
-        url: urlBase + 'Cadastros/GetOpcoesExtra'
+        url: urlBase + 'Cadastros/GetEntregadores'
     })
         .then(function (response) {
 

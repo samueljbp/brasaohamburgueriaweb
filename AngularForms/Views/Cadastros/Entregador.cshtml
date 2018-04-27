@@ -1,0 +1,214 @@
+﻿@using Microsoft.AspNet.Identity;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/CadastroEntregador/ceController.js"></script>
+<div ng-controller="ceController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetEntregadores,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirEntregador,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formEntregador" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Entregadores - Cadastro</h3>
+        <hr />
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="codEntregador" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="nome" width="40%"><a href="#">Nome</a></th>
+                        <th st-sort="telefoneCelular" width="20%"><a href="#">Celular</a></th>
+                        <th st-sort="valorPorEntrega" width="20%"><a href="#">Valor entrega</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codEntregador" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="telefoneCelular" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="valorPorEntrega" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="5">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="entregador in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{entregador.codEntregador}}</td>
+                        <td>{{entregador.nome}}</td>
+                        <td>{{entregador.telefoneCelular}}</td>
+                        <td>{{entregador.valorPorEntrega | currency: "R$ "}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoEntregador(entregador)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(entregador)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarEntregador" class="form-horizontal">
+        <div class="modal fade" id="modalGravarEntregador" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarEntregador" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarEntregador">Entregador - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarEntregador,backdrop:false,delay:10,minDuration:1000}"></div>
+
+                        <div class="form-group">
+                            <label for="codEntregador" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codEntregador" ng-disabled="modoCadastro == 'A'" name="codEntregador" class="form-control" ng-model="entregadorSelecionado.codEntregador" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nome" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="nome" name="nome" class="form-control" ng-model="entregadorSelecionado.nome" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sexo" class="col-sm-2 control-label">Sexo</label>
+                            <div class="col-sm-4 col-md-2">
+                                <select name="sexo" required id="sexo" class="form-control" ng-model="entregadorSelecionado.sexo">
+                                    <option value="">(Selecione)</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefoneCelular" class="col-sm-2 control-label">Telefone celular</label>
+                            <div class="col-sm-4 col-md-3">
+                                <input type="text" autocomplete="off" id="telefoneCelular" name="telefoneCelular" class="form-control" ng-model="entregadorSelecionado.telefoneCelular" maxlength="15" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefoneFixo" class="col-sm-2 control-label">Telefone fixo</label>
+                            <div class="col-sm-4 col-md-3">
+                                <input type="text" autocomplete="off" id="telefoneFixo" name="telefoneFixo" class="form-control" ng-model="entregadorSelecionado.telefoneFixo" maxlength="15" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">E-mail</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="email" name="email" class="form-control" ng-model="entregadorSelecionado.email" maxlength="50" data-email />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="enderecoCompleto" class="col-sm-2 control-label">Endereço completo</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="enderecoCompleto" name="enderecoCompleto" class="form-control" ng-model="entregadorSelecionado.enderecoCompleto" maxlength="100" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpf" class="col-sm-2 control-label">CPF</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="cpf" name="cpf" class="form-control" ng-model="entregadorSelecionado.cpf" maxlength="15" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="observacao" class="col-sm-2 control-label">Observação</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="observacao" name="observacao" class="form-control" ng-model="entregadorSelecionado.observacao" maxlength="1000" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ordemAcionamento" class="col-sm-2 control-label">Ordem acionamento</label>
+                            <div class="col-sm-10">
+                                <input type="text" required id="ordemAcionamento" name="ordemAcionamento" class="form-control" ng-model="entregadorSelecionado.ordemAcionamento" maxlength="2" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="valorPorEntrega" class="col-sm-2 control-label">Valor por entrega</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="valorPorEntrega" autocomplete="off" id="valorPorEntrega" format="number" class="form-control hidden-sm hidden-xs" ng-model="entregadorSelecionado.valorPorEntrega" />
+                                <input type='number' step="any" name="valorPorEntrega" autocomplete="off" id="valorPorEntrega" class="form-control hidden-md hidden-lg" ng-model="entregadorSelecionado.valorPorEntrega" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarEntregador()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
