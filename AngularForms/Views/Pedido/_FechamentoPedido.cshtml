@@ -28,32 +28,33 @@
             }
             <div>
                 <div class="col-sm-4 form-group">
-                    <label for="formaPagamento">Selecione a forma de pagamento</label>
-                    <select name="formaPagamento" required id="formaPagamento" class="form-control" ng-model="pedido.formaPagamento">
+                    <label for="codFormaPagamento">Selecione a forma de pagamento</label>
+                    <select name="codFormaPagamento" required id="codFormaPagamento" class="form-control" ng-model="pedido.codFormaPagamento">
                         <option value="">(Selecione)</option>
-                        <option value="D">Dinheiro</option>
-                        <option value="C">Cartão de crédito</option>
-                        <option value="B">Cartão de débito</option>
-                        <option value="A">Cartão refeição - Alelo</option>
+                        <option ng-repeat="forma in formasPagamento" value="{{forma.codFormaPagamento}}">{{forma.descricaoFormaPagamento}}</option>
                     </select>
-                    <small ng-if="pedido.formaPagamento == 'A'">Levamos a máquina na sua casa</small>
+
+                    <small ng-if="pedido.codFormaPagamento == 'A'">Levamos a máquina na sua casa</small>
                     <div class="help-block with-errors"></div>
                 </div>
-                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
+                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.codFormaPagamento == 'D'" style="margin-left: 10px">
                     <label for="trocoPara">Pagar com</label>
                     <input type='text' name="trocoPara" autocomplete="off" id="trocoPara" format="number" class="form-control hidden-sm hidden-xs" ng-model="pedido.trocoPara" ng-blur="calculaTroco()" />
                     <input type='number' step="any" name="trocoPara" autocomplete="off" id="trocoPara" class="form-control hidden-md hidden-lg" ng-model="pedido.trocoPara" ng-blur="calculaTroco()" />
                     <div class="help-block with-errors"></div>
                 </div>
-                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.formaPagamento == 'D'" style="margin-left: 10px">
+                <div class="col-sm-3 col-md-2 form-group" ng-if="pedido.codFormaPagamento == 'D'" style="margin-left: 10px">
                     <label for="troco">Troco</label>
                     <div class="form-control disabled">{{ (pedido.trocoPara > 0 && pedido.trocoPara >= pedido.valorTotal ? pedido.trocoPara - pedido.valorTotal : 0)  | currency: "R$ " }}</div>
                     @*<input type='text' name="troco" id="troco" class="form-control" maxlength="10" readonly ng-model="pedido.troco" />*@
                     <div class="help-block with-errors"></div>
                 </div>
-                <div class="col-sm-4 form-group" ng-if="pedido.formaPagamento == 'C' || pedido.formaPagamento == 'B'" style="margin-left: 10px">
-                    <label for="bandeiraCartao">Bandeira (Visa, Master, etc)</label>
-                    <input type='text' required name="bandeiraCartao" id="bandeiraCartao" class="form-control" maxlength="30" ng-model="pedido.bandeiraCartao" />
+                <div class="col-sm-4 form-group" ng-show="pedido.codFormaPagamento == 'C' || pedido.codFormaPagamento == 'B'" style="margin-left: 10px">
+                    <label for="codBandeiraCartao">Bandeira</label>
+                    <select name="codBandeiraCartao" required id="codBandeiraCartao" class="form-control" ng-model="pedido.codBandeiraCartao">
+                        <option value="0" ng-selected="!pedido.codBandeiraCartao > 0">(Selecione)</option>
+                        <option ng-repeat="band in bandeirasCartao" value="{{band.codBandeiraCartao}}">{{band.descricaoBandeiraCartao}}</option>
+                    </select>
                     <small>Levamos a máquina na sua casa</small>
                     <div class="help-block with-errors"></div>
                 </div>

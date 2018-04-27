@@ -102,8 +102,6 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
             //declaração da variável para retorno das funções
             int iRetorno = 0;
 
-            pedido.DescricaoFormaPagamento = BrasaoUtil.getDescricaoFormaPagamentoPedido(pedido.FormaPagamento);
-
             ServiceResultViewModel result = new ServiceResultViewModel { Succeeded = true, Errors = new List<string>(), data = null };
 
             ImpressaoBematech4200 MP2032 = new ImpressaoBematech4200();
@@ -288,12 +286,12 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                     texto += "               FORMA DE PAGAMENTO               ";
                     texto += comandoQuebraLinha;
                     texto += pedido.DescricaoFormaPagamento;
-                    if (!String.IsNullOrEmpty(pedido.BandeiraCartao))
+                    if (pedido.CodBandeiraCartao != null)
                     {
-                        texto += " - " + pedido.BandeiraCartao;
+                        texto += " - " + pedido.DescricaoBandeiraCartao;
                         texto += comandoQuebraLinha;
                     }
-                    if (pedido.FormaPagamento == "D" && pedido.Troco != null)
+                    if (pedido.CodFormaPagamento == "D" && pedido.Troco != null)
                     {
                         texto += " - Troco: " + pedido.Troco.Value.ToString("C");
                         texto += comandoQuebraLinha;

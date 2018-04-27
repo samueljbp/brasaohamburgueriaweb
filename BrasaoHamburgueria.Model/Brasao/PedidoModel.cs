@@ -23,14 +23,15 @@ namespace BrasaoHamburgueria.Model
     {
         public int CodPedido { get; set; }
         public DateTime DataPedido { get; set; }
-        public string FormaPagamento { get; set; }
+        public string CodFormaPagamento { get; set; }
         public string DescricaoFormaPagamento { get; set; }
         public double TaxaEntrega { get; set; }
         public int? CodEntregador { get; set; }
         public string NomeEntregador { get; set; }
         public double? TrocoPara { get; set; }
         public double? Troco { get; set; }
-        public string BandeiraCartao { get; set; }
+        public int? CodBandeiraCartao { get; set; }
+        public string DescricaoBandeiraCartao { get; set; }
         public double ValorTotal { get; set; }
         public int Situacao { get; set; }
         public string Usuario { get; set; }
@@ -123,6 +124,18 @@ namespace BrasaoHamburgueria.Model
         public decimal? ValorPorEntrega { get; set; }
     }
 
+    public class FormaPagamentoViewModel
+    {
+        public string CodFormaPagamento { get; set; }
+        public string DescricaoFormaPagamento { get; set; }
+    }
+
+    public class BandeiraCartaoViewModel
+    {
+        public int CodBandeiraCartao { get; set; }
+        public string DescricaoBandeiraCartao { get; set; }
+    }
+
     #endregion
 
     [Table("SITUACAO_PEDIDO")]
@@ -174,9 +187,17 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_ENTREGADOR")]
         public int? CodEntregador { get; set; }
 
-        [Required]
-        [Column("FORMA_PAGAMENTO")]
-        public string FormaPagamento { get; set; }
+        [ForeignKey("FormaPagamentoRef")]
+        [Column("COD_FORMA_PAGAMENTO")]
+        public string CodFormaPagamento { get; set; }
+
+        [ForeignKey("BandeiraCartaoRef")]
+        [Column("COD_BANDEIRA_CARTAO")]
+        public int? CodBandeiraCartao { get; set; }
+
+        //[Required]
+        //[Column("FORMA_PAGAMENTO")]
+        //public string FormaPagamento { get; set; }
 
         [Column("TROCO_PARA")]
         public double? TrocoPara { get; set; }
@@ -184,8 +205,8 @@ namespace BrasaoHamburgueria.Model
         [Column("TROCO")]
         public double? Troco { get; set; }
 
-        [Column("BANDEIRA_CARTAO")]
-        public string BandeiraCartao { get; set; }
+        //[Column("BANDEIRA_CARTAO")]
+        //public string BandeiraCartao { get; set; }
 
         [Required]
         [Column("VALOR_TOTAL")]
@@ -238,6 +259,10 @@ namespace BrasaoHamburgueria.Model
         public virtual SituacaoPedido Situacao { get; set; }
 
         public virtual Entregador Entregador { get; set; }
+
+        public virtual FormaPagamento FormaPagamentoRef { get; set; }
+
+        public virtual BandeiraCartao BandeiraCartaoRef { get; set; }
 
         [InverseProperty("Pedido")]
         public virtual List<ExtratoUsuarioProgramaFidelidade> LancamentoExtrato { get; set; }
@@ -370,7 +395,7 @@ namespace BrasaoHamburgueria.Model
     [Table("ENTREGADOR")]
     public class Entregador
     {
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         [Key]
         [Column("COD_ENTREGADOR")]
         public int CodEntregador { get; set; }
@@ -407,5 +432,31 @@ namespace BrasaoHamburgueria.Model
 
         [Column("VALOR_POR_ENTREGA")]
         public decimal? ValorPorEntrega { get; set; }
+    }
+
+    [Table("FORMA_PAGAMENTO")]
+    public class FormaPagamento
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key]
+        [Column("COD_FORMA_PAGAMENTO")]
+        public string CodFormaPagamento { get; set; }
+
+        [Required]
+        [Column("DESCRICAO")]
+        public string DescricaoFormaPagamento { get; set; }
+    }
+
+    [Table("BANDEIRA_CARTAO")]
+    public class BandeiraCartao
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key]
+        [Column("COD_BANDEIRA_CARTAO")]
+        public int CodBandeiraCartao { get; set; }
+
+        [Required]
+        [Column("DESCRICAO")]
+        public string DescricaoBandeiraCartao { get; set; }
     }
 }

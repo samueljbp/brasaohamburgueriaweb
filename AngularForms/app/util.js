@@ -112,20 +112,20 @@ function getProximaSituacaoPedido(codSituacaoAtual) {
     }
 }
 
-function getDescricaoFormaPagamentoPedido(codFormaPagamento) {
-    switch (codFormaPagamento) {
-        case "D":
-            return "Dinheiro";
-        case "C":
-            return "Cartão de crédito";
-        case "B":
-            return "CArtão de débito";
-        case "A":
-            return "Ticket refeição Alelo";
-        default:
-            text = "Forma de pagamento não definida";
-    }
-}
+//function getDescricaoFormaPagamentoPedido(codFormaPagamento) {
+//    switch (codFormaPagamento) {
+//        case "D":
+//            return "Dinheiro";
+//        case "C":
+//            return "Cartão de crédito";
+//        case "B":
+//            return "CArtão de débito";
+//        case "A":
+//            return "Ticket refeição Alelo";
+//        default:
+//            text = "Forma de pagamento não definida";
+//    }
+//}
 
 (function ($) {
     $.fn.priceFormat = function (options) {

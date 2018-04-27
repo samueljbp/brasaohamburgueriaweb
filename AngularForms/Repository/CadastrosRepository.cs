@@ -14,11 +14,33 @@ namespace BrasaoHamburgueria.Web.Repository
     {
         private BrasaoContext _contexto = new BrasaoContext();
 
+        #region Formas de pagamento
+        public async Task<List<FormaPagamentoViewModel>> GetFormasPagamento()
+        {
+            return await _contexto.FormasPagamento.OrderBy(o => o.CodFormaPagamento).Select(o => new FormaPagamentoViewModel
+            {
+                CodFormaPagamento = o.CodFormaPagamento,
+                DescricaoFormaPagamento = o.DescricaoFormaPagamento
+            }).ToListAsync();
+        }
+        #endregion  
+
+        #region Bandeiras de cartão
+        public async Task<List<BandeiraCartaoViewModel>> GetBandeirasCartao()
+        {
+            return await _contexto.BandeirasCartao.OrderBy(o => o.CodBandeiraCartao).Select(o => new BandeiraCartaoViewModel
+            {
+                CodBandeiraCartao = o.CodBandeiraCartao,
+                DescricaoBandeiraCartao = o.DescricaoBandeiraCartao
+            }).ToListAsync();
+        }
+        #endregion  
+
         #region Entregadores
 
         public async Task<List<EntregadorViewModel>> GetEntregadores()
         {
-            return _contexto.Entregadores.OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
+            return await _contexto.Entregadores.OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
             {
                 CodEntregador = o.CodEntregador,
                 Nome = o.Nome,
@@ -31,7 +53,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 Observacao = o.Observacao,
                 OrdemAcionamento = o.OrdemAcionamento,
                 ValorPorEntrega = o.ValorPorEntrega
-            }).ToList();
+            }).ToListAsync();
         }
 
         public async Task<EntregadorViewModel> GravarEntregador(EntregadorViewModel entregador, String modoCadastro)

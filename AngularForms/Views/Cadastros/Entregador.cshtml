@@ -17,6 +17,7 @@
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetEntregadores,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirEntregador,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGravarEntregador,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formEntregador" class="form-horizontal" ng-submit="submitForm()">
         <h3>Entregadores - Cadastro</h3>
         <hr />

@@ -30,7 +30,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 ped.PercentualDesconto = pedido.PercentualDesconto;
                 ped.MotivoDesconto = pedido.MotivoDesconto;
 
-                if (ped.FormaPagamento == "D" && ped.TrocoPara != null && ped.TrocoPara.Value > 0)
+                if (ped.CodFormaPagamento == "D" && ped.TrocoPara != null && ped.TrocoPara.Value > 0)
                 {
                     ped.Troco = ped.TrocoPara - ped.ValorTotal - ped.ValorDesconto.Value;
                 }
@@ -284,8 +284,8 @@ namespace BrasaoHamburgueria.Web.Repository
                     }
 
 
-                    ped.BandeiraCartao = pedidoViewModel.BandeiraCartao;
-                    ped.FormaPagamento = pedidoViewModel.FormaPagamento;
+                    ped.CodBandeiraCartao = pedidoViewModel.CodBandeiraCartao;
+                    ped.CodFormaPagamento = pedidoViewModel.CodFormaPagamento;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
                     ped.TaxaEntrega = pedidoViewModel.TaxaEntrega;
                     ped.CodEntregador = pedidoViewModel.CodEntregador;
@@ -510,6 +510,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
             return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
                 .Include(c => c.Itens)
+                .Include(s => s.FormaPagamentoRef)
+                .Include(s => s.BandeiraCartaoRef)
                 .Include(c => c.Itens.Select(i => i.Observacoes))
                 .Include(c => c.Itens.Select(i => i.Observacoes.Select(o => o.Observacao)))
                 .Include(c => c.Itens.Select(i => i.Extras))
@@ -517,8 +519,10 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Select(p => new PedidoViewModel
                 {
                     DataPedido = p.DataHora,
-                    BandeiraCartao = p.BandeiraCartao,
-                    FormaPagamento = p.FormaPagamento,
+                    CodFormaPagamento = p.CodFormaPagamento,
+                    DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
+                    CodBandeiraCartao = p.CodBandeiraCartao,
+                    DescricaoBandeiraCartao = p.BandeiraCartaoRef.DescricaoBandeiraCartao,
                     CodPedido = p.CodPedido,
                     Situacao = p.CodSituacao,
                     TaxaEntrega = p.TaxaEntrega,
@@ -555,6 +559,8 @@ namespace BrasaoHamburgueria.Web.Repository
             var pedidos = await _contexto.Pedidos.Where(p => p.Usuario == loginUsuario && !p.PedidoExterno)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
+                .Include(s => s.FormaPagamentoRef)
+                .Include(s => s.BandeiraCartaoRef)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
                 .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas))
                 .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao)))
@@ -564,7 +570,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
-                    FormaPagamento = p.FormaPagamento,
+                    CodFormaPagamento = p.CodFormaPagamento,
+                    DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,
                     CodPedido = p.CodPedido,
                     Situacao = p.CodSituacao,
@@ -620,6 +627,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(s => s.Situacao)
                 .Include(s => s.Entregador)
                 .Include(s => s.Itens)
+                .Include(s => s.FormaPagamentoRef)
+                .Include(s => s.BandeiraCartaoRef)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
                 .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas))
                 .Include(s => s.Itens.Select(i => i.ItemCardapio.ImpressorasAssociadas.Select(a => a.ImpressoraProducao)))
@@ -629,7 +638,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
-                    FormaPagamento = p.FormaPagamento,
+                    CodFormaPagamento = p.CodFormaPagamento,
+                    DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,
                     CodPedido = p.CodPedido,
                     Situacao = p.CodSituacao,
@@ -638,7 +648,8 @@ namespace BrasaoHamburgueria.Web.Repository
                     NomeEntregador = p.Entregador.Nome,
                     ValorTotal = p.ValorTotal,
                     TaxaEntrega = p.TaxaEntrega,
-                    BandeiraCartao = p.BandeiraCartao,
+                    CodBandeiraCartao = p.CodBandeiraCartao,
+                    DescricaoBandeiraCartao = p.BandeiraCartaoRef.DescricaoBandeiraCartao,
                     Troco = p.Troco,
                     TrocoPara = p.TrocoPara,
                     Usuario = p.Usuario,

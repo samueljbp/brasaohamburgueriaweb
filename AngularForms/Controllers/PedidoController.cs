@@ -72,7 +72,6 @@ namespace BrasaoHamburgueria.Web.Controllers
             {
                 var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta, false);
                 var ped = peds.FirstOrDefault();
-                ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
 
                 result.data = ped;
 
@@ -95,11 +94,6 @@ namespace BrasaoHamburgueria.Web.Controllers
             {
                 result.data = await _rep.GetPedidosAbertos(null, false, somenteProducao);
 
-                foreach (var ped in result.data)
-                {
-                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
-                }
-
                 result.Succeeded = true;
             }
             catch (Exception ex)
@@ -118,11 +112,6 @@ namespace BrasaoHamburgueria.Web.Controllers
             try
             {
                 result.data = await _rep.GetUltimosPedidos(loginUsuario);
-
-                foreach (var ped in result.data)
-                {
-                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
-                }
 
                 result.Succeeded = true;
             }

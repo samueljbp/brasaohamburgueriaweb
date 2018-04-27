@@ -29,7 +29,6 @@
                 $scope.pedidoSelecionado = retorno.data;
                 $scope.tempoMedioEspera = $scope.pedidoSelecionado.tempoMedioEspera;
                 $scope.descricaoSituacaoPedido = getDescricaoSituacaoPedido($scope.pedidoSelecionado.situacao);
-                $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
 
                 if (situacaoAnterior == 1 && $scope.pedidoSelecionado.situacao == 2) {
                     $('#modalPedidoConfirmado').modal('show');

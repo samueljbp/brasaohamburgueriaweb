@@ -91,11 +91,6 @@ namespace BrasaoHamburgueria.Web.Controllers
             {
                 var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim);
 
-                foreach(var ped in peds)
-                {
-                    ped.DescricaoFormaPagamento = Util.GetDescricaoFormaPagamentoPedido(ped.FormaPagamento);
-                }
-
                 result.data = peds;
 
                 result.Succeeded = true;

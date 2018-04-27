@@ -19,6 +19,52 @@ namespace BrasaoHamburgueria.Web.Controllers
     {
         private CadastrosRepository _rep = new CadastrosRepository();
 
+        #region Forma de pagamento
+        public async Task<JsonResult> GetFormasPagamento()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var formas = await _rep.GetFormasPagamento();
+
+                result.data = formas;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+        #endregion
+
+        #region Bandeira de cartão
+        public async Task<JsonResult> GetBandeirasCartao()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var bands = await _rep.GetBandeirasCartao();
+
+                result.data = bands;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+        #endregion
+
         #region Entregador
 
         public ActionResult Entregador()

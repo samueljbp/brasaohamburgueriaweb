@@ -15,7 +15,7 @@
 
             for (i = 0; i < collection.length; i++) {
 
-                switch (collection[i].formaPagamento) {
+                switch (collection[i].codFormaPagamento) {
                     case 'D':
                         $scope.totais.dinheiro = $scope.totais.dinheiro + (collection[i].valorTotal - collection[i].valorDesconto);
                         break;
@@ -139,7 +139,6 @@
                 if (retorno.succeeded) {
 
                     $scope.pedidoSelecionado = retorno.data;
-                    $scope.descricaoFormaPagamentoPedido = getDescricaoFormaPagamentoPedido($scope.pedidoSelecionado.formaPagamento);
                     $('#modalDetalhesPedido').modal('show');
 
                 }

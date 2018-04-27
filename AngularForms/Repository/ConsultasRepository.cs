@@ -94,6 +94,7 @@ namespace BrasaoHamburgueria.Web.Repository
             var pedidos = await _contexto.Pedidos.Where(p => p.DataHora >= (inicio != null ? inicio.Value : p.DataHora) && p.DataHora <= (fim != null ? fim.Value : p.DataHora) && p.CodSituacao >= 2 && p.CodSituacao < 9)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
+                .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
                 //.Include(c => c.Itens.Select(i => i.Observacoes))
                 //.Include(c => c.Itens.Select(i => i.Observacoes.Select(o => o.Observacao)))
@@ -101,7 +102,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 //.Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
-                    FormaPagamento = p.FormaPagamento,
+                    CodFormaPagamento = p.CodFormaPagamento,
+                    DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,
                     CodPedido = p.CodPedido,
                     Situacao = p.CodSituacao,

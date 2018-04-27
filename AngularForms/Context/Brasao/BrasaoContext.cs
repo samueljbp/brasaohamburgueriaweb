@@ -54,5 +54,7 @@ namespace BrasaoHamburgueria.Web.Context
         public DbSet<Combo> Combos { get; set; }
         public DbSet<ComboItemCardapio> ItensCombo { get; set; }
         public DbSet<Entregador> Entregadores { get; set; }
+        public DbSet<FormaPagamento> FormasPagamento { get; set; }
+        public DbSet<BandeiraCartao> BandeirasCartao { get; set; }
     }
 }

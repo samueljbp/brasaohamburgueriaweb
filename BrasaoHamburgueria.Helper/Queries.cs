@@ -28,6 +28,7 @@ namespace BrasaoHamburgueria.Helper
 	                                                       ENTREGADOR E ON P.COD_ENTREGADOR = E.COD_ENTREGADOR
                                                      where (P.COD_ENTREGADOR = ISNULL(@cod_entregador, P.COD_ENTREGADOR) OR (P.COD_ENTREGADOR IS NULL AND @cod_entregador IS NULL))
                                                        and P.RETIRAR_NA_CASA = 0
+                                                       and P.COD_SITUACAO not in (1, 9)
                                                        and P.DATA_HORA >= ISNULL(@data_inicio, P.DATA_HORA - 1)
                                                        and P.DATA_HORA < ISNULL(@data_fim, P.DATA_HORA + 1)
                                                     group by ISNULL(P.COD_ENTREGADOR, 0)

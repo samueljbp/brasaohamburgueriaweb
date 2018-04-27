@@ -7,22 +7,22 @@ namespace BrasaoHamburgueria.Web.Helpers
 {
     public static class Util
     {
-        public static string GetDescricaoFormaPagamentoPedido(string formaPagamento)
-        {
-            switch (formaPagamento)
-            {
-                case "D":
-                    return "Dinheiro";
-                case "C":
-                    return "Cartão de crédito";
-                case "B":
-                    return "Cartão de débito";
-                case "A":
-                    return "Ticket refeição Alelo";
-                default:
-                    return "Forma de pagamento não definida";
-            }
-        }
+        //public static string GetDescricaoFormaPagamentoPedido(string formaPagamento)
+        //{
+        //    switch (formaPagamento)
+        //    {
+        //        case "D":
+        //            return "Dinheiro";
+        //        case "C":
+        //            return "Cartão de crédito";
+        //        case "B":
+        //            return "Cartão de débito";
+        //        case "A":
+        //            return "Ticket refeição Alelo";
+        //        default:
+        //            return "Forma de pagamento não definida";
+        //    }
+        //}
 
         public static string GetDescricaoSituacaoPedido(int codSituacao)
         {

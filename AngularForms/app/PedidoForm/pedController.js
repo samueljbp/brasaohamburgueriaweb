@@ -318,6 +318,10 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             .then(function () {
                 $scope.pedido.situacao = 1;
 
+                if ($scope.pedido.codBandeiraCartao > 0) {
+                    $scope.pedido.codBandeiraCartao = $scope.pedido.codBandeiraCartao.toString();
+                }
+
                 sessionStorage.pedido = JSON.stringify($scope.pedido);
 
             }, function () {
@@ -328,11 +332,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     function reiniciaVariaveisPedido() {
 
         $scope.pedido = {
-            formaPagamento: '',
+            codFormaPagamento: '',
+            codBandeiraCartao: '0',
             taxaEntrega: $scope.taxaEntrega,
             trocoPara: 0.0,
             troco: 0.0,
-            bandeiraCartao: '',
             valorTotal: 0.0,
             situacao: 0,
             pedidoExterno: $scope.modoAdm.ativo,
@@ -618,7 +622,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             }
 
             $scope.pedido.trocoPara = parseFloat($scope.pedido.trocoPara);
-        } else if ($scope.pedido.formaPagamento == 'D' && $scope.pedido.trocoPara <= 0 && $scope.pedido.valorTotal > 0) {
+        } else if ($scope.pedido.codFormaPagamento == 'D' && $scope.pedido.trocoPara <= 0 && $scope.pedido.valorTotal > 0) {
             $scope.mensagem.erro = 'Informe como o pagamento em dinheiro será realizado.';
             $window.scrollTo(0, 0);
             return;
@@ -853,6 +857,67 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
             //$dialog.dialog({}).open('modalContent.html');
             $('#modalTermosProgramaFidelidade').modal('show');
         }
+
+        $scope.promiseGetFormasPagamento = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cadastros/GetFormasPagamento'
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.formasPagamento = retorno.data;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
+
+
+        $scope.promiseGetBandeirasCartao = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cadastros/GetBandeirasCartao'
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.bandeirasCartao = retorno.data;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
     }
     //FIM INICIALIZAÇÃO DE VARIÁVEIS
 });

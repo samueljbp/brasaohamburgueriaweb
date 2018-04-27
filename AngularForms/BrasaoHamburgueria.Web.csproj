@@ -1669,6 +1669,10 @@
     <Compile Include="Migrations\Brasao\201804251234316_CriacaoEntregador.Designer.cs">
       <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.cs" />
+    <Compile Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.Designer.cs">
+      <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1744,6 +1748,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201804251234316_CriacaoEntregador.resx">
       <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.resx">
+      <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
