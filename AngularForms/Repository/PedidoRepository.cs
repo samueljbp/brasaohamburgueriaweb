@@ -20,23 +20,46 @@ namespace BrasaoHamburgueria.Web.Repository
             _contexto = new BrasaoContext();
         }
 
-        public async Task AplicaDescontoPedido(PedidoViewModel pedido)
+        public async Task AplicaDescontoPedido(PedidoViewModel pedido, string loginUsuario)
         {
-            var ped = _contexto.Pedidos.Where(p => p.CodPedido == pedido.CodPedido).FirstOrDefault();
-
-            if (ped != null)
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
-                ped.ValorDesconto = pedido.ValorDesconto;
-                ped.PercentualDesconto = pedido.PercentualDesconto;
-                ped.MotivoDesconto = pedido.MotivoDesconto;
-
-                if (ped.CodFormaPagamento == "D" && ped.TrocoPara != null && ped.TrocoPara.Value > 0)
+                try
                 {
-                    ped.Troco = ped.TrocoPara - ped.ValorTotal - ped.ValorDesconto.Value;
-                }
+                    var ped = _contexto.Pedidos.Where(p => p.CodPedido == pedido.CodPedido).FirstOrDefault();
 
-                await _contexto.SaveChangesAsync();
+                    if (ped != null)
+                    {
+                        ped.ValorDesconto = pedido.ValorDesconto;
+                        ped.PercentualDesconto = pedido.PercentualDesconto;
+                        ped.MotivoDesconto = pedido.MotivoDesconto;
+
+                        if (ped.CodFormaPagamento == "D" && ped.TrocoPara != null && ped.TrocoPara.Value > 0)
+                        {
+                            ped.Troco = ped.TrocoPara - ped.ValorTotal - ped.ValorDesconto.Value;
+                        }
+
+                        var historico = new HistoricoPedido();
+
+                        historico.CodPedido = pedido.CodPedido;
+                        historico.DataHora = DateTime.Now;
+                        historico.CodSituacao = pedido.Situacao;
+                        historico.Usuario = loginUsuario;
+                        historico.Descricao = "Aplicação de " + pedido.PercentualDesconto.ToString() + "%  de desconto ao pedido.";
+
+                        _contexto.HistoricosPedido.Add(historico);
+
+                        await _contexto.SaveChangesAsync();
+
+                        dbContextTransaction.Commit();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
+
         }
 
         public async Task AlteraSituacaoPedido(PedidoViewModel pedido, string loginUsuario)
@@ -47,24 +70,41 @@ namespace BrasaoHamburgueria.Web.Repository
                 {
                     var ped = _contexto.Pedidos.Where(p => p.CodPedido == pedido.CodPedido).FirstOrDefault();
 
+                    var historico = new HistoricoPedido();
+
+                    historico.CodPedido = pedido.CodPedido;
+                    historico.DataHora = DateTime.Now;
+                    historico.Usuario = loginUsuario;
+
+                    int codSituacaoAnterior = ped.CodSituacao;
+
                     if (ped != null)
                     {
                         ped.CodSituacao = pedido.Situacao;
 
+                        historico.CodSituacao = pedido.Situacao;
+                        historico.Descricao = "STATUS: Situacação do pedido alterada de " + codSituacaoAnterior + " para " + pedido.Situacao + ".";
+
                         if (ped.CodSituacao == (int)SituacaoPedidoEnum.Concluido)
                         {
                             ped.FeedbackCliente = pedido.FeedbackCliente;
+
+                            historico.Descricao = "STATUS: Situacação do pedido alterada de " + codSituacaoAnterior + " para " + pedido.Situacao + " (conclusão do pedido).";
                         }
 
                         if (ped.CodSituacao == (int)SituacaoPedidoEnum.EmProcessoEntrega)
                         {
                             ped.CodEntregador = pedido.CodEntregador;
+
+                            historico.Descricao = "STATUS: Situacação do pedido alterada de " + codSituacaoAnterior + " para " + pedido.Situacao + " (saiu para entrega).";
                         }
 
                         decimal saldoAtualizadoPrograma = -1;
                         if (ped.CodSituacao == (int)SituacaoPedidoEnum.Cancelado)
                         {
                             ped.MotivoCancelamento = pedido.MotivoCancelamento;
+
+                            historico.Descricao = "STATUS: Situacação do pedido alterada de " + codSituacaoAnterior + " para " + pedido.Situacao + " (cancelamento do pedido).";
 
                             //no caso do cancelamento do pedido, se o usuário estiver em programa de recompensa, estorna o saldo
 
@@ -105,6 +145,8 @@ namespace BrasaoHamburgueria.Web.Repository
                                 }
                             }
                         }
+
+                        _contexto.HistoricosPedido.Add(historico);
 
                         await _contexto.SaveChangesAsync();
 
@@ -265,6 +307,13 @@ namespace BrasaoHamburgueria.Web.Repository
         {
             ValidaPedido(pedidoViewModel, loginUsuario);
 
+            var historico = new HistoricoPedido();
+
+
+            historico.DataHora = DateTime.Now;
+            historico.Usuario = loginUsuario;
+
+
             using (var dbContextTransaction = _contexto.Database.BeginTransaction())
             {
                 try
@@ -277,10 +326,16 @@ namespace BrasaoHamburgueria.Web.Repository
                         ped.CodSituacao = pedidoViewModel.Situacao;
                         ped.DataHora = DateTime.Now;
                         ped.Usuario = loginUsuario;
+
+                        historico.Descricao = "Criação do pedido .";
+                        historico.CodSituacao = ped.CodSituacao;
                     }
                     else
                     {
                         ped = _contexto.Pedidos.Find(pedidoViewModel.CodPedido);
+
+                        historico.Descricao = "Alteração do pedido " + pedidoViewModel.CodPedido;
+                        historico.CodSituacao = ped.CodSituacao;
                     }
 
 
@@ -441,6 +496,11 @@ namespace BrasaoHamburgueria.Web.Repository
                             _contexto.SaveChanges();
                         }
                     }
+
+                    historico.CodPedido = ped.CodPedido;
+                    _contexto.HistoricosPedido.Add(historico);
+
+                    _contexto.SaveChanges();
 
                     dbContextTransaction.Commit();
 
@@ -751,6 +811,21 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 ped.Itens.AddRange(itensCombo);
             }
+        }
+
+
+        public async Task<List<HistoricoPedidoViewModel>> GetHistoricoPedido(int codPedido)
+        {
+            return await _contexto.HistoricosPedido.Include(h => h.Situacao).Where(h => h.CodPedido == codPedido).Select(h => new HistoricoPedidoViewModel
+            {
+                CodPedido = h.CodPedido,
+                DataHora = h.DataHora,
+                CodSituacao = h.CodSituacao,
+                DescricaoSituacao = h.Situacao.Descricao,
+                Descricao = h.Descricao,
+                Usuario = h.Usuario
+            }).OrderBy(h => h.DataHora).ToListAsync();
+
         }
     }
 }

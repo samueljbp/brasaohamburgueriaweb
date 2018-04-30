@@ -157,7 +157,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                await _rep.AplicaDescontoPedido(pedido);
+                await _rep.AplicaDescontoPedido(pedido, User.Identity.GetUserName());
                 result.Succeeded = true;
             }
             catch (Exception ex)
@@ -169,6 +169,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         [HttpPost]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AlteraTempoMedioEspera(int tempo)
@@ -189,6 +190,8 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_COZINHA)]
         [HttpPost]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AvancarPedido(PedidoViewModel pedido)
@@ -218,6 +221,27 @@ namespace BrasaoHamburgueria.Web.Controllers
             try
             {
                 result.data = await _rep.GravaPedido(pedidoViewModel, User.Identity.GetUserName());
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_COZINHA)]
+        public async Task<JsonResult> GetHistoricoPedido(int codPedido)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                result.data = await _rep.GetHistoricoPedido(codPedido);
+
+                result.Succeeded = true;
             }
             catch (Exception ex)
             {

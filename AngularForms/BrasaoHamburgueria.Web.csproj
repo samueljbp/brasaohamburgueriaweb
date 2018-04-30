@@ -1565,6 +1565,7 @@
     <Content Include="Views\Pedido\_ModalSelecionaEntregador.cshtml" />
     <Content Include="Views\Consultas\ProdutosVendidos.cshtml" />
     <Content Include="Views\Consultas\TaxasEntrega.cshtml" />
+    <Content Include="Views\Pedido\_ModalHistoricoPedido.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1673,6 +1674,10 @@
     <Compile Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.Designer.cs">
       <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.cs" />
+    <Compile Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.Designer.cs">
+      <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1751,6 +1756,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.resx">
       <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.resx">
+      <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>

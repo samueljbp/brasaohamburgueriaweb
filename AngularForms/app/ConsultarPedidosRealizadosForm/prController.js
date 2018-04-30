@@ -83,6 +83,13 @@
             params = params + 'dataFim=' + encodeURIComponent(fim.toString());
         }
 
+        if ($scope.filtros.codPedido > 0) {
+            if (params != '?') {
+                params = params + '&';
+            }
+            params = params + 'codPedido=' + $scope.filtros.codPedido;
+        }
+
         if (params == '?') {
             params = '';
         }
@@ -154,10 +161,50 @@
                 $window.scrollTo(0, 0);
             });
 
-        $scope.promisesLoader.push($scope.promiseGetPedido);
+    }
+
+
+
+
+    $scope.getHistoricoPedido = function (pedido) {
+
+        $scope.promiseGetHistoricoPedido = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': $scope.antiForgeryToken,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Pedido/GetHistoricoPedido?CodPedido=' + pedido.codPedido
+        })
+            .then(function (response) {
+
+                var retorno = genericSuccess(response);
+
+                if (retorno.succeeded) {
+
+                    $scope.pedidoSelecionado = pedido;
+                    $scope.historicos = retorno.data;
+                    $('#modalHistoricoPedido').modal('show');
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                $window.scrollTo(0, 0);
+            });
 
 
     }
+
+
+
 
     $scope.init = function (loginUsuario, antiForgeryToken) {
 
@@ -182,8 +229,11 @@
             dataInicio: '',
             horaInicio: '',
             dataFim: '',
-            horaFim: ''
+            horaFim: '',
+            codPedido: ''
         }
+
+        $scope.historicos = {};
 
         $scope.acao = { ehConsulta: true }
 

@@ -1,0 +1,41 @@
+﻿<div class="modal fade" id="modalHistoricoPedido" tabindex="-1" role="dialog" aria-labelledby="labelModalHistoricoPedido" style="overflow: scroll;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="labelModalHistoricoPedido">Histórico do pedido</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Pedido: <strong>{{pedidoSelecionado.codPedido}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Situação: <strong>{{pedidoSelecionado.descricaoSituacao}}</strong>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th width="15%"><a href="#">Data/Hora</a></th>
+                                <th width="25%"><a href="#">Situação</a></th>
+                                <th width="20%"><a href="#">Usuário</a></th>
+                                <th width="40%"><a href="#">Descrição</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="hist in historicos">
+                                <td>{{hist.dataHora | date:'dd/MM/yyyy HH:mm'}}</td>
+                                <td>{{hist.descricaoSituacao}}</td>
+                                <td>{{hist.usuario}}</td>
+                                <td>{{hist.descricao}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

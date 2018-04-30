@@ -1,7 +1,7 @@
 ﻿<div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
-            <table class="table table-striped" ng-if="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0">
+            <table class="table table-striped" ng-show="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0">
                 <thead>
                     <tr>
                         <th class="col-sm-1">
@@ -35,11 +35,11 @@
                             <div class="row">
                                 {{item.descricaoItem}}
                             </div>
-                            <div class="row" ng-if="item.obs != null && item.obs.length > 0">
-                                <span ng-repeat="obs in item.obs track by $index" ng-if="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-if="$index < item.obs.length - 1">, </span></span>
+                            <div class="row" ng-show="item.obs != null && item.obs.length > 0">
+                                <span ng-repeat="obs in item.obs track by $index" ng-show="obs.codObservacao != null" class="small text-warning">{{obs.descricaoObservacao}}<span ng-show="$index < item.obs.length - 1">, </span></span>
                             </div>
-                            <div class="row" ng-if="item.extras != null && item.extras.length > 0">
-                                <span ng-repeat="extra in item.extras track by $index" ng-if="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-if="$index < item.extras.length - 1">, </span></span>
+                            <div class="row" ng-show="item.extras != null && item.extras.length > 0">
+                                <span ng-repeat="extra in item.extras track by $index" ng-show="extra.codOpcaoExtra != null" class="small text-danger">{{extra.descricaoOpcaoExtra}}: R$ {{extra.preco | currency: "R$ "}}<span ng-show="$index < item.extras.length - 1">, </span></span>
                             </div>
                         </td>
                         <td>
@@ -86,7 +86,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="row hidden-sm hidden-md hidden-lg" ng-if="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0" style="margin-top: -10px">
+        <div class="row hidden-sm hidden-md hidden-lg" ng-show="pedidoSelecionado.itens != null && pedidoSelecionado.itens.length > 0" style="margin-top: -10px">
             <div class="col-xs-12 text-right">
                 <small>Arraste a tabela lateralmente</small>
             </div>

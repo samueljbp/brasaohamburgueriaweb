@@ -96,6 +96,16 @@ namespace BrasaoHamburgueria.Model
         public List<String> PortasImpressaoProducao { get; set; }
     }
 
+    public class HistoricoPedidoViewModel
+    {
+        public int CodPedido { get; set; }
+        public DateTime DataHora { get; set; }
+        public int? CodSituacao { get; set; }
+        public string DescricaoSituacao { get; set; }
+        public string Usuario { get; set; }
+        public string Descricao { get; set; }
+    }
+
     public class ObservacaoItemPedidoViewModel
     {
         public int CodObservacao { get; set; }
@@ -269,6 +279,9 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("Pedido")]
         public virtual List<ItemPedido> Itens { get; set; }
+
+        [InverseProperty("Pedido")]
+        public virtual List<HistoricoPedido> Historicos { get; set; }
     }
 
     [Table("ITEM_PEDIDO")]
@@ -340,6 +353,35 @@ namespace BrasaoHamburgueria.Model
         public virtual List<ExtraItemPedido> Extras { get; set; }
     }
 
+    [Table("HISTORICO_PEDIDO")]
+    public class HistoricoPedido
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key, ForeignKey("Pedido")]
+        [Column("COD_PEDIDO", Order = 1)]
+        public int CodPedido { get; set; }
+
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Key]
+        [Column("DATA_HORA", Order = 2)]
+        public DateTime DataHora { get; set; }
+
+        [Column("COD_SITUACAO")]
+        [ForeignKey("Situacao")]
+        public int? CodSituacao { get; set; }
+
+        [Required]
+        [Column("USUARIO")]
+        public string Usuario { get; set; }
+
+        [Required]
+        [Column("DESCRICAO")]
+        public string Descricao { get; set; }
+
+        public virtual Pedido Pedido { get; set; }
+
+        public virtual SituacaoPedido Situacao { get; set; }
+    }
     
 
     [Table("OBSERVACAO_PRODUCAO_ITEM_PEDIDO")]

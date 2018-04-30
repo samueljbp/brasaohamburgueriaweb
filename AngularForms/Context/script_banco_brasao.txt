@@ -4,6 +4,20 @@ insert into AspNetRoles values (2, 'Administradores');
 insert into AspNetRoles values (3, 'Cozinha');
 
 
+insert into forma_pagamento values ('D', 'Dinheiro');
+insert into forma_pagamento values ('C', 'Cartão de crédito');
+insert into forma_pagamento values ('B', 'Cartão de débito');
+insert into forma_pagamento values ('A', 'Ticket refeição Alelo');
+
+insert into bandeira_cartao values (1, 'Visa');
+insert into bandeira_cartao values (2, 'Mastercard');
+insert into bandeira_cartao values (3, 'American Express');
+insert into bandeira_cartao values (4, 'Elo');
+insert into bandeira_cartao values (5, 'Discover Network');
+insert into bandeira_cartao values (99, 'Outros');
+
+
+
 --classes
 insert into CLASSE_ITEM_CARDAPIO values (1, 'Hamburgueres', null, 1);
 insert into CLASSE_ITEM_CARDAPIO values (2, 'Porções', null, 2);

@@ -1,5 +1,13 @@
 ﻿<div class="row">
     <div class="col-sm-6">
+        Pedido: <strong>{{pedidoSelecionado.codPedido}}</strong>
+    </div>
+    <div class="col-sm-3">
+        Situação: <strong>{{pedidoSelecionado.descricaoSituacao}}</strong>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
         Cliente: <strong>{{pedidoSelecionado.dadosCliente.nome}}</strong>
     </div>
     <div class="col-sm-3">
@@ -30,7 +38,7 @@
         Taxa de entrega: <strong>{{pedidoSelecionado.taxaEntrega | currency: "R$ "}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.valorDesconto > 0">
+<div class="row" ng-show="pedidoSelecionado.valorDesconto > 0">
     <div class="col-sm-4">
         Desconto: <strong>{{pedidoSelecionado.valorDesconto | currency: "R$ "}}</strong>
     </div>
@@ -38,12 +46,12 @@
         Valor total c/ desconto: <strong>{{pedidoSelecionado.valorTotal - pedidoSelecionado.valorDesconto | currency: "R$ "}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.valorDesconto > 0">
+<div class="row" ng-show="pedidoSelecionado.valorDesconto > 0">
     <div class="col-sm-12">
         Desconto: <strong>{{pedidoSelecionado.motivoDesconto}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.codFormaPagamento == 'D'">
+<div class="row" ng-show="pedidoSelecionado.codFormaPagamento == 'D'">
     <div class="col-sm-4">
         Forma de pagamento: <strong>{{pedidoSelecionado.descricaoFormaPagamento}}</strong>
     </div>
@@ -54,7 +62,7 @@
         Troco: <strong>{{pedidoSelecionado.troco | currency: "R$ "}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.codFormaPagamento == 'C' || pedidoSelecionado.codFormaPagamento == 'B'">
+<div class="row" ng-show="pedidoSelecionado.codFormaPagamento == 'C' || pedidoSelecionado.codFormaPagamento == 'B'">
     <div class="col-sm-4">
         Forma de pagamento: <strong>{{pedidoSelecionado.descricaoFormaPagamento}}</strong>
     </div>
@@ -62,12 +70,12 @@
         Bandeira: <strong>{{pedidoSelecionado.descricaoBandeiraCartao}}</strong>
     </div>
 </div>
-<div class="row" ng-if="pedidoSelecionado.codFormaPagamento == 'A'">
+<div class="row" ng-show="pedidoSelecionado.codFormaPagamento == 'A'">
     <div class="col-sm-12">
         Forma de pagamento: <strong>{{pedidoSelecionado.descricaoFormaPagamento}}</strong>
     </div>
 </div>
-<div ng-if="pedidoSelecionado.situacao == 1 && !acao.ehGestao" style="margin-top: 20px;">
+<div ng-show="pedidoSelecionado.situacao == 1 && !acao.ehGestao" style="margin-top: 20px;">
     <div class="row">
         <div class="col-sm-12">
             <button type="button" class="btn btn-danger btn-default btn-lg" data-toggle="modal" ng-click="cancelaPedido()">
@@ -81,7 +89,7 @@
         <div class="help-block with-errors"></div>
     </div>
 </div>
-<div ng-if="pedidoSelecionado.situacao == 4 && !acao.ehGestao && !acao.ehConsulta" style="margin-top: 20px;">
+<div ng-show="pedidoSelecionado.situacao == 4 && !acao.ehGestao && !acao.ehConsulta" style="margin-top: 20px;">
     <div class="row">
         <div class="col-sm-12">
             <button type="button" class="btn btn-success btn-default btn-lg" data-toggle="modal" ng-click="finalizaPedido()">

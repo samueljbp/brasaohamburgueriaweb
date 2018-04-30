@@ -83,13 +83,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetPedido(DateTime? dataInicio, DateTime? dataFim)
+        public async Task<JsonResult> GetPedido(DateTime? dataInicio, DateTime? dataFim, int? codPedido)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim);
+                var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim, codPedido);
 
                 result.data = peds;
 
