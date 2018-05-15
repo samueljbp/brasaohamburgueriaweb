@@ -42,6 +42,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public async Task<JsonResult> AbreFechaLoja(bool aberta)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -59,5 +60,24 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             return new JsonNetResult { Data = result };
         }
-	}
+
+        [HttpPost]
+        public async Task<JsonResult> TrocaLoja(int codLoja)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                BrasaoHamburgueria.Web.Helpers.SessionData.CodLojaSelecionada = codLoja;
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+    }
 }

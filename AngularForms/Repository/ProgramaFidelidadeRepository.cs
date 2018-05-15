@@ -7,6 +7,7 @@ using BrasaoHamburgueria.Web.Context;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using BrasaoHamburgueria.Helper;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -27,13 +28,17 @@ namespace BrasaoHamburgueria.Web.Repository
             _contexto = new BrasaoContext();
         }
 
-        public async Task<List<ProgramaFidelidadeUsuarioViewModel>> GetProgramasFidelidade()
+        public async Task<List<ProgramaFidelidadeUsuarioViewModel>> GetProgramasFidelidade(int? codEmpresa)
         {
             var programas = await (from progs in _contexto.ProgramasFidelidade
+                                   from emps in _contexto.Empresas.Where(c => c.CodEmpresa == progs.CodEmpresa).DefaultIfEmpty()
                                    join pont in _contexto.PontuacoesDinheiroProgramaFidelidade on progs.CodProgramaFidelidade equals pont.CodProgramaFidelidade
+                                   where (progs.CodEmpresa != null ? progs.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(progs.CodEmpresa != null ? progs.CodEmpresa.Value : 0))
                                    orderby progs.CodProgramaFidelidade
                                    select new ProgramaFidelidadeUsuarioViewModel
                                    {
+                                       CodEmpresa = progs.CodEmpresa,
+                                       NomeEmpresa = emps.NomeFantasia,
                                        CodProgramaFidelidade = progs.CodProgramaFidelidade,
                                        DescricaoProgramaFidelidade = progs.DescricaoProgramaFidelidade,
                                        InicioVigencia = progs.InicioVigencia,
@@ -68,7 +73,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 if (progAlterar != null)
                 {
-                    //progAlterar.CodTipoPontuacaoProgramaFidelidade = (int)TipoPontuacaoProgramaFidelidadeEnum.PontuacaoDinheiro;
+                    progAlterar.CodEmpresa = prog.CodEmpresa;
                     progAlterar.DescricaoProgramaFidelidade = prog.DescricaoProgramaFidelidade;
                     progAlterar.InicioVigencia = prog.InicioVigencia;
                     progAlterar.TermosAceite = prog.TermosAceite.RemoveLineEndings();
@@ -119,6 +124,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     progIncluir.CodProgramaFidelidade = prog.CodProgramaFidelidade;
                 }
 
+                progIncluir.CodEmpresa = prog.CodEmpresa;
                 progIncluir.CodTipoPontuacaoProgramaFidelidade = (int)TipoPontuacaoProgramaFidelidadeEnum.PontuacaoDinheiro;
                 progIncluir.DescricaoProgramaFidelidade = prog.DescricaoProgramaFidelidade;
                 progIncluir.InicioVigencia = prog.InicioVigencia;
@@ -199,15 +205,17 @@ namespace BrasaoHamburgueria.Web.Repository
             return extrato;
         }
 
-        public ProgramaFidelidadeUsuarioViewModel GetProgramaFidelidadeUsuario(string loginUsuario)
+        public ProgramaFidelidadeUsuarioViewModel GetProgramaFidelidadeUsuario(string loginUsuario, int codEmpresa)
         {
             var prog = (from progs in _contexto.ProgramasFidelidade
+                        from emps in _contexto.Empresas.Where(u => progs.CodEmpresa == u.CodEmpresa).DefaultIfEmpty()
                         from usersProgs in _contexto.UsuariosParticipantesProgramaFidelidade.Where(u => progs.CodProgramaFidelidade == u.CodProgramaFidelidade && u.LoginUsuario == loginUsuario).DefaultIfEmpty()
                         from saldoProgs in _contexto.SaldosUsuariosProgramasFidelidade.Where(s => progs.CodProgramaFidelidade == s.CodProgramaFidelidade && s.LoginUsuario == loginUsuario).DefaultIfEmpty()
                         join din in _contexto.PontuacoesDinheiroProgramaFidelidade on progs.CodProgramaFidelidade equals din.CodProgramaFidelidade
-                        where progs.ProgramaAtivo && progs.InicioVigencia <= DateTime.Now && (progs.TerminoVigencia == null || progs.TerminoVigencia.Value >= DateTime.Now)
+                        where progs.ProgramaAtivo && progs.InicioVigencia <= DateTime.Now && (progs.TerminoVigencia == null || progs.TerminoVigencia.Value >= DateTime.Now) && (progs.CodEmpresa != null ? progs.CodEmpresa : codEmpresa) == codEmpresa
                         select new ProgramaFidelidadeUsuarioViewModel
                         {
+                            CodEmpresa = progs.CodEmpresa,
                             CodProgramaFidelidade = progs.CodProgramaFidelidade,
                             CodTipoPontuacaoProgramaFidelidade = progs.CodTipoPontuacaoProgramaFidelidade,
                             DataHoraAceite = usersProgs.DataHoraAceite,

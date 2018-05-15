@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using BrasaoHamburgueria.Web.Context;
 using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
 using System.Globalization;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -14,30 +16,36 @@ namespace BrasaoHamburgueria.Web.Repository
         private BrasaoContext _contexto = new BrasaoContext();
 
         #region Horário de funcionamento
-        public async Task<List<FuncionamentoEstabelecimentoViewModel>> GetHorariosFuncionamento()
+        public async Task<List<FuncionamentoEstabelecimentoViewModel>> GetHorariosFuncionamento(int codEmpresa)
         {
-            var lista = _contexto.FuncionamentosEstabelecimento.ToList();
-            List<FuncionamentoEstabelecimentoViewModel> retorno = new List<FuncionamentoEstabelecimentoViewModel>();
-
-            foreach (var item in lista)
+            var retorno = await _contexto.FuncionamentosEstabelecimento.Include(e => e.Empresa)
+                .Where(o => o.CodEmpresa == codEmpresa && (SessionData.EmpresasInt.Contains(o.CodEmpresa)))
+                .OrderBy(o => o.DiaSemana)
+                .Select(o => new FuncionamentoEstabelecimentoViewModel
             {
-                FuncionamentoEstabelecimentoViewModel func = new FuncionamentoEstabelecimentoViewModel();
-                func.DiaSemana = item.DiaSemana;
-                func.DescricaoDiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)item.DiaSemana);
-                func.Abertura = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + item.Abertura);
-                func.Fechamento = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + item.Fechamento);
-                func.TemDelivery = item.TemDelivery;
-                retorno.Add(func);
+                CodEmpresa = o.CodEmpresa,
+                NomeEmpresa = o.Empresa.NomeFantasia,
+                DiaSemana = o.DiaSemana,
+                AberturaString = o.Abertura,
+                FechamentoString = o.Fechamento,
+                TemDelivery = o.TemDelivery
+            }).ToListAsync();
+
+            foreach(var item in retorno)
+            {
+                item.DescricaoDiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)item.DiaSemana);
+                item.Abertura = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + item.AberturaString);
+                item.Fechamento = Convert.ToDateTime(DateTime.Now.ToString("dd/MM/yyyy") + " " + item.FechamentoString);
             }
 
             return retorno;
         }
 
-        public async Task<FuncionamentoEstabelecimentoViewModel> GravarFuncionamentoEstabelecimento(FuncionamentoEstabelecimentoViewModel funcionamento, String modoCadastro)
+        public async Task<FuncionamentoEstabelecimentoViewModel> GravarFuncionamentoEstabelecimento(FuncionamentoEstabelecimentoViewModel funcionamento, String modoCadastro, int codEmpresa)
         {
             if (modoCadastro == "A") //alteração
             {
-                var funcionamentoAlterar = _contexto.FuncionamentosEstabelecimento.Find(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"));
+                var funcionamentoAlterar = _contexto.FuncionamentosEstabelecimento.Find(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"), codEmpresa);
 
                 if (funcionamentoAlterar != null)
                 {
@@ -55,13 +63,14 @@ namespace BrasaoHamburgueria.Web.Repository
                 funcionamento.DescricaoDiaSemana = new CultureInfo("pt-BR").DateTimeFormat.GetDayName((DayOfWeek)funcionamento.DiaSemana);
                 var funcionamentoIncluir = new FuncionamentoEstabelecimento();
 
-                var valida = _contexto.FuncionamentosEstabelecimento.Find(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"));
+                var valida = _contexto.FuncionamentosEstabelecimento.Find(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"), codEmpresa);
 
                 if (valida != null)
                 {
                     throw new Exception("Já existe um horário de funcionamento cadastrado para o dia " + funcionamento.DescricaoDiaSemana + " e abertura " + funcionamento.Abertura.ToString("HH:mm"));
                 }
 
+                funcionamentoIncluir.CodEmpresa = codEmpresa;
                 funcionamentoIncluir.DiaSemana = funcionamento.DiaSemana;
                 funcionamentoIncluir.Abertura = funcionamento.Abertura.ToString("HH:mm");
                 funcionamentoIncluir.Fechamento = funcionamento.Fechamento.ToString("HH:mm");
@@ -79,7 +88,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<string> ExcluiFuncionamentoEstabelecimento(FuncionamentoEstabelecimentoViewModel funcionamento)
         {
-            var funcionamentoExcluir = await _contexto.FuncionamentosEstabelecimento.FindAsync(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"));
+            var funcionamentoExcluir = await _contexto.FuncionamentosEstabelecimento.FindAsync(funcionamento.DiaSemana, funcionamento.Abertura.ToString("HH:mm"), funcionamento.CodEmpresa);
 
             if (funcionamentoExcluir != null)
             {

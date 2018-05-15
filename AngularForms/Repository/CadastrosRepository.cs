@@ -7,12 +7,474 @@ using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Data.Entity;
+using BrasaoHamburgueria.Web.Helpers;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
+using System.Configuration;
+using BrasaoHamburgueria.Helper;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
     public class CadastrosRepository
     {
         private BrasaoContext _contexto = new BrasaoContext();
+
+        #region Empresas
+
+        public void RemoverImagem(string serverPath, string fileUrl, string fileMiniUrl)
+        {
+
+            var imagem = serverPath + fileUrl.Replace(@"/", @"\");
+            System.IO.File.Delete(imagem);
+
+            imagem = serverPath + fileMiniUrl.Replace(@"/", @"\");
+            System.IO.File.Delete(imagem);
+        }
+
+        public string GravarImagem(HttpPostedFileBase file, string serverPath, string imgPath, string fileName, int maxSize)
+        {
+            var extensao = file.FileName.Split('.')[1].ToString();
+            var fullPath = serverPath + imgPath + fileName + "." + extensao;
+            file.SaveAs(fullPath);
+
+            if (file.ContentLength > maxSize)
+            {
+                throw new Exception("A imagem deve ter no máximo " + (maxSize / 1000).ToString() + "Kb.");
+            }
+
+            var thumbPath = serverPath + imgPath + "mini-" + fileName + "." + extensao;
+
+            //cria miniatura
+
+            Image.GetThumbnailImageAbort myCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
+
+            Image image = Image.FromFile(fullPath);
+
+            int height = 150;
+            int width = Convert.ToInt32(height * (Convert.ToDecimal(image.Width) / Convert.ToDecimal(image.Height)));
+
+            Image thumb = image.GetThumbnailImage(width, height, myCallback, IntPtr.Zero);
+            thumb.Save(thumbPath);
+
+            image.Dispose();
+
+            return imgPath.Replace(@"\", @"/") + fileName + "." + extensao;
+        }
+
+        public void RemoverLogoEmpresa(string serverPath, EmpresaViewModel empresa)
+        {
+            try
+            {
+                var empresaDb = _contexto.Empresas.Find(empresa.CodEmpresa);
+
+                if (empresaDb == null)
+                {
+                    throw new Exception("O registro da empresa " + empresa.CodEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                RemoverImagem(serverPath, empresa.Logomarca, empresa.LogomarcaMini);
+
+                empresaDb.Logomarca = null;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public string GravarLogoEmpresa(HttpPostedFileBase file, string serverPath, int codEmpresa)
+        {
+            var retorno = "";
+
+            try
+            {
+                var empresa = _contexto.Empresas.Find(codEmpresa);
+
+                if (empresa == null)
+                {
+                    throw new Exception("O registro da empresa " + codEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                var caminhoLogo = ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString();
+                var caminhoImagem = GravarImagem(file, serverPath, caminhoLogo, "img_logo" + codEmpresa, 300000);
+                empresa.Logomarca = caminhoImagem;
+                retorno = empresa.Logomarca;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retorno;
+        }
+
+        public void RemoverFundoPublicoEmpresa(string serverPath, EmpresaViewModel empresa)
+        {
+            try
+            {
+                var empresaDb = _contexto.Empresas.Find(empresa.CodEmpresa);
+
+                if (empresaDb == null)
+                {
+                    throw new Exception("O registro da empresa " + empresa.CodEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                RemoverImagem(serverPath, empresa.ImagemBackgroundPublica, empresa.ImagemBackgroundPublicaMini);
+
+                empresaDb.ImagemBackgroundPublica = null;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public string GravarFundoPublicoEmpresa(HttpPostedFileBase file, string serverPath, int codEmpresa)
+        {
+            var retorno = "";
+
+            try
+            {
+                var empresa = _contexto.Empresas.Find(codEmpresa);
+
+                if (empresa == null)
+                {
+                    throw new Exception("O registro da empresa " + codEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                var caminhoFundo = ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString();
+                var caminhoImagem = GravarImagem(file, serverPath, caminhoFundo, "img_bg_publica" + codEmpresa, 1000000);
+                empresa.ImagemBackgroundPublica = caminhoImagem;
+                retorno = empresa.ImagemBackgroundPublica;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retorno;
+        }
+
+        public void RemoverFundoAutenticadoEmpresa(string serverPath, EmpresaViewModel empresa)
+        {
+            try
+            {
+                var empresaDb = _contexto.Empresas.Find(empresa.CodEmpresa);
+
+                if (empresaDb == null)
+                {
+                    throw new Exception("O registro da empresa " + empresa.CodEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                RemoverImagem(serverPath, empresa.ImagemBackgroundAutenticada, empresa.ImagemBackgroundAutenticadaMini);
+
+                empresaDb.ImagemBackgroundAutenticada = null;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public string GravarFundoAutenticadoEmpresa(HttpPostedFileBase file, string serverPath, int codEmpresa)
+        {
+            var retorno = "";
+
+            try
+            {
+                var empresa = _contexto.Empresas.Find(codEmpresa);
+
+                if (empresa == null)
+                {
+                    throw new Exception("O registro da empresa " + codEmpresa + " não foi encontrado na base de dados.");
+                }
+
+                var caminhoFundo = ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString();
+                var caminhoImagem = GravarImagem(file, serverPath, caminhoFundo, "img_bg_autenticada" + codEmpresa, 1000000);
+                empresa.ImagemBackgroundAutenticada = caminhoImagem;
+                retorno = empresa.ImagemBackgroundAutenticada;
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retorno;
+        }
+
+        public async Task<List<EstadoViewModel>> GetEstados()
+        {
+            var lista = await (
+                from cids in _contexto.Cidades
+                select new EstadoViewModel
+                {
+                    Sigla = cids.Estado,
+                    Nome = cids.Estado
+                }
+                ).Distinct().OrderBy(c => c.Sigla).ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<List<CidadeViewModel>> GetCidades(string siglaEstado)
+        {
+            var lista = await (
+                from cids in _contexto.Cidades
+                where cids.Estado == (siglaEstado != null ? siglaEstado : cids.Estado)
+                select new CidadeViewModel
+                {
+                    CodCidade = cids.CodCidade,
+                    Nome = cids.Nome,
+                    Estado = cids.Estado
+                }
+                ).Distinct().OrderBy(c => c.Nome).ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<List<BairroViewModel>> GetBairros(int? codCidade)
+        {
+            var lista = await (
+                from bairros in _contexto.Bairros
+                where bairros.CodCidade == (codCidade != null ? codCidade.Value : bairros.CodCidade)
+                select new BairroViewModel
+                {
+                    CodBairro = bairros.CodBairro,
+                    Nome = bairros.Nome
+                }
+                ).Distinct().OrderBy(c => c.Nome).ToListAsync();
+
+            return lista;
+        }
+
+        public async Task<EmpresaViewModel> GravarEmpresa(EmpresaViewModel empresa, String modoCadastro)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                if (modoCadastro == "A") //alteração
+                {
+                    var empresaAlterar = _contexto.Empresas.Find(empresa.CodEmpresa);
+
+                    if (empresaAlterar != null)
+                    {
+                        empresaAlterar.RazaoSocial = empresa.RazaoSocial;
+                        empresaAlterar.NomeFantasia = empresa.NomeFantasia;
+                        empresaAlterar.CNPJ = BrasaoUtil.FormatCNPJ(BrasaoUtil.SemFormatacao(empresa.CNPJ));
+                        empresaAlterar.CodBairro = empresa.CodBairro;
+                        empresaAlterar.CodEmpresaMatriz = empresa.CodEmpresaMatriz;
+                        empresaAlterar.Complemento = empresa.Complemento;
+                        empresaAlterar.CorDestaque = empresa.CorDestaque;
+                        empresaAlterar.CorPrincipal = empresa.CorPrincipal;
+                        empresaAlterar.CorPrincipalContraste = empresa.CorPrincipalContraste;
+                        empresaAlterar.CorSecundaria = empresa.CorSecundaria;
+                        empresaAlterar.Email = empresa.Email;
+                        empresaAlterar.EmpresaAtiva = empresa.EmpresaAtiva;
+                        empresaAlterar.Facebook = empresa.Facebook;
+                        empresaAlterar.ImagemBackgroundAutenticada = empresa.ImagemBackgroundAutenticada;
+                        empresaAlterar.ImagemBackgroundPublica = empresa.ImagemBackgroundPublica;
+                        empresaAlterar.InscricaoEstadual = empresa.InscricaoEstadual;
+                        empresaAlterar.Logomarca = empresa.Logomarca;
+                        empresaAlterar.Logradouro = empresa.Logradouro;
+                        empresaAlterar.Numero = empresa.Numero;
+                        empresaAlterar.Telefone = empresa.Telefone;
+
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+
+                        BrasaoHamburgueria.Web.Helpers.SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+                    }
+
+                    return empresa;
+                }
+                else if (modoCadastro == "I") //inclusão
+                {
+                    var empresaIncluir = new Empresa();
+                    if (empresa.CodEmpresa <= 0)
+                    {
+                        empresaIncluir.CodEmpresa = 1;
+
+                        var cod = _contexto.Empresas.Select(o => o.CodEmpresa).DefaultIfEmpty(-1).Max();
+                        if (cod > 0)
+                        {
+                            empresaIncluir.CodEmpresa = cod + 1;
+                        }
+
+                        empresa.CodEmpresa = empresaIncluir.CodEmpresa;
+                    }
+                    else
+                    {
+                        var valida = _contexto.Empresas.Find(empresa.CodEmpresa);
+
+                        if (valida != null)
+                        {
+                            throw new Exception("Já existe uma empresa cadastrada com o código " + empresa.CodEmpresa);
+                        }
+
+                        empresaIncluir.CodEmpresa = empresa.CodEmpresa;
+                    }
+
+                    empresaIncluir.RazaoSocial = empresa.RazaoSocial;
+                    empresaIncluir.NomeFantasia = empresa.NomeFantasia;
+                    empresaIncluir.CNPJ = BrasaoUtil.FormatCNPJ(BrasaoUtil.SemFormatacao(empresa.CNPJ));
+                    empresaIncluir.CodBairro = empresa.CodBairro;
+                    empresaIncluir.CodEmpresaMatriz = empresa.CodEmpresaMatriz;
+                    empresaIncluir.Complemento = empresa.Complemento;
+                    empresaIncluir.CorDestaque = empresa.CorDestaque;
+                    empresaIncluir.CorPrincipal = empresa.CorPrincipal;
+                    empresaIncluir.CorPrincipalContraste = empresa.CorPrincipalContraste;
+                    empresaIncluir.CorSecundaria = empresa.CorSecundaria;
+                    empresaIncluir.Email = empresa.Email;
+                    empresaIncluir.EmpresaAtiva = empresa.EmpresaAtiva;
+                    empresaIncluir.Facebook = empresa.Facebook;
+                    empresaIncluir.ImagemBackgroundAutenticada = empresa.ImagemBackgroundAutenticada;
+                    empresaIncluir.ImagemBackgroundPublica = empresa.ImagemBackgroundPublica;
+                    empresaIncluir.InscricaoEstadual = empresa.InscricaoEstadual;
+                    empresaIncluir.Logomarca = empresa.Logomarca;
+                    empresaIncluir.Logradouro = empresa.Logradouro;
+                    empresaIncluir.Numero = empresa.Numero;
+                    empresaIncluir.Telefone = empresa.Telefone;
+
+                    await _contexto.SaveChangesAsync();
+                    dbContextTransaction.Commit();
+
+                    BrasaoHamburgueria.Web.Helpers.SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                    return empresa;
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<List<EmpresaViewModel>> GetEmpresas()
+        {
+            var lista = (
+                from emps in _contexto.Empresas
+                join bairros in _contexto.Bairros on emps.CodBairro equals bairros.CodBairro
+                join cidades in _contexto.Cidades on bairros.CodCidade equals cidades.CodCidade
+                where  SessionData.EmpresasInt.Contains(emps.CodEmpresa)
+                select new EmpresaViewModel
+                {
+                    CodEmpresa = emps.CodEmpresa,
+                    RazaoSocial = emps.RazaoSocial,
+                    NomeFantasia = emps.NomeFantasia,
+                    InscricaoEstadual = emps.InscricaoEstadual,
+                    Logomarca = emps.Logomarca,
+                    CNPJ = emps.CNPJ,
+                    CodBairro = emps.CodBairro,
+                    NomeBairro = bairros.Nome,
+                    CodCidade = bairros.CodCidade,
+                    NomeCidade = cidades.Nome,
+                    CodEmpresaMatriz = emps.CodEmpresaMatriz,
+                    Complemento = emps.Complemento,
+                    Estado = cidades.Estado,
+                    Logradouro = emps.Logradouro,
+                    Numero = emps.Numero,
+                    Telefone = emps.Telefone,
+                    Email = emps.Email,
+                    Facebook = emps.Facebook,
+                    ImagemBackgroundAutenticada = emps.ImagemBackgroundAutenticada,
+                    ImagemBackgroundPublica = emps.ImagemBackgroundPublica,
+                    CorPrincipal = emps.CorPrincipal,
+                    CorSecundaria = emps.CorSecundaria,
+                    CorPrincipalContraste = emps.CorPrincipalContraste,
+                    CorDestaque = emps.CorDestaque,
+                    EhFilial = (emps.CodEmpresaMatriz == null),
+                    EmpresaAtiva = emps.EmpresaAtiva
+                }
+                ).ToList();
+
+            foreach (var item in lista)
+            {
+                if (!String.IsNullOrEmpty(item.Logomarca))
+                {
+                    item.LogomarcaMini = item.Logomarca.Replace("img_logo", "mini-img_logo");
+                }
+
+                if (!String.IsNullOrEmpty(item.ImagemBackgroundPublica))
+                {
+                    item.ImagemBackgroundPublicaMini = item.ImagemBackgroundPublica.Replace("img_bg_publica", "mini-img_bg_publica");
+                }
+
+                if (!String.IsNullOrEmpty(item.ImagemBackgroundAutenticada))
+                {
+                    item.ImagemBackgroundAutenticadaMini = item.ImagemBackgroundAutenticada.Replace("img_bg_autenticada", "mini-img_bg_autenticada");
+                }
+            }
+
+            return lista;
+        }
+
+
+        public async Task<string> ExcluiEmpresa(EmpresaViewModel empresa)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    var empresaExcluir = await _contexto.Empresas.FindAsync(empresa.CodEmpresa);
+
+                    if (empresaExcluir != null)
+                    {
+                        _contexto.Empresas.Remove(empresaExcluir);
+                        await _contexto.SaveChangesAsync();
+                        dbContextTransaction.Commit();
+                    }
+                    else
+                    {
+                        return "Registro não encontrado na base de dados.";
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    var sqlex = ex.InnerException.InnerException as SqlException;
+
+                    if (sqlex != null)
+                    {
+                        switch (sqlex.Number)
+                        {
+                            case 547: throw new Exception("Não foi possível excluir a empresa pois ela já está associada a registros na base. Como sugestão utilize a opção de inativar o registro.");
+                            default: throw sqlex; //otra excepcion que no controlo.
+
+
+                        }
+                    }
+
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return "";
+        }
+
+
+        #endregion  
 
         #region Formas de pagamento
         public async Task<List<FormaPagamentoViewModel>> GetFormasPagamento()
@@ -38,9 +500,11 @@ namespace BrasaoHamburgueria.Web.Repository
 
         #region Entregadores
 
-        public async Task<List<EntregadorViewModel>> GetEntregadores()
+        public async Task<List<EntregadorViewModel>> GetEntregadores(int codEmpresa)
         {
-            return await _contexto.Entregadores.OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
+            return await _contexto.Entregadores.Include(e => e.Empresa)
+                .Where(o => (o.CodEmpresa != null ? o.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(o.CodEmpresa != null ? o.CodEmpresa.Value : 0)))
+                .OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
             {
                 CodEntregador = o.CodEntregador,
                 Nome = o.Nome,
@@ -52,7 +516,9 @@ namespace BrasaoHamburgueria.Web.Repository
                 EnderecoCompleto = o.EnderecoCompleto,
                 Observacao = o.Observacao,
                 OrdemAcionamento = o.OrdemAcionamento,
-                ValorPorEntrega = o.ValorPorEntrega
+                ValorPorEntrega = o.ValorPorEntrega,
+                CodEmpresa = o.CodEmpresa,
+                NomeEmpresa = o.Empresa.NomeFantasia
             }).ToListAsync();
         }
 
@@ -66,6 +532,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     if (entregadorAlterar != null)
                     {
+                        entregadorAlterar.CodEmpresa = entregador.CodEmpresa;
                         entregadorAlterar.Nome = entregador.Nome;
                         entregadorAlterar.Sexo = entregador.Sexo;
                         entregadorAlterar.CPF = entregador.CPF;
@@ -110,6 +577,7 @@ namespace BrasaoHamburgueria.Web.Repository
                         entregadorIncluir.CodEntregador = entregador.CodEntregador;
                     }
 
+                    entregadorIncluir.CodEmpresa = entregador.CodEmpresa;
                     entregadorIncluir.Nome = entregador.Nome;
                     entregadorIncluir.Sexo = entregador.Sexo;
                     entregadorIncluir.CPF = entregador.CPF;
@@ -135,7 +603,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<string> ExcluiEntregador(EntregadorViewModel entregador)
         {
-            if (_contexto.Pedidos.Where(i => i.CodEntregador.Value == entregador.CodEntregador).Count() > 0)
+            if (_contexto.Pedidos.Where(i => i.CodEntregador == entregador.CodEntregador).Count() > 0)
             {
                 return "Exclusão não permitida. Este entregador está associado a pedidos registrados na base.";
             }
@@ -159,14 +627,18 @@ namespace BrasaoHamburgueria.Web.Repository
 
         #region Cadastros de combo de cardápio
 
-        public List<ComboViewModel> GetCombosDB(bool combosDoDia)
+        public List<ComboViewModel> GetCombosDB(bool combosDoDia, int? codEmpresa)
         {
             var combos = (from cmb in _contexto.Combos
                                .Include(c => c.Itens)
+                               .Include(c => c.Empresa)
                                .Include(c => c.Itens.Select(i => i.Item))
+                               .Where(c => (c.CodEmpresa != null ? c.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(c.CodEmpresa != null ? c.CodEmpresa.Value : 0)))
                           select new ComboViewModel
                           {
                               CodCombo = cmb.CodCombo,
+                              CodEmpresa = cmb.CodEmpresa,
+                              NomeEmpresa = cmb.Empresa.NomeFantasia,
                               Nome = cmb.NomeCombo,
                               Descricao = cmb.DescricaoCombo,
                               Preco = cmb.PrecoCombo,
@@ -213,7 +685,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
         public async Task<List<ComboViewModel>> GetCombos()
         {
-            return GetCombosDB(false);
+            return GetCombosDB(false, SessionData.CodLojaSelecionada);
         }
 
         public async Task<ComboViewModel> GravarCombo(ComboViewModel combo, String modoCadastro)
@@ -248,6 +720,7 @@ namespace BrasaoHamburgueria.Web.Repository
                                 _contexto.DiasSemanaCombo.AddRange(combo.DiasAssociados.Select(o => new DiaSemanaCombo { DiaSemana = o.NumDiaSemana, CodCombo = combo.CodCombo.Value }));
                             }
 
+                            comboAlterar.CodEmpresa = combo.CodEmpresa;
                             comboAlterar.NomeCombo = combo.Nome;
                             comboAlterar.DescricaoCombo = combo.Descricao;
                             comboAlterar.Ativo = combo.Ativo;
@@ -286,6 +759,7 @@ namespace BrasaoHamburgueria.Web.Repository
                             comboIncluir.CodCombo = combo.CodCombo.Value;
                         }
 
+                        comboIncluir.CodEmpresa = combo.CodEmpresa;
                         comboIncluir.NomeCombo = combo.Nome;
                         comboIncluir.DescricaoCombo = combo.Descricao;
                         comboIncluir.Ativo = combo.Ativo;
@@ -371,19 +845,22 @@ namespace BrasaoHamburgueria.Web.Repository
                 }).ToListAsync();
         }
 
-        public async Task<List<PromocaoVendaViewModel>> GetPromocoesVenda()
+        public async Task<List<PromocaoVendaViewModel>> GetPromocoesVenda(int? codEmpresa)
         {
             var programas = await (from promos in _contexto.PromocoesVenda
                                     .Include(p => p.DiasAssociados)
+                                    .Include(p => p.Empresa)
                                     .Include(p => p.ClassesAssociadas)
                                     .Include(p => p.ClassesAssociadas.Select(c => c.Classe))
                                     .Include(p => p.ItensAssociados)
                                     .Include(p => p.ItensAssociados.Select(i => i.Item))
                                    join tipo in _contexto.TiposDescontoPromocao on promos.CodTipoAplicacaoDesconto equals tipo.CodTipoAplicacaoDesconto
-                                   where promos.PromocaoAtiva
+                                   where promos.PromocaoAtiva && (promos.CodEmpresa != null ? promos.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(promos.CodEmpresa != null ? promos.CodEmpresa.Value : 0))
                                    orderby promos.CodPromocaoVenda
                                    select new PromocaoVendaViewModel
                                    {
+                                       CodEmpresa = promos.CodEmpresa,
+                                       NomeEmpresa = promos.Empresa.NomeFantasia,
                                        CodPromocaoVenda = promos.CodPromocaoVenda,
                                        DescricaoPromocao = promos.DescricaoPromocao,
                                        DataHoraInicio = promos.DataHoraInicio,
@@ -509,6 +986,7 @@ namespace BrasaoHamburgueria.Web.Repository
                                 _contexto.DiasSemanaPromocaoVenda.AddRange(promocao.DiasAssociados.Select(o => new DiaSemanaPromocaoVenda { DiaSemana = o.NumDiaSemana, CodPromocaoVenda = promocao.CodPromocaoVenda }));
                             }
 
+                            promocaoAlterar.CodEmpresa = promocao.CodEmpresa;
                             promocaoAlterar.DescricaoPromocao = promocao.DescricaoPromocao;
                             promocaoAlterar.CodTipoAplicacaoDesconto = promocao.CodTipoAplicacaoDesconto;
                             promocaoAlterar.PromocaoAtiva = promocao.PromocaoAtiva;
@@ -547,6 +1025,7 @@ namespace BrasaoHamburgueria.Web.Repository
                             promocaoIncluir.CodPromocaoVenda = promocao.CodPromocaoVenda;
                         }
 
+                        promocaoIncluir.CodEmpresa = promocao.CodEmpresa;
                         promocaoIncluir.DescricaoPromocao = promocao.DescricaoPromocao;
                         promocaoIncluir.CodTipoAplicacaoDesconto = promocao.CodTipoAplicacaoDesconto;
                         promocaoIncluir.PromocaoAtiva = promocao.PromocaoAtiva;
@@ -841,23 +1320,27 @@ namespace BrasaoHamburgueria.Web.Repository
 
         #region Parametros de sistema
 
-        public async Task<List<ParametroSistemaViewModel>> GetParametrosSistema()
+        public async Task<List<ParametroSistemaViewModel>> GetParametrosSistema(int? codEmpresa)
         {
             return _contexto.ParametrosSistema
+                .Include(e => e.Empresa)
+                .Where(c => (c.CodEmpresa != null ? c.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(c.CodEmpresa != null ? c.CodEmpresa.Value : 0)))
                 .OrderBy(o => o.CodParametro)
                 .Select(o => new ParametroSistemaViewModel
                 {
+                    CodEmpresa = o.CodEmpresa,
+                    NomeEmpresa = o.Empresa.NomeFantasia,
                     CodParametro = o.CodParametro,
                     DescricaoParametro = o.DescricaoParametro,
                     ValorParametro = o.ValorParametro
                 }).ToList();
         }
 
-        public async Task<ParametroSistemaViewModel> GravarParametroSistema(ParametroSistemaViewModel par, String modoCadastro)
+        public async Task<ParametroSistemaViewModel> GravarParametroSistema(ParametroSistemaViewModel par, String modoCadastro, int codEmpresa)
         {
             if (modoCadastro == "A") //alteração
             {
-                var parAlterar = _contexto.ParametrosSistema.Find(par.CodParametro);
+                var parAlterar = _contexto.ParametrosSistema.Find(par.CodParametro, codEmpresa);
 
                 if (parAlterar != null)
                 {
@@ -877,7 +1360,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 {
                     parIncluir.CodParametro = 1;
 
-                    var cod = _contexto.ParametrosSistema.Select(o => o.CodParametro).DefaultIfEmpty(-1).Max();
+                    var cod = _contexto.ParametrosSistema.Where(p => p.CodEmpresa == codEmpresa).Select(o => o.CodParametro).DefaultIfEmpty(-1).Max();
                     if (cod > 0)
                     {
                         parIncluir.CodParametro = cod + 1;
@@ -888,15 +1371,17 @@ namespace BrasaoHamburgueria.Web.Repository
                 }
                 else
                 {
-                    var valida = _contexto.ParametrosSistema.Find(par.CodParametro);
+                    var valida = _contexto.ParametrosSistema.Find(par.CodParametro, codEmpresa);
 
                     if (valida != null)
                     {
-                        throw new Exception("Já existe um parâmetro cadastrado com o código " + par.CodParametro);
+                        throw new Exception("Já existe um parâmetro cadastrado com o código " + par.CodParametro + " na loja " + codEmpresa);
                     }
 
                     parIncluir.CodParametro = par.CodParametro;
                 }
+
+                parIncluir.CodEmpresa = codEmpresa;
                 parIncluir.DescricaoParametro = par.DescricaoParametro;
                 parIncluir.ValorParametro = par.ValorParametro;
 
@@ -911,16 +1396,52 @@ namespace BrasaoHamburgueria.Web.Repository
             return null;
         }
 
+        public async Task<string> ExcluiParametro(ParametroSistemaViewModel par)
+        {
+            using (var dbContextTransaction = _contexto.Database.BeginTransaction())
+            {
+                try
+                {
+                    var parExcluir = await _contexto.ParametrosSistema.FindAsync(par.CodParametro, par.CodEmpresa);
+
+                    if (parExcluir != null)
+                    {
+                        _contexto.ParametrosSistema.Remove(parExcluir);
+                        await _contexto.SaveChangesAsync();
+
+                        dbContextTransaction.Commit();
+                    }
+                    else
+                    {
+                        return "Registro não encontrado na base de dados.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+
+            }
+
+
+            return "";
+        }
+
         #endregion
 
         #region Impressoras de produção
 
-        public async Task<List<ImpressoraProducaoViewModel>> GetImpressorasProducao()
+        public async Task<List<ImpressoraProducaoViewModel>> GetImpressorasProducao(int? codEmpresa)
         {
             return _contexto.ImpressorasProducao
+                .Include(o => o.Empresa)
+                .Where(c => (c.CodEmpresa != null ? c.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(c.CodEmpresa != null ? c.CodEmpresa.Value : 0)))
                 .OrderBy(o => o.CodImpressora)
                 .Select(o => new ImpressoraProducaoViewModel
                 {
+                    CodEmpresa = o.CodEmpresa,
+                    NomeEmpresa = o.Empresa.NomeFantasia,
                     CodImpressora = o.CodImpressora,
                     Descricao = o.Descricao,
                     Porta = o.Porta
@@ -935,6 +1456,7 @@ namespace BrasaoHamburgueria.Web.Repository
 
                 if (impAlterar != null)
                 {
+                    impAlterar.CodEmpresa = imp.CodEmpresa;
                     impAlterar.Descricao = imp.Descricao;
                     impAlterar.Porta = imp.Porta;
 
@@ -969,6 +1491,8 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     impIncluir.CodImpressora = imp.CodImpressora;
                 }
+
+                impIncluir.CodEmpresa = imp.CodEmpresa;
                 impIncluir.Descricao = imp.Descricao;
                 impIncluir.Porta = imp.Porta;
 
@@ -1012,10 +1536,10 @@ namespace BrasaoHamburgueria.Web.Repository
         #endregion
 
         #region Cadastros de item de cardápio
-        public async Task<List<DadosItemCardapioViewModel>> GetItensCardapioByNome(string chave)
+        public async Task<List<DadosItemCardapioViewModel>> GetItensCardapioByNome(string chave, int? codEmpresa)
         {
             return _contexto.ItensCardapio
-                .Where(i => i.Nome.Contains(chave))
+                .Where(i => i.Nome.Contains(chave) && (i.CodEmpresa != null ? i.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(i.CodEmpresa != null ? i.CodEmpresa.Value : 0)))
                 .Include(i => i.ObservacoesPermitidas)
                 .Include(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao))
                 .Include(i => i.ExtrasPermitidos)
@@ -1030,7 +1554,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 }).ToList();
         }
 
-        public async Task<List<ItemCardapioViewModel>> GetItensCardapio()
+        public async Task<List<ItemCardapioViewModel>> GetItensCardapio(int? codEmpresa)
         {
             var lista = (
                 from itens in _contexto.ItensCardapio
@@ -1039,8 +1563,13 @@ namespace BrasaoHamburgueria.Web.Repository
                     .Where(c => c.CodItemCardapio == itens.CodItemCardapio).DefaultIfEmpty()
                 from imps in _contexto.ImpressorasItens
                     .Where(i => i.CodItemCardapio == itens.CodItemCardapio).Take(1).DefaultIfEmpty()
+                from emp in _contexto.Empresas
+                    .Where(i => i.CodEmpresa == itens.CodEmpresa).DefaultIfEmpty()
+                where (itens.CodEmpresa != null ? itens.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(itens.CodEmpresa != null ? itens.CodEmpresa.Value : 0))
                 select new ItemCardapioViewModel
                 {
+                    CodEmpresa = itens.CodEmpresa,
+                    NomeEmpresa = emp.NomeFantasia,
                     CodItemCardapio = itens.CodItemCardapio,
                     CodClasse = itens.CodClasse,
                     DescricaoClasse = classes.DescricaoClasse,
@@ -1126,6 +1655,7 @@ namespace BrasaoHamburgueria.Web.Repository
                             throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
                         }
 
+                        itemAlterar.CodEmpresa = item.CodEmpresa;
                         itemAlterar.Nome = item.Nome;
                         itemAlterar.Preco = item.Preco;
                         itemAlterar.Sincronizar = item.Sincronizar;
@@ -1212,6 +1742,7 @@ namespace BrasaoHamburgueria.Web.Repository
                         throw new Exception("O preço informado não é valido. Informe um número maior que zero.");
                     }
 
+                    itemIncluir.CodEmpresa = item.CodEmpresa;
                     itemIncluir.Nome = item.Nome;
                     itemIncluir.Preco = item.Preco;
                     itemIncluir.Sincronizar = item.Sincronizar;

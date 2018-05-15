@@ -10,6 +10,8 @@ using BrasaoHamburgueria.Web.Repository;
 using BrasaoHamburgueria.Web.Filters;
 using System.Collections.Specialized;
 using System.Globalization;
+using BrasaoHamburgueria.Web.Helpers;
+using System.Security.Claims;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -18,6 +20,266 @@ namespace BrasaoHamburgueria.Web.Controllers
     public class CadastrosController : Controller
     {
         private CadastrosRepository _rep = new CadastrosRepository();
+
+        #region Empresas
+
+        public ActionResult Empresa()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> GravarEmpresa(EmpresaViewModel empresa, String modoCadastro)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var emp = await _rep.GravarEmpresa(empresa, modoCadastro);
+                result.Succeeded = true;
+                result.data = emp;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagemLogoEmpresa(EmpresaViewModel empresa)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverLogoEmpresa(Server.MapPath("~").ToString(), empresa);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadImagemLogoEmpresa(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                result.data = _rep.GravarLogoEmpresa(file, Server.MapPath("~"), Convert.ToInt32(nvc["codEmpresa"].ToString()));
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagemFundoPublico(EmpresaViewModel empresa)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverFundoPublicoEmpresa(Server.MapPath("~").ToString(), empresa);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadImagemFundoPublico(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                result.data = _rep.GravarFundoPublicoEmpresa(file, Server.MapPath("~"), Convert.ToInt32(nvc["codEmpresa"].ToString()));
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagemFundoAutenticado(EmpresaViewModel empresa)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverFundoAutenticadoEmpresa(Server.MapPath("~").ToString(), empresa);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadImagemFundoAutenticado(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                result.data = _rep.GravarFundoAutenticadoEmpresa(file, Server.MapPath("~"), Convert.ToInt32(nvc["codEmpresa"].ToString()));
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetEstados()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var estados = await _rep.GetEstados();
+
+                result.data = estados;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetCidades(string siglaEstado)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var cidades = await _rep.GetCidades(siglaEstado);
+
+                result.data = cidades;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetBairros(int? codCidade)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var bairros = await _rep.GetBairros(codCidade);
+
+                result.data = bairros;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        public async Task<JsonResult> GetEmpresas()
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var identity = (ClaimsIdentity)HttpContext.User.Identity;
+                IEnumerable<Claim> claims = identity.Claims;
+                var emps = await _rep.GetEmpresas();
+
+                result.data = emps;
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiEmpresa(EmpresaViewModel empresa)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiEmpresa(empresa);
+                result.Succeeded = true;
+                result.data = retorno;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        #endregion
 
         #region Forma de pagamento
         public async Task<JsonResult> GetFormasPagamento()
@@ -78,7 +340,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var entregadores = await _rep.GetEntregadores();
+                var entregadores = await _rep.GetEntregadores(SessionData.CodLojaSelecionada);
 
                 result.data = entregadores;
 
@@ -221,7 +483,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var promocoes = await _rep.GetPromocoesVenda();
+                var promocoes = await _rep.GetPromocoesVenda(SessionData.CodLojaSelecionada);
 
                 result.data = promocoes;
 
@@ -390,7 +652,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var itens = await _rep.GetItensCardapioByNome(chave);
+                var itens = await _rep.GetItensCardapioByNome(chave, SessionData.CodLojaSelecionada);
 
                 result.data = itens;
 
@@ -411,7 +673,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var itens = await _rep.GetItensCardapio();
+                var itens = await _rep.GetItensCardapio(SessionData.CodLojaSelecionada);
 
                 result.data = itens;
 
@@ -525,7 +787,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var parametros = await _rep.GetParametrosSistema();
+                var parametros = await _rep.GetParametrosSistema(SessionData.CodLojaSelecionada);
 
                 result.data = parametros;
 
@@ -548,9 +810,30 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var observacao = await _rep.GravarParametroSistema(par, modoCadastro);
+                var observacao = await _rep.GravarParametroSistema(par, modoCadastro, SessionData.CodLojaSelecionada);
                 result.Succeeded = true;
                 result.data = observacao;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluiParametro(ParametroSistemaViewModel par)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var retorno = await _rep.ExcluiParametro(par);
+                result.Succeeded = true;
+                result.data = retorno;
             }
             catch (Exception ex)
             {
@@ -576,7 +859,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var impressoras = await _rep.GetImpressorasProducao();
+                var impressoras = await _rep.GetImpressorasProducao(SessionData.CodLojaSelecionada);
 
                 result.data = impressoras;
 

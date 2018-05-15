@@ -70,6 +70,13 @@
             params = params + 'codClasse=' + encodeURIComponent($scope.filtros.codClasse);
         }
 
+        if ($scope.filtros.codEmpresa > 0) {
+            if (params != '?') {
+                params = params + '&';
+            }
+            params = params + 'codEmpresa=' + $scope.filtros.codEmpresa;
+        }
+
         if (params == '?') {
             params = '';
         }
@@ -109,7 +116,7 @@
     };
 
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
 
         $scope.rowCollection = [];
         $scope.mensagem = {
@@ -133,8 +140,17 @@
             horaInicio: '',
             dataFim: '',
             horaFim: '',
-            codClasse: ''
+            codClasse: '',
+            codEmpresa: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.filtros.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         $scope.acao = { ehConsulta: true }
 

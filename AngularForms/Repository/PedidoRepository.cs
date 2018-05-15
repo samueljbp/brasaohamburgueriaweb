@@ -109,7 +109,7 @@ namespace BrasaoHamburgueria.Web.Repository
                             //no caso do cancelamento do pedido, se o usuário estiver em programa de recompensa, estorna o saldo
 
                             ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository();
-                            var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario);
+                            var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario, pedido.CodEmpresa);
 
                             var linhasEstornar = _contexto.ExtratosUsuariosProgramasFidelidade.Where(e => e.CodPedido == pedido.CodPedido).ToList();
 
@@ -260,7 +260,7 @@ namespace BrasaoHamburgueria.Web.Repository
             if (pedidoViewModel.PedidoExterno && pedidoViewModel.CodPedido <= 0)
             {
                 //var ped = _rep.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone).Result;
-                var ped = BrasaoHamburgueria.Helper.AsyncHelpers.RunSync<PedidoViewModel>(() => this.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone));
+                var ped = BrasaoHamburgueria.Helper.AsyncHelpers.RunSync<PedidoViewModel>(() => this.GetPedidoAberto("", pedidoViewModel.DadosCliente.Telefone, pedidoViewModel.CodEmpresa));
 
                 if (ped != null)
                 {
@@ -286,7 +286,7 @@ namespace BrasaoHamburgueria.Web.Repository
             {
                 using (ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository())
                 {
-                    var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario);
+                    var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario, pedidoViewModel.CodEmpresa);
 
                     if (programa == null || programa.LoginUsuario == null || !programa.TermosAceitos.Value)
                     {
@@ -338,8 +338,11 @@ namespace BrasaoHamburgueria.Web.Repository
                         historico.CodSituacao = ped.CodSituacao;
                     }
 
-
-                    ped.CodBandeiraCartao = pedidoViewModel.CodBandeiraCartao;
+                    ped.CodEmpresa = pedidoViewModel.CodEmpresa;
+                    if (pedidoViewModel.CodBandeiraCartao > 0)
+                    {
+                        ped.CodBandeiraCartao = pedidoViewModel.CodBandeiraCartao;
+                    }
                     ped.CodFormaPagamento = pedidoViewModel.CodFormaPagamento;
                     ped.NomeCliente = pedidoViewModel.DadosCliente.Nome;
                     ped.TaxaEntrega = pedidoViewModel.TaxaEntrega;
@@ -449,7 +452,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     if (!pedidoViewModel.PedidoExterno)
                     {
                         ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository();
-                        var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario);
+                        var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario, pedidoViewModel.CodEmpresa);
 
                         if (programa != null && programa.LoginUsuario != null && programa.TermosAceitos != null && programa.TermosAceitos.Value && pedidoViewModel.ValorTotal > 0)
                         {
@@ -530,7 +533,8 @@ namespace BrasaoHamburgueria.Web.Repository
                     Usuario usu = new Usuario();
                     UsuarioViewModel usuVm = new UsuarioViewModel();
                     PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
-                    UsuarioCopy.ViewModelToDB(usuVm, usu);
+                    PropertyCopy.Copy(usuVm, usu);
+                    //UsuarioCopy.ViewModelToDB(usuVm, usu);
                     usu.UsuarioExterno = true;
                     contexto.DadosUsuarios.Add(usu);
                     contexto.SaveChanges();
@@ -541,7 +545,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     //nao faz nada porque o pedido foi gravado e sao transacoes diferentes
                 }
             }
-            else if (!pedidoViewModel.PedidoExterno && pedidoViewModel.DadosCliente.Salvar) //atualiza dados do usuário logado apenas se não for pedido administrativo
+            else if (pedidoViewModel.DadosCliente.Salvar) //atualiza dados do usuário logado apenas se não for pedido administrativo
             {
                 try
                 {
@@ -550,9 +554,10 @@ namespace BrasaoHamburgueria.Web.Repository
                     var usu = contexto.DadosUsuarios.Where(d => d.Email == userName).FirstOrDefault();
                     if (usu != null)
                     {
-                        UsuarioViewModel usuVm = new UsuarioViewModel();
-                        PropertyCopy.Copy(pedidoViewModel.DadosCliente, usuVm);
-                        UsuarioCopy.ViewModelToDB(usuVm, usu);
+                        var id = usu.Id;
+                        PropertyCopy.Copy(pedidoViewModel.DadosCliente, usu);
+                        usu.Id = id;
+                        //UsuarioCopy.ViewModelToDB(usuVm, usu);
                         contexto.SaveChanges();
                     }
                 }
@@ -563,13 +568,14 @@ namespace BrasaoHamburgueria.Web.Repository
             }
         }
 
-        public async Task<PedidoViewModel> GetPedidoAberto(string loginUsuario, string telefone)
+        public async Task<PedidoViewModel> GetPedidoAberto(string loginUsuario, string telefone, int? codEmpresa)
         {
             var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
             var tempoMedioEspera = ParametroRepository.GetTempoMedioEspera();
 
-            return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
+            return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.CodEmpresa == (codEmpresa != null ? codEmpresa : p.CodPedido) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
                 .Include(c => c.Itens)
+                .Include(c => c.Empresa)
                 .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.BandeiraCartaoRef)
                 .Include(c => c.Itens.Select(i => i.Observacoes))
@@ -578,6 +584,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
+                    CodEmpresa = p.CodEmpresa,
+                    NomeEmpresa = p.Empresa.NomeFantasia,
                     DataPedido = p.DataHora,
                     CodFormaPagamento = p.CodFormaPagamento,
                     DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
@@ -612,12 +620,13 @@ namespace BrasaoHamburgueria.Web.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<PedidoViewModel>> GetUltimosPedidos(string loginUsuario)
+        public async Task<List<PedidoViewModel>> GetUltimosPedidos(string loginUsuario, int codEmpresa)
         {
             var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
 
-            var pedidos = await _contexto.Pedidos.Where(p => p.Usuario == loginUsuario && !p.PedidoExterno)
+            var pedidos = await _contexto.Pedidos.Where(p => p.Usuario == loginUsuario && !p.PedidoExterno && p.CodEmpresa == codEmpresa)
                 .Include(s => s.Situacao)
+                .Include(s => s.Empresa)
                 .Include(s => s.Itens)
                 .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.BandeiraCartaoRef)
@@ -630,6 +639,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
+                    CodEmpresa = p.CodEmpresa,
+                    NomeEmpresa = p.Empresa.NomeFantasia,
                     CodFormaPagamento = p.CodFormaPagamento,
                     DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,
@@ -678,13 +689,17 @@ namespace BrasaoHamburgueria.Web.Repository
             return pedidos;
         }
 
-        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido, bool paraConsulta, bool somenteItensProducao)
+        public async Task<List<PedidoViewModel>> GetPedidosAbertos(int? codPedido, bool paraConsulta, bool somenteItensProducao, int? codEmpresa)
         {
             var impressoraComanda = ParametroRepository.GetEnderecoImpressoraComanda();
             var portaImpressaoCozinha = ParametroRepository.GetPortaImpressoraCozinha();
 
-            var pedidos = await _contexto.Pedidos.Where(p => (!(new List<int> { 5, 9 }).Contains(p.CodSituacao) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido) && !paraConsulta) || (paraConsulta && codPedido != null && p.CodPedido == codPedido))
+            var pedidos = await _contexto.Pedidos.Where(p => ((!(new List<int> { 5, 9 }).Contains(p.CodSituacao) && p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido) && !paraConsulta) ||
+                                                              (paraConsulta && codPedido != null && p.CodPedido == codPedido)) &&
+                                                             p.CodEmpresa == (codEmpresa != null ? codEmpresa.Value : p.CodEmpresa) &&
+                                                              SessionData.EmpresasInt.Contains(p.CodEmpresa))
                 .Include(s => s.Situacao)
+                .Include(s => s.Empresa)
                 .Include(s => s.Entregador)
                 .Include(s => s.Itens)
                 .Include(s => s.FormaPagamentoRef)
@@ -698,6 +713,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(c => c.Itens.Select(i => i.Extras.Select(e => e.OpcaoExtra)))
                 .Select(p => new PedidoViewModel
                 {
+                    CodEmpresa = p.CodEmpresa,
+                    NomeEmpresa = p.Empresa.NomeFantasia,
                     CodFormaPagamento = p.CodFormaPagamento,
                     DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,

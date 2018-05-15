@@ -164,6 +164,7 @@
     <Content Include="app\AcompanharPedidosForm\apController.js" />
     <Content Include="app\CadastroClasseItemCardapioForm\cicController.js" />
     <Content Include="app\CadastroComboCardapio\cccController.js" />
+    <Content Include="app\CadastroEmpresaForm\cempController.js" />
     <Content Include="app\CadastroEntregador\ceController.js" />
     <Content Include="app\CadastroExtrasItemForm\ceiController.js" />
     <Content Include="app\CadastroImpressoraProducao\cipController.js" />
@@ -178,6 +179,8 @@
     <Content Include="app\ConsultarTaxasEntregaForm\cteController.js" />
     <Content Include="app\ConsultarUltimosPedidosForm\cpController.js" />
     <Content Include="app\ConsultarProdutosVendidosForm\cpvController.js" />
+    <Content Include="app\Directives\CpfCnpj\ngCpfCnpj.js" />
+    <Content Include="app\Directives\CpfCnpj\template.html" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\ExtratoFidelidadeForm\efController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
@@ -196,6 +199,12 @@
     <Content Include="bower_components\angular-auto-complete\angular-auto-complete.css" />
     <Content Include="bower_components\angular-auto-complete\angular-auto-complete.js" />
     <Content Include="bower_components\angular-auto-complete\gulpfile.js" />
+    <Content Include="bower_components\angular-color-picker\dist\angularjs-color-picker.css" />
+    <Content Include="bower_components\angular-color-picker\dist\angularjs-color-picker.js" />
+    <Content Include="bower_components\angular-color-picker\dist\angularjs-color-picker.min.css" />
+    <Content Include="bower_components\angular-color-picker\dist\angularjs-color-picker.min.js" />
+    <Content Include="bower_components\angular-color-picker\dist\themes\angularjs-color-picker-bootstrap.css" />
+    <Content Include="bower_components\angular-color-picker\dist\themes\angularjs-color-picker-bootstrap.min.css" />
     <Content Include="bower_components\angular-drag-and-drop-lists\angular-drag-and-drop-lists.js" />
     <Content Include="bower_components\angular-drag-and-drop-lists\angular-drag-and-drop-lists.min.js" />
     <Content Include="bower_components\angular-sanitize\angular-sanitize.js" />
@@ -243,10 +252,170 @@
     <Content Include="bower_components\angular-timer\test\e2e\scenarios.js" />
     <Content Include="bower_components\angular-timer\test\unit\directivesSpec.js" />
     <Content Include="bower_components\angular-timer\test\unit\timerSetTimeTest.js" />
+    <Content Include="bower_components\angular-ui-event\.gitignore" />
+    <Content Include="bower_components\angular-ui-event\demo\index.html" />
+    <Content Include="bower_components\angular-ui-event\dist\event.js" />
+    <Content Include="bower_components\angular-ui-event\dist\event.min.js" />
+    <Content Include="bower_components\angular-ui-event\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-event\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-event\src\event.js" />
+    <Content Include="bower_components\angular-ui-event\test\eventSpec.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\.gitignore" />
+    <Content Include="bower_components\angular-ui-indeterminate\demo\index.html" />
+    <Content Include="bower_components\angular-ui-indeterminate\dist\indeterminate.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\dist\indeterminate.min.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\src\indeterminate.js" />
+    <Content Include="bower_components\angular-ui-indeterminate\test\indeterminateSpec.js" />
+    <Content Include="bower_components\angular-ui-mask\.gitignore" />
+    <Content Include="bower_components\angular-ui-mask\demo\index.html" />
+    <Content Include="bower_components\angular-ui-mask\dist\mask.js" />
+    <Content Include="bower_components\angular-ui-mask\dist\mask.min.js" />
+    <Content Include="bower_components\angular-ui-mask\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-mask\index.js" />
+    <Content Include="bower_components\angular-ui-mask\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-mask\logos\browser-stack.png" />
+    <Content Include="bower_components\angular-ui-mask\protractor.config.js" />
+    <Content Include="bower_components\angular-ui-mask\protractor.travis.config.js" />
+    <Content Include="bower_components\angular-ui-mask\src\mask.js" />
+    <Content Include="bower_components\angular-ui-mask\test\maskSpec.js" />
+    <Content Include="bower_components\angular-ui-mask\test\maskSpec.protractor.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\.gitignore" />
+    <Content Include="bower_components\angular-ui-scrollpoint\demo\index.html" />
+    <Content Include="bower_components\angular-ui-scrollpoint\demo\style.css" />
+    <Content Include="bower_components\angular-ui-scrollpoint\dist\scrollpoint.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\dist\scrollpoint.min.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\src\scrollpoint.js" />
+    <Content Include="bower_components\angular-ui-scrollpoint\test\scrollpointSpec.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\adapterSync\adapterSync.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\adapterSync\adapterSync.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\adapterSync\server.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\adapter\adapter.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\adapter\adapter.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\animation\animation.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\animation\animation.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\append\append.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\append\append.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\append\server.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\bottomVisible\bottomVisibleAdapter.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\bottomVisible\bottomVisibleAdapter.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\cache\cache.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\cache\cache.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\chat\chat.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\chat\chat.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\controllerAs\controllerAs.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\controllerAs\controllerAs.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\css\bootstrap.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\css\style.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\differentItemHeights\differentItemHeights.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\differentItemHeights\differentItemHeights.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\disabled\disabled.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\disabled\disabled.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort-2\angular-dnd.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort-2\grid-dnd-sort.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort-2\grid-dnd-sort.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort-2\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort\grid-dnd-sort.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort\grid-dnd-sort.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-sort\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-widths\grid-dnd-widths.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-widths\grid-dnd-widths.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-dnd-widths\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-apply\grid-layout-apply.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-apply\grid-layout-apply.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-apply\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-manipulations\grid-layout-manipulations.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-manipulations\grid-layout-manipulations.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-layout-manipulations\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-scopes-wrapping\grid-scopes-wrapping.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-scopes-wrapping\grid-scopes-wrapping.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\grid-scopes-wrapping\grid.css" />
+    <Content Include="bower_components\angular-ui-scroll\demo\index.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\insideComponent\insideComponent.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\insideComponent\insideComponent.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\insideDirective\insideDirective.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\insideDirective\insideDirective.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\isLoading\isLoading.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\isLoading\isLoading.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\isLoading\isLoadingAdapter.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\isLoading\isLoadingAdapter.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\listScroller\listScroller.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\listScroller\listScroller.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\multipleLists\multipleLists.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\multipleLists\multipleLists.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\multipleReloadTest\multipleReload.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\multipleReloadTest\multipleReload.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\outOfBuffer\outOfBuffer.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\outOfBuffer\outOfBuffer.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\persistentScroll\persistentScroll.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\persistentScroll\persistentScroll.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\positionedList\positionedList.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\positionedList\positionedList.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\rebuilding\rebuilding.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\rebuilding\rebuilding.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\reload100\reload100.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\reload100\reload100.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\remote\remote.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\remote\remote.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\scopeDatasource\scopeDatasource.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\scopeDatasource\scopeDatasource.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\scrollBubblingPrevent\scrollBubblingPrevent.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\scrollBubblingPrevent\scrollBubblingPrevent.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\serviceDatasource\serviceDatasource.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\serviceDatasource\serviceDatasource.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\tableScroller\tableScroller.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\tableScroller\tableScroller.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\topVisible\topVisible.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\topVisible\topVisible.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\topVisible\topVisibleAdapter.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\topVisible\topVisibleAdapter.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\ui-scroll-demo.gif" />
+    <Content Include="bower_components\angular-ui-scroll\demo\userIndexes\userIndexes.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\userIndexes\userIndexes.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\visibility\visibility.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\visibility\visibility.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\windowviewportInline\windowviewportInline.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\windowviewportInline\windowviewportInline.js" />
+    <Content Include="bower_components\angular-ui-scroll\demo\windowViewport\windowViewport-iframe.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\windowViewport\windowViewport.html" />
+    <Content Include="bower_components\angular-ui-scroll\demo\windowViewport\windowViewport.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-grid.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-grid.min.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-jqlite.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-jqlite.min.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll.js" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll.min.js" />
+    <Content Include="bower_components\angular-ui-uploader\.gitignore" />
+    <Content Include="bower_components\angular-ui-uploader\demo\index.html" />
+    <Content Include="bower_components\angular-ui-uploader\dist\uploader.js" />
+    <Content Include="bower_components\angular-ui-uploader\dist\uploader.min.js" />
+    <Content Include="bower_components\angular-ui-uploader\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-uploader\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-uploader\src\uploader.js" />
+    <Content Include="bower_components\angular-ui-uploader\test\uploaderSpec.js" />
+    <Content Include="bower_components\angular-ui-utils\index.js" />
+    <Content Include="bower_components\angular-ui-validate\.gitignore" />
+    <Content Include="bower_components\angular-ui-validate\demo\index.html" />
+    <Content Include="bower_components\angular-ui-validate\dist\validate.js" />
+    <Content Include="bower_components\angular-ui-validate\dist\validate.min.js" />
+    <Content Include="bower_components\angular-ui-validate\gulpfile.js" />
+    <Content Include="bower_components\angular-ui-validate\index.js" />
+    <Content Include="bower_components\angular-ui-validate\karma.conf.js" />
+    <Content Include="bower_components\angular-ui-validate\src\validate.js" />
+    <Content Include="bower_components\angular-ui-validate\test\validateSpec.js" />
     <Content Include="bower_components\angular\angular-csp.css" />
     <Content Include="bower_components\angular\angular.js" />
     <Content Include="bower_components\angular\angular.min.js" />
     <Content Include="bower_components\angular\index.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cnpj.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cnpj.min.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cpf.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cpf.min.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cpf_cnpj.js" />
+    <Content Include="bower_components\cpf_cnpj\build\cpf_cnpj.min.js" />
     <Content Include="bower_components\humanize-duration\humanize-duration.js" />
     <Content Include="bower_components\humanize-duration\LICENSE.txt" />
     <Content Include="bower_components\mobile-drag-drop\release\debug.css" />
@@ -345,6 +514,20 @@
     <Content Include="bower_components\moment\min\moment-with-locales.min.js" />
     <Content Include="bower_components\moment\min\moment.min.js" />
     <Content Include="bower_components\moment\moment.js" />
+    <Content Include="bower_components\ng-cpf-cnpj\example\angular-1.2.js" />
+    <Content Include="bower_components\ng-cpf-cnpj\example\angular-1.3.js" />
+    <Content Include="bower_components\ng-cpf-cnpj\example\example.html" />
+    <Content Include="bower_components\ng-cpf-cnpj\lib\ngCpfCnpj.js" />
+    <Content Include="bower_components\ng-cpf-cnpj\MIT-LICENSE.txt" />
+    <Content Include="bower_components\tinycolor\.gitignore" />
+    <Content Include="bower_components\tinycolor\demo\demo.css" />
+    <Content Include="bower_components\tinycolor\demo\jquery-1.9.1.js" />
+    <Content Include="bower_components\tinycolor\dist\tinycolor-min.js" />
+    <Content Include="bower_components\tinycolor\docs\docco.css" />
+    <Content Include="bower_components\tinycolor\docs\tinycolor.html" />
+    <Content Include="bower_components\tinycolor\Gruntfile.js" />
+    <Content Include="bower_components\tinycolor\index.html" />
+    <Content Include="bower_components\tinycolor\tinycolor.js" />
     <Content Include="bower_components\underscore\underscore-min.js" />
     <Content Include="bower_components\underscore\underscore.js" />
     <Content Include="Content\angular-busy.min.css" />
@@ -355,8 +538,8 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\icons\ic_drag_drop.png" />
-    <Content Include="Content\img\background_inicio.jpg" />
-    <Content Include="Content\img\background_logado.jpg" />
+    <Content Include="Content\img\img_bg_publica.jpg" />
+    <Content Include="Content\img\img_bg_autenticada.jpg" />
     <Content Include="Content\img\institucional\ambientes.jpg" />
     <Content Include="Content\img\institucional\ambientes1.jpg" />
     <Content Include="Content\img\institucional\ambientes2.jpg" />
@@ -543,7 +726,7 @@
     <Content Include="Content\img\itens_cardapio\tradicional.jpg" />
     <Content Include="Content\img\itens_cardapio\zeze.jpg" />
     <Content Include="Content\img\itens_cardapio\zz_top.jpg" />
-    <Content Include="Content\img\logo.jpg" />
+    <Content Include="Content\img\img_logo.jpg" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\menu_background.jpg" />
     <Content Include="Content\Site.css" />
@@ -1404,6 +1587,78 @@
     <Content Include="bower_components\mobile-drag-drop\release\package.json" />
     <Content Include="bower_components\mobile-drag-drop\release\scroll-behaviour.js.map" />
     <Content Include="bower_components\mobile-drag-drop\release\scroll-behaviour.min.js.map" />
+    <Content Include="bower_components\cpf_cnpj\.bower.json" />
+    <Content Include="bower_components\cpf_cnpj\bower.json" />
+    <Content Include="bower_components\cpf_cnpj\README.md" />
+    <Content Include="bower_components\ng-cpf-cnpj\.bower.json" />
+    <Content Include="bower_components\ng-cpf-cnpj\bower.json" />
+    <Content Include="bower_components\ng-cpf-cnpj\README.md" />
+    <Content Include="bower_components\angular-ui-event\.bower.json" />
+    <Content Include="bower_components\angular-ui-event\.jshintrc" />
+    <Content Include="bower_components\angular-ui-event\.travis.yml" />
+    <Content Include="bower_components\angular-ui-event\bower.json" />
+    <Content Include="bower_components\angular-ui-event\CHANGELOG.md" />
+    <Content Include="bower_components\angular-ui-event\LICENSE" />
+    <Content Include="bower_components\angular-ui-event\package.json" />
+    <Content Include="bower_components\angular-ui-event\README.md" />
+    <Content Include="bower_components\angular-ui-indeterminate\.bower.json" />
+    <Content Include="bower_components\angular-ui-indeterminate\.jshintrc" />
+    <Content Include="bower_components\angular-ui-indeterminate\.travis.yml" />
+    <Content Include="bower_components\angular-ui-indeterminate\bower.json" />
+    <Content Include="bower_components\angular-ui-indeterminate\LICENSE" />
+    <Content Include="bower_components\angular-ui-indeterminate\package.json" />
+    <Content Include="bower_components\angular-ui-indeterminate\README.md" />
+    <Content Include="bower_components\angular-ui-mask\.bower.json" />
+    <Content Include="bower_components\angular-ui-mask\.jshintrc" />
+    <Content Include="bower_components\angular-ui-mask\.travis.yml" />
+    <Content Include="bower_components\angular-ui-mask\bower.json" />
+    <Content Include="bower_components\angular-ui-mask\LICENSE" />
+    <Content Include="bower_components\angular-ui-mask\package.json" />
+    <Content Include="bower_components\angular-ui-mask\README.md" />
+    <Content Include="bower_components\angular-ui-scrollpoint\.bower.json" />
+    <Content Include="bower_components\angular-ui-scrollpoint\.jshintrc" />
+    <Content Include="bower_components\angular-ui-scrollpoint\.travis.yml" />
+    <Content Include="bower_components\angular-ui-scrollpoint\bower.json" />
+    <Content Include="bower_components\angular-ui-scrollpoint\LICENSE" />
+    <Content Include="bower_components\angular-ui-scrollpoint\package.json" />
+    <Content Include="bower_components\angular-ui-scrollpoint\README.md" />
+    <Content Include="bower_components\angular-ui-scroll\.babelrc" />
+    <Content Include="bower_components\angular-ui-scroll\.bower.json" />
+    <Content Include="bower_components\angular-ui-scroll\bower.json" />
+    <Content Include="bower_components\angular-ui-scroll\demo\css\style.less" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-grid.js.map" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll-grid.min.js.map" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll.js.map" />
+    <Content Include="bower_components\angular-ui-scroll\dist\ui-scroll.min.js.map" />
+    <Content Include="bower_components\angular-ui-scroll\LICENSE" />
+    <Content Include="bower_components\angular-ui-scroll\package-lock.json" />
+    <Content Include="bower_components\angular-ui-scroll\README.md" />
+    <Content Include="bower_components\angular-ui-uploader\.bower.json" />
+    <Content Include="bower_components\angular-ui-uploader\.jshintrc" />
+    <Content Include="bower_components\angular-ui-uploader\.travis.yml" />
+    <Content Include="bower_components\angular-ui-uploader\bower.json" />
+    <Content Include="bower_components\angular-ui-uploader\LICENSE" />
+    <Content Include="bower_components\angular-ui-uploader\package.json" />
+    <Content Include="bower_components\angular-ui-uploader\README.md" />
+    <Content Include="bower_components\angular-ui-utils\.bower.json" />
+    <Content Include="bower_components\angular-ui-utils\bower.json" />
+    <Content Include="bower_components\angular-ui-utils\LICENSE" />
+    <Content Include="bower_components\angular-ui-utils\README.md" />
+    <Content Include="bower_components\angular-ui-validate\.bower.json" />
+    <Content Include="bower_components\angular-ui-validate\.jshintrc" />
+    <Content Include="bower_components\angular-ui-validate\.travis.yml" />
+    <Content Include="bower_components\angular-ui-validate\bower.json" />
+    <Content Include="bower_components\angular-ui-validate\LICENSE" />
+    <Content Include="bower_components\angular-ui-validate\package.json" />
+    <Content Include="bower_components\angular-ui-validate\README.md" />
+    <Content Include="bower_components\angular-color-picker\.bower.json" />
+    <Content Include="bower_components\angular-color-picker\bower.json" />
+    <Content Include="bower_components\tinycolor\.bower.json" />
+    <Content Include="bower_components\tinycolor\.travis.yml" />
+    <Content Include="bower_components\tinycolor\bower.json" />
+    <Content Include="bower_components\tinycolor\LICENSE" />
+    <Content Include="bower_components\tinycolor\package.json" />
+    <Content Include="bower_components\tinycolor\README.md" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
@@ -1566,6 +1821,7 @@
     <Content Include="Views\Consultas\ProdutosVendidos.cshtml" />
     <Content Include="Views\Consultas\TaxasEntrega.cshtml" />
     <Content Include="Views\Pedido\_ModalHistoricoPedido.cshtml" />
+    <Content Include="Views\Cadastros\Empresa.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1678,12 +1934,40 @@
     <Compile Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.Designer.cs">
       <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.Designer.cs">
+      <DependentUpon>201804301802424_CriacaoEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.Designer.cs">
+      <DependentUpon>201805071830073_MaisColunasEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.cs" />
+    <Compile Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.Designer.cs">
+      <DependentUpon>201805081625137_CampoEmpresaAtiva.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.cs" />
+    <Compile Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.Designer.cs">
+      <DependentUpon>201805141244565_RetiraObrigatoriedadeFundos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.cs" />
+    <Compile Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.Designer.cs">
+      <DependentUpon>201805141413495_ParametrizacaoCores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141416179_AjusteColunasCores.cs" />
+    <Compile Include="Migrations\Brasao\201805141416179_AjusteColunasCores.Designer.cs">
+      <DependentUpon>201805141416179_AjusteColunasCores.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
     <Compile Include="Migrations\Identity\201709252038170_InitialCreate.cs" />
     <Compile Include="Migrations\Identity\201709252038170_InitialCreate.Designer.cs">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.cs" />
+    <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.Designer.cs">
+      <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Identity\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1760,8 +2044,29 @@
     <EmbeddedResource Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.resx">
       <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.resx">
+      <DependentUpon>201804301802424_CriacaoEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.resx">
+      <DependentUpon>201805071830073_MaisColunasEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.resx">
+      <DependentUpon>201805081625137_CampoEmpresaAtiva.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.resx">
+      <DependentUpon>201805141244565_RetiraObrigatoriedadeFundos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.resx">
+      <DependentUpon>201805141413495_ParametrizacaoCores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141416179_AjusteColunasCores.resx">
+      <DependentUpon>201805141416179_AjusteColunasCores.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.resx">
+      <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

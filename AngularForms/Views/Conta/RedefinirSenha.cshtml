@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @{
-    ViewBag.Title = "Brasão Hamburgueria - Redefinir Senha";
+    ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Redefinir Senha";
 }
 @functions{
     public string GetAntiForgeryToken()

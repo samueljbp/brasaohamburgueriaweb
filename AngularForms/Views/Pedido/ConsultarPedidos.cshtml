@@ -36,6 +36,9 @@
                                         Nº Pedido
                                     </th>
                                     <th class="text-left">
+                                        Loja
+                                    </th>
+                                    <th class="text-left">
                                         Data
                                     </th>
                                     <th class="text-left">
@@ -56,6 +59,9 @@
                                 <tr ng-repeat="ped in pedidos">
                                     <td class="text-left">
                                         {{ped.codPedido}}
+                                    </td>
+                                    <td class="text-left">
+                                        {{ped.nomeEmpresa}}
                                     </td>
                                     <td class="text-left">
                                         {{ped.dataPedido | date:'dd/MM/yyyy HH:mm'}}

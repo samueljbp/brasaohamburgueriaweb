@@ -16,6 +16,8 @@ namespace BrasaoHamburgueria.Model
 
     public class ImpressoraProducaoViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodImpressora { get; set; }
         public string Descricao { get; set; }
         public string Porta { get; set; }
@@ -44,6 +46,8 @@ namespace BrasaoHamburgueria.Model
 
     public class ItemCardapioViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodItemCardapio { get; set; }
         public int CodClasse { get; set; }
         public string DescricaoClasse { get; set; }
@@ -110,8 +114,13 @@ namespace BrasaoHamburgueria.Model
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [Column("COD_COMBO")]
+        [Column("COD_COMBO", Order = 1)]
         public int CodCombo { get; set; }
+
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
 
         [Required]
         [Column("NOME_COMBO")]
@@ -142,6 +151,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("Combo")]
         public virtual List<DiaSemanaCombo> DiasAssociados { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("COMBO_ITEM_CARDAPIO")]
@@ -235,6 +246,11 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_ITEM_CARDAPIO")]
         public int CodItemCardapio { get; set; }
 
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
+
         [Required]
         [Column("COD_CLASSE")]
         [ForeignKey("Classe")]
@@ -277,6 +293,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("ItemCardapio")]
         public virtual List<ItemPedido> ItensPedidos { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("COMPLEMENTO_ITEM_CARDAPIO")]
@@ -386,6 +404,11 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_IMPRESSORA")]
         public int CodImpressora { get; set; }
 
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
+
         [Required]
         [Column("DESCRICAO")]
         public string Descricao { get; set; }
@@ -399,6 +422,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("ImpressoraPadrao")]
         public virtual List<ClasseItemCardapio> ClassesAssociadas { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("ITEM_CARDAPIO_IMPRESSORA_PRODUCAO")]

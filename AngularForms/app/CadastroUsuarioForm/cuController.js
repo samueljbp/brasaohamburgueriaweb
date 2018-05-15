@@ -1,12 +1,20 @@
 ﻿brasaoWebApp.controller('cuController', function ($scope, $http, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken, email) {
+    $scope.init = function (loginUsuario, antiForgeryToken, email, empresasJson, codLojaSelecionada) {
 
         $scope.mensagem = {
             erro: '',
             sucesso: '',
             informacao: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         $scope.novo = !(email != '');
         $scope.usuario = { estado: 'MG', cidade: 'Cataguases', email: '' };
@@ -171,6 +179,9 @@
             .then(function (response) {
 
                 $scope.usuario = response.data;
+                if ($scope.usuario.codEmpresaPreferencial > 0) {
+                    $scope.usuario.codEmpresaPreferencial = $scope.usuario.codEmpresaPreferencial.toString();
+                }
 
             }, function (error) {
                 $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (error.statusText ? error.statusText : 'erro desconhecido');

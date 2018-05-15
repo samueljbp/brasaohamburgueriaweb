@@ -42,6 +42,8 @@ namespace BrasaoHamburgueria.Model
 
     public class ParametroSistemaViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodParametro { get; set; }
         public string DescricaoParametro { get; set; }
         public string ValorParametro { get; set; }
@@ -52,8 +54,13 @@ namespace BrasaoHamburgueria.Model
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        [Column("COD_PARAMETRO")]
+        [Column("COD_PARAMETRO", Order = 1)]
         public int CodParametro { get; set; }
+
+        [Key, ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA", Order = 2)]
+        public int? CodEmpresa { get; set; }
 
         [Required]
         [Column("DESCRICAO_PARAMETRO")]
@@ -62,5 +69,7 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("VALOR_PARAMETRO")]
         public string ValorParametro { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 }

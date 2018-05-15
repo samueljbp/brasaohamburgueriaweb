@@ -28,7 +28,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             //    .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
             //    .ToList();
 
-            var classes = _rep.GetCardapio();
+            var classes = _rep.GetCardapio(SessionData.CodLojaSelecionada);
 
             ViewBag.Classes = classes;
 
@@ -60,7 +60,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                result.data = _rep.GetCardapio();
+                result.data = _rep.GetCardapio(SessionData.CodLojaSelecionada);
 
                 result.Succeeded = true;
             }

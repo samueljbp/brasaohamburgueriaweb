@@ -1,11 +1,19 @@
 ﻿brasaoWebApp.controller('citemController', function ($scope, $http, $filter, $ngBootbox, $window, FileUploader) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
             informacao: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         var uploader = $scope.uploader = new FileUploader({
             url: urlBase + 'Cadastros/UploadImagemItemCardapio',
@@ -244,6 +252,11 @@
         $scope.uploader.clearQueue();
 
         $scope.itemSelecionado = item;
+
+        if ($scope.itemSelecionado.codEmpresa != null) {
+            $scope.itemSelecionado.codEmpresa = $scope.itemSelecionado.codEmpresa.toString();
+        }
+
         $scope.modoCadastro = 'A';
         $('#modalGravarItem').modal('show');
     }
@@ -313,6 +326,8 @@
                     fechaPopup();
 
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
             }
             else {

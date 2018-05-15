@@ -64,13 +64,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View("ConsultarPedidos");
         }
 
-        public async Task<JsonResult> GetPedido(int codPedido, bool paraConsulta)
+        public async Task<JsonResult> GetPedido(int codPedido, bool paraConsulta, int? codEmpresa)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta, false);
+                var peds = await _rep.GetPedidosAbertos(codPedido, paraConsulta, false, codEmpresa);
                 var ped = peds.FirstOrDefault();
 
                 result.data = ped;
@@ -86,13 +86,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
-        public async Task<JsonResult> GetPedidosAbertos(bool somenteProducao)
+        public async Task<JsonResult> GetPedidosAbertos(bool somenteProducao, int? codEmpresa)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                result.data = await _rep.GetPedidosAbertos(null, false, somenteProducao);
+                result.data = await _rep.GetPedidosAbertos(null, false, somenteProducao, codEmpresa);
 
                 result.Succeeded = true;
             }
@@ -111,7 +111,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                result.data = await _rep.GetUltimosPedidos(loginUsuario);
+                result.data = await _rep.GetUltimosPedidos(loginUsuario, SessionData.CodLojaSelecionada);
 
                 result.Succeeded = true;
             }
@@ -130,7 +130,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                result.data = await _rep.GetPedidoAberto(loginUsuario, "");
+                result.data = await _rep.GetPedidoAberto(loginUsuario, "", SessionData.CodLojaSelecionada);
                 result.Succeeded = true;
             }
             catch (Exception ex)

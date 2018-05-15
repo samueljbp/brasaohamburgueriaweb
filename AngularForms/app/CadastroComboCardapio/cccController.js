@@ -1,6 +1,6 @@
 ﻿brasaoWebApp.controller('cccController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
@@ -9,6 +9,14 @@
             erroListasDragDrop: false,
             erroDiasSemana: false
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -270,6 +278,10 @@
 
         $scope.comboSelecionado = combo;
 
+        if ($scope.comboSelecionado.codEmpresa != null) {
+            $scope.comboSelecionado.codEmpresa = $scope.comboSelecionado.codEmpresa.toString();
+        }
+
         montaArrayDias();
 
         $scope.models[1].items = [];
@@ -375,6 +387,8 @@
                     $scope.rowCollection.push(retorno.data);
 
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
                 $('#modalGravarCombo').modal('hide');
 

@@ -1,11 +1,19 @@
 ﻿brasaoWebApp.controller('cipController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
             informacao: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -53,6 +61,11 @@
         $('#formGravarImp').validator('destroy').validator();
 
         $scope.impSelecionada = imp;
+
+        if ($scope.impSelecionada.codEmpresa != null) {
+            $scope.impSelecionada.codEmpresa = $scope.impSelecionada.codEmpresa.toString();
+        }
+
         $scope.modoCadastro = 'A';
         $('#modalGravarImp').modal('show');
     }
@@ -91,6 +104,8 @@
                 if ($scope.modoCadastro == 'I') {
                     $scope.rowCollection.push(retorno.data);
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
             }
             else {

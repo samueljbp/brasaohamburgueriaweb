@@ -36,7 +36,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var programas = await _rep.GetProgramasFidelidade();
+                var programas = await _rep.GetProgramasFidelidade(SessionData.CodLojaSelecionada);
 
                 result.data = programas;
 

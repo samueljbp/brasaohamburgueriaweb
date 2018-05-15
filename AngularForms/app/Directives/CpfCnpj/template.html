@@ -1,0 +1,9 @@
+﻿<div class="form-group">
+    <label for="cnpj" class="col-sm-2 control-label">{{labelCampo}}</label>
+    <div class="col-sm-8">
+        <input type="text" required class="form-control campoCnpj" ng-model="cnpjModel" ui-mask="99.999.999/9999-99" maxlength="20" ng-blur="valida(cnpjModel)" />
+        <input type="text" required class="form-control campoCpf" ng-model="cnpjModel" ui-mask="999.999.999-99" maxlength="20" ng-blur="valida(cnpjModel)" />
+        <div class="help-block with-errors erroCnpj">CNPJ inválido</div>
+        <div class="help-block with-errors erroCpf">CPF inválido</div>
+    </div>
+</div>

@@ -87,6 +87,7 @@
         pedido.alterar = true;
         sessionStorage.pedido = JSON.stringify(pedido);
         sessionStorage.modoAdm = "S";
+
         var win = window.open(urlBase + "Pedido/Index?ModoAdm=S", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
         win.moveTo(0, 0);
         win.resizeTo(screen.width, screen.height);
@@ -95,7 +96,13 @@
     $scope.novoPedidoExterno = function () {
         sessionStorage.modoAdm = "S";
         sessionStorage.removeItem('pedido');
-        var win = window.open(urlBase + "Pedido/Index?ModoAdm=S", "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
+
+        var codEmpresa = $scope.codLojaSelecionada;
+        if ($scope.filtros.codEmpresa > 0) {
+            codEmpresa = $scope.filtros.codEmpresa;
+        }
+
+        var win = window.open(urlBase + "Pedido/Index?ModoAdm=S&CodEmpresa=" + codEmpresa, "_blank", "toolbar=no,scrollbars=yes,resizable=yes,top=50,left=50,height=screen.availHeight,width=screen.availWidth,menubar=no");
         win.moveTo(0, 0);
         win.resizeTo(screen.width, screen.height);
     }
@@ -148,7 +155,7 @@
                 'RequestVerificationToken': $scope.antiForgeryToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            url: urlBase + 'Pedido/GetPedidosAbertos?somenteProducao=false'
+            url: urlBase + 'Pedido/GetPedidosAbertos?somenteProducao=false&codEmpresa=' + ($scope.filtros.codEmpresa > 0 ? $scope.filtros.codEmpresa : '')
         })
         .then(function (response) {
 
@@ -254,9 +261,21 @@
     };
 
 
-    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera, imprimeComandaCozinha, portaImpressoraCozinha) {
+    $scope.init = function (loginUsuario, antiForgeryToken, tempoMedioEspera, imprimeComandaCozinha, portaImpressoraCozinha, empresasJson, codLojaSelecionada) {
         $scope.erro = { mensagem: '' };
         $scope.sucesso = { mensagem: '' };
+
+        $scope.filtros = { codEmpresa: '' };
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
+
+        $scope.filtros.codEmpresa = $scope.codLojaSelecionada.toString();
 
         $scope.tempoMedioEspera = parseInt(tempoMedioEspera);
 

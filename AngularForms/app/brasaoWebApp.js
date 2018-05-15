@@ -1,4 +1,4 @@
-﻿var brasaoWebApp = angular.module('brasaoWebApp', ['ngBootbox', 'cgBusy', 'timer', 'smart-table', 'angularFileUpload', 'autoCompleteModule', 'dndLists']);
+﻿var brasaoWebApp = angular.module('brasaoWebApp', ['ngBootbox', 'cgBusy', 'timer', 'smart-table', 'angularFileUpload', 'autoCompleteModule', 'dndLists', 'ngCpfCnpj', 'ui.mask', 'color.picker']);
 
 brasaoWebApp.config(['$httpProvider', function ($httpProvider) {
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

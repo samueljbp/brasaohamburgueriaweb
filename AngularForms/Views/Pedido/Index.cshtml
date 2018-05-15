@@ -16,6 +16,12 @@
     }
     modoAdm = (modoAdmStr == "S");
 
+    int codEmpresa = SessionData.CodLojaSelecionada;
+    if (HttpContext.Current.Request.QueryString["CodEmpresa"] != null)
+    {
+        codEmpresa = Convert.ToInt32(HttpContext.Current.Request.QueryString["CodEmpresa"].ToString());
+    }
+
     var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
     var mostraTermosProgramaFidelidade = false;
     var inscritoProgramaFidelidade = false;
@@ -46,7 +52,7 @@
 }
 <div>
     <div class="col-xs-12 centro" style="margin-top: 20px">
-        <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)', @(mostraTermosProgramaFidelidade ? "true" : "false"), '@Newtonsoft.Json.JsonConvert.SerializeObject(progFidelidade, jsonSettings)')">
+        <div ng-controller="pedController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ParametroRepository.GetTaxaEntrega().ToString(nfi)', @(mostraTermosProgramaFidelidade ? "true" : "false"), '@Newtonsoft.Json.JsonConvert.SerializeObject(progFidelidade, jsonSettings)', @codEmpresa.ToString())">
             @functions{
         public string GetAntiForgeryToken()
         {

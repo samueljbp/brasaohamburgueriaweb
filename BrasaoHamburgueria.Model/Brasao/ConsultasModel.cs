@@ -8,6 +8,8 @@ namespace BrasaoHamburgueria.Model
 {
     public class ProdutosVendidosViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodItemCardapio { get; set; }
         public string Nome { get; set; }
         public int CodClasse { get; set; }
@@ -18,6 +20,8 @@ namespace BrasaoHamburgueria.Model
 
     public class TaxasEntregaViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodEntregador { get; set; }
         public string Nome { get; set; }
         public int QtdPedidos { get; set; }

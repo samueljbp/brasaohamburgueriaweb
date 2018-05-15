@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -7,13 +8,21 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
 <style>
     body {
         overflow-y: scroll;
     }
 </style>
 <script src="~/app/CadastroImpressoraProducao/cipController.js"></script>
-<div ng-controller="cipController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="cipController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetImpressoras,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirImpressora,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -25,13 +34,17 @@
                 <thead>
                     <tr>
                         <th st-sort="codImpressora" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
                         <th st-sort="descricao" width="30%"><a href="#">Descrição</a></th>
-                        <th st-sort="porta" width="50%"><a href="#">Porta</a></th>
+                        <th st-sort="porta" width="40%"><a href="#">Porta</a></th>
                         <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
                     </tr>
                     <tr>
                         <th>
                             <input st-search="codImpressora" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="descricao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
@@ -46,7 +59,7 @@
                 </thead>
                 <tbody>
                     <tr ng-if="rowCollection.length <= 0">
-                        <td colspan="5">
+                        <td colspan="6">
                             <div>
                                 <small>Nenhum item cadastrado</small>
                             </div>
@@ -54,6 +67,7 @@
                     </tr>
                     <tr ng-repeat="imp in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{imp.codImpressora}}</td>
+                        <td>{{(imp.nomeEmpresa != null ? imp.nomeEmpresa : 'TODAS')}}</td>
                         <td>{{imp.descricao}}</td>
                         <td>{{imp.porta}}</td>
                         <td>
@@ -72,7 +86,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-right">
+                        <td colspan="6" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">
@@ -82,7 +96,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="6" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage"></div>
                         </td>
                     </tr>
@@ -108,6 +122,17 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                             <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codEmpresa" class="col-sm-2 control-label">Empresa</label>
+                            <div class="col-md-5 col-xs-12">
+                                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="impSelecionada.codEmpresa">
+                                    <option value="" selected>TODAS</option>
+                                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
                         </div>
 
                         <div class="form-group">

@@ -3,6 +3,12 @@
 @using BrasaoHamburgueria.Model;
 @{
     var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
+    var lojaSelecionada = SessionData.Empresas.Where(e => e.CodEmpresa == SessionData.CodLojaSelecionada).FirstOrDefault();
+    var nomeLojaSelecionada = "";
+    if(lojaSelecionada != null)
+    {
+        nomeLojaSelecionada = lojaSelecionada.NomeFantasia;
+    }
 }
 <style>
     .btn-sq-lg {
@@ -14,7 +20,7 @@
 <div ng-controller="mpController" ng-init="init()">
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="texto-branco">O que você deseja fazer?</h4>
+            <h4 class="texto-branco">Bem vindo à loja <strong class="text-primary">@nomeLojaSelecionada</strong> - O que você deseja fazer?</h4>
             <hr />
         </div>
     </div>
@@ -76,13 +82,13 @@
                             <br />
                             <i class="fa fa-handshake-o fa-3x"></i>
                             <br />
-                            Brasão<br>Fidelidade
+                            @progFidelidade.DescricaoProgramaFidelidade
                         </a>
                         <a href="~/ProgramaFidelidade/Extrato" class="btn btn-sq-sm btn-default hidden-sm hidden-md hidden-lg">
                             <br />
                             <i class="fa fa-handshake-o fa-2x"></i>
                             <br />
-                            Brasão<br>Fidelidade
+                            @progFidelidade.DescricaoProgramaFidelidade
                         </a>
                     }
                     @if (User.IsInRole(Constantes.ROLE_ADMIN))

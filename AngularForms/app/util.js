@@ -5,6 +5,16 @@
     cancelar: 3
 }
 
+function verificaLista(lista, codLojaSelecionada) {
+
+    $.each(lista, function (index, value) {
+        if (value != null && value.codEmpresa != null && value.codEmpresa != '' && value.codEmpresa != codLojaSelecionada) {
+            lista.splice(index, 1);
+        }
+    });
+
+}
+
 function isMobile() {
 
     return (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)

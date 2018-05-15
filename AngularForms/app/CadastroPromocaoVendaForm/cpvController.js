@@ -1,6 +1,6 @@
 ﻿brasaoWebApp.controller('cpvController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
@@ -9,6 +9,14 @@
             erroListasDragDrop: false,
             erroDiasSemana: false
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -354,6 +362,10 @@
         montaArrayDias();
         $scope.selecionaTipoDesconto();
 
+        if ($scope.promocaoSelecionada.codEmpresa != null) {
+            $scope.promocaoSelecionada.codEmpresa = $scope.promocaoSelecionada.codEmpresa.toString();
+        }
+
         $scope.models[1].items = [];
         if ($scope.promocaoSelecionada.codTipoAplicacaoDesconto == 2) {
             $scope.models[1].items = $scope.models[1].items.concat($scope.promocaoSelecionada.classesAssociadas);
@@ -462,6 +474,8 @@
                     $scope.rowCollection.push(retorno.data);
 
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
                 $('#modalGravarPromocao').modal('hide');
 

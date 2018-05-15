@@ -26,13 +26,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetTaxasEntrega(DateTime? dataInicio, DateTime? dataFim, int? codEntregador)
+        public async Task<JsonResult> GetTaxasEntrega(DateTime? dataInicio, DateTime? dataFim, int? codEntregador, int? codEmpresa)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var taxas = await _rep.GetTaxasEntrega(dataInicio, dataFim, codEntregador);
+                var taxas = await _rep.GetTaxasEntrega(dataInicio, dataFim, codEntregador, codEmpresa);
 
                 result.data = taxas;
 
@@ -54,13 +54,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetProdutosVendidos(DateTime? dataInicio, DateTime? dataFim, int? codClasse)
+        public async Task<JsonResult> GetProdutosVendidos(DateTime? dataInicio, DateTime? dataFim, int? codClasse, int? codEmpresa)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var prods = await _rep.GetProdutosVendidos(dataInicio, dataFim, codClasse);
+                var prods = await _rep.GetProdutosVendidos(dataInicio, dataFim, codClasse, codEmpresa);
 
                 result.data = prods;
 
@@ -83,13 +83,13 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetPedido(DateTime? dataInicio, DateTime? dataFim, int? codPedido)
+        public async Task<JsonResult> GetPedido(DateTime? dataInicio, DateTime? dataFim, int? codPedido, int? codEmpresa)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
 
             try
             {
-                var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim, codPedido);
+                var peds = await _rep.GetPedidosConsulta(dataInicio, dataFim, codPedido, codEmpresa);
 
                 result.data = peds;
 

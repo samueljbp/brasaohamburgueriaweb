@@ -332,6 +332,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
     function reiniciaVariaveisPedido() {
 
         $scope.pedido = {
+            codEmpresa: $scope.codEmpresa,
             codFormaPagamento: '',
             codBandeiraCartao: '0',
             taxaEntrega: $scope.taxaEntrega,
@@ -806,7 +807,7 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
     }
 
-    $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega, mostraTermosProgramaFidelidade, programaFidJson) {
+    $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega, mostraTermosProgramaFidelidade, programaFidJson, codEmpresa) {
 
         $scope.programaFidelidade = null;
         if (programaFidJson != '') {
@@ -820,6 +821,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         } else {
 
         }
+
+        $scope.codEmpresa = codEmpresa;
 
         $scope.classeSelecionada = {};
 

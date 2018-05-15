@@ -23,7 +23,7 @@
                         <input type='number' step="any" name="saldoProgramaFidelidadeUtilizar" autocomplete="off" id="trocoPara" class="form-control hidden-md hidden-lg" ng-model="pedido.dinheiroAUtilizarProgramaRecompensa" ng-blur="atualizaValoresComSaldoPrograma()" />
                         <div class="help-block with-errors"></div>
                     </div>
-                    <div class="col-sm-9 text-left"><small>Informe o valor em R$ que deseja utilizar do seu saldo do programa Brasão Fidelidade</small></div>
+                    <div class="col-sm-9 text-left"><small>Informe o valor em R$ que deseja utilizar do seu saldo do programa de fidelidade</small></div>
                 </div>
             }
             <div>
@@ -73,13 +73,7 @@
                     <small class="hidden-sm hidden-md hidden-lg">Somente números com ddd. Ex: 99999999999</small>
                     <div class="help-block with-errors"></div>
                 </div>
-                @*<div ng-if="modoAdm.ativo" class="col-sm-1">
-                        <button type="button" class="btn btn-primary btn-sm" title="Buscar" ng-click="getDadosUsuarioByPhone(pedido.dadosCliente.telefone)">
-                            <span class=" glyphicon glyphicon-search" aria-hidden="true">
-                            </span>
-                        </button>
-                    </div>*@
-                <div class="alert alert-warning alert-dismissible fade in {{mensagem.informacao ? '' : 'hidden'}}" role="alert" style="margin-top: 20px;">
+                <div class="col-sm-6 alert alert-warning alert-dismissible fade in {{mensagem.informacao ? '' : 'hidden'}}" role="alert">
                     <button type="button" class="close" aria-label="Close" ng-click="mensagem.informacao = ''"><span aria-hidden="true">×</span></button>
                     {{mensagem.informacao}}
                 </div>

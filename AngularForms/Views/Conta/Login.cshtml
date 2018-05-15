@@ -1,7 +1,8 @@
-﻿@using BrasaoHamburgueria.Model
+﻿@using BrasaoHamburgueria.Web.Helpers;
+@using BrasaoHamburgueria.Model
 <div ng-controller="loginController" ng-init="init()">
     @{
-        ViewBag.Title = "Brasão Hamburgueria - Login";
+        ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Login";
         var returnUrl = "";
         if (Request.Params != null && Request.Params.Count > 0 && Request.Params["ReturnUrl"] != null)
         {

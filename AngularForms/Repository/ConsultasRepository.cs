@@ -21,7 +21,7 @@ namespace BrasaoHamburgueria.Web.Repository
             _contexto = new BrasaoContext();
         }
 
-        public async Task<List<TaxasEntregaViewModel>> GetTaxasEntrega(DateTime? inicio, DateTime? fim, int? codEntregador)
+        public async Task<List<TaxasEntregaViewModel>> GetTaxasEntrega(DateTime? inicio, DateTime? fim, int? codEntregador, int? codEmpresa)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
@@ -52,10 +52,25 @@ namespace BrasaoHamburgueria.Web.Repository
                 parametros.Add(new System.Data.SqlClient.SqlParameter("data_fim", DBNull.Value));
             }
 
-            return await _contexto.Database.SqlQuery<TaxasEntregaViewModel>(Queries.QUERY_TAXAS_ENTREGA, parametros.ToArray()).ToListAsync();
+            string query = Queries.QUERY_TAXAS_ENTREGA_EMPRESA;
+            if (codEmpresa.HasValue)
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_empresa", codEmpresa.Value));
+            }
+            else
+            {
+                query = Queries.QUERY_TAXAS_ENTREGA_TODAS;
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_empresa", DBNull.Value));
+            }
+
+            var retorno = await _contexto.Database.SqlQuery<TaxasEntregaViewModel>(query, parametros.ToArray()).ToListAsync();
+
+            retorno = retorno.Where(i => SessionData.EmpresasInt.Contains(i.CodEmpresa != null ? i.CodEmpresa.Value : 0)).ToList();
+
+            return retorno;
         }
 
-        public async Task<List<ProdutosVendidosViewModel>> GetProdutosVendidos(DateTime? inicio, DateTime? fim, int? codClasse)
+        public async Task<List<ProdutosVendidosViewModel>> GetProdutosVendidos(DateTime? inicio, DateTime? fim, int? codClasse, int? codEmpresa)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
@@ -86,22 +101,41 @@ namespace BrasaoHamburgueria.Web.Repository
                 parametros.Add(new System.Data.SqlClient.SqlParameter("cod_classe", DBNull.Value));
             }
 
-            return await _contexto.Database.SqlQuery<ProdutosVendidosViewModel>(Queries.QUERY_PRODUTOS_VENDIDOS, parametros.ToArray()).ToListAsync();
+            string query = Queries.QUERY_PRODUTOS_VENDIDOS_EMPRESA;
+            if (codEmpresa.HasValue)
+            {
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_empresa", codEmpresa.Value));
+            }
+            else
+            {
+                query = Queries.QUERY_PRODUTOS_VENDIDOS_TODAS;
+                parametros.Add(new System.Data.SqlClient.SqlParameter("cod_empresa", DBNull.Value));
+            }
+
+            var retorno = await _contexto.Database.SqlQuery<ProdutosVendidosViewModel>(query, parametros.ToArray()).ToListAsync();
+
+            retorno = retorno.Where(i => SessionData.EmpresasInt.Contains(i.CodEmpresa != null ? i.CodEmpresa.Value : 0)).ToList();
+
+            return retorno;
         }
 
-        public async Task<List<PedidoViewModel>> GetPedidosConsulta(DateTime? inicio, DateTime? fim, int? codPedido)
+        public async Task<List<PedidoViewModel>> GetPedidosConsulta(DateTime? inicio, DateTime? fim, int? codPedido, int? codEmpresa)
         {
             var pedidos = await _contexto.Pedidos
                 .Where(p => p.DataHora >= (inicio != null ? inicio.Value : p.DataHora) &&
                             p.DataHora <= (fim != null ? fim.Value : p.DataHora) &&
+                            p.CodEmpresa == (codEmpresa != null ? codEmpresa.Value : p.CodEmpresa) &&
                             (p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido)) &&
                             ((p.CodSituacao >= 2 && p.CodSituacao < 9 && codPedido == null) || codPedido != null))
+                .Include(s => s.Empresa)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
                 .Select(p => new PedidoViewModel
                 {
+                    CodEmpresa = p.CodEmpresa,
+                    NomeEmpresa = p.Empresa.NomeFantasia,
                     CodFormaPagamento = p.CodFormaPagamento,
                     DescricaoFormaPagamento = p.FormaPagamentoRef.DescricaoFormaPagamento,
                     DataPedido = p.DataHora,
@@ -131,6 +165,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 })
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
+
+            pedidos = pedidos.Where(i => SessionData.EmpresasInt.Contains(i.CodEmpresa)).ToList();
 
             return pedidos;
         }

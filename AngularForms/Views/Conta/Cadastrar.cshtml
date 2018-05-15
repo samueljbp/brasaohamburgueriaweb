@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @{
-    ViewBag.Title = "Brasão Hamburgueria - Cadastrar conta";
+    ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Cadastrar conta";
 }
 @functions{
     public string GetAntiForgeryToken()
@@ -10,8 +11,16 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
 <script src="~/app/CadastroUsuarioForm/cuController.js"></script>
-<div ng-controller="cuController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Email')">
+<div ng-controller="cuController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@ViewBag.Email', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)">
     <h2 class="texto-branco">Cadastrar conta</h2>
     <div class="centro">
         <div cg-busy="{promise:promiseGetUsuario,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -78,6 +87,18 @@
                             <input type="password" autocomplete="off" id="confirmeNovaSenha" name="confirmeNovaSenha" class="form-control" max="10" data-confirmanovasenha />
                             <div class="help-block with-errors"></div>
                         </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Preferências</legend>
+                <div class="form-group">
+                    <label for="codEmpresa" class="col-sm-2 control-label">Loja preferencial</label>
+                    <div class="col-md-5 col-xs-12">
+                        <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="usuario.codEmpresaPreferencial">
+                            <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                        </select>
+                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
             </fieldset>

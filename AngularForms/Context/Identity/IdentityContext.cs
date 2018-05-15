@@ -23,6 +23,8 @@ namespace BrasaoHamburgueria.Web.Context
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public const string CLAIM_EMPRESA = "EMPRESA";
+
         public System.Data.Entity.DbSet<Usuario> DadosUsuarios { get; set; }
 
         public ApplicationDbContext()

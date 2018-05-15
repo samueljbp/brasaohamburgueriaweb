@@ -16,6 +16,8 @@ namespace BrasaoHamburgueria.Model
     
     public class ProgramaFidelidadeUsuarioViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public string LoginUsuario { get; set; }
         public int CodProgramaFidelidade { get; set; }
         public int CodTipoPontuacaoProgramaFidelidade { get; set; }
@@ -66,6 +68,11 @@ namespace BrasaoHamburgueria.Model
         [Key]
         public int CodProgramaFidelidade { get; set; }
 
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
+
         [Required]
         [Column("COD_TIPO_PONTUACAO_PROGRAMA_FIDELIDADE")]
         [ForeignKey("TipoPontuacao")]
@@ -103,6 +110,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("ProgramaFidelidade")]
         public virtual List<ExtratoUsuarioProgramaFidelidade> ExtratosUsuarios { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("PONTUACAO_DINHEIRO_PROGRAMA_FIDELIDADE")]

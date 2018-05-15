@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity;
 @using BrasaoHamburgueria.Model;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -10,10 +11,17 @@
 }
 @{
     var ehAdm = false;
-}
-@if (Request.IsAuthenticated && User.IsInRole(Constantes.ROLE_ADMIN))
-{
-    ehAdm = true;
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+
+    if (Request.IsAuthenticated && User.IsInRole(Constantes.ROLE_ADMIN))
+    {
+        ehAdm = true;
+    }
 }
 <style>
     body {
@@ -21,7 +29,7 @@
     }
 </style>
 <script src="~/app/HorarioFuncionamentoForm/hfController.js"></script>
-<div ng-controller="hfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="hfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetFuncionamentoEstabelecimento,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirFuncionamento,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -33,9 +41,9 @@
                 <thead>
                     <tr>
                         <th st-sort="descricaoDiaSemana" width="40%"><a href="#">Dia da semana</a></th>
-                        <th st-sort="abertura" width="25%"><a href="#">Abre</a></th>
-                        <th st-sort="fechamento" width="25%"><a href="#">Fecha</a></th>
-                        <th st-sort="temDelivery" width="25%"><a href="#">Faz entrega?</a></th>
+                        <th st-sort="abertura" width="15%"><a href="#">Abre</a></th>
+                        <th st-sort="fechamento" width="15%"><a href="#">Fecha</a></th>
+                        <th st-sort="temDelivery" width="20%"><a href="#">Faz entrega?</a></th>
                         @if (ehAdm)
                         {
                             <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>

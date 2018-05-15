@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -6,6 +7,14 @@
         AntiForgery.GetTokens(null, out cookieToken, out formToken);
         return cookieToken + ":" + formToken;
     }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
 }
 <style>
     body {
@@ -64,7 +73,7 @@
     }
 </style>
 <script src="~/app/CadastroProgramaFidelidadeForm/cpfController.js"></script>
-<div ng-controller="cpfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro" nv-file-drop="" uploader="uploader">
+<div ng-controller="cpfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro" nv-file-drop="" uploader="uploader">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetProgramas,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirPrograma,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -75,16 +84,20 @@
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
-                        <th st-sort="codProgramaFidelidade" width="10%"><a href="#">Código</a></th>
-                        <th st-sort="descricaoProgramaFidelidade" width="30%"><a href="#">Descrição</a></th>
-                        <th st-sort="inicioVigencia" width="20%"><a href="#">Início</a></th>
-                        <th st-sort="terminoVigencia" width="20%"><a href="#">Término</a></th>
+                        <th st-sort="codProgramaFidelidade" width="9%"><a href="#">Código</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="descricaoProgramaFidelidade" width="25%"><a href="#">Descrição</a></th>
+                        <th st-sort="inicioVigencia" width="18%"><a href="#">Início</a></th>
+                        <th st-sort="terminoVigencia" width="18%"><a href="#">Término</a></th>
                         <th st-sort="programaAtivo" width="10%"><a href="#">Ativo</a></th>
                         <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
                     </tr>
                     <tr>
                         <th>
                             <input st-search="codProgramaFidelidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="descricaoProgramaFidelidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
@@ -105,7 +118,7 @@
                 </thead>
                 <tbody>
                     <tr ng-if="rowCollection.length <= 0">
-                        <td colspan="7">
+                        <td colspan="8">
                             <div>
                                 <small>Nenhum item cadastrado</small>
                             </div>
@@ -113,6 +126,7 @@
                     </tr>
                     <tr ng-repeat="prog in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{prog.codProgramaFidelidade}}</td>
+                        <td>{{(prog.nomeEmpresa != null ? prog.nomeEmpresa : 'TODAS')}}</td>
                         <td>{{prog.descricaoProgramaFidelidade}}</td>
                         <td>{{prog.inicioVigencia | date:'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{prog.terminoVigencia | date:'dd/MM/yyyy HH:mm'}}</td>
@@ -133,7 +147,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="7" class="text-right">
+                        <td colspan="8" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">
@@ -143,7 +157,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="8" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage"></div>
                         </td>
                     </tr>
@@ -169,6 +183,17 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                             <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codEmpresa" class="col-sm-2 control-label">Empresa</label>
+                            <div class="col-md-5 col-xs-12">
+                                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="programaSelecionado.codEmpresa">
+                                    <option value="" selected>TODAS</option>
+                                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
                         </div>
 
                         <div class="form-group">

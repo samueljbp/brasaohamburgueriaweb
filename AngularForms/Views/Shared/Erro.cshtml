@@ -1,7 +1,8 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
+@using BrasaoHamburgueria.Web.Helpers;
 
 @{
-    ViewBag.Title = "Brasão Hamburgueria - Erro";
+    ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Erro";
 }
 
 <h1 class="text-danger">Error.</h1>

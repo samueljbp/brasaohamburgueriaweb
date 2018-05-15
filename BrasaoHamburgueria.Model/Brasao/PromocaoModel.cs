@@ -17,6 +17,8 @@ namespace BrasaoHamburgueria.Model
 
     public class PromocaoVendaViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodPromocaoVenda { get; set; }
         public string DescricaoPromocao { get; set; }
         public DateTime DataHoraInicio { get; set; }
@@ -64,6 +66,11 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_PROMOCAO_VENDA")]
         public int CodPromocaoVenda { get; set; }
 
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
+
         [Required]
         [Column("DESCRICAO_PROMOCAO")]
         public string DescricaoPromocao { get; set; }
@@ -100,6 +107,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("PromocaoVenda")]
         public virtual List<DiaSemanaPromocaoVenda> DiasAssociados { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("TIPO_APLICACAO_DESCONTO_PROMOCAO")]

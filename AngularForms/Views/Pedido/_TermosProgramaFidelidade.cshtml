@@ -1,6 +1,11 @@
 ﻿@using BrasaoHamburgueria.Model;
 @{
     var progFidelidade = (ProgramaFidelidadeUsuarioViewModel)Model;
+
+    if (progFidelidade == null)
+    {
+        return;
+    }
 }
 <div class="modal fade" id="modalTermosProgramaFidelidade" tabindex="-3" role="dialog" aria-labelledby="labelModalTermosProgramaFidelidade" style="overflow: scroll;">
     <div class="modal-dialog modal-lg" role="document">

@@ -1,11 +1,19 @@
 ﻿brasaoWebApp.controller('hfController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
             informacao: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -55,6 +63,10 @@
 
         $scope.funcionamentoSelecionado.abertura = abertura;
         $scope.funcionamentoSelecionado.fechamento = fechamento;
+
+        if ($scope.funcionamentoSelecionado.codEmpresa != null) {
+            $scope.funcionamentoSelecionado.codEmpresa = $scope.funcionamentoSelecionado.codEmpresa.toString();
+        }
 
         $scope.modoCadastro = 'A';
         $('#modalGravarHorarioFunc').modal('show');
@@ -122,6 +134,8 @@
                     }
 
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
             }
             else {

@@ -8,6 +8,7 @@ using BrasaoHamburgueria.Model;
 using System.Threading.Tasks;
 using BrasaoHamburgueria.Web.Repository;
 using BrasaoHamburgueria.Web.Filters;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var opcoes = await _rep.GetHorariosFuncionamento();
+                var opcoes = await _rep.GetHorariosFuncionamento(SessionData.CodLojaSelecionada);
 
                 result.data = opcoes;
 
@@ -71,7 +72,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var observacao = await _rep.GravarFuncionamentoEstabelecimento(funcionamento, modoCadastro);
+                var observacao = await _rep.GravarFuncionamentoEstabelecimento(funcionamento, modoCadastro, SessionData.CodLojaSelecionada);
                 result.Succeeded = true;
                 result.data = observacao;
             }

@@ -1,6 +1,7 @@
 ﻿@using BrasaoHamburgueria.Model
+@using BrasaoHamburgueria.Web.Helpers;
 @{
-    ViewBag.Title = "Brasão Hamburgueria - Sistema de pedidos online";
+    ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Sistema de pedidos online";
 }
 <h2 class="texto-branco">Bem vindo!</h2>
 <div class="centro">
@@ -8,7 +9,7 @@
         <div class="col-sm-12">
             <p>
                 <h5>
-                    Bem vindo ao sistema de pedidos online da Brasão Hamburgueria. Aqui você poderá fazer seu pedido no conforto do lar e acompanhar o andamento até recebê-lo.
+                    Bem vindo ao sistema de pedidos online @SessionData.LojaSelecionada.NomeFantasia. Aqui você poderá fazer seu pedido no conforto do lar e acompanhar o andamento até recebê-lo.
                 </h5>
             </p>
             <p>

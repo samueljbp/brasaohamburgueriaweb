@@ -1,8 +1,9 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 <script src="~/app/EsqueciSenhaForm/esController.js"></script>
 <div ng-controller="esController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
     @{
-        ViewBag.Title = "Brasão Hamburgueria - Redefinir senha";
+        ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Redefinir senha";
     }
     @functions{
         public string GetAntiForgeryToken()

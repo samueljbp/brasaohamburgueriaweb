@@ -1,5 +1,6 @@
 ﻿@using BrasaoHamburgueria;
 @using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -8,13 +9,21 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
 <style>
     body {
         overflow-y: scroll;
     }
 </style>
 <script src="~/app/CadastroPromocaoVendaForm/cpvController.js"></script>
-<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetPromocoes,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirPromocao,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -28,10 +37,11 @@
             <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
                 <thead>
                     <tr>
-                        <th st-sort="codPromocaoVenda" width="6%"><a href="#">Código</a></th>
-                        <th st-sort="descricaoPromocao" width="25%"><a href="#">Descrição</a></th>
-                        <th st-sort="dataHoraInicio" width="14%"><a href="#">Início</a></th>
-                        <th st-sort="dataHoraFim" width="14%"><a href="#">Término</a></th>
+                        <th st-sort="codPromocaoVenda" width="5%"><a href="#">Código</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="descricaoPromocao" width="20%"><a href="#">Descrição</a></th>
+                        <th st-sort="dataHoraInicio" width="12%"><a href="#">Início</a></th>
+                        <th st-sort="dataHoraFim" width="12%"><a href="#">Término</a></th>
                         <th st-sort="descricaoTipoAplicacaoDesconto" width="15%"><a href="#">Tipo desconto</a></th>
                         <th st-sort="percentualDesconto" width="10%"><a href="#">% desconto</a></th>
                         <th st-sort="promocaoAtiva" width="6%"><a href="#">Ativa</a></th>
@@ -40,6 +50,9 @@
                     <tr>
                         <th>
                             <input st-search="codPromocaoVenda" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="descricaoPromocao" placeholder="Pesquisar" class="input-sm form-control" type="search" />
@@ -60,7 +73,7 @@
                 </thead>
                 <tbody>
                     <tr ng-if="rowCollection.length <= 0">
-                        <td colspan="9">
+                        <td colspan="10">
                             <div>
                                 <small>Nenhum item cadastrado</small>
                             </div>
@@ -68,6 +81,7 @@
                     </tr>
                     <tr ng-repeat="promo in displayedCollection" ng-if="rowCollection.length > 0">
                         <td>{{promo.codPromocaoVenda}}</td>
+                        <td>{{(promo.nomeEmpresa != null ? promo.nomeEmpresa : 'TODAS')}}</td>
                         <td>{{promo.descricaoPromocao}}</td>
                         <td>{{promo.dataHoraInicio | date:'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{promo.dataHoraFim | date:'dd/MM/yyyy HH:mm'}}</td>
@@ -90,7 +104,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="9" class="text-right">
+                        <td colspan="10" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">
@@ -100,7 +114,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="9" class="text-center">
+                        <td colspan="10" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage"></div>
                         </td>
                     </tr>
@@ -126,6 +140,17 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                             <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codEmpresa" class="col-sm-2 control-label">Empresa</label>
+                            <div class="col-md-5 col-xs-12">
+                                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="promocaoSelecionada.codEmpresa">
+                                    <option value="" selected>TODAS</option>
+                                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
                         </div>
 
                         <div id="divCheckPromocaoAtiva" class="form-group">

@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -7,15 +8,24 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
 <style>
     body {
         overflow-y: scroll;
     }
 </style>
 <script src="~/app/CadastroParametroSistema/cpsController.js"></script>
-<div ng-controller="cpsController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="cpsController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetParametros,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirParametro,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formPar" class="form-horizontal" ng-submit="submitForm()">
         <h3>Parâmetros de sistema - Cadastro</h3>
         <hr />
@@ -24,7 +34,7 @@
                 <thead>
                     <tr>
                         <th st-sort="codParametro" width="10%"><a href="#">Código</a></th>
-                        <th st-sort="descricaoParametro" width="60%"><a href="#">Descrição</a></th>
+                        <th st-sort="descricaoParametro" width="50%"><a href="#">Descrição</a></th>
                         <th st-sort="valorParametro" width="20%"><a href="#">Valor</a></th>
                         <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
                     </tr>
@@ -38,14 +48,14 @@
                         <th>
                             <input st-search="valorParametro" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
-                        <th>
+                        <th colspan="2">
 
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-if="rowCollection.length <= 0">
-                        <td colspan="4">
+                        <td colspan="5">
                             <div>
                                 <small>Nenhum item cadastrado</small>
                             </div>
@@ -56,6 +66,12 @@
                         <td>{{par.descricaoParametro}}</td>
                         <td>{{par.valorParametro}}</td>
                         <td>
+                            <button type="button" ng-click="confirmaExclusaoParametro(par)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
                             <button type="button" ng-click="modalAlteracao(par)" class="btn btn-sm btn-warning">
                                 <i class="glyphicon glyphicon-edit">
                                 </i>
@@ -65,7 +81,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="text-right">
+                        <td colspan="5" class="text-right">
                             <div class="text-right">
                                 <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
                                     <i class="glyphicon glyphicon-plus">

@@ -17,6 +17,7 @@ using Microsoft.AspNet.Identity.Owin;
 using BrasaoHamburgueria.Web.Extentions;
 using System.Text.RegularExpressions;
 using BrasaoHamburgueria.Helper;
+using BrasaoHamburgueria.Web.Helpers;
 
 namespace BrasaoHamburgueria.Web.Controllers
 {
@@ -204,6 +205,8 @@ namespace BrasaoHamburgueria.Web.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.LembrarMe);
+
+                    SessionData.RefreshParam(SessionData.Empresas);
                     
                     result = new { Succeeded = true, errors = new List<String>(), data = model.ReturnUrl };
                 }
@@ -250,7 +253,8 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             var usuario = new UsuarioViewModel();
 
-            UsuarioCopy.DBToViewModel(user.DadosUsuario, usuario);
+            PropertyCopy.Copy(user.DadosUsuario, usuario);
+            //UsuarioCopy.DBToViewModel(user.DadosUsuario, usuario);
             
             return new JsonNetResult { Data = usuario };
         }
@@ -277,7 +281,9 @@ namespace BrasaoHamburgueria.Web.Controllers
                     user.DataNascimento = user.DataNascimento.Substring(0, 2) + "/" + user.DataNascimento.Substring(2, 2) + "/" + user.DataNascimento.Substring(4);
                 }
 
-                UsuarioCopy.DBToViewModel(user, usuario);                
+                PropertyCopy.IgnoreExceptions = true;
+                PropertyCopy.Copy(user, usuario);
+                //UsuarioCopy.DBToViewModel(user, usuario);                
             }
             else
             {
@@ -382,8 +388,8 @@ namespace BrasaoHamburgueria.Web.Controllers
                     string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                     var callbackUrl = Url.Action("RedefinirSenha", "Conta", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     String strHTML = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath("~/Emails/InstrucoesEsqueciMinhaSenha.html"));
-                    strHTML = String.Format(strHTML, user.DadosUsuario.Nome, callbackUrl);
-                    await UserManager.SendEmailAsync(user.Id, "Brasão Hamburgueria - Redefinir senha", strHTML);
+                    strHTML = String.Format(strHTML, user.DadosUsuario.Nome, SessionData.LojaSelecionada.NomeFantasia, callbackUrl, SessionData.LojaSelecionada.Logomarca);
+                    await UserManager.SendEmailAsync(user.Id, SessionData.LojaSelecionada.NomeFantasia + " - Redefinir senha", strHTML);
 
                     result = new { Succeeded = true, errors = new List<String>(), data = callbackUrl };
                 }

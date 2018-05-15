@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -7,19 +8,37 @@
         return cookieToken + ":" + formToken;
     }
 }
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
 <style>
     body {
         overflow-y: scroll;
     }
 </style>
 <script src="~/app/ConsultarTaxasEntregaForm/cteController.js"></script>
-<div ng-controller="cteController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+<div ng-controller="cteController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetTaxasEntrega,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGetEntregadores,backdrop:false,delay:10,minDuration:1000}"></div>
     <form role="form" id="formTaxaEntrega" class="form-horizontal" ng-submit="submitForm()">
         <h3>Taxas de entrega</h3>
         <hr />
+        <div class="form-group">
+            <label for="codEmpresa" class="col-sm-1 col-xs-12 control-label">Empresa</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="filtros.codEmpresa">
+                    <option value="" selected>TODAS</option>
+                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
         <div class="form-group">
             <label for="codEntregador" class="col-sm-1 col-xs-12 control-label">Entregador</label>
             <div class="col-md-5 col-xs-12">
@@ -83,13 +102,17 @@
                 <thead>
                     <tr>
                         <th st-sort="codEntregador" width="10%"><a href="#">Cod Entregador</a></th>
-                        <th st-sort="nome" width="50%"><a href="#">Nome</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="nome" width="40%"><a href="#">Nome</a></th>
                         <th st-sort="qtdPedidos" width="20%"><a href="#">Qtd Entregas</a></th>
                         <th st-sort="totalTaxasEntrega" width="20%"><a href="#">Total taxas</a></th>
                     </tr>
                     <tr>
                         <th>
                             <input st-search="codEntregador" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
                         </th>
                         <th>
                             <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
@@ -105,6 +128,7 @@
                 <tbody>
                     <tr ng-repeat="taxa in displayedCollection">
                         <td>{{taxa.codEntregador}}</td>
+                        <td>{{(taxa.nomeEmpresa != 0 ? taxa.nomeEmpresa : 'TODAS')}}</td>
                         <td>{{taxa.nome}}</td>
                         <td>{{taxa.qtdPedidos}}</td>
                         <td>{{taxa.totalTaxasEntrega | currency: "R$ "}}</td>
@@ -112,7 +136,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="text-left">
+                        <td colspan="5" class="text-left">
                             <div class="col-sm-4">
                                 <small>Quantidade total entregas: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
                             </div>
@@ -122,7 +146,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="5" class="text-center">
                             <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
                         </td>
                     </tr>

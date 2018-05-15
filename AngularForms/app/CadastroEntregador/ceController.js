@@ -1,11 +1,19 @@
 ﻿brasaoWebApp.controller('ceController', function ($scope, $http, $filter, $ngBootbox, $window) {
 
-    $scope.init = function (loginUsuario, antiForgeryToken) {
+    $scope.init = function (loginUsuario, antiForgeryToken, empresasJson, codLojaSelecionada) {
         $scope.mensagem = {
             erro: '',
             sucesso: '',
             informacao: ''
         }
+
+        $scope.empresas = {};
+        if (empresasJson != '') {
+            $scope.empresas = JSON.parse(empresasJson);
+        }
+
+        $scope.codEmpresa = codLojaSelecionada.toString();
+        $scope.codLojaSelecionada = codLojaSelecionada;
 
         // I: inclusão, A: alteração
         $scope.modoCadastro = '';
@@ -17,13 +25,17 @@
         $scope.rowCollection = [];
         $scope.itemsByPage = 10;
 
-        $scope.promiseGetOpcoesExtra();
+        $scope.getEntregadores();
     }
 
     $scope.modalAlteracao = function (entregador) {
         $('#formGravarEntregador').validator('destroy').validator();
 
         $scope.entregadorSelecionado = entregador;
+        if ($scope.entregadorSelecionado.codEmpresa != null) {
+            $scope.entregadorSelecionado.codEmpresa = $scope.entregadorSelecionado.codEmpresa.toString();
+        }
+        
         $scope.modoCadastro = 'A';
         $('#modalGravarEntregador').modal('show');
     }
@@ -73,6 +85,8 @@
                 if ($scope.modoCadastro == 'I') {
                     $scope.rowCollection.push(retorno.data);
                 }
+
+                verificaLista($scope.rowCollection, $scope.codLojaSelecionada);
 
             }
             else {
@@ -152,34 +166,38 @@
 
     }
 
-    $scope.promiseGetEntregadores = $http({
-        method: 'GET',
-        headers: {
-            //'Authorization': 'Bearer ' + accesstoken,
-            'RequestVerificationToken': 'XMLHttpRequest',
-            'X-Requested-With': 'XMLHttpRequest',
-        },
-        url: urlBase + 'Cadastros/GetEntregadores'
-    })
-        .then(function (response) {
+    $scope.getEntregadores = function () {
 
-            var retorno = genericSuccess(response);
+        $scope.promiseGetEntregadores = $http({
+            method: 'GET',
+            headers: {
+                //'Authorization': 'Bearer ' + accesstoken,
+                'RequestVerificationToken': 'XMLHttpRequest',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            url: urlBase + 'Cadastros/GetEntregadores'
+        })
+            .then(function (response) {
 
-            if (retorno.succeeded) {
+                var retorno = genericSuccess(response);
 
-                $scope.rowCollection = retorno.data;
+                if (retorno.succeeded) {
 
-            }
-            else {
-                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $scope.rowCollection = retorno.data;
+
+                }
+                else {
+                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                    $window.scrollTo(0, 0);
+                }
+
+
+
+            }, function (error) {
+                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
                 $window.scrollTo(0, 0);
-            }
+            });
 
-
-
-        }, function (error) {
-            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-            $window.scrollTo(0, 0);
-        });
+    }
 
 });

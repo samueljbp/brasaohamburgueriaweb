@@ -21,6 +21,8 @@ namespace BrasaoHamburgueria.Model
 
     public class PedidoViewModel
     {
+        public int CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodPedido { get; set; }
         public DateTime DataPedido { get; set; }
         public string CodFormaPagamento { get; set; }
@@ -121,6 +123,8 @@ namespace BrasaoHamburgueria.Model
 
     public class EntregadorViewModel
     {
+        public int? CodEmpresa { get; set; }
+        public string NomeEmpresa { get; set; }
         public int CodEntregador { get; set; }
         public string Nome { get; set; }
         public string Sexo { get; set; }
@@ -168,6 +172,11 @@ namespace BrasaoHamburgueria.Model
         [Key]
         [Column("COD_PEDIDO")]
         public int CodPedido { get; set; }
+
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int CodEmpresa { get; set; }
 
         [ForeignKey("Situacao")]
         [Column("COD_SITUACAO")]
@@ -282,6 +291,8 @@ namespace BrasaoHamburgueria.Model
 
         [InverseProperty("Pedido")]
         public virtual List<HistoricoPedido> Historicos { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("ITEM_PEDIDO")]
@@ -442,6 +453,11 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_ENTREGADOR")]
         public int CodEntregador { get; set; }
 
+        [ForeignKey("Empresa")]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        [Column("COD_EMPRESA")]
+        public int? CodEmpresa { get; set; }
+
         [Required]
         [Column("NOME")]
         public string Nome { get; set; }
@@ -474,6 +490,8 @@ namespace BrasaoHamburgueria.Model
 
         [Column("VALOR_POR_ENTREGA")]
         public decimal? ValorPorEntrega { get; set; }
+
+        public virtual Empresa Empresa { get; set; }
     }
 
     [Table("FORMA_PAGAMENTO")]

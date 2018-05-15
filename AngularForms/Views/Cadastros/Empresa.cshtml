@@ -1,0 +1,721 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+
+    .containerAAA {
+        position: relative;
+        width: 150px;
+        height: 100%;
+    }
+
+    .overlayAAA {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .containerAAA:hover .overlayAAA {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .imgAAA {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        left: 0;
+    }
+
+    .buttonAAA {
+        position: absolute;
+        width: 150px;
+        left: 0;
+        top: 40%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+
+        .buttonAAA a {
+            width: 150px;
+            padding: 12px 48px;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .containerAAA:hover .buttonAAA {
+        opacity: 1;
+    }
+
+
+
+
+
+    .divTextoLogo {
+        width: 145px;
+        height: 35px;
+        background-color: white;
+        box-shadow: 1px 2px 3px #ededed;
+        position: relative;
+        border: 1px solid #d8d8d8;
+    }
+
+    input[type='file'] {
+        width: 145px;
+        height: 35px;
+        opacity: 0
+    }
+
+    #txtArquivoLogo {
+        width: 400px;
+        height: 35px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 13px;
+        line-height: 25px;
+        text-indent: 10px;
+        pointer-events: none;
+    }
+
+    #botaoSelecionarLogo {
+        cursor: pointer;
+        display: block;
+        width: 30px;
+        background-color: #5cb85c;
+        height: 35px;
+        color: white;
+        position: absolute;
+        right: 0;
+        top: -1px;
+        font-size: 11px;
+        line-height: 25px;
+        text-align: center;
+        -webkit-transition: 500ms all;
+        -moz-transition: 500ms all;
+        transition: 500ms all;
+    }
+
+        #botaoSelecionarLogo:hover {
+            background-color: #449d44;
+        }
+
+
+
+    #txtArquivoBgPublica {
+        width: 400px;
+        height: 35px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 13px;
+        line-height: 25px;
+        text-indent: 10px;
+        pointer-events: none;
+    }
+
+    #botaoSelecionarBgPublica {
+        cursor: pointer;
+        display: block;
+        width: 30px;
+        background-color: #5cb85c;
+        height: 35px;
+        color: white;
+        position: absolute;
+        right: 0;
+        top: -1px;
+        font-size: 11px;
+        line-height: 25px;
+        text-align: center;
+        -webkit-transition: 500ms all;
+        -moz-transition: 500ms all;
+        transition: 500ms all;
+    }
+
+        #botaoSelecionarBgPublica:hover {
+            background-color: #449d44;
+        }
+
+
+
+    #txtArquivoBgAutenticado {
+        width: 400px;
+        height: 35px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 13px;
+        line-height: 25px;
+        text-indent: 10px;
+        pointer-events: none;
+    }
+
+    #botaoSelecionarBgAutenticado {
+        cursor: pointer;
+        display: block;
+        width: 30px;
+        background-color: #5cb85c;
+        height: 35px;
+        color: white;
+        position: absolute;
+        right: 0;
+        top: -1px;
+        font-size: 11px;
+        line-height: 25px;
+        text-align: center;
+        -webkit-transition: 500ms all;
+        -moz-transition: 500ms all;
+        transition: 500ms all;
+    }
+
+        #botaoSelecionarBgAutenticado:hover {
+            background-color: #449d44;
+        }
+</style>
+<script src="~/app/CadastroEmpresaForm/cempController.js"></script>
+<div ng-controller="cempController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetEmpresas,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetEstados,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseRemoverImagem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGravarEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formEmpresa" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Empresa - Cadastro</h3>
+        <hr />
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="codEmpresa" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="razaoSocial" width="30%"><a href="#">Empresa</a></th>
+                        <th st-sort="nomeFantasia" width="30%"><a href="#">Imagem</a></th>
+                        <th st-sort="cnpj" width="20%"><a href="#">Nome</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="razaoSocial" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeFantasia" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="cnpj" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="2">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="6">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="emp in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{emp.codEmpresa}}</td>
+                        <td>{{emp.razaoSocial}}</td>
+                        <td>{{emp.nomeFantasia}}</td>
+                        <td>{{emp.cnpj}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoEmpresa(emp)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(emp)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="11" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="11" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarEmpresa" name="formGravarEmpresa" class="form-horizontal">
+        <div class="modal fade" id="modalGravarEmpresa" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarEmpresa" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarEmpresa">Empresa - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGetCidades,backdrop:false,delay:10,minDuration:1000}"></div>
+                        <div cg-busy="{promise:promiseGetBairros,backdrop:false,delay:10,minDuration:1000}"></div>
+                        <div cg-busy="{promise:promiseGravarEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+                        <div class="form-group">
+                            <label for="codEmpresa" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codEmpresa" ng-disabled="modoCadastro == 'A'" name="codEmpresa" class="form-control" ng-model="empresaSelecionada.codEmpresa" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <fieldset>
+                            <legend>Estilos</legend>
+
+                            <div class="form-group" ng-show="empresaSelecionada.codEmpresa > 0">
+                                <label for="logomarca" class="col-sm-2 control-label">Logomarca</label>
+                                <div class="col-sm-2">
+
+                                    <div class="divTextoLogo">
+                                        <input type="file" id="inputLogo" nv-file-select uploader="uploaderLogo" /> <span id='txtArquivoLogo'></span>
+                                        <span id='botaoSelecionarLogo' title="Enviar nova imagem">...</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="table-responsive">
+
+                                        <div class="containerAAA" ng-show="empresaSelecionada.logomarca != null && uploaderLogo.queue.length == 0">
+                                            <img src="~/{{empresaSelecionada.logomarcaMini}}" alt="{{empresaSelecionada.logomarcaMini}}" class="img-thumbnail" />
+                                            <div class="overlayAAA"></div>
+                                            <div class="buttonAAA">
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagemLogomarca()">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <table class="table" ng-show="uploaderLogo.queue.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Imagem</th>
+                                                    <th width="15%" ng-show="uploaderLogo.isHTML5">Tamanho</th>
+                                                    <th width="20%" ng-show="uploaderLogo.isHTML5">Progresso</th>
+                                                    <th width="15%">Status</th>
+                                                    <th width="20%">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in uploaderLogo.queue">
+                                                    <td>
+                                                        <div ng-show="uploaderLogo.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                    </td>
+                                                    <td ng-show="uploaderLogo.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                    <td ng-show="uploaderLogo.isHTML5">
+                                                        <div class="progress" style="margin-bottom: 0;">
+                                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                    </td>
+                                                    <td nowrap>
+                                                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                            <span class="glyphicon glyphicon-upload"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="empresaSelecionada.codEmpresa > 0">
+                                <label for="logomarca" class="col-sm-2 control-label">Fundo área pública</label>
+                                <div class="col-sm-2">
+
+                                    <div class="divTextoLogo">
+                                        <input type="file" id="inputBgPublica" nv-file-select uploader="uploaderBgPublico" /> <span id='txtArquivoBgPublica'></span>
+                                        <span id='botaoSelecionarBgPublica' title="Enviar nova imagem">...</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="table-responsive">
+
+                                        <div class="containerAAA" ng-show="empresaSelecionada.imagemBackgroundPublica != null && uploaderBgPublico.queue.length == 0">
+                                            <img src="~/{{empresaSelecionada.imagemBackgroundPublicaMini}}" alt="{{empresaSelecionada.imagemBackgroundPublicaMini}}" class="img-thumbnail" />
+                                            <div class="overlayAAA"></div>
+                                            <div class="buttonAAA">
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagemFundoPublico()">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <table class="table" ng-show="uploaderBgPublico.queue.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Imagem</th>
+                                                    <th width="15%" ng-show="uploaderBgPublico.isHTML5">Tamanho</th>
+                                                    <th width="20%" ng-show="uploaderBgPublico.isHTML5">Progresso</th>
+                                                    <th width="15%">Status</th>
+                                                    <th width="20%">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in uploaderBgPublico.queue">
+                                                    <td>
+                                                        <div ng-show="uploaderBgPublico.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                    </td>
+                                                    <td ng-show="uploaderBgPublico.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                    <td ng-show="uploaderBgPublico.isHTML5">
+                                                        <div class="progress" style="margin-bottom: 0;">
+                                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                    </td>
+                                                    <td nowrap>
+                                                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                            <span class="glyphicon glyphicon-upload"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="empresaSelecionada.codEmpresa > 0">
+                                <label for="logomarca" class="col-sm-2 control-label">Fundo área autenticada</label>
+                                <div class="col-sm-2">
+
+                                    <div class="divTextoLogo">
+                                        <input type="file" id="inputBgAutenticado" nv-file-select uploader="uploaderBgAutenticado" /> <span id='txtArquivoBgAutenticado'></span>
+                                        <span id='botaoSelecionarBgAutenticado' title="Enviar nova imagem">...</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="table-responsive">
+
+                                        <div class="containerAAA" ng-show="empresaSelecionada.imagemBackgroundAutenticada != null && uploaderBgAutenticado.queue.length == 0">
+                                            <img src="~/{{empresaSelecionada.imagemBackgroundAutenticadaMini}}" alt="{{empresaSelecionada.imagemBackgroundAutenticadaMini}}" class="img-thumbnail" />
+                                            <div class="overlayAAA"></div>
+                                            <div class="buttonAAA">
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagemFundoAutenticado()">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <table class="table" ng-show="uploaderBgAutenticado.queue.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Imagem</th>
+                                                    <th width="15%" ng-show="uploaderBgAutenticado.isHTML5">Tamanho</th>
+                                                    <th width="20%" ng-show="uploaderBgAutenticado.isHTML5">Progresso</th>
+                                                    <th width="15%">Status</th>
+                                                    <th width="20%">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in uploaderBgAutenticado.queue">
+                                                    <td>
+                                                        <div ng-show="uploaderBgAutenticado.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                    </td>
+                                                    <td ng-show="uploaderBgAutenticado.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                    <td ng-show="uploaderBgAutenticado.isHTML5">
+                                                        <div class="progress" style="margin-bottom: 0;">
+                                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                    </td>
+                                                    <td nowrap>
+                                                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                            <span class="glyphicon glyphicon-upload"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="razaoSocial" class="col-sm-2 control-label">Cor principal</label>
+                                <div class="col-sm-8">
+                                    <color-picker id="aaa" ng-model="empresaSelecionada.corPrincipal" options="colorPickerOptions" event-api="eventApi" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="razaoSocial" class="col-sm-2 control-label">Cor secundária</label>
+                                <div class="col-sm-8">
+                                    <color-picker ng-model="empresaSelecionada.corSecundaria" options="colorPickerOptions" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="razaoSocial" class="col-sm-2 control-label">Cor contraste</label>
+                                <div class="col-sm-8">
+                                    <color-picker ng-model="empresaSelecionada.corPrincipalContraste" options="colorPickerOptions" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="razaoSocial" class="col-sm-2 control-label">Cor destaque</label>
+                                <div class="col-sm-8">
+                                    <color-picker ng-model="empresaSelecionada.corDestaque" options="colorPickerOptions" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Dados cadastrais</legend>
+                            <div id="divCheckEhFilial" class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-2">
+                                    <div class="checkbox">
+                                        <label class="control-label"><input type="checkbox" id="ehFilial" name="ehFilial" ng-model="empresaSelecionada.ehFilial" />É filial</label>
+                                    </div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-show="empresaSelecionada.ehFilial">
+                                <label for="codEmpresaMatriz" class="col-sm-2 control-label">Matriz</label>
+                                <div class="col-md-5 col-xs-12">
+                                    <select name="codEmpresaMatriz" id="codEmpresaMatriz" class="form-control" ng-model="empresaSelecionada.codEmpresaMatriz">
+                                        <option value="" selected>SELECIONE</option>
+                                        <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="razaoSocial" class="col-sm-2 control-label">Razão social</label>
+                                <div class="col-sm-8">
+                                    <input type="text" required id="razaoSocial" name="razaoSocial" class="form-control" ng-model="empresaSelecionada.razaoSocial" maxlength="200" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nomeFantasia" class="col-sm-2 control-label">Nome fantasia</label>
+                                <div class="col-sm-8">
+                                    <input type="text" required id="nomeFantasia" name="nomeFantasia" class="form-control" ng-model="empresaSelecionada.nomeFantasia" maxlength="200" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <ng-cpf-cnpj cnpj-model="empresaSelecionada.cnpj" tipo="'cnpj'" label-campo="'CNPJ:'" validacao="mensagem"></ng-cpf-cnpj>
+
+                            <div class="form-group">
+                                <label for="inscricaoEstadual" class="col-sm-2 control-label">Inscrição estadual</label>
+                                <div class="col-sm-5">
+                                    <input type="number" id="inscricaoEstadual" name="inscricaoEstadual" class="form-control" ng-model="empresaSelecionada.inscricaoEstadual" maxlength="20" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estado" class="col-sm-2 control-label">Estado</label>
+                                <div class="col-md-5 col-xs-12">
+                                    <select name="estado" id="estado" required class="form-control" ng-model="empresaSelecionada.estado" ng-change="selecionaEstado()">
+                                        <option value="" selected>SELECIONE</option>
+                                        <option ng-repeat="est in estados" value="{{est.sigla}}">{{est.nome}}</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="codCidade" class="col-sm-2 control-label">Cidade</label>
+                                <div class="col-md-5 col-xs-12">
+                                    <select name="codCidade" id="codCidade" required class="form-control" ng-model="empresaSelecionada.codCidade" ng-change="selecionaCidade()">
+                                        <option value="" selected>SELECIONE</option>
+                                        <option ng-repeat="cid in cidades" ng-selected="cid.codCidade == empresaSelecionada.codCidade" value="{{cid.codCidade}}">{{cid.nome}}</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="codBairro" class="col-sm-2 control-label">Bairro</label>
+                                <div class="col-md-5 col-xs-12">
+                                    <select name="codBairro" id="codBairro" required class="form-control" ng-model="empresaSelecionada.codBairro">
+                                        <option value="" selected>SELECIONE</option>
+                                        <option ng-repeat="bair in bairros" value="{{bair.codBairro}}">{{bair.nome}}</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="logradouro" class="col-sm-2 control-label">Logradouro</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="logradouro" required name="logradouro" class="form-control" ng-model="empresaSelecionada.logradouro" maxlength="400" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numero" class="col-sm-2 control-label">Número</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="numero" required name="numero" class="form-control" ng-model="empresaSelecionada.numero" maxlength="40" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="complemento" class="col-sm-2 control-label">Complemento</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="complemento" name="complemento" class="form-control" ng-model="empresaSelecionada.complemento" maxlength="400" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefone" class="col-sm-2 control-label">Telefone</label>
+                                <div class="col-sm-3">
+                                    <input type="text" autocomplete="off" required id="telefone" name="telefone" class="form-control" ng-model="empresaSelecionada.telefone" maxlength="15" onkeypress="mascara(this, mtel)" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="col-sm-2 control-label">E-mail</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="email" name="email" class="form-control" ng-model="empresaSelecionada.email" maxlength="200" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="facebook" class="col-sm-2 control-label">Facebook</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="facebook" name="facebook" class="form-control" ng-model="empresaSelecionada.facebook" maxlength="200" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div id="divCheckAtivo" class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-2">
+                                    <div class="checkbox">
+                                        <label class="control-label"><input type="checkbox" id="empresaAtiva" name="empresaAtiva" ng-model="empresaSelecionada.empresaAtiva" />Ativa</label>
+                                    </div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarEmpresa()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('#botaoSelecionarLogo').click(function () {
+        $("#inputLogo").trigger('click');
+    });
+
+    $("#inputLogo").change(function () {
+        $('#txtArquivoLogo').text(this.value.replace(/C:\\fakepath\\/i, ''))
+    });
+
+    $('#botaoSelecionarBgPublica').click(function () {
+        $("#inputBgPublica").trigger('click');
+    });
+
+    $("#inputBgPublica").change(function () {
+        $('#txtArquivoBgPublica').text(this.value.replace(/C:\\fakepath\\/i, ''))
+    });
+
+    $('#botaoSelecionarBgAutenticado').click(function () {
+        $("#inputBgAutenticado").trigger('click');
+    });
+
+    $("#inputBgAutenticado").change(function () {
+        $('#txtArquivoBgAutenticado').text(this.value.replace(/C:\\fakepath\\/i, ''))
+    });
+</script>

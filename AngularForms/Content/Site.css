@@ -18,7 +18,12 @@
 }
 
 
-
+.teste {
+    background-color: #74de90;
+    color: #2e8738;
+    border-color: #b6f0a8;
+    border-top-color: #c1e11b;
+}
 
 
 div.auto-complete-container {
@@ -75,39 +80,24 @@ body {
     padding-bottom: 70px;
 }
 
-.navbar-inverse {
-    background-color: #D8C078;
-    /*background-image: url('img/menu_background.jpg');*/
-    border-color: #ffffff;
-    border: none;
+.navbar-inverse .navbar-collapse ul a {
+    color: #000000;
 }
-
-
-    .navbar-inverse .navbar-collapse ul a {
-        color: #000000;
-    }
 
 .casaAberta {
     font-weight: bold;
     background: #57ce4e;
 }
 
-.casaFechada {
-    font-weight: bold;
-    background: #D89000;
+.lojaSelecionada {
+    background-color: #ddd !important;
+    font-weight: bold !important;
 }
 
-
-
-
-.panel-info > .panel-heading {
-    color: #807718;
-    background-color: #F0D8A8;
-    border-color: #807718;
-}
-
-.panel-info {
-    border-color: #807718;
+.lojaMenu {
+    border: 1px solid !important;
+    padding: 5px;
+    background-color: white !important;
 }
 
 
@@ -119,32 +109,12 @@ body {
     border-color: #ffffff;
 }
 
-    .navbar-inverse .navbar-toggle.collapsed {
-        border-color: #ffffff;
-    }
-
-.navbar-inverse .navbar-collapse .dropdown ul {
-    background-color: #D8C078;
-    /*background-image: url('img/menu_background.jpg');*/
-}
-
-ul.nav.navbar-nav .dropdown.open .dropdown-toggle {
-    background-color: #807718;
+.navbar-inverse .navbar-toggle.collapsed {
+    border-color: #ffffff;
 }
 
 .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
     color: #000000;
-}
-
-.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a {
-}
-
-.divider {
-    border-top: 1px solid #F0F0D8;
-}
-
-.navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a:hover {
-    background-color: #F0D8A8;
 }
 
 .btn-sq-lg {
@@ -343,14 +313,6 @@ ul.nav.navbar-nav .dropdown.open .dropdown-toggle {
         transition: .4s;
     }
 
-input:checked + .slider {
-    background-color: #D89000;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #D89000;
-}
-
 input:checked + .slider:before {
     -webkit-transform: translateX(18px);
     -ms-transform: translateX(18px);
@@ -386,20 +348,14 @@ a, a:hover {
     z-index: 1;
 }
 
-    .nav-1.nav-bottom {
-        bottom: 0;
-        font-size: 0.8em;
-        border-top: 3px solid #807718;
+    .nav-1.nav-bottom li {
+        padding: 0;
     }
 
-        .nav-1.nav-bottom li {
-            padding: 0;
-        }
-
-        .nav-1.nav-bottom .icon-nav-bottom {
-            font-size: 2.8em;
-            color: red !important;
-        }
+    .nav-1.nav-bottom .icon-nav-bottom {
+        font-size: 2.8em;
+        color: red !important;
+    }
 
 /* $Nav Tab */
 .nav-tabs.nav-tabs-1 > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
@@ -438,25 +394,12 @@ a, a:hover {
         transform: scale(1);
     }
 
-/* $Background */
-.bg-1 {
-    background: #D8C078;
-}
 
 .btn-4 {
     color: #fff;
     padding: 5px 0;
     display: block;
 }
-
-    .btn-4:hover, .btn-4-active {
-        color: #000000;
-        background: #fff;
-        text-decoration: none;
-        border-top: 0px solid #807718;
-        margin-top: -6px;
-        padding: 8.5px 0;
-    }
 
 .icon-login:before {
     content: "\e903";
@@ -493,10 +436,10 @@ a, a:hover {
 }
 
     /**
- * An element with .dndPlaceholder class will be
- * added to the dnd-list while the user is dragging
- * over it.
- */
+* An element with .dndPlaceholder class will be
+* added to the dnd-list while the user is dragging
+* over it.
+*/
     .multiDemo ul[dnd-list] .dndPlaceholder {
         background-color: #ddd;
         display: block;
@@ -512,15 +455,6 @@ a, a:hover {
         margin-bottom: -1px;
         padding: 10px 15px;
     }
-
-        /**
- * Show selected elements in green
- */
-        .multiDemo ul[dnd-list] li.selected {
-            background-color: #807718;
-            color: white;
-        }
-
 
 
 

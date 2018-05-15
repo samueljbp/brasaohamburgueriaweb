@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity;
 @using BrasaoHamburgueria.Web.Repository;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -12,9 +13,15 @@
     var tempoMedioEspera = ParametroRepository.GetTempoMedioEspera();
     var imprimeComandaCozinha = ParametroRepository.GetImprimeComandaCozinha();
     var portaImpressoraCozinha = ParametroRepository.GetPortaImpressoraCozinha();
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
 }
 <script src="~/app/GerenciarPedidosForm/gpController.js"></script>
-<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@tempoMedioEspera', @imprimeComandaCozinha.ToString().ToLower(), '@portaImpressoraCozinha.ToString()')" class="centro">
+<div ng-controller="gpController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@tempoMedioEspera', @imprimeComandaCozinha.ToString().ToLower(), '@portaImpressoraCozinha.ToString()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <form role="form" id="formEntregador" class="form-inline">
         @Html.Partial("~/Views/Pedido/_ModalSelecionaEntregador.cshtml")
@@ -26,7 +33,22 @@
     <audio id="play" src="~/Content/sounds/beep.wav"></audio>
     <form role="form" id="formPedido" class="form-inline">
         <div>
-            <h4>Gerenciar pedidos</h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>Gerenciar pedidos</h4>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <div class="form-group">
+                        <div>
+                            <label for="codEmpresa" class="control-label">Empresa</label>
+                            <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="filtros.codEmpresa" ng-change="getPedidosPendentes(false, true)">
+                                <option value="" selected>TODAS</option>
+                                <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <hr />
             <div class="row" style="margin-bottom: 10px">
                 <div class="col-sm-3">
@@ -70,6 +92,9 @@
                                             Nº
                                         </th>
                                         <th class="text-left">
+                                            Empresa
+                                        </th>
+                                        <th class="text-left">
                                             Externo
                                         </th>
                                         <th class="text-left">
@@ -96,27 +121,15 @@
                                         <th>
 
                                         </th>
-                                        <th>
-
-                                        </th>
-                                        <th>
-
-                                        </th>
-                                        <th>
-
-                                        </th>
-                                        <th>
-
-                                        </th>
-                                        <th>
-
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="ped in pedidos">
                                         <td class="text-left">
                                             {{ped.codPedido}}
+                                        </td>
+                                        <td class="text-left">
+                                            {{ped.nomeEmpresa}}
                                         </td>
                                         <td class="text-left">
                                             <span ng-if="ped.pedidoExterno">Sim</span>
@@ -149,40 +162,46 @@
                                             {{ped.descricaoFormaPagamento}}
                                         </td>
                                         <td class="text-right">
-                                            <button type="button" class="btn btn-default btn-sm" title="Visualizar detalhes" ng-click="visualizaPedido(ped)">
-                                                <span class=" glyphicon glyphicon-list" aria-hidden="true">
-                                                </span>
-                                            </button>
-                                        </td>
-                                        <td class="text-right">
-                                            <button type="button" class="btn btn-default btn-sm" title="Reimprimir comanda e cupons de produção" ng-click="imprimePedido(ped)">
-                                                <span class=" glyphicon glyphicon-print" aria-hidden="true">
-                                                </span>
-                                            </button>
-                                        </td>
-                                        <td class="text-right">
-                                            <button type="button" class="btn btn-default btn-sm" title="Alterar pedido" ng-click="alteraPedido(ped)">
-                                                <span class=" glyphicon glyphicon-edit" aria-hidden="true">
-                                                </span>
-                                            </button>
-                                        </td>
-                                        <td class="text-right">
-                                            <button type="button" class="btn btn-danger btn-sm" title="Cancelar pedido" ng-click="cancelaPedido(ped)">
-                                                <span class=" glyphicon glyphicon-remove" aria-hidden="true">
-                                                </span>
-                                            </button>
-                                        </td>
-                                        <td class="text-right">
-                                            <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar status" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 0 || ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
-                                                <span ng-class="determinaEstiloBotao(ped, 'I')" aria-hidden="true">
-                                                </span>
-                                            </button>
-                                        </td>
-                                        <td class="text-right">
-                                            <button type="button" class="btn btn-default btn-sm" title="Finalizar" ng-click="finalizaPedido(ped)" ng-if="ped.situacao == 4">
-                                                <span class=" glyphicon glyphicon-ok" aria-hidden="true">
-                                                </span>
-                                            </button>
+                                            <div class="row" style="width: 99%">
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Cancelar pedido" ng-click="cancelaPedido(ped)">
+                                                        <span class=" glyphicon glyphicon-remove" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <button type="button" ng-class="determinaEstiloBotao(ped, 'B')" title="Avançar status" ng-click="avancarPedido(ped)" ng-if="ped.situacao == 0 || ped.situacao == 1 || ped.situacao == 2 || ped.situacao == 3">
+                                                        <span ng-class="determinaEstiloBotao(ped, 'I')" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-default btn-sm" title="Finalizar" ng-click="finalizaPedido(ped)" ng-if="ped.situacao == 4">
+                                                        <span class=" glyphicon glyphicon-ok" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="width: 99%; margin-top: 5px">
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-default btn-sm" title="Visualizar detalhes" ng-click="visualizaPedido(ped)">
+                                                        <span class=" glyphicon glyphicon-list" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-default btn-sm" title="Reimprimir comanda e cupons de produção" ng-click="imprimePedido(ped)">
+                                                        <span class=" glyphicon glyphicon-print" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <button type="button" class="btn btn-default btn-sm" title="Alterar pedido" ng-click="alteraPedido(ped)">
+                                                        <span class=" glyphicon glyphicon-edit" aria-hidden="true">
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

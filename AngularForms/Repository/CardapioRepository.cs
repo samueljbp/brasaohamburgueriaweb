@@ -39,17 +39,13 @@ namespace BrasaoHamburgueria.Web.Repository
                     }).FirstOrDefault();
         }
 
-        public List<ClasseItemCardapioViewModel> GetCardapio()
+        public List<ClasseItemCardapioViewModel> GetCardapio(int? codEmpresa)
         {
 
             var retorno = _contexto.Classes
                 .Include(c => c.Itens)
                 .Include(c => c.Itens.Select(i => i.Classe))
                 .Include(c => c.Itens.Select(i => i.Complemento))
-                //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas))
-                //.Include(c => c.Itens.Select(i => i.ObservacoesPermitidas.Select(o => o.ObservacaoProducao)))
-                //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos))
-                //.Include(c => c.Itens.Select(i => i.ExtrasPermitidos.Select(e => e.OpcaoExtra)))
                 .ToList()
                 .Where(c => c.Itens.Where(a => a.Ativo).Count() > 0)
                 .Select(c =>
@@ -59,7 +55,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     DescricaoClasse = c.DescricaoClasse,
                     Imagem = c.Imagem,
                     OrdemExibicao = c.OrdemExibicao,
-                    Itens = c.Itens.Select(i =>
+                    Itens = c.Itens.Where(i => (i.CodEmpresa != null ? i.CodEmpresa : codEmpresa) == codEmpresa && i.Ativo).Select(i =>
                         new ItemCardapioViewModel
                         {
                             CodItemCardapio = i.CodItemCardapio,
@@ -67,10 +63,6 @@ namespace BrasaoHamburgueria.Web.Repository
                             Nome = i.Nome,
                             Preco = i.Preco,
                             Ativo = i.Ativo,
-                            /*ObservacoesPermitidas = (i.ObservacoesPermitidas != null ?
-                                i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList() : null),
-                            ExtrasPermitidos = (i.ExtrasPermitidos != null ?
-                                i.ExtrasPermitidos.Select(e => new OpcaoExtraViewModel { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }).ToList() : null),*/
                             Complemento = (i.Complemento != null ?
                                 new ComplementoItemCardapioViewModel
                                 {
@@ -84,6 +76,7 @@ namespace BrasaoHamburgueria.Web.Repository
             var promocoesAtivas = (from promos in _contexto.PromocoesVenda.Include(p => p.ClassesAssociadas).Include(p => p.ItensAssociados).Include(p => p.DiasAssociados)
                                    where promos.PromocaoAtiva && promos.DataHoraInicio <= DateTime.Now && promos.DataHoraFim >= DateTime.Now
                                    && promos.DiasAssociados.Select(d => d.DiaSemana).Contains(numDiaHoje)
+                                   && (promos.CodEmpresa != null ? promos.CodEmpresa : codEmpresa) == codEmpresa
                                    select promos).ToList();
 
             if (promocoesAtivas != null && promocoesAtivas.Count > 0)
@@ -139,7 +132,7 @@ namespace BrasaoHamburgueria.Web.Repository
             }
 
             CadastrosRepository cadRep = new CadastrosRepository();
-            var combosDB = cadRep.GetCombosDB(true);
+            var combosDB = cadRep.GetCombosDB(true, codEmpresa);
 
             if (combosDB != null && combosDB.Where(c => c.Ativo).Count() > 0)
             {

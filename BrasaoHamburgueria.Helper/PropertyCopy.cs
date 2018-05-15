@@ -92,7 +92,7 @@ namespace BrasaoHamburgueria.Helper
 
         internal static void Copy(TSource source, TTarget target)
         {
-            if (initializationException != null)
+            if (initializationException != null && !PropertyCopy.IgnoreExceptions)
             {
                 throw initializationException;
             }
@@ -136,36 +136,37 @@ namespace BrasaoHamburgueria.Helper
                 PropertyInfo targetProperty = typeof(TTarget).GetProperty(sourceProperty.Name);
                 if (targetProperty == null)
                 {
-                    hasException = true;
-                    if (!PropertyCopy.IgnoreExceptions)
-                    {
-                        throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " + typeof(TTarget).FullName);
-                    }
+                    //if (!PropertyCopy.IgnoreExceptions)
+                    //{
+                    //    hasException = true;
+                    //    throw new ArgumentException("Property " + sourceProperty.Name + " is not present and accessible in " + typeof(TTarget).FullName);
+                    //}
+                    continue;
                 }
 
                 if (!targetProperty.CanWrite)
                 {
-                    hasException = true;
                     if (!PropertyCopy.IgnoreExceptions)
                     {
+                        hasException = true;
                         throw new ArgumentException("Property " + sourceProperty.Name + " is not writable in " + typeof(TTarget).FullName);
                     }
                 }
 
                 if ((targetProperty.GetSetMethod().Attributes & MethodAttributes.Static) != 0)
                 {
-                    hasException = true;
                     if (!PropertyCopy.IgnoreExceptions)
                     {
+                        hasException = true;
                         throw new ArgumentException("Property " + sourceProperty.Name + " is static in " + typeof(TTarget).FullName);
                     }
                 }
 
                 if (!targetProperty.PropertyType.IsAssignableFrom(sourceProperty.PropertyType))
                 {
-                    hasException = true;
                     if (!PropertyCopy.IgnoreExceptions)
                     {
+                        hasException = true;
                         throw new ArgumentException("Property " + sourceProperty.Name + " has an incompatible type in " + typeof(TTarget).FullName);
                     }
                 }
