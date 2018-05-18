@@ -38,6 +38,15 @@ namespace BrasaoHamburgueria.Model
         public string CorSecundaria { get; set; }
         public string CorPrincipalContraste { get; set; }
         public string CorDestaque { get; set; }
+        public string TextoInstitucional { get; set; }
+
+        public List<ImagemInstitucionalViewModel> ImagensInstitucionais { get; set; }
+    }
+
+    public class ImagemInstitucionalViewModel
+    {
+        public string Imagem { get; set; }
+        public string ImagemMini { get; set; }
     }
 
     public class EstadoViewModel
@@ -148,6 +157,9 @@ namespace BrasaoHamburgueria.Model
 
         [Column("FACEBOOK")]
         public string Facebook { get; set; }
+
+        [Column("TEXTO_INSTITUCIONAL")]
+        public string TextoInstitucional { get; set; }
 
         [Column("LOGOMARCA")]
         public string Logomarca { get; set; }

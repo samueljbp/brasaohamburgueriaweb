@@ -19,6 +19,7 @@
         inicializaUploaderLogo();
         inicializaUploaderFundoPublico();
         inicializaUploaderFundoAutenticado();
+        inicializaUploaderImagensInstitucionais();
 
         // options - if a list is given then choose one of the items. The first item in the list will be the default
         $scope.colorPickerOptions = {
@@ -300,6 +301,58 @@
 
     }
 
+    function inicializaUploaderImagensInstitucionais() {
+
+        var uploaderImagensInstitucionais = $scope.uploaderImagensInstitucionais = new FileUploader({
+            url: urlBase + 'Cadastros/UploadImagemInstitucional',
+            removeAfterUpload: true,
+            queueLimit: 10
+        });
+
+        uploaderImagensInstitucionais.filters.push({
+            name: 'imageFilter',
+            fn: function (item /*{File|FileLikeObject}*/, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                var size = item.size;
+                return ('|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1) && size < 1000000;
+            }
+        });
+
+        // CALLBACKS
+
+        uploaderImagensInstitucionais.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+            console.info('onWhenAddingFileFailed', item, filter, options);
+            $scope.mensagem.informacao = "Arquivo não permitido. Permitidos arquivos |jpg|png|jpeg|bmp|gif| e com tamanho de até 1000kb.";
+        };
+        uploaderImagensInstitucionais.onAfterAddingFile = function (fileItem) {
+            console.info('onAfterAddingFile', fileItem);
+            fileItem.formData.push($scope.empresaSelecionada);
+        };
+        uploaderImagensInstitucionais.onErrorItem = function (fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+
+            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (status != '' ? status : 'Erro desconhecido.');
+            $window.scrollTo(0, 0);
+        };
+        uploaderImagensInstitucionais.onCompleteItem = function (fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+
+            if (response.succeeded) {
+
+                $scope.mensagem.sucesso = 'Imagem enviada com sucesso.';
+                $window.scrollTo(0, 0);
+                $scope.empresaSelecionada.imagensInstitucionais = response.data;
+            } else {
+
+                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (response.errors[0] ? response.errors[0] : 'erro desconhecido');
+                $window.scrollTo(0, 0);
+
+            }
+
+        };
+
+    }
+
     $scope.selecionaEstado = function () {
 
         $scope.cidades = {};
@@ -496,11 +549,60 @@
 
     }
 
+    $scope.removerImagemInstitucional = function (imagem) {
+
+        $ngBootbox.confirm('Confirma a exclusão da imagem?')
+            .then(function () {
+
+
+                $scope.promiseRemoverImagem = $http({
+                    method: 'POST',
+                    url: urlBase + 'Cadastros/RemoverImagemInstitucional',
+                    data: { empresa: $scope.empresaSelecionada, imagem: imagem },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $scope.antiForgeryToken
+                    }
+                }).then(function (success) {
+                    var retorno = genericSuccess(success);
+
+                    if (retorno.succeeded) {
+
+                        $scope.mensagem.sucesso = 'Imagem removida com sucesso.';
+
+                        $.each($scope.empresaSelecionada.imagensInstitucionais, function (index, value) {
+                            if (value != null && value.imagem != null && value.imagem == imagem) {
+                                $scope.empresaSelecionada.imagensInstitucionais.splice(index, 1);
+                            }
+                        });
+
+                        $scope.empresaSelecionada.logomarca = null;
+                        $scope.empresaSelecionada.logomarcaMini = null;
+
+                    }
+                    else {
+                        $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+                        $window.scrollTo(0, 0);
+                    }
+
+                }).catch(function (error) {
+                    $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+                    $window.scrollTo(0, 0);
+                });
+
+
+            }, function () {
+                //console.log('Confirm dismissed!');
+            });
+
+    }
+
     $scope.modalAlteracao = function (empresa) {
         $('#formGravarEmpresa').validator('destroy').validator();
         $scope.uploaderLogo.clearQueue();
         $scope.uploaderBgPublico.clearQueue();
         $scope.uploaderBgAutenticado.clearQueue();
+        $scope.uploaderImagensInstitucionais.clearQueue();
 
         $scope.empresaSelecionada = empresa;
 
@@ -530,6 +632,7 @@
         $scope.uploaderLogo.clearQueue();
         $scope.uploaderBgPublico.clearQueue();
         $scope.uploaderBgAutenticado.clearQueue();
+        $scope.uploaderImagensInstitucionais.clearQueue();
 
         $scope.empresaSelecionada = {};
         $scope.empresaSelecionada.cnpj = '';

@@ -10,6 +10,10 @@
 }
 @{
     var lojas = SessionData.Empresas;
+    foreach(var l in lojas)
+    {
+        l.TextoInstitucional = "";
+    }
     var codLojaSelecilnada = SessionData.CodLojaSelecionada;
     var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
     {
@@ -69,6 +73,59 @@
         }
 
     .containerAAA:hover .buttonAAA {
+        opacity: 1;
+    }
+
+
+
+
+    .containerBBB {
+        position: relative;
+        width: 80px;
+        height: 100%;
+    }
+
+    .overlayBBB {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .containerBBB:hover .overlayBBB {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .imgBBB {
+        position: absolute;
+        width: 80px;
+        left: 0;
+    }
+
+    .buttonBBB {
+        position: absolute;
+        width: 80px;
+        left: 0;
+        top: 40%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+
+        .buttonBBB a {
+            width: 80px;
+            padding: 13px 48px;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .containerBBB:hover .buttonBBB {
         opacity: 1;
     }
 
@@ -194,6 +251,42 @@
     }
 
         #botaoSelecionarBgAutenticado:hover {
+            background-color: #449d44;
+        }
+
+
+
+    #txtArquivoImagensInstitucionais {
+        width: 400px;
+        height: 35px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 13px;
+        line-height: 25px;
+        text-indent: 10px;
+        pointer-events: none;
+    }
+
+    #botaoSelecionarImagensInstitucionais {
+        cursor: pointer;
+        display: block;
+        width: 30px;
+        background-color: #5cb85c;
+        height: 35px;
+        color: white;
+        position: absolute;
+        right: 0;
+        top: -1px;
+        font-size: 11px;
+        line-height: 25px;
+        text-align: center;
+        -webkit-transition: 500ms all;
+        -moz-transition: 500ms all;
+        transition: 500ms all;
+    }
+
+        #botaoSelecionarImagensInstitucionais:hover {
             background-color: #449d44;
         }
 </style>
@@ -509,6 +602,103 @@
                                 </div>
                             </div>
 
+                            <div class="form-group" ng-show="empresaSelecionada.codEmpresa > 0">
+                                <label for="inputImagensInstitucionais" class="col-sm-2 control-label">Imagens institucionais</label>
+                                <div class="col-sm-2">
+
+                                    <div class="divTextoLogo">
+                                        <input type="file" id="inputImagensInstitucionais" multiple nv-file-select uploader="uploaderImagensInstitucionais" /> <span id='txtArquivoImagensInstitucionais'></span>
+                                        <span id='botaoSelecionarImagensInstitucionais' title="Enviar nova imagem">...</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="row">
+                                        <div class="col-sm-2" ng-repeat="img in empresaSelecionada.imagensInstitucionais">
+                                            <div class="containerBBB">
+                                                <img src="~/{{img.imagemMini}}" title="~/{{img.imagemMini}}" class="img-thumbnail" />
+                                                <div class="overlayBBB"></div>
+                                                <div class="buttonBBB">
+                                                    <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagemInstitucional(img.imagem)">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+
+                                        @*<div class="containerAAA" ng-show="empresaSelecionada.imagemBackgroundAutenticada != null && uploaderImagensInstitucionais.queue.length == 0">
+                        <img src="~/{{empresaSelecionada.imagemBackgroundAutenticadaMini}}" alt="{{empresaSelecionada.imagemBackgroundAutenticadaMini}}" class="img-thumbnail" />
+                        <div class="overlayAAA"></div>
+                        <div class="buttonAAA">
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagemFundoAutenticado()">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </div>
+                    </div>*@
+
+                                        <table class="table" ng-show="uploaderImagensInstitucionais.queue.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Imagem</th>
+                                                    <th width="15%" ng-show="uploaderImagensInstitucionais.isHTML5">Tamanho</th>
+                                                    <th width="20%" ng-show="uploaderImagensInstitucionais.isHTML5">Progresso</th>
+                                                    <th width="15%">Status</th>
+                                                    <th width="20%">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in uploaderImagensInstitucionais.queue">
+                                                    <td>
+                                                        <div ng-show="uploaderImagensInstitucionais.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                    </td>
+                                                    <td ng-show="uploaderImagensInstitucionais.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                    <td ng-show="uploaderImagensInstitucionais.isHTML5">
+                                                        <div class="progress" style="margin-bottom: 0;">
+                                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                    </td>
+                                                    <td nowrap>
+                                                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                            <span class="glyphicon glyphicon-upload"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                            <span class="glyphicon glyphicon-ban-circle"></span>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <div class="progress" style="">
+                                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploaderImagensInstitucionais.progress + '%' }"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <button type="button" class="btn btn-success btn-s" ng-click="uploaderImagensInstitucionais.uploadAll()" ng-disabled="!uploaderImagensInstitucionais.getNotUploadedItems().length">
+                                                            <span class="glyphicon glyphicon-upload"></span> Enviar todas
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor principal</label>
                                 <div class="col-sm-8">
@@ -537,6 +727,14 @@
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor destaque</label>
                                 <div class="col-sm-8">
                                     <color-picker ng-model="empresaSelecionada.corDestaque" options="colorPickerOptions" />
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="textoInstitucional" class="col-sm-2 control-label">Texto institucional</label>
+                                <div class="col-sm-8">
+                                    <textarea rows="4" cols="50" required id="textoInstitucional" name="textoInstitucional" class="form-control" ng-model="empresaSelecionada.textoInstitucional" maxlength="4000"></textarea>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -717,5 +915,13 @@
 
     $("#inputBgAutenticado").change(function () {
         $('#txtArquivoBgAutenticado').text(this.value.replace(/C:\\fakepath\\/i, ''))
+    });
+
+    $('#botaoSelecionarImagensInstitucionais').click(function () {
+        $("#inputImagensInstitucionais").trigger('click');
+    });
+
+    $("#inputImagensInstitucionais").change(function () {
+        $('#txtArquivoImagensInstitucionais').text(this.value.replace(/C:\\fakepath\\/i, ''))
     });
 </script>

@@ -12,6 +12,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Configuration;
 using BrasaoHamburgueria.Helper;
+using System.IO;
 
 namespace BrasaoHamburgueria.Web.Repository
 {
@@ -29,6 +30,47 @@ namespace BrasaoHamburgueria.Web.Repository
 
             imagem = serverPath + fileMiniUrl.Replace(@"/", @"\");
             System.IO.File.Delete(imagem);
+        }
+
+        private void FillImagensEmpresa(List<EmpresaViewModel> empresas, string serverPath)
+        {
+            //var serverPath = @"C:\Users\sjbp\source\repos\brasaohamburgueriaweb\AngularForms\";
+            var imgPath = System.Configuration.ConfigurationManager.AppSettings["CaminhoImagensEmpresa"].ToString();
+
+            foreach (var empresa in empresas)
+            {
+                var fullPath = serverPath + imgPath + empresa.CodEmpresa + @"\";
+
+                var imagens = new List<ImagemInstitucionalViewModel>();
+
+                if (!Directory.Exists(fullPath))
+                {
+                    Directory.CreateDirectory(fullPath);
+                    return;
+                }
+
+                var files = Directory.GetFiles(fullPath);
+                foreach (var file in files.Where(x => x.Contains("mini")))
+                {
+                    ImagemInstitucionalViewModel img = new ImagemInstitucionalViewModel();
+                    img.ImagemMini = file;
+                    imagens.Add(img);
+                }
+
+                foreach (var img in imagens)
+                {
+                    var aux = img.ImagemMini.Split('_');
+                    var numero = aux[aux.Length - 1].Split('.')[0];
+                    var file = files.Where(x => x.Contains("img_empresa_" + numero + ".")).FirstOrDefault();
+                    img.Imagem = file;
+
+                    img.Imagem = imgPath.Replace(@"\", @"/") + empresa.CodEmpresa + @"/" + img.Imagem.Split('\\')[img.Imagem.Split('\\').Length - 1];
+                    img.ImagemMini = imgPath.Replace(@"\", @"/") + empresa.CodEmpresa + @"/" + img.ImagemMini.Split('\\')[img.ImagemMini.Split('\\').Length - 1];
+                }
+
+                empresa.ImagensInstitucionais = imagens;
+            }
+
         }
 
         public string GravarImagem(HttpPostedFileBase file, string serverPath, string imgPath, string fileName, int maxSize)
@@ -223,6 +265,63 @@ namespace BrasaoHamburgueria.Web.Repository
             return retorno;
         }
 
+        public List<ImagemInstitucionalViewModel> GravarImagemInstitucional(HttpPostedFileBase file, string serverPath, int codEmpresa)
+        {
+            var retorno = new List<ImagemInstitucionalViewModel>();
+
+            try
+            {
+                List<EmpresaViewModel> emps = new List<EmpresaViewModel>();
+                var emp = new EmpresaViewModel();
+                emp.CodEmpresa = codEmpresa;
+                emps.Add(emp);
+                FillImagensEmpresa(emps, serverPath);
+                var imagens = emps[0].ImagensInstitucionais;
+
+                var imgNumber = 1;
+                if (imagens != null && imagens.Count > 0)
+                {
+                    imgNumber = imagens.Count + 1;
+                }
+
+                GravarImagem(file, serverPath, ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString() + @"empresas\" + codEmpresa + @"\", "img_empresa_" + imgNumber, 500000);
+
+                List<EmpresaViewModel> empresas = AsyncHelpers.RunSync<List<EmpresaViewModel>>(() => this.GetEmpresas());
+                FillImagensEmpresa(empresas, serverPath);
+
+                retorno = empresas.Where(e => e.CodEmpresa == codEmpresa).FirstOrDefault().ImagensInstitucionais;
+
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retorno;
+        }
+
+        public void RemoverImagemInstitucionalEmpresa(string serverPath, EmpresaViewModel empresa, string arquivo)
+        {
+            try
+            {
+                var imagemMini = empresa.ImagensInstitucionais.Where(i => i.Imagem == arquivo).FirstOrDefault().ImagemMini;
+
+                RemoverImagem(serverPath, arquivo, imagemMini);
+
+                SessionData.RefreshParam(BrasaoHamburgueria.Web.Helpers.SessionData.Empresas);
+
+                _contexto.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<List<EstadoViewModel>> GetEstados()
         {
             var lista = await (
@@ -288,6 +387,7 @@ namespace BrasaoHamburgueria.Web.Repository
                         empresaAlterar.CorPrincipal = empresa.CorPrincipal;
                         empresaAlterar.CorPrincipalContraste = empresa.CorPrincipalContraste;
                         empresaAlterar.CorSecundaria = empresa.CorSecundaria;
+                        empresaAlterar.TextoInstitucional = empresa.TextoInstitucional;
                         empresaAlterar.Email = empresa.Email;
                         empresaAlterar.EmpresaAtiva = empresa.EmpresaAtiva;
                         empresaAlterar.Facebook = empresa.Facebook;
@@ -344,6 +444,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     empresaIncluir.CorPrincipal = empresa.CorPrincipal;
                     empresaIncluir.CorPrincipalContraste = empresa.CorPrincipalContraste;
                     empresaIncluir.CorSecundaria = empresa.CorSecundaria;
+                    empresaIncluir.TextoInstitucional = empresa.TextoInstitucional;
                     empresaIncluir.Email = empresa.Email;
                     empresaIncluir.EmpresaAtiva = empresa.EmpresaAtiva;
                     empresaIncluir.Facebook = empresa.Facebook;
@@ -373,7 +474,7 @@ namespace BrasaoHamburgueria.Web.Repository
                 from emps in _contexto.Empresas
                 join bairros in _contexto.Bairros on emps.CodBairro equals bairros.CodBairro
                 join cidades in _contexto.Cidades on bairros.CodCidade equals cidades.CodCidade
-                where  SessionData.EmpresasInt.Contains(emps.CodEmpresa)
+                where SessionData.EmpresasInt.Contains(emps.CodEmpresa)
                 select new EmpresaViewModel
                 {
                     CodEmpresa = emps.CodEmpresa,
@@ -400,6 +501,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     CorSecundaria = emps.CorSecundaria,
                     CorPrincipalContraste = emps.CorPrincipalContraste,
                     CorDestaque = emps.CorDestaque,
+                    TextoInstitucional = emps.TextoInstitucional,
                     EhFilial = (emps.CodEmpresaMatriz == null),
                     EmpresaAtiva = emps.EmpresaAtiva
                 }
@@ -422,6 +524,8 @@ namespace BrasaoHamburgueria.Web.Repository
                     item.ImagemBackgroundAutenticadaMini = item.ImagemBackgroundAutenticada.Replace("img_bg_autenticada", "mini-img_bg_autenticada");
                 }
             }
+
+            FillImagensEmpresa(lista, HttpContext.Current.Server.MapPath("~").ToString());
 
             return lista;
         }
@@ -505,21 +609,21 @@ namespace BrasaoHamburgueria.Web.Repository
             return await _contexto.Entregadores.Include(e => e.Empresa)
                 .Where(o => (o.CodEmpresa != null ? o.CodEmpresa : codEmpresa) == codEmpresa && (SessionData.EmpresasInt.Contains(o.CodEmpresa != null ? o.CodEmpresa.Value : 0)))
                 .OrderBy(o => o.CodEntregador).Select(o => new EntregadorViewModel
-            {
-                CodEntregador = o.CodEntregador,
-                Nome = o.Nome,
-                Sexo = o.Sexo,
-                CPF = o.CPF,
-                Email = o.Email,
-                TelefoneCelular = o.TelefoneCelular,
-                TelefoneFixo = o.TelefoneFixo,
-                EnderecoCompleto = o.EnderecoCompleto,
-                Observacao = o.Observacao,
-                OrdemAcionamento = o.OrdemAcionamento,
-                ValorPorEntrega = o.ValorPorEntrega,
-                CodEmpresa = o.CodEmpresa,
-                NomeEmpresa = o.Empresa.NomeFantasia
-            }).ToListAsync();
+                {
+                    CodEntregador = o.CodEntregador,
+                    Nome = o.Nome,
+                    Sexo = o.Sexo,
+                    CPF = o.CPF,
+                    Email = o.Email,
+                    TelefoneCelular = o.TelefoneCelular,
+                    TelefoneFixo = o.TelefoneFixo,
+                    EnderecoCompleto = o.EnderecoCompleto,
+                    Observacao = o.Observacao,
+                    OrdemAcionamento = o.OrdemAcionamento,
+                    ValorPorEntrega = o.ValorPorEntrega,
+                    CodEmpresa = o.CodEmpresa,
+                    NomeEmpresa = o.Empresa.NomeFantasia
+                }).ToListAsync();
         }
 
         public async Task<EntregadorViewModel> GravarEntregador(EntregadorViewModel entregador, String modoCadastro)

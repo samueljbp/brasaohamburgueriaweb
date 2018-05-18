@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity;
 @using BrasaoHamburgueria.Model;
+@using BrasaoHamburgueria.Web.Helpers;
 @functions{
     public string GetAntiForgeryToken()
     {
@@ -7,6 +8,18 @@
         AntiForgery.GetTokens(null, out cookieToken, out formToken);
         return cookieToken + ":" + formToken;
     }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    //var lojaSelecionada = lojas.Where(c => c.CodEmpresa == codLojaSelecilnada).FirstOrDefault();
+    var _rep = new BrasaoHamburgueria.Web.Repository.CadastrosRepository();
+    var empresas = BrasaoHamburgueria.Helper.AsyncHelpers.RunSync<List<EmpresaViewModel>>(() => _rep.GetEmpresas());
+    var lojaSelecionada = empresas.Where(c => c.CodEmpresa == codLojaSelecilnada).FirstOrDefault();
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
 }
 <style>
     body {
@@ -25,51 +38,21 @@
     }
 </style>
 <div class="centro">
-    <h3>Conheça a nossa casa</h3>
-    <hr />
-    <p>Estamos localizados no coração de Cataguases, na Av Astolfo Dutra, 535 em um casarão cheio de charme e história.</p>
-    <p>Temos um ambiente moderno e aconchegante, pensado para proporcionar aos nossos clientes conforto e qualidade de atendimento. Nossa decoração tem inspiração musical e cada ambiente representa um gênero de música.</p>
-    <p>Para a alegria dos papais e dos pequenos, temos um espaço Kids super divertido. Temos também área externa para fumantes, com mesas no nosso charmoso jardim com vista para a avenida.</p>
-    <p><b>Confira abaixo algumas fotos!</b></p>
-    <h4 class="text-warning tituloSecaoImagem">Fachada</h4>
+    @Html.Raw(HttpUtility.HtmlDecode(lojaSelecionada.TextoInstitucional))
+    <h4 class="text-warning tituloSecaoImagem">Fotos</h4>
     <hr class="linhaImagem" />
     <div class="row">
         <div class="col-sm-12">
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada.jpg" />
+            @foreach(var img in lojaSelecionada.ImagensInstitucionais)
+            {
+                <a href="#" class="pop">
+                <img src="~/@img.ImagemMini" class="img-thumbnail" />
+                <input type="hidden" value="~@img.Imagem" />
             </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada1.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada1.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada7.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada7.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada2.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada2.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada3.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada3.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada4.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada4.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada5.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada5.jpg" />
-            </a>
-            <a href="#" class="pop">
-                <img src="~/Content/img/institucional/mini-fachada6.jpg" class="img-thumbnail" />
-                <input type="hidden" value="~/Content/img/institucional/fachada6.jpg" />
-            </a>
+            }
         </div>
     </div>
-    <h4 class="text-warning tituloSecaoImagem">Bar</h4>
+    @*<h4 class="text-warning tituloSecaoImagem">Bar</h4>
     <hr class="linhaImagem" />
     <div class="row">
         <div class="col-sm-12">
@@ -224,7 +207,7 @@
                 <input type="hidden" value="~/Content/img/institucional/equipe1.jpg" />
             </a>
         </div>
-    </div>
+    </div>*@
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

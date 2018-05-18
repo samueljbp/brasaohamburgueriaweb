@@ -190,8 +190,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
-        [Authorize(Roles = Constantes.ROLE_COZINHA)]
+        [Authorize]
         [HttpPost]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AvancarPedido(PedidoViewModel pedido)

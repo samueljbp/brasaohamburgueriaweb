@@ -124,7 +124,9 @@
 
             if (retorno.succeeded) {
 
-                $scope.pedidos.push(retorno.data);
+                if (retorno.data != null) {
+                    $scope.pedidos.push(retorno.data);
+                }
 
             }
             else {

@@ -172,6 +172,49 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [HttpPost]
+        public async Task<JsonResult> UploadImagemInstitucional(HttpPostedFileBase file)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                NameValueCollection nvc = Request.Form;
+                var codEmpresa = Convert.ToInt32(nvc["codEmpresa"].ToString());
+                result.data = _rep.GravarImagemInstitucional(file, Server.MapPath("~"), codEmpresa);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemoverImagemInstitucional(EmpresaViewModel empresa, string imagem)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                _rep.RemoverImagemInstitucionalEmpresa(Server.MapPath("~").ToString(), empresa, imagem);
+
+                result.Succeeded = true;
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [AllowAnonymous]
         public async Task<JsonResult> GetEstados()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -193,6 +236,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetCidades(string siglaEstado)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -214,6 +258,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetBairros(int? codCidade)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -235,6 +280,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetEmpresas()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -282,6 +328,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         #endregion
 
         #region Forma de pagamento
+        [AllowAnonymous]
         public async Task<JsonResult> GetFormasPagamento()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -305,6 +352,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         #endregion
 
         #region Bandeira de cartão
+        [AllowAnonymous]
         public async Task<JsonResult> GetBandeirasCartao()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -334,6 +382,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetEntregadores()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -406,6 +455,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetCombos()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -477,6 +527,8 @@ namespace BrasaoHamburgueria.Web.Controllers
         {
             return View();
         }
+
+        [AllowAnonymous]
         public async Task<JsonResult> GetPromocoesVenda()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -498,6 +550,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetTiposAplicacaoDesconto()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -519,6 +572,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetDiasSemana()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -646,6 +700,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetItensCardapioByNome(string chave)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -667,6 +722,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetItensCardapio()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -781,6 +837,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetParametrosSistema()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -853,6 +910,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetImpressorasProducao()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -924,6 +982,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetClassesItemCardapio()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -1035,6 +1094,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetOpcoesExtra()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -1105,6 +1165,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<JsonResult> GetObservacoes()
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
