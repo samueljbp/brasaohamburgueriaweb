@@ -16,10 +16,10 @@ namespace BrasaoHamburgueria.Web.Repository
         private BrasaoContext _contexto = new BrasaoContext();
 
         #region Horário de funcionamento
-        public async Task<List<FuncionamentoEstabelecimentoViewModel>> GetHorariosFuncionamento(int codEmpresa)
+        public async Task<List<FuncionamentoEstabelecimentoViewModel>> GetHorariosFuncionamento(int codEmpresa, bool ehAdmin)
         {
             var retorno = await _contexto.FuncionamentosEstabelecimento.Include(e => e.Empresa)
-                .Where(o => o.CodEmpresa == codEmpresa && (SessionData.EmpresasInt.Contains(o.CodEmpresa)))
+                .Where(o => o.CodEmpresa == codEmpresa && ((SessionData.EmpresasInt.Contains(o.CodEmpresa)) || ehAdmin))
                 .OrderBy(o => o.DiaSemana)
                 .Select(o => new FuncionamentoEstabelecimentoViewModel
             {

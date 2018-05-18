@@ -179,6 +179,11 @@ namespace BrasaoHamburgueria.Web.Helpers
 
                 HttpContext.Current.Session.Add("Empresas", empsDb);
 
+                foreach(var e in empsDb)
+                {
+                    e.TextoInstitucional = "";
+                }
+
                 return empsDb;
             }
         }

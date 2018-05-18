@@ -28,7 +28,8 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             try
             {
-                var opcoes = await _rep.GetHorariosFuncionamento(SessionData.CodLojaSelecionada);
+                var ehAdmin = HttpContext.User.IsInRole(Constantes.ROLE_ADMIN);
+                var opcoes = await _rep.GetHorariosFuncionamento(SessionData.CodLojaSelecionada, ehAdmin);
 
                 result.data = opcoes;
 
