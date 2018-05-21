@@ -1,0 +1,32 @@
+﻿<div class="form-group">
+    <label for="estadoModel" class="col-sm-2 control-label">Estado</label>
+    <div class="col-md-5 col-xs-12">
+        <select name="estadoModel" id="estadoModel" required class="form-control" ng-model="estadoModel" ng-change="selecionaEstado()">
+            <option value="" selected>SELECIONE</option>
+            <option ng-repeat="est in estadosModel" value="{{est.sigla}}">{{est.nome}}</option>
+        </select>
+        <div class="help-block with-errors"></div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="cidadeModel" class="col-sm-2 control-label">Cidade</label>
+    <div class="col-md-5 col-xs-12">
+        <select name="cidadeModel" id="cidadeModel" required class="form-control" ng-model="cidadeModel" ng-change="selecionaCidade()">
+            <option value="" selected>SELECIONE</option>
+            <option ng-repeat="cid in cidadesModel" value="{{cid.codCidade}}">{{cid.nome}}</option>
+        </select>
+        <div class="help-block with-errors"></div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="bairroModel" class="col-sm-2 control-label">Bairro</label>
+    <div class="col-md-5 col-xs-12">
+        <select name="bairroModel" id="bairroModel" required class="form-control" ng-model="bairroModel">
+            <option value="" selected>SELECIONE</option>
+            <option ng-repeat="bair in bairrosModel" value="{{bair.codBairro}}">{{bair.nome}}</option>
+        </select>
+        <div class="help-block with-errors"></div>
+    </div>
+</div>

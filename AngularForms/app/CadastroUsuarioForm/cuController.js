@@ -8,6 +8,8 @@
             informacao: ''
         }
 
+        $scope.gatilhoModel = 0;
+
         $scope.empresas = {};
         if (empresasJson != '') {
             $scope.empresas = JSON.parse(empresasJson);
@@ -181,6 +183,14 @@
                 $scope.usuario = response.data;
                 if ($scope.usuario.codEmpresaPreferencial > 0) {
                     $scope.usuario.codEmpresaPreferencial = $scope.usuario.codEmpresaPreferencial.toString();
+                }
+
+                if ($scope.usuario.codCidade != null) {
+                    $scope.usuario.codCidade = $scope.usuario.codCidade.toString();
+                }
+
+                if ($scope.usuario.codBairro != null) {
+                    $scope.usuario.codBairro = $scope.usuario.codBairro.toString();
                 }
 
             }, function (error) {

@@ -59,25 +59,25 @@ namespace BrasaoHamburgueria.Web.Repository
         {
             BrasaoContext _contexto = new BrasaoContext();
 
-            var parCasaAberta = _contexto.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CASA_ABERTA).FirstOrDefault();
+            var empresa = _contexto.Empresas.Where(e => e.CodEmpresa == SessionData.CodLojaSelecionada).FirstOrDefault();
 
-            if (parCasaAberta != null)
+            if (empresa != null)
             {
-                parCasaAberta.ValorParametro = (aberta ? "1" : "0");
+                empresa.CasaAberta = (aberta ? "1" : "0");
 
                 await _contexto.SaveChangesAsync();
 
-                SessionData.RefreshParam(SessionData.ParametrosSistema);
+                SessionData.RefreshParam(SessionData.Empresas);
             }
         }
 
         public static bool CasaAberta()
         {
-            var parCasaAberta = SessionData.ParametrosSistema.Where(p => p.CodParametro == CodigosParametros.COD_PARAMETRO_CASA_ABERTA).FirstOrDefault();
+            var empresa = SessionData.Empresas.Where(e => e.CodEmpresa == SessionData.CodLojaSelecionada).FirstOrDefault();
 
-            if (parCasaAberta != null)
+            if (empresa != null)
             {
-                var casaAberta = Convert.ToInt32(parCasaAberta.ValorParametro);
+                var casaAberta = Convert.ToInt32(empresa.CasaAberta);
 
                 if (casaAberta <= 0)
                 {

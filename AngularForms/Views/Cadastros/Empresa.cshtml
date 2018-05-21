@@ -294,7 +294,6 @@
 <div ng-controller="cempController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
     @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
     <div cg-busy="{promise:promiseGetEmpresas,backdrop:false,delay:10,minDuration:1000}"></div>
-    <div cg-busy="{promise:promiseGetEstados,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseRemoverImagem,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseGravarEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
     <div cg-busy="{promise:promiseExcluirEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
@@ -790,38 +789,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="estado" class="col-sm-2 control-label">Estado</label>
-                                <div class="col-md-5 col-xs-12">
-                                    <select name="estado" id="estado" required class="form-control" ng-model="empresaSelecionada.estado" ng-change="selecionaEstado()">
-                                        <option value="" selected>SELECIONE</option>
-                                        <option ng-repeat="est in estados" value="{{est.sigla}}">{{est.nome}}</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="codCidade" class="col-sm-2 control-label">Cidade</label>
-                                <div class="col-md-5 col-xs-12">
-                                    <select name="codCidade" id="codCidade" required class="form-control" ng-model="empresaSelecionada.codCidade" ng-change="selecionaCidade()">
-                                        <option value="" selected>SELECIONE</option>
-                                        <option ng-repeat="cid in cidades" ng-selected="cid.codCidade == empresaSelecionada.codCidade" value="{{cid.codCidade}}">{{cid.nome}}</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="codBairro" class="col-sm-2 control-label">Bairro</label>
-                                <div class="col-md-5 col-xs-12">
-                                    <select name="codBairro" id="codBairro" required class="form-control" ng-model="empresaSelecionada.codBairro">
-                                        <option value="" selected>SELECIONE</option>
-                                        <option ng-repeat="bair in bairros" value="{{bair.codBairro}}">{{bair.nome}}</option>
-                                    </select>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
+                            <ng-localizacao gatilho-model="gatilhoModel" estado-model="empresaSelecionada.estado" estados-model="estados" cidade-model="empresaSelecionada.codCidade" cidades-model="cidades" bairro-model="empresaSelecionada.codBairro" bairros-model="bairros" mensagem-model="mensagem"></ng-localizacao>
 
                             <div class="form-group">
                                 <label for="logradouro" class="col-sm-2 control-label">Logradouro</label>

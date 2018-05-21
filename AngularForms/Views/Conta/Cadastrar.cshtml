@@ -146,19 +146,29 @@
             <fieldset>
                 <legend>Endereço</legend>
 
-                <div class="form-group">
-                    <label for="estado" class="col-sm-2 control-label">Estado</label>
-                    <div class="col-sm-3 col-md-2">
-                        <input type="text" readonly id="estado" name="estado" class="form-control" value="MG" ng-model="usuario.estado" />
-                    </div>
-                </div>
+                <ng-localizacao gatilho-model="gatilhoModel" estado-model="usuario.estado" estados-model="estados" cidade-model="usuario.codCidade" cidades-model="cidades" bairro-model="usuario.codBairro" bairros-model="bairros" mensagem-model="mensagem"></ng-localizacao>
 
-                <div class="form-group">
-                    <label for="cidade" class="col-sm-2 control-label">Cataguases</label>
-                    <div class="col-sm-4 col-md-3">
-                        <input type="text" readonly id="cidade" name="cidade" class="form-control" value="CATAGUASES" ng-model="usuario.cidade" />
-                    </div>
-                </div>
+                @*<div class="form-group">
+            <label for="estado" class="col-sm-2 control-label">Estado</label>
+            <div class="col-sm-3 col-md-2">
+                <input type="text" readonly id="estado" name="estado" class="form-control" value="MG" ng-model="usuario.estado" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cidade" class="col-sm-2 control-label">Cataguases</label>
+            <div class="col-sm-4 col-md-3">
+                <input type="text" readonly id="cidade" name="cidade" class="form-control" value="CATAGUASES" ng-model="usuario.cidade" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="bairro" class="col-sm-2 control-label">Bairro</label>
+            <div class="col-sm-6">
+                <input type="text" required id="bairro" name="bairro" class="form-control" ng-model="usuario.bairro" maxlength="50" />
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>*@
 
                 <div class="form-group">
                     <label for="logradouro" class="col-sm-2 control-label">Logradouro</label>
@@ -180,14 +190,6 @@
                     <label for="complemento" class="col-sm-2 control-label">Complemento</label>
                     <div class="col-sm-6">
                         <input type="text" required id="complemento" name="complemento" class="form-control" ng-model="usuario.complemento" maxlength="50" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="bairro" class="col-sm-2 control-label">Bairro</label>
-                    <div class="col-sm-6">
-                        <input type="text" required id="bairro" name="bairro" class="form-control" ng-model="usuario.bairro" maxlength="50" />
-                        <div class="help-block with-errors"></div>
                     </div>
                 </div>
 

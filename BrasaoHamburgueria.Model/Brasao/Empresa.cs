@@ -39,6 +39,7 @@ namespace BrasaoHamburgueria.Model
         public string CorPrincipalContraste { get; set; }
         public string CorDestaque { get; set; }
         public string TextoInstitucional { get; set; }
+        public string CasaAberta { get; set; }
 
         public List<ImagemInstitucionalViewModel> ImagensInstitucionais { get; set; }
     }
@@ -189,6 +190,10 @@ namespace BrasaoHamburgueria.Model
         [Required]
         [Column("EMPRESA_ATIVA")]
         public bool EmpresaAtiva { get; set; }
+
+        [Required]
+        [Column("CASA_ABERTA")]
+        public string CasaAberta { get; set; }
 
         public virtual Bairro Bairro { get; set; }
 

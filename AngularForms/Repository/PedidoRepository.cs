@@ -358,13 +358,11 @@ namespace BrasaoHamburgueria.Web.Repository
 
                     if (!ped.RetirarNaCasa)
                     {
-                        ped.BairroEntrega = pedidoViewModel.DadosCliente.Bairro;
-                        ped.CidadeEntrega = pedidoViewModel.DadosCliente.Cidade;
+                        ped.CodBairro = pedidoViewModel.DadosCliente.CodBairro;
                         ped.ComplementoEntrega = pedidoViewModel.DadosCliente.Complemento;
                         ped.LogradouroEntrega = pedidoViewModel.DadosCliente.Logradouro;
                         ped.NumeroEntrega = pedidoViewModel.DadosCliente.Numero;
                         ped.ReferenciaEntrega = pedidoViewModel.DadosCliente.Referencia;
-                        ped.UFEntrega = pedidoViewModel.DadosCliente.Estado;
                     }
 
                     if (pedidoViewModel.CodPedido <= 0)
@@ -576,6 +574,8 @@ namespace BrasaoHamburgueria.Web.Repository
             return await _contexto.Pedidos.Where(p => new List<int> { (int)SituacaoPedidoEnum.AguardandoConfirmacao, (int)SituacaoPedidoEnum.Confirmado, (int)SituacaoPedidoEnum.EmPreparacao, (int)SituacaoPedidoEnum.EmProcessoEntrega }.Contains(p.CodSituacao) && p.CodEmpresa == (codEmpresa != null ? codEmpresa : p.CodPedido) && p.Usuario == (loginUsuario != "" ? loginUsuario : p.Usuario) && p.TelefoneCliente == (telefone != "" ? telefone : p.TelefoneCliente) && (!p.PedidoExterno || telefone != ""))
                 .Include(c => c.Itens)
                 .Include(c => c.Empresa)
+                .Include(c => c.Bairro)
+                .Include(c => c.Bairro.Cidade)
                 .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.BandeiraCartaoRef)
                 .Include(c => c.Itens.Select(i => i.Observacoes))
@@ -606,10 +606,12 @@ namespace BrasaoHamburgueria.Web.Repository
                     TempoMedioEspera = tempoMedioEspera,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
-                        Bairro = p.BairroEntrega,
-                        Cidade = p.CidadeEntrega,
+                        CodBairro = p.CodBairro,
+                        NomeBairro = p.Bairro.Nome,
+                        CodCidade = p.Bairro.CodCidade,
+                        NomeCidade = p.Bairro.Cidade.Nome,
                         Complemento = p.ComplementoEntrega,
-                        Estado = p.UFEntrega,
+                        Estado = p.Bairro.Cidade.Estado,
                         Logradouro = p.LogradouroEntrega,
                         Nome = p.NomeCliente,
                         Numero = p.NumeroEntrega,
@@ -702,6 +704,8 @@ namespace BrasaoHamburgueria.Web.Repository
                 .Include(s => s.Empresa)
                 .Include(s => s.Entregador)
                 .Include(s => s.Itens)
+                .Include(s => s.Bairro)
+                .Include(s => s.Bairro.Cidade)
                 .Include(s => s.FormaPagamentoRef)
                 .Include(s => s.BandeiraCartaoRef)
                 .Include(s => s.Itens.Select(i => i.ItemCardapio))
@@ -740,10 +744,12 @@ namespace BrasaoHamburgueria.Web.Repository
                     PortaImpressaoComandaEntrega = impressoraComanda,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
-                        Bairro = p.BairroEntrega,
-                        Cidade = p.CidadeEntrega,
+                        CodBairro = p.Bairro.CodBairro,
+                        NomeBairro = p.Bairro.Nome,
+                        NomeCidade = p.Bairro.Cidade.Nome,
+                        CodCidade = p.Bairro.CodCidade,
                         Complemento = p.ComplementoEntrega,
-                        Estado = p.UFEntrega,
+                        Estado = p.Bairro.Cidade.Estado,
                         Logradouro = p.LogradouroEntrega,
                         Nome = p.NomeCliente,
                         Numero = p.NumeroEntrega,

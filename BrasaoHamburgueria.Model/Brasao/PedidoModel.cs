@@ -65,11 +65,13 @@ namespace BrasaoHamburgueria.Model
         public String Sexo { get; set; }
         public String DataNascimento { get; set; }
         public String Estado { get; set; }
-        public String Cidade { get; set; }
+        public int CodCidade { get; set; }
+        public string NomeCidade { get; set; }
+        public int CodBairro { get; set; }
+        public string NomeBairro { get; set; }
         public String Logradouro { get; set; }
         public String Numero { get; set; }
         public String Complemento { get; set; }
-        public String Bairro { get; set; }
         public String Referencia { get; set; }
         public bool Salvar { get; set; }
         public bool ClienteNovo { get; set; }
@@ -214,18 +216,11 @@ namespace BrasaoHamburgueria.Model
         [Column("COD_BANDEIRA_CARTAO")]
         public int? CodBandeiraCartao { get; set; }
 
-        //[Required]
-        //[Column("FORMA_PAGAMENTO")]
-        //public string FormaPagamento { get; set; }
-
         [Column("TROCO_PARA")]
         public double? TrocoPara { get; set; }
 
         [Column("TROCO")]
         public double? Troco { get; set; }
-
-        //[Column("BANDEIRA_CARTAO")]
-        //public string BandeiraCartao { get; set; }
 
         [Required]
         [Column("VALOR_TOTAL")]
@@ -239,11 +234,10 @@ namespace BrasaoHamburgueria.Model
         [Column("TELEFONE_CLIENTE")]
         public string TelefoneCliente { get; set; }
 
-        [Column("UF_ENTREGA")]
-        public string UFEntrega { get; set; }
-
-        [Column("CIDADE_ENTREGA")]
-        public string CidadeEntrega { get; set; }
+        [Required]
+        [ForeignKey("Bairro")]
+        [Column("COD_BAIRRO")]
+        public int CodBairro { get; set; }
 
         [Column("LOGRADOURO_ENTREGA")]
         public string LogradouroEntrega { get; set; }
@@ -253,9 +247,6 @@ namespace BrasaoHamburgueria.Model
 
         [Column("COMPLEMENTO_ENTREGA")]
         public string ComplementoEntrega { get; set; }
-
-        [Column("BAIRRO_ENTREGA")]
-        public string BairroEntrega { get; set; }
 
         [Column("REFERENCIA_ENTREGA")]
         public string ReferenciaEntrega { get; set; }
@@ -293,6 +284,8 @@ namespace BrasaoHamburgueria.Model
         public virtual List<HistoricoPedido> Historicos { get; set; }
 
         public virtual Empresa Empresa { get; set; }
+
+        public virtual Bairro Bairro { get; set; }
     }
 
     [Table("ITEM_PEDIDO")]

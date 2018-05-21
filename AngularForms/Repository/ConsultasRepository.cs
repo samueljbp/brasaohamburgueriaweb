@@ -128,6 +128,8 @@ namespace BrasaoHamburgueria.Web.Repository
                             (p.CodPedido == (codPedido != null ? codPedido.Value : p.CodPedido)) &&
                             ((p.CodSituacao >= 2 && p.CodSituacao < 9 && codPedido == null) || codPedido != null))
                 .Include(s => s.Empresa)
+                .Include(s => s.Bairro)
+                .Include(s => s.Bairro.Cidade)
                 .Include(s => s.Situacao)
                 .Include(s => s.Itens)
                 .Include(s => s.FormaPagamentoRef)
@@ -151,10 +153,12 @@ namespace BrasaoHamburgueria.Web.Repository
                     PedidoExterno = p.PedidoExterno,
                     DadosCliente = new DadosClientePedidoViewModel
                     {
-                        Bairro = p.BairroEntrega,
-                        Cidade = p.CidadeEntrega,
+                        CodBairro = p.Bairro.CodBairro,
+                        NomeBairro = p.Bairro.Nome,
+                        NomeCidade = p.Bairro.Cidade.Nome,
+                        CodCidade = p.Bairro.CodCidade,
                         Complemento = p.ComplementoEntrega,
-                        Estado = p.UFEntrega,
+                        Estado = p.Bairro.Cidade.Estado,
                         Logradouro = p.LogradouroEntrega,
                         Nome = p.NomeCliente,
                         Numero = p.NumeroEntrega,

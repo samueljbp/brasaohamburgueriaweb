@@ -159,7 +159,7 @@ namespace BrasaoHamburgueria.Web.Controllers
                 usu.Nome = model.Nome;
                 usu.Telefone = model.Telefone;
                 usu.Estado = "MG";
-                usu.Cidade = "Cataguases";
+                //usu.Cidade = "Cataguases";
 
                 user.DadosUsuario = usu;
 
@@ -290,7 +290,7 @@ namespace BrasaoHamburgueria.Web.Controllers
                 usuario.ClienteNovo = true;
                 usuario.Telefone = telefone;
                 usuario.Estado = "MG";
-                usuario.Cidade = "Cataguases";
+                //usuario.Cidade = "Cataguases";
             }
 
             result.data = usuario;

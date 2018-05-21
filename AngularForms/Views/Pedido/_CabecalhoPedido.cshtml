@@ -16,15 +16,16 @@
 </div>
 <div class="row">
     <div class="col-sm-4">
-        Cidade: <strong>{{pedidoSelecionado.dadosCliente.cidade}}</strong> / <strong>{{pedidoSelecionado.dadosCliente.estado}}</strong>
+        Cidade: <strong>{{pedidoSelecionado.dadosCliente.nomeCidade}}</strong> / <strong>{{pedidoSelecionado.dadosCliente.estado}}</strong>
     </div>
     <div class="col-sm-6">
-        Bairro: <strong>{{pedidoSelecionado.dadosCliente.bairro}}</strong>
+        Bairro: <strong>{{pedidoSelecionado.dadosCliente.nomeBairro}}</strong>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
         Endereço: <strong>{{pedidoSelecionado.dadosCliente.logradouro}}</strong>, <strong>{{pedidoSelecionado.dadosCliente.numero}}</strong> - <strong>{{pedidoSelecionado.dadosCliente.complemento}}</strong>
+        <strong>{{(pedidoSelecionado.retirarNaCasa ? 'CLIENTE RETIROU NA CASA' : '')}}</strong>
     </div>
     <div class="col-sm-6">
         Referência: <strong>{{pedidoSelecionado.dadosCliente.referencia}}</strong>

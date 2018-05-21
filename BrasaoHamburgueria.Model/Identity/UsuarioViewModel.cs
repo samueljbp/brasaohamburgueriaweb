@@ -28,11 +28,13 @@ namespace BrasaoHamburgueria.Model
         public String Sexo { get; set; }
         public String DataNascimento { get; set; }
         public String Estado { get; set; }
-        public String Cidade { get; set; }
+        public int CodCidade { get; set; }
+        public string NomeCidade { get; set; }
+        public int CodBairro { get; set; }
+        public string NomeBairro { get; set; }
         public String Logradouro { get; set; }
         public String Numero { get; set; }
         public String Complemento { get; set; }
-        public String Bairro { get; set; }
         public String Referencia { get; set; }
         public bool Salvar { get; set; }
         public bool ClienteNovo { get; set; }
@@ -49,11 +51,11 @@ namespace BrasaoHamburgueria.Model
         public String Sexo { get; set; }
         public String DataNascimento { get; set; }
         public String Estado { get; set; }
-        public String Cidade { get; set; }
+        public int CodCidade { get; set; }
+        public int CodBairro { get; set; }
         public String Logradouro { get; set; }
         public String Numero { get; set; }
         public String Complemento { get; set; }
-        public String Bairro { get; set; }
         public String Referencia { get; set; }
         public int? CodEmpresaPreferencial { get; set; }
     }

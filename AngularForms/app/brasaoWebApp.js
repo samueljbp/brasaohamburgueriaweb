@@ -1,4 +1,4 @@
-﻿var brasaoWebApp = angular.module('brasaoWebApp', ['ngBootbox', 'cgBusy', 'timer', 'smart-table', 'angularFileUpload', 'autoCompleteModule', 'dndLists', 'ngCpfCnpj', 'ui.mask', 'color.picker']);
+﻿var brasaoWebApp = angular.module('brasaoWebApp', ['ngBootbox', 'cgBusy', 'timer', 'smart-table', 'angularFileUpload', 'autoCompleteModule', 'dndLists', 'ngCpfCnpj', 'ngLocalizacao', 'ui.mask', 'color.picker']);
 
 brasaoWebApp.config(['$httpProvider', function ($httpProvider) {
     //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -6,7 +6,7 @@ brasaoWebApp.config(['$httpProvider', function ($httpProvider) {
 
 brasaoWebApp.value('$', $);
 
-var urlBase = 'http://10.84.121.110:57919/';
+var urlBase = 'http://10.84.124.128:57919/';
 var urlWebAPIBase = 'http://localhost:62993/api/';
 
 brasaoWebApp.factory('noteService', ['$', '$rootScope',

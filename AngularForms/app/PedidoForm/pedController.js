@@ -107,11 +107,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 nome: '',
                 telefone: '',
                 estado: 'MG',
-                cidade: 'Cataguases',
+                codCidade: '',
                 logradouro: '',
                 numero: '',
                 complemento: '',
-                bairro: '',
+                codBairro: '',
                 referencia: '',
                 clienteNovo: false
             }
@@ -133,11 +133,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                         nome: $scope.usuario.nome,
                         telefone: $scope.usuario.telefone,
                         estado: $scope.usuario.estado,
-                        cidade: $scope.usuario.cidade,
+                        codCidade: $scope.usuario.codCidade,
                         logradouro: $scope.usuario.logradouro,
                         numero: $scope.usuario.numero,
                         complemento: $scope.usuario.complemento,
-                        bairro: $scope.usuario.bairro,
+                        codBairro: $scope.usuario.codBairro,
                         referencia: $scope.usuario.referencia,
                         clienteNovo: false
                     };
@@ -177,15 +177,17 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                             nome: $scope.usuario.nome,
                             telefone: $scope.usuario.telefone,
                             estado: $scope.usuario.estado,
-                            cidade: $scope.usuario.cidade,
+                            codCidade: $scope.usuario.codCidade.toString(),
+                            //codBairro: $scope.usuario.codBairro.toString(),
                             logradouro: $scope.usuario.logradouro,
                             numero: $scope.usuario.numero,
                             complemento: $scope.usuario.complemento,
-                            bairro: $scope.usuario.bairro,
                             referencia: $scope.usuario.referencia,
                             clienteNovo: $scope.usuario.clienteNovo,
                             salvar: $scope.usuario.salvar
                         }
+
+                        $scope.pedido.dadosCliente.codBairro = $scope.usuario.codBairro.toString();
 
                         if ($scope.usuario.id <= 0) {
                             $scope.mensagem.informacao = 'Cliente não cadastrado.';
@@ -347,11 +349,11 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 nome: '',
                 telefone: '',
                 estado: 'MG',
-                cidade: 'Cataguases',
+                codCidade: '',
                 logradouro: '',
                 numero: '',
                 complemento: '',
-                bairro: '',
+                codBairro: '',
                 referencia: ''
             },
             itens: []

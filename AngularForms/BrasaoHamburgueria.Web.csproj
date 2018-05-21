@@ -181,6 +181,8 @@
     <Content Include="app\ConsultarProdutosVendidosForm\cpvController.js" />
     <Content Include="app\Directives\CpfCnpj\ngCpfCnpj.js" />
     <Content Include="app\Directives\CpfCnpj\template.html" />
+    <Content Include="app\Directives\Localizacao\ngLocalizacao.js" />
+    <Content Include="app\Directives\Localizacao\template.html" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\ExtratoFidelidadeForm\efController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
@@ -1962,6 +1964,14 @@
     <Compile Include="Migrations\Brasao\201805151842019_TextoInstitucionalEmpresa.Designer.cs">
       <DependentUpon>201805151842019_TextoInstitucionalEmpresa.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.Designer.cs">
+      <DependentUpon>201805211209068_ControleCasaFechadaEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805211932024_CamposLocalPedido.cs" />
+    <Compile Include="Migrations\Brasao\201805211932024_CamposLocalPedido.Designer.cs">
+      <DependentUpon>201805211932024_CamposLocalPedido.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Brasao\Configuration.cs" />
     <Compile Include="Context\Brasao\BrasaoContext.cs" />
     <Compile Include="Context\Identity\IdentityContext.cs" />
@@ -1972,6 +1982,10 @@
     <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.cs" />
     <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.Designer.cs">
       <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.cs" />
+    <Compile Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.Designer.cs">
+      <DependentUpon>201805211859267_EstadoCidadeBairroTabelaUsuario.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Identity\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2069,11 +2083,20 @@
     <EmbeddedResource Include="Migrations\Brasao\201805151842019_TextoInstitucionalEmpresa.resx">
       <DependentUpon>201805151842019_TextoInstitucionalEmpresa.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.resx">
+      <DependentUpon>201805211209068_ControleCasaFechadaEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805211932024_CamposLocalPedido.resx">
+      <DependentUpon>201805211932024_CamposLocalPedido.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
       <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.resx">
       <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.resx">
+      <DependentUpon>201805211859267_EstadoCidadeBairroTabelaUsuario.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -189,7 +189,7 @@ namespace BrasaoHamburgueria.ServicosInternos.Business
                             texto += "Complemento: " + pedido.DadosCliente.Complemento;
                             texto += comandoQuebraLinha;
                         }
-                        texto += "Bairro: " + pedido.DadosCliente.Bairro;
+                        texto += "Bairro: " + pedido.DadosCliente.NomeBairro;
                         texto += comandoQuebraLinha;
                         if (!String.IsNullOrEmpty(pedido.DadosCliente.Referencia))
                         {

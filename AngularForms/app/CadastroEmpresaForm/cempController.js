@@ -8,6 +8,8 @@
             erroCnpj: true
         }
 
+        $scope.gatilhoModel = 0;
+
         $scope.empresas = {};
         if (empresasJson != '') {
             $scope.empresas = JSON.parse(empresasJson);
@@ -88,37 +90,6 @@
                 if (retorno.succeeded) {
 
                     $scope.rowCollection = retorno.data;
-
-                }
-                else {
-                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
-                    $window.scrollTo(0, 0);
-                }
-
-
-
-            }, function (error) {
-                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-                $window.scrollTo(0, 0);
-            });
-
-
-        $scope.promiseGetEstados = $http({
-            method: 'GET',
-            headers: {
-                //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            url: urlBase + 'Cadastros/GetEstados'
-        })
-            .then(function (response) {
-
-                var retorno = genericSuccess(response);
-
-                if (retorno.succeeded) {
-
-                    $scope.estados = retorno.data;
 
                 }
                 else {
@@ -353,78 +324,78 @@
 
     }
 
-    $scope.selecionaEstado = function () {
+    //$scope.selecionaEstado = function () {
 
-        $scope.cidades = {};
-        $scope.bairros = {};
+    //    $scope.cidades = {};
+    //    $scope.bairros = {};
 
-        $scope.promiseGetCidades = $http({
-            method: 'GET',
-            headers: {
-                //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            url: urlBase + "Cadastros/GetCidades?siglaEstado=" + $scope.empresaSelecionada.estado
-        })
-            .then(function (response) {
+    //    $scope.promiseGetCidades = $http({
+    //        method: 'GET',
+    //        headers: {
+    //            //'Authorization': 'Bearer ' + accesstoken,
+    //            'RequestVerificationToken': 'XMLHttpRequest',
+    //            'X-Requested-With': 'XMLHttpRequest',
+    //        },
+    //        url: urlBase + "Cadastros/GetCidades?siglaEstado=" + $scope.empresaSelecionada.estado
+    //    })
+    //        .then(function (response) {
 
-                var retorno = genericSuccess(response);
+    //            var retorno = genericSuccess(response);
 
-                if (retorno.succeeded) {
+    //            if (retorno.succeeded) {
 
-                    $scope.cidades = retorno.data;
+    //                $scope.cidades = retorno.data;
 
-                }
-                else {
-                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
-                    $window.scrollTo(0, 0);
-                }
-
-
-
-            }, function (error) {
-                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-                $window.scrollTo(0, 0);
-            });
-
-    }
-
-    $scope.selecionaCidade = function () {
-
-        $scope.bairros = {};
-
-        $scope.promiseGetBairros = $http({
-            method: 'GET',
-            headers: {
-                //'Authorization': 'Bearer ' + accesstoken,
-                'RequestVerificationToken': 'XMLHttpRequest',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-            url: urlBase + "Cadastros/GetBairros?codCidade=" + $scope.empresaSelecionada.codCidade
-        })
-            .then(function (response) {
-
-                var retorno = genericSuccess(response);
-
-                if (retorno.succeeded) {
-
-                    $scope.bairros = retorno.data;
-
-                }
-                else {
-                    $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
-                    $window.scrollTo(0, 0);
-                }
+    //            }
+    //            else {
+    //                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+    //                $window.scrollTo(0, 0);
+    //            }
 
 
 
-            }, function (error) {
-                $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
-                $window.scrollTo(0, 0);
-            });
+    //        }, function (error) {
+    //            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+    //            $window.scrollTo(0, 0);
+    //        });
 
-    }
+    //}
+
+    //$scope.selecionaCidade = function () {
+
+    //    $scope.bairros = {};
+
+    //    $scope.promiseGetBairros = $http({
+    //        method: 'GET',
+    //        headers: {
+    //            //'Authorization': 'Bearer ' + accesstoken,
+    //            'RequestVerificationToken': 'XMLHttpRequest',
+    //            'X-Requested-With': 'XMLHttpRequest',
+    //        },
+    //        url: urlBase + "Cadastros/GetBairros?codCidade=" + $scope.empresaSelecionada.codCidade
+    //    })
+    //        .then(function (response) {
+
+    //            var retorno = genericSuccess(response);
+
+    //            if (retorno.succeeded) {
+
+    //                $scope.bairros = retorno.data;
+
+    //            }
+    //            else {
+    //                $scope.mensagem.erro = 'Ocorreu uma falha durante a execução da operação com a seguinte mensagem: ' + (retorno.errors[0] ? retorno.errors[0] : 'erro desconhecido');
+    //                $window.scrollTo(0, 0);
+    //            }
+
+
+
+    //        }, function (error) {
+    //            $scope.mensagem.erro = 'Ocorreu uma falha no processamento da requisição. ' + (error.statusText != '' ? error.statusText : 'Erro desconhecido.');
+    //            $window.scrollTo(0, 0);
+    //        });
+
+    //}
 
     $scope.removerImagemLogomarca = function () {
 
@@ -620,8 +591,7 @@
             $scope.empresaSelecionada.codBairro = $scope.empresaSelecionada.codBairro.toString();
         }
 
-        $scope.selecionaEstado();
-        $scope.selecionaCidade();
+        //$scope.gatilhoModel = $scope.gatilhoModel + 1;
 
         $scope.modoCadastro = 'A';
         $('#modalGravarEmpresa').modal('show');
