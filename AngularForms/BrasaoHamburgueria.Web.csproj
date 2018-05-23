@@ -412,12 +412,6 @@
     <Content Include="bower_components\angular\angular.js" />
     <Content Include="bower_components\angular\angular.min.js" />
     <Content Include="bower_components\angular\index.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cnpj.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cnpj.min.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cpf.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cpf.min.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cpf_cnpj.js" />
-    <Content Include="bower_components\cpf_cnpj\build\cpf_cnpj.min.js" />
     <Content Include="bower_components\humanize-duration\humanize-duration.js" />
     <Content Include="bower_components\humanize-duration\LICENSE.txt" />
     <Content Include="bower_components\mobile-drag-drop\release\debug.css" />
@@ -516,11 +510,6 @@
     <Content Include="bower_components\moment\min\moment-with-locales.min.js" />
     <Content Include="bower_components\moment\min\moment.min.js" />
     <Content Include="bower_components\moment\moment.js" />
-    <Content Include="bower_components\ng-cpf-cnpj\example\angular-1.2.js" />
-    <Content Include="bower_components\ng-cpf-cnpj\example\angular-1.3.js" />
-    <Content Include="bower_components\ng-cpf-cnpj\example\example.html" />
-    <Content Include="bower_components\ng-cpf-cnpj\lib\ngCpfCnpj.js" />
-    <Content Include="bower_components\ng-cpf-cnpj\MIT-LICENSE.txt" />
     <Content Include="bower_components\tinycolor\.gitignore" />
     <Content Include="bower_components\tinycolor\demo\demo.css" />
     <Content Include="bower_components\tinycolor\demo\jquery-1.9.1.js" />
@@ -1589,12 +1578,6 @@
     <Content Include="bower_components\mobile-drag-drop\release\package.json" />
     <Content Include="bower_components\mobile-drag-drop\release\scroll-behaviour.js.map" />
     <Content Include="bower_components\mobile-drag-drop\release\scroll-behaviour.min.js.map" />
-    <Content Include="bower_components\cpf_cnpj\.bower.json" />
-    <Content Include="bower_components\cpf_cnpj\bower.json" />
-    <Content Include="bower_components\cpf_cnpj\README.md" />
-    <Content Include="bower_components\ng-cpf-cnpj\.bower.json" />
-    <Content Include="bower_components\ng-cpf-cnpj\bower.json" />
-    <Content Include="bower_components\ng-cpf-cnpj\README.md" />
     <Content Include="bower_components\angular-ui-event\.bower.json" />
     <Content Include="bower_components\angular-ui-event\.jshintrc" />
     <Content Include="bower_components\angular-ui-event\.travis.yml" />

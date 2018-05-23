@@ -284,7 +284,7 @@ namespace BrasaoHamburgueria.Web.Repository
                     imgNumber = imagens.Count + 1;
                 }
 
-                GravarImagem(file, serverPath, ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString() + @"empresas\" + codEmpresa + @"\", "img_empresa_" + imgNumber, 500000);
+                GravarImagem(file, serverPath, ConfigurationManager.AppSettings["CaminhoPadraoImagens"].ToString() + @"empresas\" + codEmpresa + @"\", "img_empresa_" + imgNumber, 1000000);
 
                 List<EmpresaViewModel> empresas = AsyncHelpers.RunSync<List<EmpresaViewModel>>(() => this.GetEmpresas());
                 FillImagensEmpresa(empresas, serverPath);

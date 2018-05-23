@@ -701,7 +701,7 @@
                             <div class="form-group">
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor principal</label>
                                 <div class="col-sm-8">
-                                    <color-picker id="aaa" ng-model="empresaSelecionada.corPrincipal" options="colorPickerOptions" event-api="eventApi" />
+                                    <color-picker ng-model="empresaSelecionada.corPrincipal" options="colorPickerOptionsPrincipal" event-api="eventApiPrincipal" />
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -709,7 +709,7 @@
                             <div class="form-group">
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor secundária</label>
                                 <div class="col-sm-8">
-                                    <color-picker ng-model="empresaSelecionada.corSecundaria" options="colorPickerOptions" />
+                                    <color-picker ng-model="empresaSelecionada.corSecundaria" options="colorPickerOptionsSecundario" event-api="eventApiSecundario" />
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -717,7 +717,7 @@
                             <div class="form-group">
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor contraste</label>
                                 <div class="col-sm-8">
-                                    <color-picker ng-model="empresaSelecionada.corPrincipalContraste" options="colorPickerOptions" />
+                                    <color-picker ng-model="empresaSelecionada.corPrincipalContraste" options="colorPickerOptionsContraste" event-api="eventApiContraste" />
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -725,7 +725,7 @@
                             <div class="form-group">
                                 <label for="razaoSocial" class="col-sm-2 control-label">Cor destaque</label>
                                 <div class="col-sm-8">
-                                    <color-picker ng-model="empresaSelecionada.corDestaque" options="colorPickerOptions" />
+                                    <color-picker ng-model="empresaSelecionada.corDestaque" options="colorPickerOptionsDestaque" event-api="eventApiDestaque" />
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>

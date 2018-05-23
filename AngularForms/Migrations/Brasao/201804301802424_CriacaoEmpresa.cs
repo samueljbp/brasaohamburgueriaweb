@@ -56,8 +56,8 @@ namespace BrasaoHamburgueria.Web.Migrations.Brasao
 
             base.Sql(@"INSERT INTO BAIRRO (COD_BAIRRO, NOME, CIDADE) VALUES (1, 'Centro', 1)");
 
-            base.Sql(@"INSERT INTO EMPRESA (COD_EMPRESA, RAZAO_SOCIAL, NOME_FANTASIA, CNPJ, COD_BAIRRO, LOGRADOURO, NUMERO, TELEFONE) VALUES 
-                    (1, 'Nome da empresa', 'Nome fantasia', '00.000.000/0000-00', 1, 'Logradouro', 'Numero', 'Telefone')");
+            base.Sql(@"INSERT INTO EMPRESA (COD_EMPRESA, RAZAO_SOCIAL, NOME_FANTASIA, CNPJ, COD_BAIRRO, LOGRADOURO, NUMERO, TELEFONE, EMPRESA_ATIVA, CASA_ABERTA) VALUES 
+                    (1, 'Nome da empresa', 'Nome fantasia', '00.000.000/0000-00', 1, 'Logradouro', 'Numero', 'Telefone', 1, 0)");
 
             AddColumn("dbo.IMPRESSORA_PRODUCAO", "COD_EMPRESA", c => c.Int());
             AddColumn("dbo.ITEM_CARDAPIO", "COD_EMPRESA", c => c.Int());

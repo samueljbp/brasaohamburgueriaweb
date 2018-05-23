@@ -24,13 +24,71 @@
         inicializaUploaderImagensInstitucionais();
 
         // options - if a list is given then choose one of the items. The first item in the list will be the default
-        $scope.colorPickerOptions = {
+        $scope.colorPickerOptionsPrincipal = {
             // html attributes
             required: true,
             disabled: false,
+            id: 'pickerCorPrincipal',
             inputClass: '',
             // validation
-            restrictToFormat: true,
+            restrictToFormat: false,
+            preserveInputFormat: true,
+            allowEmpty: false,
+            round: false,
+            swatch: true,
+            swatchPos: 'left',
+            swatchBootstrap: true,
+            // color
+            format: 'hex',
+            case: 'upper'
+        };
+
+        $scope.colorPickerOptionsSecundario = {
+            // html attributes
+            required: true,
+            disabled: false,
+            id: 'pickerCorSecundaria',
+            inputClass: '',
+            // validation
+            restrictToFormat: false,
+            preserveInputFormat: true,
+            allowEmpty: false,
+            round: false,
+            swatch: true,
+            swatchPos: 'left',
+            swatchBootstrap: true,
+            // color
+            format: 'hex',
+            case: 'upper'
+        };
+
+        $scope.colorPickerOptionsContraste = {
+            // html attributes
+            required: true,
+            disabled: false,
+            id: 'pickerCorContraste',
+            inputClass: '',
+            // validation
+            restrictToFormat: false,
+            preserveInputFormat: true,
+            allowEmpty: false,
+            round: false,
+            swatch: true,
+            swatchPos: 'left',
+            swatchBootstrap: true,
+            // color
+            format: 'hex',
+            case: 'upper'
+        };
+
+        $scope.colorPickerOptionsDestaque = {
+            // html attributes
+            required: true,
+            disabled: false,
+            id: 'pickerCorDestaque',
+            inputClass: '',
+            // validation
+            restrictToFormat: false,
             preserveInputFormat: true,
             allowEmpty: false,
             round: false,
@@ -43,25 +101,64 @@
         };
 
         // api event handlers
-        $scope.eventApi = {
+        $scope.eventApiPrincipal = {
             onChange: function (api, color, $event) {
 
                 if (!$scope.empresaSelecionada.corPrincipal.startsWith("#") && $scope.empresaSelecionada.corPrincipal != "") {
                     $scope.empresaSelecionada.corPrincipal = "#" + $scope.empresaSelecionada.corPrincipal;
                 }
+            },
+            onBlur: function (api, color, $event) {
+                $scope.empresaSelecionada.corPrincipal = $('#pickerCorPrincipal').val();
+                if (!$scope.empresaSelecionada.corPrincipal.startsWith('#')) {
+                    $scope.empresaSelecionada.corPrincipal = "#" + $scope.empresaSelecionada.corPrincipal;
+                }
+            },
+        };
+
+        $scope.eventApiSecundario = {
+            onChange: function (api, color, $event) {
 
                 if (!$scope.empresaSelecionada.corSecundaria.startsWith("#") && $scope.empresaSelecionada.corSecundaria != "") {
                     $scope.empresaSelecionada.corSecundaria = "#" + $scope.empresaSelecionada.corSecundaria;
                 }
+            },
+            onBlur: function (api, color, $event) {
+                $scope.empresaSelecionada.corSecundaria = $('#pickerCorSecundaria').val();
+                if (!$scope.empresaSelecionada.corSecundaria.startsWith('#')) {
+                    $scope.empresaSelecionada.corSecundaria = "#" + $scope.empresaSelecionada.corSecundaria;
+                }
+            },
+        };
+
+        $scope.eventApiContraste = {
+            onChange: function (api, color, $event) {
 
                 if (!$scope.empresaSelecionada.corPrincipalContraste.startsWith("#") && $scope.empresaSelecionada.corPrincipalContraste != "") {
+                    $scope.empresaSelecionada.corPrincipalContraste = "#" + $scope.empresaSelecionada.corContraste;
+                }
+            },
+            onBlur: function (api, color, $event) {
+                $scope.empresaSelecionada.corPrincipalContraste = $('#pickerCorContraste').val();
+                if (!$scope.empresaSelecionada.corPrincipalContraste.startsWith('#')) {
                     $scope.empresaSelecionada.corPrincipalContraste = "#" + $scope.empresaSelecionada.corPrincipalContraste;
                 }
+            },
+        };
+
+        $scope.eventApiDestaque = {
+            onChange: function (api, color, $event) {
 
                 if (!$scope.empresaSelecionada.corDestaque.startsWith("#") && $scope.empresaSelecionada.corDestaque != "") {
                     $scope.empresaSelecionada.corDestaque = "#" + $scope.empresaSelecionada.corDestaque;
                 }
-            }
+            },
+            onBlur: function (api, color, $event) {
+                $scope.empresaSelecionada.corDestaque = $('#pickerCorDestaque').val();
+                if (!$scope.empresaSelecionada.corDestaque.startsWith('#')) {
+                    $scope.empresaSelecionada.corDestaque = "#" + $scope.empresaSelecionada.corDestaque;
+                }
+            },
         };
 
         // I: inclusão, A: alteração
