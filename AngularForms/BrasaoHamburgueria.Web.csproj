@@ -183,6 +183,7 @@
     <Content Include="app\Directives\CpfCnpj\template.html" />
     <Content Include="app\Directives\Localizacao\ngLocalizacao.js" />
     <Content Include="app\Directives\Localizacao\template.html" />
+    <Content Include="app\EmpresaUsuarioForm\euController.js" />
     <Content Include="app\EsqueciSenhaForm\esController.js" />
     <Content Include="app\ExtratoFidelidadeForm\efController.js" />
     <Content Include="app\GerenciarPedidosForm\gpController.js" />
@@ -1807,6 +1808,7 @@
     <Content Include="Views\Consultas\TaxasEntrega.cshtml" />
     <Content Include="Views\Pedido\_ModalHistoricoPedido.cshtml" />
     <Content Include="Views\Cadastros\Empresa.cshtml" />
+    <Content Include="Views\Conta\EmpresaUsuario.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

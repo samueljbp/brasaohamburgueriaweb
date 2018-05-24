@@ -16,7 +16,7 @@ using System.Security.Claims;
 namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
-    [Authorize(Roles = Constantes.ROLE_ADMIN)]
+    [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
     public class CadastrosController : Controller
     {
         private CadastrosRepository _rep = new CadastrosRepository();

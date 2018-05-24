@@ -42,7 +42,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> AbreFechaLoja(bool aberta)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

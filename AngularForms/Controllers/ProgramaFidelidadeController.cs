@@ -24,7 +24,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         private ProgramaFidelidadeRepository _rep = new ProgramaFidelidadeRepository();
 
         #region Cadastro de programa de fidelidade
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public ActionResult CadastroProgramaFidelidade()
         {
             return View();
@@ -53,6 +53,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> GravarProgramaFidelidade(ProgramaFidelidadeUsuarioViewModel prog, String modoCadastro)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -74,6 +75,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> ExcluiProgramaFidelidade(ProgramaFidelidadeUsuarioViewModel prog)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

@@ -46,6 +46,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> ExcluiFuncionamentoEstabelecimento(FuncionamentoEstabelecimentoViewModel funcionamento)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -67,6 +68,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> GravarFuncionamentoEstabelecimento(FuncionamentoEstabelecimentoViewModel funcionamento, String modoCadastro)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

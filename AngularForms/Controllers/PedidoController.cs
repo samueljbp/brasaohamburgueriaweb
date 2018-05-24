@@ -36,8 +36,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             }
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
-        [Authorize(Roles = Constantes.ROLE_COZINHA)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + "," + Constantes.ROLE_COZINHA + ", " + Constantes.ROLE_MASTER)]
         public ActionResult ProducaoCozinha()
         {
             return View("ProducaoCozinha");
@@ -53,7 +52,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return View("AcompanharPedidos");
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public ActionResult GerenciarPedidos()
         {
             return View("GerenciarPedidos");
@@ -150,7 +149,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
         [HttpPost]
         [MyValidateAntiForgeryToken]
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> AplicaDesconto(PedidoViewModel pedido)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);
@@ -169,7 +168,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
         [HttpPost]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> AlteraTempoMedioEspera(int tempo)
@@ -230,8 +229,7 @@ namespace BrasaoHamburgueria.Web.Controllers
             return new JsonNetResult { Data = result };
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
-        [Authorize(Roles = Constantes.ROLE_COZINHA)]
+        [Authorize(Roles = Constantes.ROLE_ADMIN + "," + Constantes.ROLE_COZINHA + ", " + Constantes.ROLE_MASTER)]
         public async Task<JsonResult> GetHistoricoPedido(int codPedido)
         {
             var result = new ServiceResultViewModel(true, new List<string>(), null);

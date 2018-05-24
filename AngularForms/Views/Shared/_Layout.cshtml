@@ -251,7 +251,7 @@
                     {
                         if (Request.IsAuthenticated)
                         {
-                            if (User.IsInRole(Constantes.ROLE_ADMIN))
+                            if (User.IsInRole(Constantes.ROLE_ADMIN) || User.IsInRole(Constantes.ROLE_MASTER))
                             {
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultas <span class="caret"></span></a>
@@ -273,7 +273,11 @@
                                                 <li>@Html.ActionLink("Observações de produção", "ObservacaoProducao", "Cadastros")</li>
                                                 <li>@Html.ActionLink("Opções extras", "OpcaoExtra", "Cadastros")</li>
 
-                                                <li>@Html.ActionLink("Perfil de usuário", "PerfilUsuario", "Conta")</li>
+                                                @if (User.IsInRole(Constantes.ROLE_MASTER))
+                                                {
+                                                    <li>@Html.ActionLink("Perfil de usuário", "PerfilUsuario", "Conta")</li>
+                                                    <li>@Html.ActionLink("Empresas do usuário", "EmpresaUsuario", "Conta")</li>
+                                                }
 
                                                 <li role="separator" class="divider"></li>
                                                 <li>@Html.ActionLink("Associação observação x item", "ItemCardapioObservacaoProducao", "Cadastros")</li>

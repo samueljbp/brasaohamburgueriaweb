@@ -1,0 +1,111 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoHamburgueria.Web.Helpers;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/EmpresaUsuarioForm/euController.js"></script>
+<div ng-controller="euController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseIncluirEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirEmpresa,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formEmpresa" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Empresas usuário - Manutenção</h3>
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="usuario" class="col-sm-2 control-label">Usuário</label>
+            <div class="col-sm-10">
+                <div>
+                    <input type="text"
+                           required
+                           ng-model="usuario.nome"
+                           class="form-control"
+                           placeholder="Digite parte do nome"
+                           auto-complete="autoCompleteOptions" />
+                </div>
+                <div id="dropdownParent"
+                     class="inline-auto-complete-container">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="codEmpresa" class="col-sm-2 control-label">Empresa</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="usuario.codEmpresa">
+                    <option value="" selected>TODAS</option>
+                    <option ng-repeat="empresa in empresas | orderBy:'nomeFantasia'" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10 text-left">
+                <button type="button" class="btn btn-success" ng-click="incluirEmpresa()">Incluir</button>
+            </div>
+        </div>
+
+
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="id" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="nome" width="80%"><a href="#">Nome</a></th>
+                        <th st-sort="" width="10%"></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="3">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="empresa in displayedCollection | orderBy:'codEmpresa'" ng-if="rowCollection.length > 0">
+                        <td>{{empresa.codEmpresa}}</td>
+                        <td>{{empresa.nomeFantasia}}</td>
+                        <td class="text-right">
+                            <button type="button" ng-click="confirmaExclusaoEmpresa(empresa)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </form>
+</div>

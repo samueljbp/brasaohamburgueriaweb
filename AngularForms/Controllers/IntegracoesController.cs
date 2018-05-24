@@ -12,13 +12,12 @@ using BrasaoHamburgueria.Web.Filters;
 namespace BrasaoHamburgueria.Web.Controllers
 {
     [AllowCrossSiteJsonAttribute]
-    [Authorize(Roles = Constantes.ROLE_ADMIN)]
+    [Authorize(Roles = Constantes.ROLE_ADMIN + ", " + Constantes.ROLE_MASTER)]
     public class IntegracoesController : Controller
     {
         IntegracoesRepository _rep = new IntegracoesRepository();
 
         // GET: Integracoes
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
         public ActionResult TronSolution()
         {
             return View();

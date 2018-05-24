@@ -11,12 +11,19 @@ namespace BrasaoHamburgueria.Model
         public string nome { get; set; }
     }
 
+    public class EmpresaUsuarioViewModel
+    {
+        public string CodEmpresa { get; set; }
+        public string NomeFantasia { get; set; }
+    }
+
     public class UsuarioPerfisViewModel
     {
         public string Id { get; set; }
         public String Email { get; set; }
         public String Nome { get; set; }
         public List<PerfilViewModel> Perfis { get; set; }
+        public List<EmpresaUsuarioViewModel> Empresas { get; set; }
     }
 
     public class UsuarioViewModel

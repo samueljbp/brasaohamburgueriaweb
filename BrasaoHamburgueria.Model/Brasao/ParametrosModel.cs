@@ -35,6 +35,7 @@ namespace BrasaoHamburgueria.Model
 
     public static class Constantes
     {
+        public const string ROLE_MASTER = "Master";
         public const string ROLE_ADMIN = "Administradores";
         public const string ROLE_COZINHA = "Cozinha";
         public const string ROLE_CLIENTE = "Clientes";

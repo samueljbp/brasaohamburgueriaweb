@@ -207,7 +207,7 @@ namespace BrasaoHamburgueria.Web.Controllers
                     await SignInAsync(user, model.LembrarMe);
 
                     SessionData.RefreshParam(SessionData.Empresas);
-                    
+
                     result = new { Succeeded = true, errors = new List<String>(), data = model.ReturnUrl };
                 }
                 else
@@ -255,7 +255,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             PropertyCopy.Copy(user.DadosUsuario, usuario);
             //UsuarioCopy.DBToViewModel(user.DadosUsuario, usuario);
-            
+
             return new JsonNetResult { Data = usuario };
         }
 
@@ -352,11 +352,11 @@ namespace BrasaoHamburgueria.Web.Controllers
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    result = new IdentityResult(new []{ex.Message});
+                    result = new IdentityResult(new[] { ex.Message });
                 }
-                
+
             }
             // If we got this far, something failed, redisplay form
             return Json(result, "application/json", JsonRequestBehavior.AllowGet);
@@ -427,7 +427,7 @@ namespace BrasaoHamburgueria.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                result = new { Succeeded = false, errors = new List<String>{"Dados do formulário preenchidos incorretamente"}, data = "" };
+                result = new { Succeeded = false, errors = new List<String> { "Dados do formulário preenchidos incorretamente" }, data = "" };
             }
             else
             {
@@ -467,8 +467,14 @@ namespace BrasaoHamburgueria.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
         public ActionResult PerfilUsuario()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
+        public ActionResult EmpresaUsuario()
         {
             return View();
         }
@@ -484,11 +490,30 @@ namespace BrasaoHamburgueria.Web.Controllers
 
                 var users = (from u in contexto.Users
                              where u.DadosUsuario.Nome.Contains(nome)
-                             select new UsuarioPerfisViewModel { Id = u.Id, Nome = u.DadosUsuario.Nome, Email = u.DadosUsuario.Email, Perfis = u.Roles.Select(p => new PerfilViewModel { id = p.RoleId }).ToList() }).Take(10).ToList();
+                             select new UsuarioPerfisViewModel
+                             {
+                                 Id = u.Id,
+                                 Nome = u.DadosUsuario.Nome,
+                                 Email = u.DadosUsuario.Email,
+                                 Perfis = u.Roles.Select(p => new PerfilViewModel { id = p.RoleId }).ToList(),
+                                 Empresas = u.Claims.Where(c => c.ClaimType == "EMPRESA").Select(c => new EmpresaUsuarioViewModel { CodEmpresa = c.ClaimValue }).ToList()
+                             }).Take(10).ToList();
+
+                foreach (var us in users)
+                {
+                    foreach (var emp in us.Empresas)
+                    {
+                        var empresa = SessionData.TodasEmpresas.Where(e => e.CodEmpresa.ToString() == emp.CodEmpresa).FirstOrDefault();
+                        if (empresa != null)
+                        {
+                            emp.NomeFantasia = empresa.NomeFantasia;
+                        }
+                    }
+                }
 
                 result.data = users;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Succeeded = false;
                 result.Errors.Add(ex.Message);
@@ -509,7 +534,7 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> IncluirPerfilUsuario(string idPerfil, string idUsuario)
         {
@@ -557,7 +582,53 @@ namespace BrasaoHamburgueria.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Constantes.ROLE_ADMIN)]
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> IncluirEmpresaUsuario(string codEmpresa, string idUsuario)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                var claims = UserManager.GetClaims(idUsuario);
+
+                if (claims != null && claims.Where(c => c.Value == codEmpresa && c.Type == "EMPRESA").Count() > 0)
+                {
+                    result.Succeeded = false;
+                    result.Errors.Add("O usuário já possui esta empresa em seu cadastro.");
+                }
+                else
+                {
+                    Claim claim = new Claim("EMPRESA", codEmpresa);
+                    UserManager.AddClaim(idUsuario, claim);
+
+                    claims = UserManager.GetClaims(idUsuario);
+
+                    result.data = claims.Where(c => c.Type == "EMPRESA").Select(c => new EmpresaUsuarioViewModel { CodEmpresa = c.Value }).ToList();
+
+                    foreach (var emp in result.data)
+                    {
+                        var empresa = SessionData.TodasEmpresas.Where(e => e.CodEmpresa.ToString() == emp.CodEmpresa).FirstOrDefault();
+                        if (empresa != null)
+                        {
+                            emp.NomeFantasia = empresa.NomeFantasia;
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
         [MyValidateAntiForgeryToken]
         public async Task<JsonResult> ExcluirPerfilUsuario(string idPerfil, string idUsuario)
         {
@@ -581,7 +652,44 @@ namespace BrasaoHamburgueria.Web.Controllers
                     result.data = user.Roles.ToList().Select(r => new PerfilViewModel { id = r.RoleId });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                result.Succeeded = false;
+                result.Errors.Add(ex.Message);
+            }
+
+            return new JsonNetResult { Data = result };
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Constantes.ROLE_MASTER)]
+        [MyValidateAntiForgeryToken]
+        public async Task<JsonResult> ExcluirEmpresaUsuario(string codEmpresa, string idUsuario)
+        {
+            var result = new ServiceResultViewModel(true, new List<string>(), null);
+
+            try
+            {
+                Claim claim = new Claim("EMPRESA", codEmpresa);
+                UserManager.RemoveClaim(idUsuario, claim);
+
+                var claims = UserManager.GetClaims(idUsuario);
+
+                if (claims != null && claims.Count > 0)
+                {
+                    result.data = claims.Where(c => c.Type == "EMPRESA").Select(c => new EmpresaUsuarioViewModel { CodEmpresa = c.Value }).ToList();
+
+                    foreach (var emp in result.data)
+                    {
+                        var empresa = SessionData.TodasEmpresas.Where(e => e.CodEmpresa.ToString() == emp.CodEmpresa).FirstOrDefault();
+                        if (empresa != null)
+                        {
+                            emp.NomeFantasia = empresa.NomeFantasia;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 result.Succeeded = false;
                 result.Errors.Add(ex.Message);
