@@ -59,10 +59,16 @@
             </div>
             <div class="modal-body">
                 <div cg-busy="{promise:promiseGetDadosItemCardapio,backdrop:false,delay:10,minDuration:1000}"></div>
-                <div class="row backgroundClasse">
-                    <div class="col-sm-4">
-                        <div class="dropdown" ng-if="itemCardapioSelecionado == null">
-                            <button id="dLabel" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="row backgroundClasse" ng-if="itemCardapioSelecionado == null">
+                    <div class="col-sm-4 text-left">
+                        <div>
+                            <small><strong class="text-primary">Pesquise pelo nome</strong></small><input type="text" id="pesquisaItem" name="pesquisaItem" class="form-control" ng-model="pesquisaItem.chave" ng-keyup="pesquisaItens()" maxlength="20" />
+                        </div>
+                        <div>
+                            <small><strong class="text-primary">ou</strong></small>
+                        </div>
+                        <div class="dropdown">
+                            <button id="dLabel" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-bottom: 5px; margin-top: 5px">
                                 <span id="dropdownText">{{comboClasse.descricaoClasse}}</span>
                                 <span class="caret"></span>
                             </button>
@@ -76,10 +82,6 @@
                     <div class="col-sm-8">
                         <img src="../{{classeSelecionada.imagemMini}}" alt="{{classeSelecionada.imagemMini}}" ng-show="classeSelecionada.imagem != null" style="max-width: 50%; height: auto; margin: 5px;" class="img-responsive" />
                     </div>
-                    @*<div class="col-sm-4 text-right" ng-if="itemCardapioSelecionado != null">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="cancelaInclusaoItem()">Cancelar</button>
-                            <button type="button" class="btn btn-success" ng-click="confirmaInclusaoItem()">Confirmar</button>
-                        </div>*@
                 </div>
                 <hr />
                 <h5 class="text-warning" ng-if="(itensFiltrados == null || itensFiltrados.length == 0) && comboClasse.codClasse > 0">Nenhum item encontrado para esta classe.</h5>

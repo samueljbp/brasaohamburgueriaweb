@@ -32,6 +32,17 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
                 if (retorno.succeeded) {
 
                     $scope.classes = retorno.data;
+                    $scope.todosItens = [];
+
+                    if ($scope.classes.length > 0) {
+                        $.each($scope.classes, function (index, value) {
+                            if (value != null && value.itens != null && value.itens.length > 0) {
+                                $scope.todosItens.push.apply($scope.todosItens, value.itens);
+                                //$scope.todosItens.concat(value.itens);
+                            }
+                        });
+                    }
+
                     $scope.itensFiltrados = null;
 
                 }
@@ -809,6 +820,17 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
 
     }
 
+    $scope.pesquisaItens = function () {
+
+        if ($scope.pesquisaItem.chave == '') {
+            $scope.itensFiltrados = [];
+            return;
+        }
+
+        $scope.itensFiltrados = $filter('filter')($scope.todosItens, { nome: $scope.pesquisaItem.chave });
+
+    }
+
     $scope.init = function (loginUsuario, antiForgeryToken, taxaEntrega, mostraTermosProgramaFidelidade, programaFidJson, codEmpresa) {
 
         $scope.programaFidelidade = null;
@@ -823,6 +845,8 @@ brasaoWebApp.controller('pedController', function ($scope, $http, $filter, $ngBo
         } else {
 
         }
+
+        $scope.pesquisaItem = { chave: '' };
 
         $scope.codEmpresa = codEmpresa;
 
