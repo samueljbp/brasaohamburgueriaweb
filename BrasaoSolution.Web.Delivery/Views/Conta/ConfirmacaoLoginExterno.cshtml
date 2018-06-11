@@ -1,0 +1,30 @@
+﻿<script src="~/Scripts/jquery.validate.min.js"></script>
+@model BrasaoSolution.Model.ConfirmacaoLoginExternoViewModel
+@using (Html.BeginForm("ConfirmacaoLoginExterno", "Conta", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="centro">
+        @Html.AntiForgeryToken()
+        <h4>Cadastro de usuário</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <p class="text-info">
+            Você se autenticou com sucesso com <strong>@Model.Provider</strong>.
+            Agora escolha um e-mail para que sua conta fique registrada em nosso site.
+        </p>
+        <div class="form-group">
+            @Html.HiddenFor(m => m.Provider)
+            @Html.HiddenFor(m => m.Nome)
+            @Html.HiddenFor(m => m.Telefone)
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-success" value="Registrar" />
+            </div>
+        </div>
+    </div>
+}

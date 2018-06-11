@@ -1,0 +1,143 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoSolution.Model;
+@using BrasaoSolution.Repository;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/ExtratoFidelidadeForm/efController.js"></script>
+<div ng-controller="efController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()')" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetExtratoProgramaFidelidade,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formExtrato" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Extrato do programa de fidelidade</h3>
+        <hr />
+        @if (progFidelidade != null && progFidelidade.CodProgramaFidelidade > 0 && progFidelidade.TermosAceitos != null && progFidelidade.TermosAceitos.Value)
+        {
+            var saldoDinheiro = progFidelidade.Saldo * progFidelidade.ValorDinheiroPorPontoParaResgate;
+            <div class="row">
+                <div class="col-sm-3 text-right">
+                    <h4>Nome do programa:</h4>
+                </div>
+                <div class="col-sm-3">
+                    <h4><strong>@progFidelidade.DescricaoProgramaFidelidade</strong></h4>
+                </div>
+                <div class="col-sm-3 text-right">
+                    <h4>Saldo (pontos):</h4>
+                </div>
+                <div class="col-sm-3">
+                    <h4><strong class="text-success">@progFidelidade.Saldo.Value.ToString("0.00") </strong></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 text-right">
+                    <h5>Data de inscrição:</h5>
+                </div>
+                <div class="col-sm-3">
+                    <h5><strong>@progFidelidade.DataHoraAceite.Value.ToString("dd/MM/yyyy HH:mm")</strong></h5>
+                </div>
+                <div class="col-sm-3 text-right">
+                    <h4>Saldo (R$):</h4>
+                </div>
+                <div class="col-sm-3">
+                    <h4><strong class="text-success">@saldoDinheiro.Value.ToString("C")</strong></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    
+                </div>
+                <div class="col-sm-9">
+                    <button type="button" class="btn btn-primary" ng-click="verTermosAceite()">Visualizar termos do programa</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 text-right">
+                    <h5>Início vigência:</h5>
+                </div>
+                <div class="col-sm-3">
+                    <h5><strong>@progFidelidade.InicioVigencia.ToString("dd/MM/yyyy HH:mm")</strong></h5>
+                </div>
+                <div class="col-sm-3 text-right">
+                    <h5>Término vigência:</h5>
+                </div>
+                <div class="col-sm-3">
+                    <h5><strong>@(progFidelidade.TerminoVigencia != null ? @progFidelidade.TerminoVigencia.Value.ToString("dd/MM/yyyy HH:mm") : "Indeterminado")</strong></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 text-right">
+                    <h5>Forma de pontuação:</h5>
+                </div>
+                <div class="col-sm-9">
+                    <h5>Cada real consumido adiciona <strong>@progFidelidade.PontosGanhosPorUnidadeMonetariaGasta.ToString("0.00")</strong> pontos ao saldo.</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 text-right">
+                    <h5>Forma de resgate:</h5>
+                </div>
+                <div class="col-sm-9">
+                    <h5>Cada ponto de saldo equivale a <strong>@progFidelidade.ValorDinheiroPorPontoParaResgate.ToString("C")</strong>.</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-9">
+                    <small class="text-danger">Pontuação mínima para resgate dos pontos: <strong>@progFidelidade.QuantidadeMinimaPontosParaResgate.ToString("0.00")</strong></small>
+                </div>
+            </div>
+            <div class="row" ng-if="rowCollection.length <= 0" style="margin-top: 15px">
+                <div class="col-sm-12 text-center">
+                    <small>O extrato ainda não possui nenhum lançamento.</small>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0">
+                    <thead>
+                        <tr>
+                            <th st-sort="dataHoraLancamento" width="15%"><a href="#">Data/Hora</a></th>
+                            <th st-sort="descricaoLancamento" width="45%"><a href="#">Descrição</a></th>
+                            <th st-sort="valorLancamento" width="15%"><a href="#">Lançamento</a></th>
+                            <th st-sort="saldoPosLancamento" width="15%"><a href="#">Saldo</a></th>
+                            <th st-sort="codPedido" width="10%"><a href="#">Pedido associado</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="ext in displayedCollection">
+                            <td>{{ext.dataHoraLancamento | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{ext.descricaoLancamento}}</td>
+                            <td ng-class="(ext.valorLancamento >= 0 ? 'text-success' : 'text-danger')">{{ext.valorLancamento | number : 2}}</td>
+                            <td>{{ext.saldoPosLancamento | number : 2}}</td>
+                            <td>{{ext.codPedido}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <small>No momento você não está inscrito em nenhum programa de fidelidade.</small>
+        }
+    </form>
+    @Html.Partial("~/Views/Pedido/_TermosProgramaFidelidade.cshtml", progFidelidade)
+</div>

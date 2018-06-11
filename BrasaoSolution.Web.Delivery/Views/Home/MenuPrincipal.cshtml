@@ -1,0 +1,128 @@
+﻿@using Microsoft.AspNet.Identity
+@using BrasaoSolution.Repository;
+@using BrasaoSolution.Model;
+@{
+    var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
+    var lojaSelecionada = SessionData.Empresas.Where(e => e.CodEmpresa == SessionData.CodLojaSelecionada).FirstOrDefault();
+    var nomeLojaSelecionada = "";
+    if(lojaSelecionada != null)
+    {
+        nomeLojaSelecionada = lojaSelecionada.NomeFantasia;
+    }
+}
+<style>
+    .btn-sq-lg {
+        margin: 2px;
+    }
+</style>
+<script src="~/app/MenuPrincipalForm/mpController.js"></script>
+<br />
+<div ng-controller="mpController" ng-init="init()">
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="texto-branco">Bem vindo à loja <strong class="text-primary">@nomeLojaSelecionada</strong> - O que você deseja fazer?</h4>
+            <hr />
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>
+                    <a href="~/Cardapio/Listar" class="btn btn-sq-lg btn-primary hidden-xs">
+                        <br />
+                        <i class="fa fa-list-ul fa-3x"></i>
+                        <br />
+                        Ver <br>cardápio
+                    </a>
+                    <a href="~/Cardapio/Listar" class="btn btn-sq-sm btn-primary hidden-sm hidden-md hidden-lg">
+                        <br />
+                        <i class="fa fa-list-ul fa-2x"></i>
+                        <br />
+                        Ver <br>cardápio
+                    </a>
+                    <a href="" ng-click="iniciaPedidoModoNormal()" class="btn btn-sq-lg btn-success hidden-xs">
+                        <br />
+                        <i class="fa fa-plus-square fa-3x"></i>
+                        <br />
+                        Fazer <br>pedido
+                    </a>
+                    <a href="" ng-click="iniciaPedidoModoNormal()" class="btn btn-sq-sm btn-success hidden-sm hidden-md hidden-lg">
+                        <br />
+                        <i class="fa fa-plus-square fa-2x"></i>
+                        <br />
+                        Fazer <br>pedido
+                    </a>
+                    <a href="~/Pedido/AcompanharPedido" class="btn btn-sq-lg btn-warning hidden-xs">
+                        <br />
+                        <i class="fa fa-eye fa-3x"></i>
+                        <br />
+                        Acompanhar<br>pedido
+                    </a>
+                    <a href="~/Pedido/AcompanharPedido" class="btn btn-sq-sm btn-warning hidden-sm hidden-md hidden-lg">
+                        <br />
+                        <i class="fa fa-eye fa-2x"></i>
+                        <br />
+                        Acompanhar<br>pedido
+                    </a>
+                    <a href="~/Pedido/ConsultarPedidos" class="btn btn-sq-lg btn-info hidden-xs">
+                        <br />
+                        <i class="fa fa-search fa-3x"></i>
+                        <br />
+                        Consultar<br>pedidos
+                    </a>
+                    <a href="~/Pedido/ConsultarPedidos" class="btn btn-sq-sm btn-info hidden-sm hidden-md hidden-lg">
+                        <br />
+                        <i class="fa fa-search fa-2x"></i>
+                        <br />
+                        Consultar<br>pedidos
+                    </a>
+                    @if (progFidelidade != null && progFidelidade.CodProgramaFidelidade > 0 && progFidelidade.TermosAceitos != null && progFidelidade.TermosAceitos.Value)
+                    {
+                        <a href="~/ProgramaFidelidade/Extrato" class="btn btn-sq-lg btn-default hidden-xs">
+                            <br />
+                            <i class="fa fa-handshake-o fa-3x"></i>
+                            <br />
+                            @progFidelidade.DescricaoProgramaFidelidade
+                        </a>
+                        <a href="~/ProgramaFidelidade/Extrato" class="btn btn-sq-sm btn-default hidden-sm hidden-md hidden-lg">
+                            <br />
+                            <i class="fa fa-handshake-o fa-2x"></i>
+                            <br />
+                            @progFidelidade.DescricaoProgramaFidelidade
+                        </a>
+                    }
+                    @if (User.IsInRole(Constantes.ROLE_ADMIN))
+                    {
+                        <a href="~/Pedido/GerenciarPedidos" class="btn btn-sq-lg btn-danger hidden-xs">
+                            <br />
+                            <i class="fa fa-tasks fa-3x"></i>
+                            <br />
+                            Gerenciar<br>pedidos
+                        </a>
+                        <a href="~/Pedido/GerenciarPedidos" class="btn btn-sq-sm btn-danger hidden-sm hidden-md hidden-lg">
+                            <br />
+                            <i class="fa fa-tasks fa-2x"></i>
+                            <br />
+                            Gerenciar<br>pedidos
+                        </a>
+                    }
+                    @if (User.IsInRole(Constantes.ROLE_ADMIN) || User.IsInRole(Constantes.ROLE_COZINHA))
+                    {
+                        <a href="~/Pedido/ProducaoCozinha" class="btn btn-sq-lg btn-success hidden-xs">
+                            <br />
+                            <i class="fa fa-cutlery fa-3x"></i>
+                            <br />
+                            Produção<br>pedidos
+                        </a>
+                        <a href="~/Pedido/ProducaoCozinha" class="btn btn-sq-sm btn-success hidden-sm hidden-md hidden-lg">
+                            <br />
+                            <i class="fa fa-cutlery fa-2x"></i>
+                            <br />
+                            Produção<br>pedidos
+                        </a>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

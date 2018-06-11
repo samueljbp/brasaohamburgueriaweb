@@ -1,0 +1,454 @@
+﻿@using Microsoft.AspNet.Identity
+@using BrasaoSolution.Model;
+@using BrasaoSolution.Repository;
+<!DOCTYPE html>
+@{
+    var emManutencao = ParametroRepository.GetEmManutencao();
+    var casaAberta = ParametroRepository.CasaAberta();
+    var lojas = SessionData.Empresas;
+    var todasLojas = SessionData.TodasEmpresas;
+    var lojaSelecionada = SessionData.LojaSelecionada;
+    var urlBase = @"http://" + HttpContext.Current.Request.Url.Authority;
+
+    ViewDataDictionary viewData = new ViewDataDictionary();
+    viewData.Add("EmManutencao", emManutencao);
+    viewData.Add("CasaAberta", casaAberta);
+}
+<html ng-app="brasaoWebApp">
+<head>
+    <meta http-equiv="Cache-Control" content="max-age=86400" />
+
+
+    <meta property="og:url" content="@urlBase" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@lojaSelecionada.NomeFantasia" />
+    <meta property="og:description" content="Acabei de fazer um pedido no site da @lojaSelecionada.NomeFantasia Agora é só aguardar!" />
+    <meta property="og:image" content="@urlBase@lojaSelecionada.ImagemBackgroundPublica" />
+
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106648768-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments) };
+        gtag('js', new Date());
+
+        gtag('config', 'UA-106648768-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width" />
+    <title>@lojaSelecionada.NomeFantasia</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/angular-busy.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-social.css" rel="stylesheet" />
+    <link href="~/bower_components/angular-color-picker/dist/angularjs-color-picker.min.css" rel="stylesheet" />
+    <link href="~/bower_components/angular-color-picker/dist/themes/angularjs-color-picker-bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/bower_components/angular-auto-complete/angular-auto-complete.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/validator.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-with-locales.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/ngBootbox.js"></script>
+    <script src="~/Scripts/angular-animate.min.js"></script>
+    <script src="~/Scripts/angular-busy.min.js"></script>
+    <script src="~/bower_components/humanize-duration/humanize-duration.js"></script>
+    <script src="~/bower_components/angular-timer/dist/angular-timer.min.js"></script>
+    <script src="~/Scripts/smart-table.min.js"></script>
+    <script src="~/app/util.js"></script>
+    <script src="~/Scripts/angular-file-upload.min.js"></script>
+    <script src="~/bower_components/underscore/underscore-min.js"></script>
+    <script src="~/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="~/bower_components/angular-auto-complete/angular-auto-complete.js"></script>
+    <script src="~/bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
+    <script src="~/bower_components/angular-ui-mask/dist/mask.min.js"></script>
+    <script src="~/app/Directives/CpfCnpj/ngCpfCnpj.js"></script>
+    <script src="~/app/Directives/Localizacao/ngLocalizacao.js"></script>
+    <script src="~/bower_components/tinycolor/dist/tinycolor-min.js"></script>
+    <script src="~/bower_components/angular-color-picker/dist/angularjs-color-picker.min.js"></script>
+    <script src="~/app/brasaoWebApp.js"></script>
+    <script src="~/app/NavbarForm/nbController.js"></script>
+    <style>
+        .casaFechada {
+            font-weight: bold;
+            background: @lojaSelecionada.CorDestaque;
+        }
+
+        .selecaoLoja {
+            font-weight: bold;
+            background: @lojaSelecionada.CorDestaque;
+        }
+
+        .divider {
+            border-top: 1px solid @lojaSelecionada.CorDestaque;
+        }
+
+        input:checked + .slider {
+            background-color: @lojaSelecionada.CorDestaque;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px @lojaSelecionada.CorDestaque;
+        }
+
+        .navbar-inverse {
+            background-color: @lojaSelecionada.CorPrincipal;
+            border-color: #ffffff;
+            border: none;
+        }
+
+        .panel-info > .panel-heading {
+            color: @lojaSelecionada.CorPrincipalContraste;
+            background-color: @lojaSelecionada.CorSecundaria;
+            border-color: @lojaSelecionada.CorPrincipalContraste;
+        }
+
+        .panel-info {
+            border-color: @lojaSelecionada.CorPrincipalContraste;
+        }
+
+        .navbar-inverse .navbar-collapse .dropdown ul {
+            background-color: @lojaSelecionada.CorSecundaria;
+        }
+
+        .navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a {
+            background-color: @lojaSelecionada.CorSecundaria;
+        }
+
+        ul.nav.navbar-nav .dropdown.open .dropdown-toggle {
+            background-color: @lojaSelecionada.CorPrincipalContraste;
+        }
+
+        .navbar-inverse .navbar-collapse .dropdown .dropdown-menu li a:hover {
+            background-color: #@lojaSelecionada.CorSecundaria;
+        }
+
+        .nav-1.nav-bottom {
+            bottom: 0;
+            font-size: 0.8em;
+            border-top: 3px solid @lojaSelecionada.CorPrincipalContraste;
+        }
+
+        /* $Background */
+        .bg-1 {
+            background: @lojaSelecionada.CorPrincipal;
+        }
+
+        .btn-4:hover, .btn-4-active {
+            color: #000000;
+            background: #fff;
+            text-decoration: none;
+            border-top: 0px solid @lojaSelecionada.CorPrincipalContraste;
+            margin-top: -6px;
+            padding: 8.5px 0;
+        }
+
+        /**
+         * Show selected elements in green
+         */
+        .multiDemo ul[dnd-list] li.selected {
+            background-color: @lojaSelecionada.CorPrincipalContraste;
+            color: white;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu ul {
+            background-color: @lojaSelecionada.CorPrincipal !important;
+        }
+
+        .dropdown-submenu li a {
+            background-color: @lojaSelecionada.CorPrincipal !important;
+        }
+
+        .dropdown-submenu li a:hover {
+            position: relative;
+            background-color: @lojaSelecionada.CorSecundaria !important;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+
+        .dropdown-menu {
+            background-color: @lojaSelecionada.CorPrincipal !important;
+        }
+
+        .dropdown-menu ul {
+            background-color: @lojaSelecionada.CorPrincipal !important;
+        }
+
+        .dropdown-menu li a {
+            background-color: @lojaSelecionada.CorPrincipal !important;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: @lojaSelecionada.CorSecundaria !important;
+        }
+    </style>
+    @if (Request.IsAuthenticated)
+    {
+        <style>
+            body {
+                background-image: url('@urlBase/@lojaSelecionada.ImagemBackgroundAutenticada');
+                background-size: cover;
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                height: 100%;
+            }
+        </style>
+    }
+    else
+    {
+        <style>
+            body {
+                background-image: url('@urlBase/@lojaSelecionada.ImagemBackgroundPublica');
+                background-size: cover;
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                height: 100%;
+            }
+        </style>
+    }
+</head>
+<body>
+    <div cg-busy="{promiseGeral:promiseGetCombos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div id="fb-root"></div>
+    <div class="navbar navbar-inverse navbar-fixed-top" ng-controller="nbController" ng-init="init('@(casaAberta ? "S" : "N")')">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (!User.IsInRole(Constantes.ROLE_ADMIN))
+                    {
+                        <li>
+                            <a class="navbar-brand" href="~/Home/MenuPrincipal">
+                                <img alt="Brand" src="~/@lojaSelecionada.Logomarca" style="width: 40px; height: 40px; margin-top: -10px;">
+                            </a>
+                            @*@Html.ActionLink("Início", "MenuPrincipal", "Home")*@
+                        </li>
+                    }
+                    <li>
+                        @Html.ActionLink("Início", "MenuPrincipal", "Home", null, new { @class = "hidden-sm hidden-xs" })
+                    </li>
+                    @if (emManutencao == "S")
+                    {
+                        <li></li>
+                    }
+                    else
+                    {
+                        if (Request.IsAuthenticated)
+                        {
+                            if (User.IsInRole(Constantes.ROLE_ADMIN) || User.IsInRole(Constantes.ROLE_MASTER))
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultas <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Pedidos realizados", "PedidosRealizados", "Consultas")</li>
+                                        <li>@Html.ActionLink("Produtos vendidos", "ProdutosVendidos", "Consultas")</li>
+                                        <li>@Html.ActionLink("Taxas de entrega", "TaxasEntrega", "Consultas")</li>
+                                        @*<li role="separator" class="divider"></li>*@
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cadastros <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-submenu">
+                                            <a class="test" href="#">Gerais <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Classes de cardápio", "ClasseItemCardapio", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Empresas", "Empresa", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Observações de produção", "ObservacaoProducao", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Opções extras", "OpcaoExtra", "Cadastros")</li>
+
+                                                @if (User.IsInRole(Constantes.ROLE_MASTER))
+                                                {
+                                                    <li>@Html.ActionLink("Perfil de usuário", "PerfilUsuario", "Conta")</li>
+                                                    <li>@Html.ActionLink("Empresas do usuário", "EmpresaUsuario", "Conta")</li>
+                                                }
+
+                                                <li role="separator" class="divider"></li>
+                                                <li>@Html.ActionLink("Associação observação x item", "ItemCardapioObservacaoProducao", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Associação opção extra x item", "ItemCardapioOpcaoExtra", "Cadastros")</li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu">
+                                            <a class="test" href="#">Por loja <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li>@Html.ActionLink("Impressoras de produção", "ImpressoraProducao", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Entregadores", "Entregador", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Horários de funcionamento", "HorarioFuncionamento", "Institucional")</li>
+                                                <li>@Html.ActionLink("Parâmetros de sistema", "ParametroSistema", "Cadastros")</li>
+                                                <li role="separator" class="divider"></li>
+                                                <li>@Html.ActionLink("Itens de cardápio", "ItemCardapio", "Cadastros")</li>
+                                                <li role="separator" class="divider"></li>
+                                                <li>@Html.ActionLink("Programa de fidelidade", "CadastroProgramaFidelidade", "ProgramaFidelidade")</li>
+                                                <li>@Html.ActionLink("Promoção de venda", "PromocaoVenda", "Cadastros")</li>
+                                                <li>@Html.ActionLink("Combo de itens", "ComboCardapio", "Cadastros")</li>
+                                            </ul>
+                                        </li>
+                                        <li>@Html.ActionLink("Tron Solution", "TronSolution", "Integracoes")</li>
+
+                                    </ul>
+                                </li>
+                            }
+                            if (todasLojas.Count > 1)
+                            {
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle selecaoLoja" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Loja <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        @foreach (var loja in todasLojas)
+                                        {
+                                            if (SessionData.CodLojaSelecionada > 0 && loja.CodEmpresa == SessionData.CodLojaSelecionada)
+                                            {
+                                                @*<li class="lojaSelecionada">@Html.ActionLink(loja.NomeFantasia, "TronSolution", "Integração TronSolution")</li>*@
+                                                <li>
+                                                    @*<a href="#">@loja.NomeFantasia</a>*@
+                                                    <div class="lojaMenu">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 text-center">
+                                                                <span>@loja.NomeFantasia</span><br />
+                                                                <small class="text-warning">Você está aqui</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                @*<li>@Html.ActionLink(loja.NomeFantasia, "TronSolution", "Integração TronSolution")</li>*@
+                                                <li>
+                                                    @*<a href="#" ng-click="confirmaAlteracaoLoja(@loja.CodEmpresa.ToString())">@loja.NomeFantasia</a>*@
+                                                    <div class="lojaMenu">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 text-center">
+                                                                <span>@loja.NomeFantasia</span><br />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12 text-center">
+                                                                <button type="button" class="btn btn-success" ng-click="confirmaAlteracaoLoja(@loja.CodEmpresa.ToString())">
+                                                                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>Acessar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
+
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    }
+
+                </ul>
+                @Html.Partial("_LoginPartial", viewData)
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+
+    <footer class="nav-1 hidden-md hidden-lg nav-bottom text-center color-2 bg-1">
+        <ul class="list-unstyled list-inline">
+            <li class="col-xs-3">
+                <a href="/" class="btn-4 text-lowercase"><i class="fa fa-home fa-2x" aria-hidden="true"></i><br>Início</a>
+            </li>
+            <li class="col-xs-3">
+                <a href="/Institucional/Sobre" class="btn-4 text-lowercase"><i class="fa fa-info fa-2x" aria-hidden="true"></i><br>Sobre</a>
+
+            </li>
+            <li class="col-xs-3">
+                <a href="/Cardapio/Listar" class="btn-4 text-lowercase"><i class="fa fa-cutlery fa-2x" aria-hidden="true"></i><br>Cardápio</a>
+            </li>
+            <li class="col-xs-3">
+                <a href="/Institucional/HorarioFuncionamento" class="btn-4  text-lowercase"><i class="fa fa-clock-o fa-2x" aria-hidden="true"></i><br>Funcionamento</a>
+            </li>
+        </ul>
+    </footer>
+
+
+    <footer class="nav-1 nav-bottom text-center hidden-xs hidden-sm" style="background-color: @lojaSelecionada.CorPrincipal;">
+
+
+        <div class="row divTransparente">
+            <div class="col-xs-4">
+                <h5 class="text-uppercase">Entre em contato</h5>
+
+                <p><i class="fa fa-phone" aria-hidden="true"></i> @lojaSelecionada.Telefone </p>
+
+                <p> <a href="mailto:@lojaSelecionada.Email" class="linkRodape"><i class="fa fa-envelope-o" aria-hidden="true"></i>@lojaSelecionada.Email</a></p>
+            </div>
+            <div class="col-xs-4">
+                <h5 class="text-uppercase">Localização</h5>
+                <p><i class="fa fa-location-arrow" aria-hidden="true"></i> @lojaSelecionada.Logradouro, @lojaSelecionada.Numero - @lojaSelecionada.Numero - @lojaSelecionada.Bairro.Cidade.Nome - @lojaSelecionada.Bairro.Nome</p>
+                <p>
+                    <a href="http://www.facebook.com/@lojaSelecionada.Facebook" target="_blank">
+                        <i class="fa fa-facebook-official" aria-hidden="true"></i> /@lojaSelecionada.Facebook
+                    </a>
+                </p>
+            </div>
+            <div class="col-xs-4">
+                <h5 class="text-uppercase">Informações</h5>
+                <p class="bottom-15">
+                    <a href="/Institucional/HorarioFuncionamento" class="linkRodape">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i> Horário de funcionamento
+                    </a>
+                </p>
+                <p>
+                    <a href="/Institucional/Sobre" class="linkRodape">
+                        <i class="fa fa-info" aria-hidden="true"></i> Sobre a casa
+                    </a>
+                </p>
+
+            </div>
+        </div>
+
+
+
+
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            var currurl = window.location.pathname;
+            //$('.active').removeClass('active');
+            $('li:has(a[href="' + currurl + '"])').children('a').removeClass('btn-4-active');
+
+            var val = $('footer li:has([href="' + currurl + '"])').children().addClass('btn-4-active');
+
+            if (isMobile()) {
+                $('body').css('background-size', $(window).outerHeight() * 1.5 + 'px' + ' ' + $(window).outerHeight() + 'px');
+            } else {
+                $('body').css('background-size', $(window).outerHeight() * 2.2 + 'px' + ' ' + $(window).outerHeight() * 1.2 + 'px');
+            }
+
+            $('.dropdown-submenu a.test').on("click", function (e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+
+        });
+    </script>
+</body>
+</html>

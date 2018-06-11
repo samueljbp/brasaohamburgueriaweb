@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoSolution.Repository;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/ConsultarTaxasEntregaForm/cteController.js"></script>
+<div ng-controller="cteController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetTaxasEntrega,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetEntregadores,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formTaxaEntrega" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Taxas de entrega</h3>
+        <hr />
+        <div class="form-group">
+            <label for="codEmpresa" class="col-sm-1 col-xs-12 control-label">Empresa</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="filtros.codEmpresa">
+                    <option value="" selected>TODAS</option>
+                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="codEntregador" class="col-sm-1 col-xs-12 control-label">Entregador</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codEntregador" id="codEntregador" required class="form-control" ng-model="filtros.codEntregador">
+                    <option value="" selected>(Selecione)</option>
+                    <option ng-repeat="entregador in entregadores" value="{{entregador.codEntregador}}">{{entregador.nome}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="compDataInicio" class="col-md-1 col-xs-12 control-label">Início</label>
+            <div class="col-md-3 col-xs-12">
+                <div class='input-group date' id='compDataInicio'>
+                    <input type='text' class="form-control" maxlength="10" id="txtDataInicio" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <div class='input-group date' id='compHoraInicio'>
+                    <input type='text' class="form-control" id="txtHoraInicio" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="compDataFim" class="col-md-1 col-xs-12 control-label">Fim</label>
+            <div class="col-md-3 col-xs-12">
+                <div class='input-group date' id='compDataFim'>
+                    <input type='text' class="form-control" maxlength="10" id="txtDataFim" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <div class='input-group date' id='compHoraFim'>
+                    <input type='text' class="form-control" id="txtHoraFim" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <button type="button" class="btn btn-success" ng-click="getTaxasEntrega()">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Consultar
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div ng-if="rowCollection.length <= 0">
+            <small>Nenhum item encontrado</small>
+        </div>
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
+                <thead>
+                    <tr>
+                        <th st-sort="codEntregador" width="10%"><a href="#">Cod Entregador</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="nome" width="40%"><a href="#">Nome</a></th>
+                        <th st-sort="qtdPedidos" width="20%"><a href="#">Qtd Entregas</a></th>
+                        <th st-sort="totalTaxasEntrega" width="20%"><a href="#">Total taxas</a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codEntregador" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="qtdPedidos" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="totalTaxasEntrega" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="taxa in displayedCollection">
+                        <td>{{taxa.codEntregador}}</td>
+                        <td>{{(taxa.nomeEmpresa != 0 ? taxa.nomeEmpresa : 'TODAS')}}</td>
+                        <td>{{taxa.nome}}</td>
+                        <td>{{taxa.qtdPedidos}}</td>
+                        <td>{{taxa.totalTaxasEntrega | currency: "R$ "}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-left">
+                            <div class="col-sm-4">
+                                <small>Quantidade total entregas: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
+                            </div>
+                            <div class="col-sm-4">
+                                <small>Valor total taxas: <span class="text-success">{{totais.valorTotal | currency: "R$ "}}</span></small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>

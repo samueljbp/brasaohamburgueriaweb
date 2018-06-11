@@ -1,0 +1,185 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoSolution.Model;
+@using BrasaoSolution.Repository;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var ehAdm = false;
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+
+    if (Request.IsAuthenticated && User.IsInRole(Constantes.ROLE_ADMIN))
+    {
+        ehAdm = true;
+    }
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/HorarioFuncionamentoForm/hfController.js"></script>
+<div ng-controller="hfController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetFuncionamentoEstabelecimento,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirFuncionamento,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formFuncionamento" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Horários de funcionamento</h3>
+        <hr />
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="descricaoDiaSemana" width="40%"><a href="#">Dia da semana</a></th>
+                        <th st-sort="abertura" width="15%"><a href="#">Abre</a></th>
+                        <th st-sort="fechamento" width="15%"><a href="#">Fecha</a></th>
+                        <th st-sort="temDelivery" width="20%"><a href="#">Faz entrega?</a></th>
+                        @if (ehAdm)
+                        {
+                            <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="6">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="dia in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{dia.descricaoDiaSemana}}</td>
+                        <td>{{dia.abertura | date:'HH:mm'}}</td>
+                        <td>{{dia.fechamento | date:'HH:mm'}}</td>
+                        <td>{{dia.temDelivery ? 'Sim' : 'Não' }}</td>
+                        @if (ehAdm)
+                        {
+                            <td>
+                                <button type="button" ng-click="confirmaExclusaoFuncionamento(dia)" class="btn btn-sm btn-danger">
+                                    <i class="glyphicon glyphicon-remove">
+                                    </i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" ng-click="modalAlteracao(dia)" class="btn btn-sm btn-warning">
+                                    <i class="glyphicon glyphicon-edit">
+                                    </i>
+                                </button>
+                            </td>
+                        }
+
+                    </tr>
+                </tbody>
+                <tfoot>
+                    @if (ehAdm)
+                    {
+                        <tr>
+                            <td colspan="6" class="text-right">
+                                <div class="text-right">
+                                    <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                        <i class="glyphicon glyphicon-plus">
+                                        </i>Cadastrar
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarFuncionamento" class="form-horizontal">
+        <div class="modal fade" id="modalGravarHorarioFunc" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarHorarioFunc" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarHorarioFunc">Funcionamento do estabelecimento - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarHorarioFuncionamento,backdrop:false,delay:10,minDuration:1000}"></div>
+
+                        <div class="form-group">
+                            <label for="diaSemana" class="col-sm-2 control-label">Dia semana</label>
+                            <div class="col-sm-2" ng-show="modoCadastro == 'I'">
+                                <select name="diaSemana" required id="diaSemana" class="form-control" ng-model="funcionamentoSelecionado.diaSemana">
+                                    <option value="">(Selecione)</option>
+                                    <option value="0">Domingo</option>
+                                    <option value="1">Segunda-feira</option>
+                                    <option value="2">Terça-feira</option>
+                                    <option value="3">Quarta-feira</option>
+                                    <option value="4">Quinta-feira</option>
+                                    <option value="5">Sexta-feira</option>
+                                    <option value="6">Sábado</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-sm-2" ng-show="modoCadastro == 'A'">
+                                <span>{{funcionamentoSelecionado.descricaoDiaSemana}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="compAbertura" class="col-sm-2 control-label">Abertura</label>
+                            <div class="col-sm-3" ng-show="modoCadastro == 'I'">
+                                <div class='input-group date' id='compAbertura'>
+                                    <input type='text' required class="form-control" id="txtAbertura" ng-model="funcionamentoSelecionado.abertura" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2" ng-show="modoCadastro == 'A'">
+                                <span>{{funcionamentoSelecionado.abertura | date:'HH:mm'}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="compFechamento" class="col-sm-2 control-label">Fechamento</label>
+                            <div class="col-sm-3">
+                                <div class='input-group date' id='compFechamento'>
+                                    <input type='text' required class="form-control" id="txtFechamento" ng-model="funcionamentoSelecionado.fechamento" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="divCheckTemDevlivery" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="temDelivery" name="temDelivery" ng-model="funcionamentoSelecionado.temDelivery" />Tem delivery</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarHorarioFuncionamento()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

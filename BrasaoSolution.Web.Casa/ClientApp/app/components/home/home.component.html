@@ -1,0 +1,12 @@
+﻿<div class="card" style="margin-bottom: 5px" *ngIf="comanda.itens.length <= 0">
+    <div class="card-body">
+        <div>
+            <small><strong>Sua comanda está vazia.</strong></small>
+            <small>Clique no botão "Fazer pedido" para ver o cardápio e começar a consumir.</small>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-success btn-lg btn-block" (click)="novoPedido()">Fazer pedido</button>
+<button type="button" class="btn btn-primary btn-lg btn-block">Chamar garçom</button>
+<button type="button" class="btn btn-primary btn-lg btn-block">Visualizar consumo</button>
+<button type="button" class="btn btn-danger btn-lg btn-block">Pedir a conta</button>

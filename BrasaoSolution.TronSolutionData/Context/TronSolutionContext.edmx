@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BrasaoSolution.TronSolutionData.Context.Store" Provider="FirebirdSql.Data.FirebirdClient" ProviderManifestToken="2.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CLASSE_ITEMCARDAPIO">
+          <Key>
+            <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+          </Key>
+          <Property Name="CD_CLASSEITEMCARDAPIO" Type="int" Nullable="false" />
+          <Property Name="DS_CLASSEITEMCARDAPIO" Type="char" MaxLength="20" Unicode="false" />
+          <Property Name="CD_EMPRESA" Type="int" />
+        </EntityType>
+        <EntityType Name="ITEM_CARDAPIO">
+          <Key>
+            <PropertyRef Name="CD_ITEMCARDAPIO" />
+          </Key>
+          <Property Name="CD_ITEMCARDAPIO" Type="int" Nullable="false" />
+          <Property Name="CD_IMPRESSORAPEDIDOS" Type="int" />
+          <Property Name="CD_EMPRESA" Type="int" />
+          <Property Name="CD_SITUACAOTRIBUTARIA" Type="int" />
+          <Property Name="CD_UNIDADE" Type="int" />
+          <Property Name="CD_CLASSEITEMCARDAPIO" Type="int" />
+          <Property Name="DS_ITEMCARDAPIO" Type="varchar" MaxLength="100" Unicode="true" />
+          <Property Name="VALOR_VENDA" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="CODIGO_BARRAS" Type="char" MaxLength="20" Unicode="false" />
+          <Property Name="IMPRIME_NO_CARDAPIO" Type="smallint" />
+          <Property Name="ENVIA_COZINHA" Type="smallint" />
+          <Property Name="QTD_ESTOQUE_MINIMO" Type="numeric" Precision="10" Scale="3" />
+          <Property Name="VALOR_CUSTO_MEDIO" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="VALOR_COMPRA" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="CONTROLA_ESTOQUE" Type="smallint" />
+          <Property Name="DS_COMPOSICAO_CARDAPIO" Type="clob" Unicode="true" />
+          <Property Name="ATIVO" Type="smallint" />
+          <Property Name="PONTOS_FIDELIDADE" Type="int" />
+          <Property Name="CREDITOS_PROMOTER" Type="int" />
+          <Property Name="EH_COMBO" Type="smallint" />
+          <Property Name="PODE_PARTICIPAR_COMBO" Type="smallint" />
+          <Property Name="CD_UNIDADECOMPRA" Type="int" />
+          <Property Name="CONVERSAO_UNIDADECOMPRA" Type="float" />
+          <Property Name="DEVE_PESAR" Type="smallint" />
+          <Property Name="QTD_MAX_USUAL" Type="int" />
+          <Property Name="NR_ICONE_TOQUETELA" Type="int" />
+          <Property Name="POSICAO_TOQUETELA" Type="int" />
+          <Property Name="PODE_TELE_ENTREGA" Type="smallint" />
+          <Property Name="PERMITE_OBS_PRODUCAO" Type="smallint" />
+          <Property Name="PERMITE_ALT_INGREDIENTE" Type="smallint" />
+          <Property Name="REDUCAO_ICMS" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="SUBST_ICMS" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="PRODUCAO_PROPRIA" Type="smallint" />
+          <Property Name="ARREDONDA_TRUNCA" Type="smallint" />
+          <Property Name="NCM" Type="char" MaxLength="20" Unicode="false" />
+          <Property Name="MD5" Type="varchar" MaxLength="257" Unicode="true" />
+          <Property Name="CD_GENERO_NCM" Type="char" MaxLength="2" Unicode="false" />
+          <Property Name="EX" Type="int" />
+          <Property Name="CEST" Type="varchar" MaxLength="10" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ITEM_CARDAPIOXEMPRESA">
+          <Key>
+            <PropertyRef Name="CD_ITEMCARDAPIO" />
+            <PropertyRef Name="CD_EMPRESA" />
+          </Key>
+          <Property Name="CD_ITEMCARDAPIO" Type="int" Nullable="false" />
+          <Property Name="CD_EMPRESA" Type="int" Nullable="false" />
+          <Property Name="ATIVO" Type="smallint" />
+          <Property Name="CD_SITUACAOTRIBUTARIA" Type="int" />
+          <Property Name="VALOR_VENDA" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="IMPRIME_NO_CARDAPIO" Type="smallint" />
+          <Property Name="VALOR_CUSTO_MEDIO" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="VALOR_COMPRA" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="NR_ICONE_TOQUETELA" Type="int" />
+          <Property Name="POSICAO_TOQUETELA" Type="int" />
+          <Property Name="REDUCAO_ICMS" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="SUBST_ICMS" Type="numeric" Precision="9" Scale="2" />
+          <Property Name="CD_IMPRESSORAPEDIDOS" Type="int" />
+          <Property Name="ENVIA_COZINHA" Type="smallint" />
+          <Property Name="CD_IMPRESSORAPEDIDOS2" Type="int" />
+          <Property Name="CD_CLASSIFICACAOFISCAL" Type="int" />
+          <Property Name="ALIQUOTA_ICMS" Type="numeric" Precision="9" Scale="3" />
+          <Property Name="ALIQUOTA_IPI" Type="numeric" Precision="9" Scale="3" />
+          <Property Name="MINUTOS_PRODUCAO" Type="int" />
+          <Property Name="MINUTOS_ALERTA_PRODUCAO" Type="int" />
+          <Property Name="MEI_TIPO_RECEITA" Type="int" />
+        </EntityType>
+        <Association Name="INTEG_8396">
+          <End Role="CLASSE_ITEMCARDAPIO" Type="Self.CLASSE_ITEMCARDAPIO" Multiplicity="0..1" />
+          <End Role="ITEM_CARDAPIO" Type="Self.ITEM_CARDAPIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLASSE_ITEMCARDAPIO">
+              <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+            </Principal>
+            <Dependent Role="ITEM_CARDAPIO">
+              <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="INTEG_8402">
+          <End Role="ITEM_CARDAPIO" Type="Self.ITEM_CARDAPIO" Multiplicity="1" />
+          <End Role="ITEM_CARDAPIOXEMPRESA" Type="Self.ITEM_CARDAPIOXEMPRESA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITEM_CARDAPIO">
+              <PropertyRef Name="CD_ITEMCARDAPIO" />
+            </Principal>
+            <Dependent Role="ITEM_CARDAPIOXEMPRESA">
+              <PropertyRef Name="CD_ITEMCARDAPIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BrasaoSolutionTronSolutionDataContextStoreContainer">
+          <EntitySet Name="CLASSE_ITEMCARDAPIO" EntityType="Self.CLASSE_ITEMCARDAPIO" Schema="Firebird" store:Type="Tables" />
+          <EntitySet Name="ITEM_CARDAPIO" EntityType="Self.ITEM_CARDAPIO" Schema="Firebird" store:Type="Tables" />
+          <EntitySet Name="ITEM_CARDAPIOXEMPRESA" EntityType="Self.ITEM_CARDAPIOXEMPRESA" Schema="Firebird" store:Type="Tables" />
+          <AssociationSet Name="INTEG_8396" Association="Self.INTEG_8396">
+            <End Role="CLASSE_ITEMCARDAPIO" EntitySet="CLASSE_ITEMCARDAPIO" />
+            <End Role="ITEM_CARDAPIO" EntitySet="ITEM_CARDAPIO" />
+          </AssociationSet>
+          <AssociationSet Name="INTEG_8402" Association="Self.INTEG_8402">
+            <End Role="ITEM_CARDAPIO" EntitySet="ITEM_CARDAPIO" />
+            <End Role="ITEM_CARDAPIOXEMPRESA" EntitySet="ITEM_CARDAPIOXEMPRESA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BrasaoSolution.TronSolutionData.Context" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CLASSE_ITEMCARDAPIO">
+          <Key>
+            <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+          </Key>
+          <Property Name="CD_CLASSEITEMCARDAPIO" Type="Int32" Nullable="false" />
+          <Property Name="DS_CLASSEITEMCARDAPIO" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="CD_EMPRESA" Type="Int32" />
+          <NavigationProperty Name="ITEM_CARDAPIO" Relationship="Self.INTEG_8396" FromRole="CLASSE_ITEMCARDAPIO" ToRole="ITEM_CARDAPIO" />
+        </EntityType>
+        <EntityType Name="ITEM_CARDAPIO">
+          <Key>
+            <PropertyRef Name="CD_ITEMCARDAPIO" />
+          </Key>
+          <Property Name="CD_ITEMCARDAPIO" Type="Int32" Nullable="false" />
+          <Property Name="CD_IMPRESSORAPEDIDOS" Type="Int32" />
+          <Property Name="CD_EMPRESA" Type="Int32" />
+          <Property Name="CD_SITUACAOTRIBUTARIA" Type="Int32" />
+          <Property Name="CD_UNIDADE" Type="Int32" />
+          <Property Name="CD_CLASSEITEMCARDAPIO" Type="Int32" />
+          <Property Name="DS_ITEMCARDAPIO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VALOR_VENDA" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="CODIGO_BARRAS" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="IMPRIME_NO_CARDAPIO" Type="Int16" />
+          <Property Name="ENVIA_COZINHA" Type="Int16" />
+          <Property Name="QTD_ESTOQUE_MINIMO" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="VALOR_CUSTO_MEDIO" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="VALOR_COMPRA" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="CONTROLA_ESTOQUE" Type="Int16" />
+          <Property Name="DS_COMPOSICAO_CARDAPIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ATIVO" Type="Int16" />
+          <Property Name="PONTOS_FIDELIDADE" Type="Int32" />
+          <Property Name="CREDITOS_PROMOTER" Type="Int32" />
+          <Property Name="EH_COMBO" Type="Int16" />
+          <Property Name="PODE_PARTICIPAR_COMBO" Type="Int16" />
+          <Property Name="CD_UNIDADECOMPRA" Type="Int32" />
+          <Property Name="CONVERSAO_UNIDADECOMPRA" Type="Single" />
+          <Property Name="DEVE_PESAR" Type="Int16" />
+          <Property Name="QTD_MAX_USUAL" Type="Int32" />
+          <Property Name="NR_ICONE_TOQUETELA" Type="Int32" />
+          <Property Name="POSICAO_TOQUETELA" Type="Int32" />
+          <Property Name="PODE_TELE_ENTREGA" Type="Int16" />
+          <Property Name="PERMITE_OBS_PRODUCAO" Type="Int16" />
+          <Property Name="PERMITE_ALT_INGREDIENTE" Type="Int16" />
+          <Property Name="REDUCAO_ICMS" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="SUBST_ICMS" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="PRODUCAO_PROPRIA" Type="Int16" />
+          <Property Name="ARREDONDA_TRUNCA" Type="Int16" />
+          <Property Name="NCM" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="MD5" Type="String" MaxLength="257" FixedLength="false" Unicode="true" />
+          <Property Name="CD_GENERO_NCM" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="EX" Type="Int32" />
+          <Property Name="CEST" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CLASSE_ITEMCARDAPIO" Relationship="Self.INTEG_8396" FromRole="ITEM_CARDAPIO" ToRole="CLASSE_ITEMCARDAPIO" />
+          <NavigationProperty Name="ITEM_CARDAPIOXEMPRESA" Relationship="Self.INTEG_8402" FromRole="ITEM_CARDAPIO" ToRole="ITEM_CARDAPIOXEMPRESA" />
+        </EntityType>
+        <EntityType Name="ITEM_CARDAPIOXEMPRESA">
+          <Key>
+            <PropertyRef Name="CD_ITEMCARDAPIO" />
+            <PropertyRef Name="CD_EMPRESA" />
+          </Key>
+          <Property Name="CD_ITEMCARDAPIO" Type="Int32" Nullable="false" />
+          <Property Name="CD_EMPRESA" Type="Int32" Nullable="false" />
+          <Property Name="ATIVO" Type="Int16" />
+          <Property Name="CD_SITUACAOTRIBUTARIA" Type="Int32" />
+          <Property Name="VALOR_VENDA" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="IMPRIME_NO_CARDAPIO" Type="Int16" />
+          <Property Name="VALOR_CUSTO_MEDIO" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="VALOR_COMPRA" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="NR_ICONE_TOQUETELA" Type="Int32" />
+          <Property Name="POSICAO_TOQUETELA" Type="Int32" />
+          <Property Name="REDUCAO_ICMS" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="SUBST_ICMS" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="CD_IMPRESSORAPEDIDOS" Type="Int32" />
+          <Property Name="ENVIA_COZINHA" Type="Int16" />
+          <Property Name="CD_IMPRESSORAPEDIDOS2" Type="Int32" />
+          <Property Name="CD_CLASSIFICACAOFISCAL" Type="Int32" />
+          <Property Name="ALIQUOTA_ICMS" Type="Decimal" Precision="9" Scale="3" />
+          <Property Name="ALIQUOTA_IPI" Type="Decimal" Precision="9" Scale="3" />
+          <Property Name="MINUTOS_PRODUCAO" Type="Int32" />
+          <Property Name="MINUTOS_ALERTA_PRODUCAO" Type="Int32" />
+          <Property Name="MEI_TIPO_RECEITA" Type="Int32" />
+          <NavigationProperty Name="ITEM_CARDAPIO" Relationship="Self.INTEG_8402" FromRole="ITEM_CARDAPIOXEMPRESA" ToRole="ITEM_CARDAPIO" />
+        </EntityType>
+        <Association Name="INTEG_8396">
+          <End Role="CLASSE_ITEMCARDAPIO" Type="Self.CLASSE_ITEMCARDAPIO" Multiplicity="0..1" />
+          <End Role="ITEM_CARDAPIO" Type="Self.ITEM_CARDAPIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLASSE_ITEMCARDAPIO">
+              <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+            </Principal>
+            <Dependent Role="ITEM_CARDAPIO">
+              <PropertyRef Name="CD_CLASSEITEMCARDAPIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="INTEG_8402">
+          <End Role="ITEM_CARDAPIO" Type="Self.ITEM_CARDAPIO" Multiplicity="1" />
+          <End Role="ITEM_CARDAPIOXEMPRESA" Type="Self.ITEM_CARDAPIOXEMPRESA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITEM_CARDAPIO">
+              <PropertyRef Name="CD_ITEMCARDAPIO" />
+            </Principal>
+            <Dependent Role="ITEM_CARDAPIOXEMPRESA">
+              <PropertyRef Name="CD_ITEMCARDAPIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TronSolutionConnection" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CLASSE_ITEMCARDAPIO" EntityType="Self.CLASSE_ITEMCARDAPIO" />
+          <EntitySet Name="ITEM_CARDAPIO" EntityType="Self.ITEM_CARDAPIO" />
+          <EntitySet Name="ITEM_CARDAPIOXEMPRESA" EntityType="Self.ITEM_CARDAPIOXEMPRESA" />
+          <AssociationSet Name="INTEG_8396" Association="Self.INTEG_8396">
+            <End Role="CLASSE_ITEMCARDAPIO" EntitySet="CLASSE_ITEMCARDAPIO" />
+            <End Role="ITEM_CARDAPIO" EntitySet="ITEM_CARDAPIO" />
+          </AssociationSet>
+          <AssociationSet Name="INTEG_8402" Association="Self.INTEG_8402">
+            <End Role="ITEM_CARDAPIO" EntitySet="ITEM_CARDAPIO" />
+            <End Role="ITEM_CARDAPIOXEMPRESA" EntitySet="ITEM_CARDAPIOXEMPRESA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BrasaoSolutionTronSolutionDataContextStoreContainer" CdmEntityContainer="TronSolutionConnection">
+          <EntitySetMapping Name="CLASSE_ITEMCARDAPIO">
+            <EntityTypeMapping TypeName="BrasaoSolution.TronSolutionData.Context.CLASSE_ITEMCARDAPIO">
+              <MappingFragment StoreEntitySet="CLASSE_ITEMCARDAPIO">
+                <ScalarProperty Name="CD_CLASSEITEMCARDAPIO" ColumnName="CD_CLASSEITEMCARDAPIO" />
+                <ScalarProperty Name="DS_CLASSEITEMCARDAPIO" ColumnName="DS_CLASSEITEMCARDAPIO" />
+                <ScalarProperty Name="CD_EMPRESA" ColumnName="CD_EMPRESA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITEM_CARDAPIO">
+            <EntityTypeMapping TypeName="BrasaoSolution.TronSolutionData.Context.ITEM_CARDAPIO">
+              <MappingFragment StoreEntitySet="ITEM_CARDAPIO">
+                <ScalarProperty Name="CD_ITEMCARDAPIO" ColumnName="CD_ITEMCARDAPIO" />
+                <ScalarProperty Name="CD_IMPRESSORAPEDIDOS" ColumnName="CD_IMPRESSORAPEDIDOS" />
+                <ScalarProperty Name="CD_EMPRESA" ColumnName="CD_EMPRESA" />
+                <ScalarProperty Name="CD_SITUACAOTRIBUTARIA" ColumnName="CD_SITUACAOTRIBUTARIA" />
+                <ScalarProperty Name="CD_UNIDADE" ColumnName="CD_UNIDADE" />
+                <ScalarProperty Name="CD_CLASSEITEMCARDAPIO" ColumnName="CD_CLASSEITEMCARDAPIO" />
+                <ScalarProperty Name="DS_ITEMCARDAPIO" ColumnName="DS_ITEMCARDAPIO" />
+                <ScalarProperty Name="VALOR_VENDA" ColumnName="VALOR_VENDA" />
+                <ScalarProperty Name="CODIGO_BARRAS" ColumnName="CODIGO_BARRAS" />
+                <ScalarProperty Name="IMPRIME_NO_CARDAPIO" ColumnName="IMPRIME_NO_CARDAPIO" />
+                <ScalarProperty Name="ENVIA_COZINHA" ColumnName="ENVIA_COZINHA" />
+                <ScalarProperty Name="QTD_ESTOQUE_MINIMO" ColumnName="QTD_ESTOQUE_MINIMO" />
+                <ScalarProperty Name="VALOR_CUSTO_MEDIO" ColumnName="VALOR_CUSTO_MEDIO" />
+                <ScalarProperty Name="VALOR_COMPRA" ColumnName="VALOR_COMPRA" />
+                <ScalarProperty Name="CONTROLA_ESTOQUE" ColumnName="CONTROLA_ESTOQUE" />
+                <ScalarProperty Name="DS_COMPOSICAO_CARDAPIO" ColumnName="DS_COMPOSICAO_CARDAPIO" />
+                <ScalarProperty Name="ATIVO" ColumnName="ATIVO" />
+                <ScalarProperty Name="PONTOS_FIDELIDADE" ColumnName="PONTOS_FIDELIDADE" />
+                <ScalarProperty Name="CREDITOS_PROMOTER" ColumnName="CREDITOS_PROMOTER" />
+                <ScalarProperty Name="EH_COMBO" ColumnName="EH_COMBO" />
+                <ScalarProperty Name="PODE_PARTICIPAR_COMBO" ColumnName="PODE_PARTICIPAR_COMBO" />
+                <ScalarProperty Name="CD_UNIDADECOMPRA" ColumnName="CD_UNIDADECOMPRA" />
+                <ScalarProperty Name="CONVERSAO_UNIDADECOMPRA" ColumnName="CONVERSAO_UNIDADECOMPRA" />
+                <ScalarProperty Name="DEVE_PESAR" ColumnName="DEVE_PESAR" />
+                <ScalarProperty Name="QTD_MAX_USUAL" ColumnName="QTD_MAX_USUAL" />
+                <ScalarProperty Name="NR_ICONE_TOQUETELA" ColumnName="NR_ICONE_TOQUETELA" />
+                <ScalarProperty Name="POSICAO_TOQUETELA" ColumnName="POSICAO_TOQUETELA" />
+                <ScalarProperty Name="PODE_TELE_ENTREGA" ColumnName="PODE_TELE_ENTREGA" />
+                <ScalarProperty Name="PERMITE_OBS_PRODUCAO" ColumnName="PERMITE_OBS_PRODUCAO" />
+                <ScalarProperty Name="PERMITE_ALT_INGREDIENTE" ColumnName="PERMITE_ALT_INGREDIENTE" />
+                <ScalarProperty Name="REDUCAO_ICMS" ColumnName="REDUCAO_ICMS" />
+                <ScalarProperty Name="SUBST_ICMS" ColumnName="SUBST_ICMS" />
+                <ScalarProperty Name="PRODUCAO_PROPRIA" ColumnName="PRODUCAO_PROPRIA" />
+                <ScalarProperty Name="ARREDONDA_TRUNCA" ColumnName="ARREDONDA_TRUNCA" />
+                <ScalarProperty Name="NCM" ColumnName="NCM" />
+                <ScalarProperty Name="MD5" ColumnName="MD5" />
+                <ScalarProperty Name="CD_GENERO_NCM" ColumnName="CD_GENERO_NCM" />
+                <ScalarProperty Name="EX" ColumnName="EX" />
+                <ScalarProperty Name="CEST" ColumnName="CEST" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITEM_CARDAPIOXEMPRESA">
+            <EntityTypeMapping TypeName="BrasaoSolution.TronSolutionData.Context.ITEM_CARDAPIOXEMPRESA">
+              <MappingFragment StoreEntitySet="ITEM_CARDAPIOXEMPRESA">
+                <ScalarProperty Name="CD_ITEMCARDAPIO" ColumnName="CD_ITEMCARDAPIO" />
+                <ScalarProperty Name="CD_EMPRESA" ColumnName="CD_EMPRESA" />
+                <ScalarProperty Name="ATIVO" ColumnName="ATIVO" />
+                <ScalarProperty Name="CD_SITUACAOTRIBUTARIA" ColumnName="CD_SITUACAOTRIBUTARIA" />
+                <ScalarProperty Name="VALOR_VENDA" ColumnName="VALOR_VENDA" />
+                <ScalarProperty Name="IMPRIME_NO_CARDAPIO" ColumnName="IMPRIME_NO_CARDAPIO" />
+                <ScalarProperty Name="VALOR_CUSTO_MEDIO" ColumnName="VALOR_CUSTO_MEDIO" />
+                <ScalarProperty Name="VALOR_COMPRA" ColumnName="VALOR_COMPRA" />
+                <ScalarProperty Name="NR_ICONE_TOQUETELA" ColumnName="NR_ICONE_TOQUETELA" />
+                <ScalarProperty Name="POSICAO_TOQUETELA" ColumnName="POSICAO_TOQUETELA" />
+                <ScalarProperty Name="REDUCAO_ICMS" ColumnName="REDUCAO_ICMS" />
+                <ScalarProperty Name="SUBST_ICMS" ColumnName="SUBST_ICMS" />
+                <ScalarProperty Name="CD_IMPRESSORAPEDIDOS" ColumnName="CD_IMPRESSORAPEDIDOS" />
+                <ScalarProperty Name="ENVIA_COZINHA" ColumnName="ENVIA_COZINHA" />
+                <ScalarProperty Name="CD_IMPRESSORAPEDIDOS2" ColumnName="CD_IMPRESSORAPEDIDOS2" />
+                <ScalarProperty Name="CD_CLASSIFICACAOFISCAL" ColumnName="CD_CLASSIFICACAOFISCAL" />
+                <ScalarProperty Name="ALIQUOTA_ICMS" ColumnName="ALIQUOTA_ICMS" />
+                <ScalarProperty Name="ALIQUOTA_IPI" ColumnName="ALIQUOTA_IPI" />
+                <ScalarProperty Name="MINUTOS_PRODUCAO" ColumnName="MINUTOS_PRODUCAO" />
+                <ScalarProperty Name="MINUTOS_ALERTA_PRODUCAO" ColumnName="MINUTOS_ALERTA_PRODUCAO" />
+                <ScalarProperty Name="MEI_TIPO_RECEITA" ColumnName="MEI_TIPO_RECEITA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

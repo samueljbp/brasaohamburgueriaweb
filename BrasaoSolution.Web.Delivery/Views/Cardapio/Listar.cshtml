@@ -1,0 +1,303 @@
+﻿@using BrasaoSolution.Model;
+@using BrasaoSolution.Repository;
+
+<script>
+    $(function () {
+        $('.pop').on('click', function ($e) {
+            $e.preventDefault();
+            $('.imagepreview').attr('src', $(this).find('input').attr('value'));
+            $('#imagemodal').modal('show');
+        });
+    });
+</script>
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<style id="jsbin-css">
+    .tab-pane {
+        padding: 15px 5px;
+    }
+
+    .responsive-tabs.nav-tabs {
+        position: relative;
+        z-index: 10;
+        height: 42px;
+        overflow: visible;
+        border-bottom: none;
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs {
+            border-bottom: 1px solid #ddd;
+        }
+    }
+
+    .responsive-tabs.nav-tabs span.glyphicon {
+        position: absolute;
+        top: 14px;
+        right: 22px;
+    }
+
+        .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
+            display: none;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs span.glyphicon {
+            display: none;
+        }
+    }
+
+    .responsive-tabs.nav-tabs > li {
+        display: none;
+        float: none;
+        text-align: center;
+    }
+
+        .responsive-tabs.nav-tabs > li:last-of-type > a {
+            margin-right: 0;
+        }
+
+        .responsive-tabs.nav-tabs > li > a {
+            margin-right: 0;
+            background: #fff;
+            border: 1px solid #DDDDDD;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li > a {
+            margin-right: 4px;
+        }
+    }
+
+    .responsive-tabs.nav-tabs > li.active {
+        display: block;
+    }
+
+        .responsive-tabs.nav-tabs > li.active a {
+            border: 1px solid #DDDDDD;
+            border-radius: 2px;
+        }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li.active a {
+            border-bottom-color: transparent;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs > li {
+            display: block;
+            float: left;
+        }
+    }
+
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+        display: block;
+    }
+
+    @@media (min-width: 768px) {
+        .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+            display: none;
+        }
+    }
+
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-bottom {
+        display: none;
+    }
+
+    .responsive-tabs.nav-tabs.open > li {
+        display: block;
+    }
+
+        .responsive-tabs.nav-tabs.open > li a {
+            border-radius: 0;
+        }
+
+        .responsive-tabs.nav-tabs.open > li:first-of-type a {
+            border-radius: 2px 2px 0 0;
+        }
+
+        .responsive-tabs.nav-tabs.open > li:last-of-type a {
+            border-radius: 0 0 2px 2px;
+        }
+</style>
+
+<br />
+<div class="centro">
+
+
+    <div class="row">
+        <div class="col-sm-10">
+            <h3>Conheça nosso cardápio</h3>
+        </div>
+        <div class="col-sm-2">
+            @if (ParametroRepository.GetEmManutencao() == "N")
+            {
+                @Html.ActionLink("Fazer um pedido", "Index", "Pedido", null, new { @class = "btn btn-success" })
+            }
+        </div>
+    </div>
+    <hr />
+    @{
+        List<ClasseItemCardapioViewModel> classes = ViewBag.Classes;
+        var cont = 0;
+        var tamanhoColunaNome = "col-sm-11";
+        var listaClassesSemDescricaoLonga = new List<int> { 10, 13, 14, 15, 16, 18, 19, 20, 21, -1, -2 };
+    }
+    <ul class="nav nav-tabs">
+        @foreach (ClasseItemCardapioViewModel classe in classes.Where(c => c.Itens.Count > 0))
+        {
+            <li class="small @(cont == 0 ? "active" : "")"><a data-toggle="pill" href="#@classe.CodClasse">@classe.DescricaoClasse</a></li>
+            cont++;
+        }
+    </ul>
+
+    <div class="tab-content">
+        @{ cont = 0; }
+        @foreach (ClasseItemCardapioViewModel classe in classes.Where(c => c.Itens.Count > 0))
+        {
+            tamanhoColunaNome = "col-sm-10";
+
+            string ativa = "";
+            var mostraOfertas = Request.QueryString["mostrarOfertas"];
+            if (mostraOfertas != null)
+            {
+                if (classe.CodClasse == -1)
+                {
+                    ativa = "in active";
+                }
+            } else if (cont == 0)
+            {
+                ativa = "in active";
+            }
+
+            <div id="@classe.CodClasse" class="tab-pane fade @ativa">
+                <br />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                            {
+                                tamanhoColunaNome = "col-sm-2";
+                                <th class="hidden-xs col-sm-1">
+
+                                </th>
+                            }
+                            <th class="@tamanhoColunaNome">
+                                Item
+                            </th>
+                            @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                            {
+                                <th class="col-sm-7">
+                                    Descrição
+                                </th>
+                            }
+                            <th class="col-sm-2">
+                                Preço
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ItemCardapioViewModel item in classe.Itens.Where(i => i.CodClasse == classe.CodClasse && i.Ativo).OrderBy(i => i.Preco).ToList())
+                        {
+                            <tr>
+                                @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                                {
+                                    <td class="hidden-xs">
+                                        @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                                        {
+                                            <a href="#" class="pop">
+                                                <img src="~/@item.Complemento.Imagem.Replace("img_item", "mini-img_item")" alt="@item.Nome" style="max-width: 80%; height: auto;" class="img-circle">
+                                                <input type="hidden" value="~/@item.Complemento.Imagem" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+                                    </td>
+                                }
+                                <td class="hidden-sm hidden-md hidden-lg text-left">
+                                    @if (item.Complemento != null && !String.IsNullOrEmpty(item.Complemento.Imagem))
+                                    {
+                                        <a href="#" class="pop">
+                                            <img src="~/@item.Complemento.Imagem.Replace("img_item", "mini-img_item")" alt="@item.Nome" style="width:100%; height: auto;" class="img-circle">
+                                            <input type="hidden" value="~/@item.Complemento.Imagem" />
+                                        </a>
+                                    }
+                                    <h5>
+                                        @item.Nome
+                                        @if (!String.IsNullOrEmpty(item.Descricao))
+                                        {
+                                            <br />
+                                            <strong>@item.Descricao</strong>
+                                        }
+                                    </h5>
+                                </td>
+                                <td class="hidden-xs">
+                                    <h5>
+                                        @item.Nome
+                                        @if (!String.IsNullOrEmpty(item.Descricao))
+                                        {
+                                            <br />
+                                            <strong>@item.Descricao</strong>
+                                        }
+                                    </h5>
+                                </td>
+                                @if (!listaClassesSemDescricaoLonga.Contains(classe.CodClasse))
+                                {
+                                    <td>@(item.Complemento != null ? item.Complemento.DescricaoLonga : "-")</td>
+                                }
+                                <td>
+                                    @if (item.PercentualDesconto > 0)
+                                    {
+                                        <span class="tachado" style="margin-bottom: 0px">@item.Preco.ToString("C")</span><br />
+                                        <span style="margin-top: 0px" class="text-success"><strong>@item.PercentualDesconto.ToString()% off - Por @item.PrecoComDesconto.ToString("C")</strong></span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Preco.ToString("C")</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            {
+                cont = cont + 1;
+            }
+        }
+
+        <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <img src="" class="imagepreview" style="width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $.fn.responsiveTabs = function () {
+        this.addClass('responsive-tabs');
+        this.append($('<span class="glyphicon glyphicon-triangle-bottom"></span>'));
+        this.append($('<span class="glyphicon glyphicon-triangle-top"></span>'));
+
+        this.on('click', 'li.active > a, span.glyphicon', function () {
+            this.toggleClass('open');
+        }.bind(this));
+
+        this.on('click', 'li:not(.active) > a', function () {
+            this.removeClass('open');
+        }.bind(this));
+    };
+
+    $('.nav.nav-tabs').responsiveTabs();
+</script>

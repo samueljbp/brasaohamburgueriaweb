@@ -1,0 +1,361 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoSolution.Repository;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+
+    .containerAAA {
+        position: relative;
+        width: 150px;
+        height: 100%;
+    }
+
+    .overlayAAA {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.5s ease;
+    }
+
+    .containerAAA:hover .overlayAAA {
+        display: block;
+        background: rgba(0, 0, 0, .3);
+    }
+
+    .imgAAA {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        left: 0;
+    }
+
+    .buttonAAA {
+        position: absolute;
+        width: 150px;
+        left: 0;
+        top: 40%;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+    }
+
+        .buttonAAA a {
+            width: 150px;
+            padding: 12px 48px;
+            text-align: center;
+            color: white;
+            border: solid 2px white;
+            z-index: 1;
+        }
+
+    .containerAAA:hover .buttonAAA {
+        opacity: 1;
+    }
+</style>
+<script src="~/app/CadastroItemCardapioForm/citemController.js"></script>
+<div ng-controller="citemController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro" nv-file-drop="" uploader="uploader">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetItens,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetImpressorasProducao,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseRemoverImagem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGravarItem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseExcluirItem,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formItemCardapio" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Item de cardápio - Cadastro</h3>
+        <hr />
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th st-sort="codItemCardapio" width="10%"><a href="#">Código</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="imagem" width="13%"><a href="#">Imagem</a></th>
+                        <th st-sort="nome" width="18%"><a href="#">Nome</a></th>
+                        <th st-sort="descricaoClasse" width="16%"><a href="#">Classe</a></th>
+                        <th st-sort="preco" width="8%"><a href="#">Preço</a></th>
+                        <th st-sort="ordemExibicao" width="5%"><a href="#">Ordem exibição</a></th>
+                        <th st-sort="sincronizar" width="5%"><a href="#">Sincronizar</a></th>
+                        <th st-sort="ativo" width="5%"><a href="#">Ativo</a></th>
+                        <th st-sort="" colspan="2" width="10%"><a href="#"></a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codItemCardapio" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th></th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="2">
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="rowCollection.length <= 0">
+                        <td colspan="11">
+                            <div>
+                                <small>Nenhum item cadastrado</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="item in displayedCollection" ng-if="rowCollection.length > 0">
+                        <td>{{item.codItemCardapio}}</td>
+                        <td>{{(item.nomeEmpresa != null ? item.nomeEmpresa : 'TODAS')}}</td>
+                        <td>
+                            <img src="../{{item.complemento.imagemMini}}" alt="{{item.complemento.imagemMini}}" ng-show="item.complemento && item.complemento.imagem != null" style="max-width: 50%; height: auto;" class="img-thumbnail" />
+                        </td>
+                        <td>{{item.nome}}</td>
+                        <td>{{item.descricaoClasse}}</td>
+                        <td>{{item.preco | currency: "R$ "}}</td>
+                        <td>{{item.complemento.ordemExibicao}}</td>
+                        <td>{{item.sincronizar ? 'Sim' : 'Não'}}</td>
+                        <td>{{item.ativo ? 'Sim' : 'Não'}}</td>
+                        <td>
+                            <button type="button" ng-click="confirmaExclusaoItem(item)" class="btn btn-sm btn-danger">
+                                <i class="glyphicon glyphicon-remove">
+                                </i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" ng-click="modalAlteracao(item)" class="btn btn-sm btn-warning">
+                                <i class="glyphicon glyphicon-edit">
+                                </i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="11" class="text-right">
+                            <div class="text-right">
+                                <button type="button" ng-click="modalInclusao()" class="btn btn-sm btn-primary">
+                                    <i class="glyphicon glyphicon-plus">
+                                    </i>Cadastrar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="11" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <form role="form" id="formGravarItem" class="form-horizontal">
+        <div class="modal fade" id="modalGravarItem" tabindex="-1" role="dialog" aria-labelledby="labelModalGravarItem" style="overflow: scroll;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="labelModalGravarItem">Item de cardápio - Manutenção</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div cg-busy="{promise:promiseGravarItem,backdrop:false,delay:10,minDuration:1000}"></div>
+                        @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+                        <div class="form-group">
+                            <label for="codItemCardapio" class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="codItemCardapio" ng-disabled="modoCadastro == 'A'" name="codItemCardapio" class="form-control" ng-model="itemSelecionado.codItemCardapio" maxlength="5" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <small ng-id="modoCadastro == 'I'">Deixe o campo vazio para gerar o código automaticamente</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codEmpresa" class="col-sm-2 control-label">Empresa</label>
+                            <div class="col-md-5 col-xs-12">
+                                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="itemSelecionado.codEmpresa">
+                                    <option value="" selected>TODAS</option>
+                                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="itemSelecionado.codItemCardapio > 0">
+                            <label for="numero" class="col-sm-2 control-label">Imagem</label>
+                            <div class="col-sm-3">
+                                <div ng-show="uploader.isHTML5">
+                                    <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                    <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                        Arraste a imagem até aqui
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="table-responsive">
+
+                                    <div class="containerAAA" ng-show="itemSelecionado.complemento.imagem != null && uploader.queue.length == 0">
+                                        <img src="../{{itemSelecionado.complemento.imagemMini}}" alt="{{itemSelecionado.complemento.imagemMini}}" class="img-thumbnail" />
+                                        <div class="overlayAAA"></div>
+                                        <div class="buttonAAA">
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="removerImagem()">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <table class="table" ng-show="uploader.queue.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">Imagem</th>
+                                                <th width="15%" ng-show="uploader.isHTML5">Tamanho</th>
+                                                <th width="20%" ng-show="uploader.isHTML5">Progresso</th>
+                                                <th width="15%">Status</th>
+                                                <th width="20%">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in uploader.queue">
+                                                <td>
+                                                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 60 }" title="{{ item.file.name }}" data-toggle="tooltip" data-placement="top" tooltip></div>
+                                                </td>
+                                                <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                <td ng-show="uploader.isHTML5">
+                                                    <div class="progress" style="margin-bottom: 0;">
+                                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                    <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                    <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                </td>
+                                                <td nowrap>
+                                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                        <span class="glyphicon glyphicon-upload"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                        <span class="glyphicon glyphicon-ban-circle"></span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nome" class="col-sm-2 control-label">Nome</label>
+                            <div class="col-sm-8">
+                                <input type="text" required id="numero" name="nome" class="form-control" ng-model="itemSelecionado.nome" maxlength="200" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoLonga" class="col-sm-2 control-label">Descrição detalhada</label>
+                            <div class="col-sm-8">
+                                <textarea rows="4" cols="50" required id="descricaoLonga" name="descricaoLonga" class="form-control" ng-model="itemSelecionado.complemento.descricaoLonga" maxlength="400"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codClasse" class="col-sm-2 control-label">Classe</label>
+                            <div class="col-sm-6">
+                                <select name="codClasse" id="codClasse" required class="form-control" ng-model="itemSelecionado.codClasse" ng-change="selecionaClasse()">
+                                    <option value="">(Selecione)</option>
+                                    <option ng-repeat="classe in classes" ng-selected="itemSelecionado.codClasse == classe.codClasse" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="codImpressoraProducao" class="col-sm-2 control-label">Impressora produção</label>
+                            <div class="col-sm-6">
+                                <select name="codImpressoraProducao" id="codImpressoraProducao" class="form-control" ng-model="itemSelecionado.codImpressoraProducao" ng-change="selecionaImpressora()">
+                                    <option value="">(Selecione)</option>
+                                    <option ng-repeat="imp in impressorasProducao" ng-selected="itemSelecionado.codImpressoraProducao == imp.codImpressora" value="{{imp.codImpressora}}">{{imp.descricao}}</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preco" class="col-sm-2 control-label">Preço</label>
+                            <div class="col-sm-4">
+                                <input type='text' name="preco" autocomplete="off" id="preco" format="number" class="form-control hidden-sm hidden-xs" ng-model="itemSelecionado.preco" />
+                                <input type='number' step="any" name="preco" autocomplete="off" id="preco" class="form-control hidden-md hidden-lg" ng-model="itemSelecionado.preco" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numero" class="col-sm-2 control-label">Ordem exibição</label>
+                            <div class="col-sm-3">
+                                <input type="number" step="1" id="ordemExibicao" name="ordemExibicao" class="form-control" ng-model="itemSelecionado.complemento.ordemExibicao" maxlength="3" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div id="divCheckSincronizar" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="itemSelecionado.sincronizar" />Sincronizar</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div id="divCheckAtivo" class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-2">
+                                <div class="checkbox">
+                                    <label class="control-label"><input type="checkbox" id="sincronizar" name="sincronizar" ng-model="itemSelecionado.ativo" />Ativo</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" ng-click="gravarItem()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

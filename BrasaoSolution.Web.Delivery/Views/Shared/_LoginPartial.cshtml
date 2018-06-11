@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNet.Identity
+@using BrasaoSolution.Model;
+@{
+    ViewDataDictionary viewData = ViewData;
+    var emManut = viewData["EmManutencao"].ToString();
+    var casaAberta = Convert.ToBoolean(viewData["CasaAberta"].ToString());
+}
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("Sair", "Conta", FormMethod.Post, new { id = "logoutForm", @class = "" }))
+    {
+        @Html.AntiForgeryToken()
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a class="{{casaAberta ? 'casaAberta' : 'casaFechada'}}" href="#">
+                    {{casaAberta ? 'Aberto' : 'Fechado'}}
+                </a>
+            </li>
+            @if (User.IsInRole(Constantes.ROLE_ADMIN))
+            {
+                <li>
+                    <a href="#">
+                        <label class="switch">
+                            <input type="checkbox" ng-click="checkCasaAberta()" ng-model="casaAberta" @(casaAberta ? "checked" : "")>
+                            <span class="slider round"></span>
+                        </label>
+                    </a>
+                </li>
+            }
+            <li>
+                @Html.ActionLink("Olá " + User.Identity.GetUserName(), "Alterar", "Conta", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Sair</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @if (emManut == "S")
+        {
+            <li></li>
+        }
+        else
+        {
+            <li>
+                <a class="{{casaAberta ? 'casaAberta' : 'casaFechada'}}" href="#">
+                    {{casaAberta ? 'Aberto' : 'Fechado'}} agora
+                </a>
+            </li>
+            <li>@Html.ActionLink("Registrar", "Cadastrar", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+            <li>@Html.ActionLink("Entrar", "Login", "Conta", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        }
+    </ul>
+}

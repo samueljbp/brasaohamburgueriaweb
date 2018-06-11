@@ -1,0 +1,162 @@
+﻿@using Microsoft.AspNet.Identity;
+@using BrasaoSolution.Repository;
+@functions{
+    public string GetAntiForgeryToken()
+    {
+        string cookieToken, formToken;
+        AntiForgery.GetTokens(null, out cookieToken, out formToken);
+        return cookieToken + ":" + formToken;
+    }
+}
+@{
+    var lojas = SessionData.Empresas;
+    var codLojaSelecilnada = SessionData.CodLojaSelecionada;
+    var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
+    {
+        ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+    };
+}
+<style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+<script src="~/app/ConsultarProdutosVendidosForm/cpvController.js"></script>
+<div ng-controller="cpvController" ng-init="init('@User.Identity.GetUserName()', '@GetAntiForgeryToken()', '@Newtonsoft.Json.JsonConvert.SerializeObject(lojas, jsonSettings)', @codLojaSelecilnada)" class="centro">
+    @Html.Partial("~/Views/Shared/_MensagensInformativas.cshtml")
+    <div cg-busy="{promise:promiseGetProdutosVendidos,backdrop:false,delay:10,minDuration:1000}"></div>
+    <div cg-busy="{promise:promiseGetClasses,backdrop:false,delay:10,minDuration:1000}"></div>
+    <form role="form" id="formProdutosVendidos" class="form-horizontal" ng-submit="submitForm()">
+        <h3>Produtos vendidos</h3>
+        <hr />
+        <div class="form-group">
+            <label for="codEmpresa" class="col-sm-1 col-xs-12 control-label">Empresa</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codEmpresa" id="codEmpresa" class="form-control" ng-model="filtros.codEmpresa">
+                    <option value="" selected>TODAS</option>
+                    <option ng-repeat="empresa in empresas" value="{{empresa.codEmpresa}}">{{empresa.nomeFantasia}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="codClasse" class="col-sm-1 col-xs-12 control-label">Classe</label>
+            <div class="col-md-5 col-xs-12">
+                <select name="codClasse" id="codClasse" required class="form-control" ng-model="filtros.codClasse">
+                    <option value="" selected>(Selecione)</option>
+                    <option ng-repeat="classe in classes" value="{{classe.codClasse}}">{{classe.descricaoClasse}}</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="compDataInicio" class="col-md-1 col-xs-12 control-label">Início</label>
+            <div class="col-md-3 col-xs-12">
+                <div class='input-group date' id='compDataInicio'>
+                    <input type='text' class="form-control" maxlength="10" id="txtDataInicio" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <div class='input-group date' id='compHoraInicio'>
+                    <input type='text' class="form-control" id="txtHoraInicio" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="compDataFim" class="col-md-1 col-xs-12 control-label">Fim</label>
+            <div class="col-md-3 col-xs-12">
+                <div class='input-group date' id='compDataFim'>
+                    <input type='text' class="form-control" maxlength="10" id="txtDataFim" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <div class='input-group date' id='compHoraFim'>
+                    <input type='text' class="form-control" id="txtHoraFim" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <button type="button" class="btn btn-success" ng-click="getProdutosVendidos()">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>Consultar
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div ng-if="rowCollection.length <= 0">
+            <small>Nenhum item encontrado</small>
+        </div>
+        <div class="table-responsive">
+            <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped" ng-if="rowCollection.length > 0" on-filter="onFilter">
+                <thead>
+                    <tr>
+                        <th st-sort="codItemCardapio" width="5%"><a href="#">Cod Item</a></th>
+                        <th st-sort="nomeEmpresa" width="10%"><a href="#">Empresa</a></th>
+                        <th st-sort="nome" width="30%"><a href="#">Item</a></th>
+                        <th st-sort="descricaoClasse" width="25%"><a href="#">Classe</a></th>
+                        <th st-sort="quantidade" width="15%"><a href="#">Quantidade</a></th>
+                        <th st-sort="valorTotal" width="15%"><a href="#">Valor total</a></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="codItemCardapio" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nomeEmpresa" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="nome" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="descricaoClasse" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="quantidade" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="valorTotal" placeholder="Pesquisar" class="input-sm form-control" type="search" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in displayedCollection">
+                        <td>{{item.codItemCardapio}}</td>
+                        <td>{{(item.nomeEmpresa != 0 ? item.nomeEmpresa : 'TODAS')}}</td>
+                        <td>{{item.nome}}</td>
+                        <td>{{item.descricaoClasse}}</td>
+                        <td>{{item.quantidade}}</td>
+                        <td>{{item.valorTotal | currency: "R$ "}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-left">
+                            <div class="col-sm-2">
+                                <small>Quantidade total: <span class="text-primary">{{totais.quantidadeTotal}}</span></small>
+                            </div>
+                            <div class="col-sm-2">
+                                <small>Valor total: <span class="text-success">{{totais.valorTotal | currency: "R$ "}}</span></small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>

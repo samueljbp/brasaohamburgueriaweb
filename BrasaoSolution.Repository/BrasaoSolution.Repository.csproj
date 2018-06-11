@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32A32C69-65C8-430D-8643-B31860862682}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BrasaoHamburgueria.Repository</RootNamespace>
+    <AssemblyName>BrasaoHamburgueria.Repository</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context\Brasao\BrasaoContext.cs" />
+    <Compile Include="Context\Identity\IdentityContext.cs" />
+    <Compile Include="Migrations\Brasao\201709252036459_InitialCreate.cs" />
+    <Compile Include="Migrations\Brasao\201709252036459_InitialCreate.Designer.cs">
+      <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201710091824193_DescontoPedido.cs" />
+    <Compile Include="Migrations\Brasao\201710091824193_DescontoPedido.Designer.cs">
+      <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.cs" />
+    <Compile Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.Designer.cs">
+      <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.cs" />
+    <Compile Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.Designer.cs">
+      <DependentUpon>201710201601450_IndicadoresSincronizarRegistro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.cs" />
+    <Compile Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.Designer.cs">
+      <DependentUpon>201710201616251_ImpressoraPadraoClasse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201711091832383_CriaTabelasProgramaFidelidade.cs" />
+    <Compile Include="Migrations\Brasao\201711091832383_CriaTabelasProgramaFidelidade.Designer.cs">
+      <DependentUpon>201711091832383_CriaTabelasProgramaFidelidade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.cs" />
+    <Compile Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.Designer.cs">
+      <DependentUpon>201801311526353_RetirarPedidoNaCasa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201802271257589_PromocaoVenda.cs" />
+    <Compile Include="Migrations\Brasao\201802271257589_PromocaoVenda.Designer.cs">
+      <DependentUpon>201802271257589_PromocaoVenda.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201802271708562_ColunasPromocaoItemPedido.cs" />
+    <Compile Include="Migrations\Brasao\201802271708562_ColunasPromocaoItemPedido.Designer.cs">
+      <DependentUpon>201802271708562_ColunasPromocaoItemPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201803091332580_ComboCardapio.cs" />
+    <Compile Include="Migrations\Brasao\201803091332580_ComboCardapio.Designer.cs">
+      <DependentUpon>201803091332580_ComboCardapio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201803261213276_ValidadeCombo.cs" />
+    <Compile Include="Migrations\Brasao\201803261213276_ValidadeCombo.Designer.cs">
+      <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201804251234316_CriacaoEntregador.cs" />
+    <Compile Include="Migrations\Brasao\201804251234316_CriacaoEntregador.Designer.cs">
+      <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.cs" />
+    <Compile Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.Designer.cs">
+      <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.cs" />
+    <Compile Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.Designer.cs">
+      <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.Designer.cs">
+      <DependentUpon>201804301802424_CriacaoEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.Designer.cs">
+      <DependentUpon>201805071830073_MaisColunasEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.cs" />
+    <Compile Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.Designer.cs">
+      <DependentUpon>201805081625137_CampoEmpresaAtiva.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.cs" />
+    <Compile Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.Designer.cs">
+      <DependentUpon>201805141244565_RetiraObrigatoriedadeFundos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.cs" />
+    <Compile Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.Designer.cs">
+      <DependentUpon>201805141413495_ParametrizacaoCores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805141416179_AjusteColunasCores.cs" />
+    <Compile Include="Migrations\Brasao\201805141416179_AjusteColunasCores.Designer.cs">
+      <DependentUpon>201805141416179_AjusteColunasCores.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805151842019_TextoInstitucionalEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805151842019_TextoInstitucionalEmpresa.Designer.cs">
+      <DependentUpon>201805151842019_TextoInstitucionalEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.Designer.cs">
+      <DependentUpon>201805211209068_ControleCasaFechadaEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805211932024_CamposLocalPedido.cs" />
+    <Compile Include="Migrations\Brasao\201805211932024_CamposLocalPedido.Designer.cs">
+      <DependentUpon>201805211932024_CamposLocalPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201805281624591_URLSiteEmpresa.cs" />
+    <Compile Include="Migrations\Brasao\201805281624591_URLSiteEmpresa.Designer.cs">
+      <DependentUpon>201805281624591_URLSiteEmpresa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\201806111233296_CodBairroPedidoNull.cs" />
+    <Compile Include="Migrations\Brasao\201806111233296_CodBairroPedidoNull.Designer.cs">
+      <DependentUpon>201806111233296_CodBairroPedidoNull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Brasao\Configuration.cs" />
+    <Compile Include="Migrations\Identity\201709252038170_InitialCreate.cs" />
+    <Compile Include="Migrations\Identity\201709252038170_InitialCreate.Designer.cs">
+      <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.cs" />
+    <Compile Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.Designer.cs">
+      <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.cs" />
+    <Compile Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.Designer.cs">
+      <DependentUpon>201805211859267_EstadoCidadeBairroTabelaUsuario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Identity\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\CadastrosRepository.cs" />
+    <Compile Include="Repository\CardapioRepository.cs" />
+    <Compile Include="Repository\ConsultasRepository.cs" />
+    <Compile Include="Repository\InstitucionalRepository.cs" />
+    <Compile Include="Repository\IntegracoesRepository.cs" />
+    <Compile Include="Repository\ParametroRepository.cs" />
+    <Compile Include="Repository\PedidoRepository.cs" />
+    <Compile Include="Repository\ProgramaFidelidadeRepository.cs" />
+    <Compile Include="SessionData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Context\itens_cardapio.xls" />
+    <Content Include="Context\script_banco_brasao.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BrasaoSolution.Helper\BrasaoSolution.Helper.csproj">
+      <Project>{349b8f94-7236-4b0c-ba43-cc7fc76698b5}</Project>
+      <Name>BrasaoSolution.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BrasaoSolution.Model\BrasaoSolution.Model.csproj">
+      <Project>{fcf4fdf4-ce09-4690-9078-2b4f335008b1}</Project>
+      <Name>BrasaoSolution.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\Brasao\201709252036459_InitialCreate.resx">
+      <DependentUpon>201709252036459_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710091824193_DescontoPedido.resx">
+      <DependentUpon>201710091824193_DescontoPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710111822365_ItemCardapioAtivo.resx">
+      <DependentUpon>201710111822365_ItemCardapioAtivo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710201601450_IndicadoresSincronizarRegistro.resx">
+      <DependentUpon>201710201601450_IndicadoresSincronizarRegistro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201710201616251_ImpressoraPadraoClasse.resx">
+      <DependentUpon>201710201616251_ImpressoraPadraoClasse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201711091832383_CriaTabelasProgramaFidelidade.resx">
+      <DependentUpon>201711091832383_CriaTabelasProgramaFidelidade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201801311526353_RetirarPedidoNaCasa.resx">
+      <DependentUpon>201801311526353_RetirarPedidoNaCasa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201802271257589_PromocaoVenda.resx">
+      <DependentUpon>201802271257589_PromocaoVenda.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201802271708562_ColunasPromocaoItemPedido.resx">
+      <DependentUpon>201802271708562_ColunasPromocaoItemPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201803091332580_ComboCardapio.resx">
+      <DependentUpon>201803091332580_ComboCardapio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201803261213276_ValidadeCombo.resx">
+      <DependentUpon>201803261213276_ValidadeCombo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804251234316_CriacaoEntregador.resx">
+      <DependentUpon>201804251234316_CriacaoEntregador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804271819592_FormaPagamentoCadastrada.resx">
+      <DependentUpon>201804271819592_FormaPagamentoCadastrada.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804301145230_CriacaoHistoricoPedido.resx">
+      <DependentUpon>201804301145230_CriacaoHistoricoPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201804301802424_CriacaoEmpresa.resx">
+      <DependentUpon>201804301802424_CriacaoEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805071830073_MaisColunasEmpresa.resx">
+      <DependentUpon>201805071830073_MaisColunasEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805081625137_CampoEmpresaAtiva.resx">
+      <DependentUpon>201805081625137_CampoEmpresaAtiva.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141244565_RetiraObrigatoriedadeFundos.resx">
+      <DependentUpon>201805141244565_RetiraObrigatoriedadeFundos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141413495_ParametrizacaoCores.resx">
+      <DependentUpon>201805141413495_ParametrizacaoCores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805141416179_AjusteColunasCores.resx">
+      <DependentUpon>201805141416179_AjusteColunasCores.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805151842019_TextoInstitucionalEmpresa.resx">
+      <DependentUpon>201805151842019_TextoInstitucionalEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805211209068_ControleCasaFechadaEmpresa.resx">
+      <DependentUpon>201805211209068_ControleCasaFechadaEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805211932024_CamposLocalPedido.resx">
+      <DependentUpon>201805211932024_CamposLocalPedido.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201805281624591_URLSiteEmpresa.resx">
+      <DependentUpon>201805281624591_URLSiteEmpresa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Brasao\201806111233296_CodBairroPedidoNull.resx">
+      <DependentUpon>201806111233296_CodBairroPedidoNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201709252038170_InitialCreate.resx">
+      <DependentUpon>201709252038170_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201804301818561_CodEmpresaPadrao.resx">
+      <DependentUpon>201804301818561_CodEmpresaPadrao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Identity\201805211859267_EstadoCidadeBairroTabelaUsuario.resx">
+      <DependentUpon>201805211859267_EstadoCidadeBairroTabelaUsuario.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

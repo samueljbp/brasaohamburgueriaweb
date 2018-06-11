@@ -1,0 +1,52 @@
+﻿@using BrasaoSolution.Model
+@using BrasaoSolution.Repository;
+@{
+    ViewBag.Title = SessionData.LojaSelecionada.NomeFantasia + " - Sistema de pedidos online";
+}
+<h2 class="texto-branco">Bem vindo!</h2>
+<div class="centro">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <h5>
+                    Bem vindo ao sistema de pedidos online @SessionData.LojaSelecionada.NomeFantasia. Aqui você poderá fazer seu pedido no conforto do lar e acompanhar o andamento até recebê-lo.
+                </h5>
+            </p>
+            <p>
+                <h5>
+                    Esperamos que goste! :)
+                </h5>
+            </p>
+            <p>
+                <h5>
+                    Se quiser dar uma olhada no nosso cardápio antes de se cadastrar clique @Html.ActionLink("aqui", "Listar", "Cardapio").
+                </h5>
+            </p>
+            <p>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4">
+                        <a href="~/Cardapio/Listar?mostrarOfertas=true" class="btn btn-success btn-block">
+                            <i class="fa fa-shopping-cart"></i>
+                            Ofertas do dia
+                        </a>
+                    </div>
+                </div>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5 col-md-4">
+            <br />
+            <h4 class="text-primary">Já tem cadastro?</h4>
+            Clique @Html.ActionLink("aqui", "Login", "Conta") e faça login.<br /><br />
+            ou<br /><br />
+            @Html.Partial("~/Views/Conta/_ListaLoginExternos.cshtml", new LoginExternoViewModel { ReturnURL = ViewBag.ReturnUrl })
+        </div>
+        <div class="col-sm-6">
+            <br />
+            <h4 class="text-warning">É novo por aqui?</h4>
+            Clique @Html.ActionLink("aqui", "Cadastrar", "Conta") e faça seu cadastro.
+        </div>
+    </div>
+</div>
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
