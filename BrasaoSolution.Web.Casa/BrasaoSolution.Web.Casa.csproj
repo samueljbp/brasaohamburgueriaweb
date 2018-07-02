@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,14 +25,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\cardapio.provider.ts" />
     <None Remove="ClientApp\app\components\pedido\pedido.component.ts" />
+    <None Remove="ClientApp\app\empresa.provider.ts" />
+    <None Remove="ClientApp\app\GlobalData.resolver.ts" />
     <None Remove="ClientApp\app\GlobalData.service.ts" />
     <None Remove="ClientApp\app\GlobalData.ts" />
     <None Remove="ClientApp\app\GlobalVariables.ts" />
     <None Remove="ClientApp\app\model\ClasseItemCardapioViewModel.ts" />
     <None Remove="ClientApp\app\model\Comanda.ts" />
     <None Remove="ClientApp\app\model\ComplementoItemCardapioViewModel.ts" />
-    <None Remove="ClientApp\app\model\Empresa.ts" />
+    <None Remove="ClientApp\app\model\EmpresaViewModel.ts" />
     <None Remove="ClientApp\app\model\ExtraItemComanda.ts" />
     <None Remove="ClientApp\app\model\ItemCardapioViewModel.ts" />
     <None Remove="ClientApp\app\model\ItemComanda.ts" />
@@ -41,17 +45,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="node_modules\font-awesome\css\font-awesome.css" />
+    <Content Include="node_modules\font-awesome\css\font-awesome.min.css" />
+    <Content Include="node_modules\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="node_modules\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="node_modules\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="node_modules\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="node_modules\font-awesome\HELP-US-OUT.txt" />
+    <Content Include="node_modules\font-awesome\package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BrasaoSolution.Helper\BrasaoSolution.Helper.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\pedido\pedido.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\empresa.provider.ts" />
+    <TypeScriptCompile Include="ClientApp\app\GlobalData.resolver.ts" />
     <TypeScriptCompile Include="ClientApp\app\GlobalData.ts" />
     <TypeScriptCompile Include="ClientApp\app\GlobalData.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\GlobalVariables.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ClasseItemCardapioViewModel.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ComplementoItemCardapioViewModel.ts" />
-    <TypeScriptCompile Include="ClientApp\app\model\Empresa.ts" />
+    <TypeScriptCompile Include="ClientApp\app\model\EmpresaViewModel.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ExtraItemComanda.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ItemCardapioViewModel.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ItemComanda.ts" />
@@ -59,6 +76,43 @@
     <TypeScriptCompile Include="ClientApp\app\model\Comanda.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\ObservacaoProducaoViewModel.ts" />
     <TypeScriptCompile Include="ClientApp\app\model\OpcaoExtraViewModel.ts" />
+    <TypeScriptCompile Include="ClientApp\app\cardapio.provider.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="node_modules\font-awesome\.npmignore" />
+    <None Include="node_modules\font-awesome\css\font-awesome.css.map" />
+    <None Include="node_modules\font-awesome\fonts\fontawesome-webfont.svg" />
+    <None Include="node_modules\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <None Include="node_modules\font-awesome\less\animated.less" />
+    <None Include="node_modules\font-awesome\less\bordered-pulled.less" />
+    <None Include="node_modules\font-awesome\less\core.less" />
+    <None Include="node_modules\font-awesome\less\fixed-width.less" />
+    <None Include="node_modules\font-awesome\less\font-awesome.less" />
+    <None Include="node_modules\font-awesome\less\icons.less" />
+    <None Include="node_modules\font-awesome\less\larger.less" />
+    <None Include="node_modules\font-awesome\less\list.less" />
+    <None Include="node_modules\font-awesome\less\mixins.less" />
+    <None Include="node_modules\font-awesome\less\path.less" />
+    <None Include="node_modules\font-awesome\less\rotated-flipped.less" />
+    <None Include="node_modules\font-awesome\less\screen-reader.less" />
+    <None Include="node_modules\font-awesome\less\stacked.less" />
+    <None Include="node_modules\font-awesome\less\variables.less" />
+    <None Include="node_modules\font-awesome\README.md" />
+    <None Include="node_modules\font-awesome\scss\font-awesome.scss" />
+    <None Include="node_modules\font-awesome\scss\_animated.scss" />
+    <None Include="node_modules\font-awesome\scss\_bordered-pulled.scss" />
+    <None Include="node_modules\font-awesome\scss\_core.scss" />
+    <None Include="node_modules\font-awesome\scss\_fixed-width.scss" />
+    <None Include="node_modules\font-awesome\scss\_icons.scss" />
+    <None Include="node_modules\font-awesome\scss\_larger.scss" />
+    <None Include="node_modules\font-awesome\scss\_list.scss" />
+    <None Include="node_modules\font-awesome\scss\_mixins.scss" />
+    <None Include="node_modules\font-awesome\scss\_path.scss" />
+    <None Include="node_modules\font-awesome\scss\_rotated-flipped.scss" />
+    <None Include="node_modules\font-awesome\scss\_screen-reader.scss" />
+    <None Include="node_modules\font-awesome\scss\_stacked.scss" />
+    <None Include="node_modules\font-awesome\scss\_variables.scss" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

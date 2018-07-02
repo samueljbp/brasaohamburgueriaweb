@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Comanda } from '../../model/Comanda';
 import { GlobalData } from '../../GlobalData';
-import { Router } from '@angular/router';
 import { ItemComanda } from '../../model/ItemComanda';
+import * as globals from '../../GlobalVariables';
+import { ClasseItemCardapioViewModel } from '../../model/ClasseItemCardapioViewModel';
+import { ItemCardapioViewModel } from '../../model/ItemCardapioViewModel';
 
 @Component({
     selector: 'home',
@@ -10,17 +12,17 @@ import { ItemComanda } from '../../model/ItemComanda';
 })
 export class HomeComponent implements OnInit {
     public comanda: Comanda;
+    public cardapio: ClasseItemCardapioViewModel[] = new Array<ClasseItemCardapioViewModel>();
 
-    constructor(
-        private router: Router,
-        private globalData: GlobalData) {
+    constructor() {
 
-        this.comanda = globalData.comanda;
+        this.cardapio = globals.globalData.cardapio;
+        this.comanda = globals.globalData.comanda;
 
     }
 
     ngOnInit(): void {
-              
+
 
     }
 

@@ -1,13 +1,16 @@
 ﻿import { Injectable } from "@angular/core";
-import { Empresa } from "./model/Empresa";
+import { EmpresaViewModel } from "./model/EmpresaViewModel";
 import { Comanda } from "./model/Comanda";
 import { ClasseItemCardapioViewModel } from "./model/ClasseItemCardapioViewModel";
 
 @Injectable()
 export class GlobalData {
 
-    empresa: Empresa;
-    comanda: Comanda;
-    cardapio: ClasseItemCardapioViewModel[];
+    initialized: boolean = false;
+    codEmpresa: number;
+    numMesa: number;
+    empresa: EmpresaViewModel = new EmpresaViewModel();
+    comanda: Comanda = new Comanda();
+    cardapio: ClasseItemCardapioViewModel[] = new Array<ClasseItemCardapioViewModel>();
 
 }

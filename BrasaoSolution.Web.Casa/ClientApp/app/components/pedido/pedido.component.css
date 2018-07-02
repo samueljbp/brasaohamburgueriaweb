@@ -1,0 +1,15 @@
+.img-fluid {
+    cursor: zoom-in;
+}
+
+.card:hover {
+    background-color: #e4e4e4;
+}
+
+.modal-header {
+    height: 35px;
+    vertical-align: middle;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}

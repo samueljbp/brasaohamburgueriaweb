@@ -32,14 +32,6 @@ namespace BrasaoSolution.Web.Casa.Controllers
             });
         }
 
-        [HttpGet("[action]")]
-        public List<ClasseItemCardapioViewModel> GetCardapio()
-        {
-            BrasaoSolutionRepository rep = new BrasaoSolutionRepository(this._brasaoContext);
-
-            return rep.GetCardapio(1);
-        }
-
         public class WeatherForecast
         {
             public string DateFormatted { get; set; }

@@ -363,6 +363,7 @@ namespace BrasaoSolution.Repository
 
         public async Task<int> GravaPedido(PedidoViewModel pedidoViewModel, string loginUsuario)
         {
+            BrasaoUtil.GravaLog("Valida pedido.", EventLogEntryType.Information);
             try
             {
                 ValidaPedido(pedidoViewModel, loginUsuario);
@@ -373,7 +374,8 @@ namespace BrasaoSolution.Repository
                 
                 throw ex;
             }
-            
+            BrasaoUtil.GravaLog("Validou pedido com sucesso.", EventLogEntryType.Information);
+
 
             var historico = new HistoricoPedido();
 
@@ -386,6 +388,7 @@ namespace BrasaoSolution.Repository
             {
                 try
                 {
+                    BrasaoUtil.GravaLog("Inicia gravação do registro do pedido.", EventLogEntryType.Information);
                     Pedido ped;
 
                     if (pedidoViewModel.CodPedido <= 0)
@@ -445,9 +448,11 @@ namespace BrasaoSolution.Repository
                     }
 
                     await _contexto.SaveChangesAsync();
+                    BrasaoUtil.GravaLog("Gravou registro do pedido com sucesso.", EventLogEntryType.Information);
 
                     ItemPedido item;
 
+                    BrasaoUtil.GravaLog("Executa trecho de combo.", EventLogEntryType.Information);
                     var itens = pedidoViewModel.Itens.Where(i => i.CodCombo == null).ToList();
 
                     //combos são explodidos em itens e tem seus itens gravados individualmente. A forma de identificar é a coluna cod_combo. Na hora de recuperar os itens precisa agrupar novamente
@@ -472,7 +477,9 @@ namespace BrasaoSolution.Repository
                             itens.Add(icPedido);
                         }
                     }
+                    BrasaoUtil.GravaLog("Executou trecho de combo com sucesso.", EventLogEntryType.Information);
 
+                    BrasaoUtil.GravaLog("Inicia gravação dos itens.", EventLogEntryType.Information);
                     foreach (var itemViewModel in itens)
                     {
                         if (itemViewModel.AcaoRegistro == (int)Comum.AcaoRegistro.Incluir)
@@ -519,21 +526,29 @@ namespace BrasaoSolution.Repository
 
                     await _contexto.SaveChangesAsync();
 
+                    BrasaoUtil.GravaLog("Gravou itens com sucesso.", EventLogEntryType.Information);
+
                     decimal saldoAtualizadoPrograma = -1;
 
                     if (!pedidoViewModel.PedidoExterno)
                     {
+                        BrasaoUtil.GravaLog("Se não for pedido externo, verifica programa de fidelidade.", EventLogEntryType.Information);
                         ProgramaFidelidadeRepository _progRep = new ProgramaFidelidadeRepository();
                         var programa = _progRep.GetProgramaFidelidadeUsuario(loginUsuario, pedidoViewModel.CodEmpresa);
 
+                        BrasaoUtil.GravaLog("Buscou programa na base.", EventLogEntryType.Information);
                         if (programa != null && programa.LoginUsuario != null && programa.TermosAceitos != null && programa.TermosAceitos.Value && pedidoViewModel.ValorTotal > 0)
                         {
+                            BrasaoUtil.GravaLog("Encontrou programa: " + JsonConvert.SerializeObject(programa), EventLogEntryType.Information);
                             //credita pontos referentes ao pedido
+                            BrasaoUtil.GravaLog("Busca objeto do saldo.", EventLogEntryType.Information);
                             SaldoUsuarioProgramaFidelidade saldo = _contexto.SaldosUsuariosProgramasFidelidade.Where(s => s.CodProgramaFidelidade == programa.CodProgramaFidelidade && s.LoginUsuario == loginUsuario).FirstOrDefault();
                             var pontosCreditar = (decimal)pedidoViewModel.ValorTotal * programa.PontosGanhosPorUnidadeMonetariaGasta;
                             saldo.Saldo = saldo.Saldo + pontosCreditar;
                             saldoAtualizadoPrograma = saldo.Saldo;
+                            BrasaoUtil.GravaLog("Atualizo saldo.", EventLogEntryType.Information);
 
+                            BrasaoUtil.GravaLog("Cria entrada de extrato.", EventLogEntryType.Information);
                             ExtratoUsuarioProgramaFidelidade extrato = new ExtratoUsuarioProgramaFidelidade();
                             extrato.CodPedido = ped.CodPedido;
                             extrato.CodProgramaFidelidade = programa.CodProgramaFidelidade;
@@ -545,10 +560,12 @@ namespace BrasaoSolution.Repository
                             _contexto.ExtratosUsuariosProgramasFidelidade.Add(extrato);
 
                             _contexto.SaveChanges();
+                            BrasaoUtil.GravaLog("Gravou extrato.", EventLogEntryType.Information);
                         }
 
                         if (pedidoViewModel.UsaSaldoProgramaFidelidade)
                         {
+                            BrasaoUtil.GravaLog("Usa pontos do programa.", EventLogEntryType.Information);
                             if (programa == null)
                             {
                                 throw new Exception("O usuário não está inscrito em nenhum programa de fidelidade no momento.");
@@ -569,17 +586,22 @@ namespace BrasaoSolution.Repository
                             _contexto.ExtratosUsuariosProgramasFidelidade.Add(extrato);
 
                             _contexto.SaveChanges();
+                            BrasaoUtil.GravaLog("Usou pontos.", EventLogEntryType.Information);
                         }
                     }
 
+                    BrasaoUtil.GravaLog("Adiciona histórico.", EventLogEntryType.Information);
                     historico.CodPedido = ped.CodPedido;
                     _contexto.HistoricosPedido.Add(historico);
 
                     _contexto.SaveChanges();
+                    BrasaoUtil.GravaLog("Historico gravado.", EventLogEntryType.Information);
 
                     if (saldoAtualizadoPrograma >= 0)
                     {
+                        BrasaoUtil.GravaLog("Atualiza saldo na sessão.", EventLogEntryType.Information);
                         SessionData.ProgramaFidelidadeUsuario.Saldo = saldoAtualizadoPrograma;
+                        BrasaoUtil.GravaLog("Atualizou saldo na sessão.", EventLogEntryType.Information);
                     }
 
                     dbContextTransaction.Commit();

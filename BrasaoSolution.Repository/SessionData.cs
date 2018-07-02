@@ -10,6 +10,7 @@ using System.Net.Http;
 using BrasaoSolution.Repository.Context;
 using System.Diagnostics;
 using BrasaoSolution.Helper;
+using Newtonsoft.Json;
 
 namespace BrasaoSolution.Repository
 {
@@ -153,29 +154,44 @@ namespace BrasaoSolution.Repository
         {
             get
             {
+                BrasaoUtil.GravaLog("Busca programa de fidelidade na sessão.", EventLogEntryType.Information);
                 ProgramaFidelidadeUsuarioViewModel prog = TryAccessSessionObject<ProgramaFidelidadeUsuarioViewModel>("ProgramaFidelidade");
 
                 if (prog != null)
                 {
-                    if (prog.CodEmpresa != SessionData.CodLojaSelecionada)
+                    BrasaoUtil.GravaLog("Encontrou: " + JsonConvert.SerializeObject(prog), EventLogEntryType.Information);
+                    if (prog.CodEmpresa != null && prog.CodEmpresa != SessionData.CodLojaSelecionada)
                     {
+                        BrasaoUtil.GravaLog("É de outra empresa. Retorna null.", EventLogEntryType.Information);
                         return null;
                     }
 
+                    BrasaoUtil.GravaLog("Retorna objeto.", EventLogEntryType.Information);
                     return prog;
                 }
 
+                BrasaoUtil.GravaLog("Não encontrou.", EventLogEntryType.Information);
+
                 var rep = new ProgramaFidelidadeRepository();
 
+                BrasaoUtil.GravaLog("Otem usuário logado.", EventLogEntryType.Information);
                 string userName = TryGetCurrentUsername();
+                BrasaoUtil.GravaLog("Usuário logado: " + userName, EventLogEntryType.Information);
+                BrasaoUtil.GravaLog("Busca programa de fidelidade do usuário logado.", EventLogEntryType.Information);
                 var progDb = rep.GetProgramaFidelidadeUsuario(userName, SessionData.CodLojaSelecionada);
 
                 if (progDb == null)
                 {
+                    BrasaoUtil.GravaLog("Não eoncontrou.", EventLogEntryType.Information);
                     progDb = new ProgramaFidelidadeUsuarioViewModel();
                 }
 
+                BrasaoUtil.GravaLog("Encontrou: " + JsonConvert.SerializeObject(progDb), EventLogEntryType.Information);
+
                 TrySetSessionObject(progDb, "ProgramaFidelidade");
+
+                BrasaoUtil.GravaLog("Guardou na sessão.", EventLogEntryType.Information);
+
                 return progDb;
             }
         }

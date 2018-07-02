@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { Comanda } from '../../model/Comanda';
 import { GlobalData } from '../../GlobalData';
-import { Router } from '@angular/router';
-import { Empresa } from '../../model/Empresa';
-import { GlobalDataService } from '../../GlobalData.service';
+import { EmpresaViewModel } from '../../model/EmpresaViewModel';
 import * as globals from '../../GlobalVariables';
 import { ClasseItemCardapioViewModel } from '../../model/ClasseItemCardapioViewModel';
 
@@ -14,19 +12,14 @@ import { ClasseItemCardapioViewModel } from '../../model/ClasseItemCardapioViewM
 })
 export class NavMenuComponent {
     public comanda: Comanda;
-    public empresa: Empresa;
-    public cardapio: ClasseItemCardapioViewModel[];
+    public empresa: EmpresaViewModel;
+    public cardapio: ClasseItemCardapioViewModel[] = new Array<ClasseItemCardapioViewModel>();
 
-    constructor(
-        private router: Router) {
+    constructor() {
 
         this.cardapio = globals.globalData.cardapio;
         this.comanda = globals.globalData.comanda;
         this.empresa = globals.globalData.empresa;
-
-        this.data = new Observable<Array<any>>(observer => {
-            this.dataObserver = observer;
-        });
 
     }
 

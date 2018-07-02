@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Comanda } from '../../model/Comanda';
 import { GlobalData } from '../../GlobalData';
-import { Router } from '@angular/router';
-import { Empresa } from '../../model/Empresa';
+import { EmpresaViewModel } from '../../model/EmpresaViewModel';
+import * as globals from '../../GlobalVariables';
+import { ClasseItemCardapioViewModel } from '../../model/ClasseItemCardapioViewModel';
 
 @Component({
     selector: 'rodape',
@@ -11,14 +12,13 @@ import { Empresa } from '../../model/Empresa';
 })
 export class RodapeComponent {
     public comanda: Comanda;
-    public empresa: Empresa;
+    public empresa: EmpresaViewModel;
+    public cardapio: ClasseItemCardapioViewModel[] = new Array<ClasseItemCardapioViewModel>();
 
-    constructor(
-        private router: Router,
-        private globalData: GlobalData) {
+    constructor() {
 
-        this.comanda = globalData.comanda;
-        this.empresa = globalData.empresa;
+        this.cardapio = globals.globalData.cardapio;
+        this.comanda = globals.globalData.comanda;
 
     }
 

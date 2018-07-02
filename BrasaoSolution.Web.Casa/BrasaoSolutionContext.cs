@@ -155,5 +155,7 @@ namespace BrasaoSolution.Web.Casa
         public DbSet<BandeiraCartao> BandeirasCartao { get; set; }
         public DbSet<HistoricoPedido> HistoricosPedido { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<Bairro> Bairros { get; set; }
+        public DbSet<Cidade> Cidades { get; set; }
     }
 }
