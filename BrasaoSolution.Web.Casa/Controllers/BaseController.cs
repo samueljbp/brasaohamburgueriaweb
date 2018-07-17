@@ -1,5 +1,5 @@
 ﻿using BrasaoSolution.Helper;
-using BrasaoSolution.Casa.Model;
+using BrasaoSolution.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

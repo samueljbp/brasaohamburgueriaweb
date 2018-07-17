@@ -1870,6 +1870,10 @@
       <Project>{32a32c69-65c8-430d-8643-b31860862682}</Project>
       <Name>BrasaoSolution.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BrasaoSolution.ViewModel\BrasaoSolution.ViewModel.csproj">
+      <Project>{128f6727-d951-475f-871e-12f4d9de2e43}</Project>
+      <Name>BrasaoSolution.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="bower_components\mobile-drag-drop\release\index.d.ts" />

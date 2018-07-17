@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BrasaoSolution.Model;
 using BrasaoSolution.TronSolutionData.Context;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.ServicosInternos.Business
 {

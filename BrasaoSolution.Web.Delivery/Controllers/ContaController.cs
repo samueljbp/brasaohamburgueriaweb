@@ -10,15 +10,13 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using BrasaoSolution.Model;
 using BrasaoSolution.Repository.Context;
-using Newtonsoft.Json.Serialization;
 using BrasaoSolution.Web.Filters;
-using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
 using BrasaoSolution.Helper.Extentions;
 using System.Text.RegularExpressions;
 using BrasaoSolution.Helper;
-using BrasaoSolution.Web.Helpers;
 using BrasaoSolution.Repository;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Web.Controllers
 {

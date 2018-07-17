@@ -64,6 +64,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BrasaoSolution.Helper\BrasaoSolution.Helper.csproj" />
+    <ProjectReference Include="..\BrasaoSolution.ViewModel\BrasaoSolution.ViewModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

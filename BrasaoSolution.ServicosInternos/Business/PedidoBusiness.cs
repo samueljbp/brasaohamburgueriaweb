@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using BrasaoSolution.Model;
 using ImpressaoBematech;
-using System.Runtime.CompilerServices;
 using ExtensionMethods;
-using System.Web.Http;
-using System.Threading.Tasks;
-using BrasaoSolution.Helper;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.ServicosInternos.Business
 {

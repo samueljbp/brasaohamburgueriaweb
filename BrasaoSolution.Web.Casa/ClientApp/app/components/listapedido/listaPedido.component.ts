@@ -14,7 +14,6 @@ import { BehaviorSubject } from 'rxjs';
 import { ListaPedidoDataSource } from '../../datasources/listaPedido.datasource';
 import { ComandaService } from '../../services/comanda.service';
 import * as jquery from 'jquery';
-import * as deepmerge from 'deepmerge';
 
 @Component({
     selector: 'listaPedido',

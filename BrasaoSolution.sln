@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoSolution.ServicosInte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoSolution.Web.Delivery", "BrasaoSolution.Web.Delivery\BrasaoSolution.Web.Delivery.csproj", "{F8246FB5-629A-4112-AEE2-EC63909680E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoSolution.Web.Casa", "BrasaoSolution.Web.Casa\BrasaoSolution.Web.Casa.csproj", "{479A4741-022C-4012-9D0F-6D3F2FB1F427}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrasaoSolution.Web.Casa", "BrasaoSolution.Web.Casa\BrasaoSolution.Web.Casa.csproj", "{479A4741-022C-4012-9D0F-6D3F2FB1F427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrasaoSolution.ViewModel", "BrasaoSolution.ViewModel\BrasaoSolution.ViewModel.csproj", "{128F6727-D951-475F-871E-12F4D9DE2E43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{479A4741-022C-4012-9D0F-6D3F2FB1F427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{479A4741-022C-4012-9D0F-6D3F2FB1F427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{479A4741-022C-4012-9D0F-6D3F2FB1F427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{128F6727-D951-475F-871E-12F4D9DE2E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128F6727-D951-475F-871E-12F4D9DE2E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128F6727-D951-475F-871E-12F4D9DE2E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128F6727-D951-475F-871E-12F4D9DE2E43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

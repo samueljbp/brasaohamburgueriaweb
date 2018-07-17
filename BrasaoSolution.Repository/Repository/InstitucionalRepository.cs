@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
-using System.Web;
 using BrasaoSolution.Repository.Context;
 using BrasaoSolution.Model;
 using System.Threading.Tasks;
 using System.Globalization;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Repository
 {

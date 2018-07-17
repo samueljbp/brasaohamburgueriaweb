@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BrasaoSolution.Helper.Extentions;
@@ -9,9 +8,8 @@ using System.Threading.Tasks;
 using BrasaoSolution.Repository;
 using BrasaoSolution.Web.Filters;
 using System.Collections.Specialized;
-using System.Globalization;
-using BrasaoSolution.Web.Helpers;
 using System.Security.Claims;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Web.Controllers
 {

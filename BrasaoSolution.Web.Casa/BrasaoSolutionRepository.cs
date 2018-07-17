@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BrasaoSolution.Casa.Model;
+using BrasaoSolution.ViewModel;
 using BrasaoSolution.Helper;
 using Microsoft.EntityFrameworkCore;
 

@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using BrasaoSolution.Helper;
 using System.IO;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Repository
 {

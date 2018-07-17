@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
-using System.Web.SessionState;
 using BrasaoSolution.Model;
 using System.Security.Claims;
-using System.Net.Http;
 using BrasaoSolution.Repository.Context;
 using System.Diagnostics;
 using BrasaoSolution.Helper;
 using Newtonsoft.Json;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Repository
 {

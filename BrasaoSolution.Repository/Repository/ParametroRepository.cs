@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using BrasaoSolution.Model;
 using BrasaoSolution.Repository.Context;
 using System.Threading.Tasks;
-using System.Data.Entity;
-using System.Threading;
 using System.Globalization;
 using System.Configuration;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Repository
 {

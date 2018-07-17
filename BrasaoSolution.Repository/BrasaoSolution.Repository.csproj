@@ -203,6 +203,10 @@
       <Project>{fcf4fdf4-ce09-4690-9078-2b4f335008b1}</Project>
       <Name>BrasaoSolution.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BrasaoSolution.ViewModel\BrasaoSolution.ViewModel.csproj">
+      <Project>{128f6727-d951-475f-871e-12f4d9de2e43}</Project>
+      <Name>BrasaoSolution.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\Brasao\201709252036459_InitialCreate.resx">

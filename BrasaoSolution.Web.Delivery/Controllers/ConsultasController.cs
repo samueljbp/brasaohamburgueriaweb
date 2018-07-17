@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BrasaoSolution.Repository;
 using System.Threading.Tasks;
-using BrasaoSolution.Helper;
 using BrasaoSolution.Model;
-using BrasaoSolution.Web.Helpers;
 using BrasaoSolution.Helper.Extentions;
+using BrasaoSolution.ViewModel;
 
 namespace BrasaoSolution.Web.Controllers
 {

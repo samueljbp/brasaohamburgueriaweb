@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BrasaoSolution.Model;
 using BrasaoSolution.Repository.Context;
 using BrasaoSolution.Helper.Extentions;
-using System.Data.Entity;
 using BrasaoSolution.Repository;
-using System.Threading.Tasks;
-using BrasaoSolution.Web.Helpers;
 
 namespace BrasaoSolution.Web.Controllers
 {

@@ -198,6 +198,10 @@
       <Project>{6cdd1572-29e4-4fca-b1fd-9bc9d2603671}</Project>
       <Name>BrasaoSolution.TronSolutionData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BrasaoSolution.ViewModel\BrasaoSolution.ViewModel.csproj">
+      <Project>{128f6727-d951-475f-871e-12f4d9de2e43}</Project>
+      <Name>BrasaoSolution.ViewModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Impressao\BrasaoSolution.ImpressaoBematech.csproj">
       <Project>{31cb258e-bb7c-4e28-961e-b86810e5497c}</Project>
       <Name>BrasaoSolution.ImpressaoBematech</Name>
