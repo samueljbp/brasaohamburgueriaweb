@@ -1,0 +1,27 @@
+.example-container {
+    display: flex;
+    flex-direction: column;
+}
+
+    .example-container > * {
+        width: 100%;
+    }
+
+
+    .mat-list-option {
+        /*display: inline-grid !important;*/
+        font-size: small !important;
+        margin: -8px !important;
+    }
+
+.mat-pseudo-checkbox-checked {
+    background-color: #007bff;
+}
+
+.snackbarClass {
+    margin-bottom: 50px !important;
+}
+
+.mat-expansion-panel-header {
+    height: 35px !important;
+}

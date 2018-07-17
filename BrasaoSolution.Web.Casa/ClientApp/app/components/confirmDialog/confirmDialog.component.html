@@ -1,0 +1,14 @@
+﻿<h4>Atenção!</h4>
+<div class="card bg-light" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="card-body">
+        {{confirmMessage}}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <button type="button" class="btn btn-danger btn-block" (click)="dialogRef.close(false)">Não</button>
+    </div>
+    <div class="col">
+        <button type="button" class="btn btn-success btn-block" (click)="dialogRef.close(true)">Sim</button>
+    </div>
+</div>

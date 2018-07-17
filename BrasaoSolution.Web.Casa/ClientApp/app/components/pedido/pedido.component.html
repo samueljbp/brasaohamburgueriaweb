@@ -1,4 +1,5 @@
-﻿<div class="row" *ngFor="let classe of cardapio; index as i;" style="margin-bottom: 10px">
+﻿<!--<input [(ngModel)]="searchText" placeholder="Pesquisar...">-->
+<div class="row" *ngFor="let classe of cardapio | filter : searchText" style="margin-bottom: 10px">
     <div class="col-12">
         <h6 class="text-primary">{{classe.descricaoClasse}}</h6>
         <div *ngFor="let item of classe.itens; index as i;">
@@ -15,28 +16,36 @@
                             <span>{{item.nome}}</span>
                         </div>
                         <div class="col-4">
-                            <span>{{item.preco | currency:'BRL':true}}</span>
+                            <span>{{item.preco | currency:'BRL'}}</span>
                         </div>
                     </div>
                     <div class="row" *ngIf="item.complemento != null">
                         <div class="col-8">
                             <small>{{item.complemento.descricaoLonga}}</small>
                         </div>
-                        <div class="col-4">
-                            <a class="btn bbtn-default" (click)="selecionaItem(item)">
+                        <div class="col-4 text-center">
+                            <a class="btn bbtn-default" (click)="selecionaItem(item)" *ngIf="(!loading) || (loading && item != itemSelecionado)">
                                 <br />
                                 <i class="fa fa-check fa-4x text-success"></i>
                             </a>
+                            <div *ngIf="loading && item === itemSelecionado">
+                                <br />
+                                <mat-spinner [diameter]="50" [mode]="indeterminate"></mat-spinner>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" *ngIf="item.complemento == null">
                     <div class="row" style="margin-bottom: 5px; margin-top: 5px;">
                         <div class="col-8">
-                            <span>{{item.nome}}</span>
+                            <span>{{item.nome}}</span><br />
+                            <span>{{item.preco | currency:'BRL'}}</span>
                         </div>
-                        <div class="col-4">
-                            <span>{{item.preco | currency:'BRL':true}}</span>
+                        <div class="col-4 text-center">
+                            <a class="btn bbtn-default" (click)="selecionaItem(item)" *ngIf="(!loading) || (loading && item != itemSelecionado)">
+                                <i class="fa fa-check fa-4x text-success"></i>
+                            </a>
+                            <mat-spinner [diameter]="50" [mode]="indeterminate" *ngIf="loading && item === itemSelecionado"></mat-spinner>
                         </div>
                     </div>
                 </div>

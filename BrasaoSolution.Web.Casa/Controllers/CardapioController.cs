@@ -22,5 +22,13 @@ namespace BrasaoSolution.Web.Casa.Controllers
 
             return rep.GetCardapio(codEmpresa);
         }
+
+        [HttpGet("[action]")]
+        public DadosItemCardapioViewModel GetDadosItemCardapio(int codItemCardapio)
+        {
+            BrasaoSolutionRepository rep = new BrasaoSolutionRepository(this._brasaoContext);
+
+            return rep.GetDadosItemCardapio(codItemCardapio);
+        }
     }
 }

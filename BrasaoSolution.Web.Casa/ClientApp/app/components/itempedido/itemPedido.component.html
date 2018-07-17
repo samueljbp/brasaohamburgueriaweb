@@ -1,0 +1,92 @@
+﻿<div *ngIf="itemSelecionado != null">
+    <div class="row">
+        <div class="col text-left">
+            <h4 style="margin-top: 0px">{{itemSelecionado.nome}}</h4>
+            <div *ngIf="itemSelecionado.percentualDesconto > 0">
+                <h6 class="tachado" style="margin-bottom: 0px">{{itemSelecionado.preco | currency:'BRL'}}</h6><br />
+                <h6 style="margin-top: 0px" class="text-success"><strong>{{itemSelecionado.percentualDesconto | currency: ""}}% off - Por {{itemSelecionado.precoComDesconto | currency:'BRL'}}</strong></h6>
+            </div>
+            <div *ngIf="itemSelecionado.percentualDesconto <= 0" style="margin-top: 4px">
+                <h6>{{itemSelecionado.preco | currency:'BRL'}}</h6>
+            </div>
+        </div>
+        <div class="col text-right">
+            <div class="button-row" style="margin-top: -3px;">
+                <button mat-fab class="bg-primary" (click)="incrementaQuantidade()">
+                    <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+                </button>
+                <strong style="margin-left: 5px; margin-right: 5px; font-size: large">{{novoItem.quantidade}}</strong>
+                <button mat-fab class="bg-primary" (click)="decrementaQuantidade()">
+                    <mat-icon aria-label="Example icon-button with a heart icon">remove</mat-icon>
+                </button>
+            </div>
+            <div *ngIf="quantidadeInvalida">
+                <small class="text-danger">Quantidade inválida</small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <small *ngIf="itemSelecionado.complemento != null && itemSelecionado.complemento.descricaoLonga != null">{{itemSelecionado.complemento.descricaoLonga}}</small>
+            <small *ngIf="itemSelecionado.complemento == null || itemSelecionado.complemento.descricaoLonga == null">{{itemSelecionado.nome}}</small>
+        </div>
+    </div>
+    <div *ngIf="dadosItemSelecionado != null && dadosItemSelecionado.observacoes != null && dadosItemSelecionado.observacoes.length > 0">
+
+        <mat-expansion-panel style="margin-top:5px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Observações de preparo
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="row">
+                <mat-selection-list #obsos [(ngModel)]="novoItem.obs" (ngModelChange)="onNgModelChange($event)">
+                    <mat-list-option *ngFor="let obs of dadosItemSelecionado.observacoes" (change)="atualizaValorTotalItem()" [value]="obs">
+                        {{obs.descricaoObservacao}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+
+        </mat-expansion-panel>
+
+
+    </div>
+    <div class="row">
+        <div class="col-12 example-container">
+            <mat-form-field>
+                <textarea matInput rows="2" placeholder="Observação livre" [(ngModel)]="novoItem.observacaoLivre" maxlength="100"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+    <div *ngIf="dadosItemSelecionado != null && dadosItemSelecionado.extras != null && dadosItemSelecionado.extras.length > 0">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Turbine seu pedido
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="row">
+                <mat-selection-list #extras [(ngModel)]="novoItem.extras" (ngModelChange)="onNgModelChange($event)">
+                    <mat-list-option *ngFor="let extra of dadosItemSelecionado.extras" (change)="atualizaValorTotalItem()" [value]="extra">
+                        {{extra.descricaoOpcaoExtra}} - {{extra.preco | currency:'BRL'}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </mat-expansion-panel>
+    </div>
+    <div class="card bg-light" style="margin-top: 10px; margin-bottom: 10px;">
+        <div class="card-body" style="padding-top: 2px; padding-bottom: 2px">
+            <h4>Total item: {{novoItem.valorTotal | currency:'BRL'}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-danger btn-block" (click)="confirmaAbandonarPedido()">Cancelar</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-success btn-block" (click)="confirmaRegistrarPedido()">Confirmar</button>
+        </div>
+    </div>
+</div>

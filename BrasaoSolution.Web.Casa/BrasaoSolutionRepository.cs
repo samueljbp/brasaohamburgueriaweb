@@ -219,6 +219,24 @@ namespace BrasaoSolution.Web.Casa
             return retorno;
         }
 
+        public DadosItemCardapioViewModel GetDadosItemCardapio(int codItemCardapio)
+        {
+            return _contexto.ItensCardapio
+                    .Where(i => i.CodItemCardapio == codItemCardapio)
+                    .Include(i => i.ObservacoesPermitidas).ThenInclude(o => o.ObservacaoProducao)
+                    .Include(i => i.ExtrasPermitidos).ThenInclude(e => e.OpcaoExtra)
+                    .ToList()
+                    .Select(i =>
+                    new DadosItemCardapioViewModel
+                    {
+                        CodItemCardapio = i.CodItemCardapio,
+                        Observacoes = (i.ObservacoesPermitidas != null ?
+                               i.ObservacoesPermitidas.Select(o => new ObservacaoProducaoViewModel { CodObservacao = o.ObservacaoProducao.CodObservacao, DescricaoObservacao = o.ObservacaoProducao.DescricaoObservacao }).ToList() : null),
+                        Extras = (i.ExtrasPermitidos != null ?
+                                i.ExtrasPermitidos.Select(e => new OpcaoExtraViewModel { CodOpcaoExtra = e.OpcaoExtra.CodOpcaoExtra, DescricaoOpcaoExtra = e.OpcaoExtra.DescricaoOpcaoExtra, Preco = e.OpcaoExtra.Preco }).ToList() : null)
+                    }).FirstOrDefault();
+        }
+
         public List<ComboViewModel> GetCombosDB(bool combosDoDia, int codEmpresa)
         {
             var combos = (from cmb in _contexto.Combos

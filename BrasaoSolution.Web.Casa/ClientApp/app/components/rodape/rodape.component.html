@@ -3,9 +3,12 @@
         <a class="navbar-brand" href="#">
             <div class="row">
                 <div class="col-12 text-right">
-                    TOTAL PARCIAL: {{comanda.valorTotal | currency:'BRL':'R$'}}
+                    Comanda: {{comanda.valorTotal | currency:'BRL':'R$'}}
                 </div>
             </div>
         </a>
+        <form class="form-inline">
+            <button class="btn btn-primary" *ngIf="quantidadeItensPendentes > 0" [routerLink]="['/listaPedido']"><i class="fa fa-shopping-cart" style="margin-right: 2px;"></i>Ver pedido<span class="badge badge-light" style="margin-left: 2px;">{{quantidadeItensPendentes}}</span></button>
+        </form>
     </div>
 </div>

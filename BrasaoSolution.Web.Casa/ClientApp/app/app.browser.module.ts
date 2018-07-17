@@ -3,10 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppModuleShared } from './app.shared.module';
 import { AppComponent } from './components/app/app.component';
 import { ActivatedRoute } from '@angular/router';
-import * as globals from './GlobalVariables';
-import { CardapioProvider } from './cardapio.provider';
+import * as globals from './globals';
+import { CardapioProvider } from './services/cardapio.provider';
 import { URLSearchParams } from "@angular/http";
-import { EmpresaProvider } from './empresa.provider';
+import { EmpresaProvider } from './services/empresa.provider';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { DadosItemCardapioService } from './services/dadosItemCardapio.service';
+import { DadosItemCardapioResolver } from './resolvers/dadosItemCardapio.resolver';
+import { GlobalDataService } from './services/globalData.service';
+import { ComandaService } from './services/comanda.service';
+
+registerLocaleData(localePt);
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -16,7 +24,7 @@ import { EmpresaProvider } from './empresa.provider';
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-        CardapioProvider, EmpresaProvider,
+        CardapioProvider, EmpresaProvider, DadosItemCardapioService, DadosItemCardapioResolver, GlobalDataService, ComandaService,
         { provide: APP_INITIALIZER, useFactory: cardapioProviderFactory, deps: [CardapioProvider], multi: true },
         { provide: APP_INITIALIZER, useFactory: empresaProviderFactory, deps: [EmpresaProvider], multi: true },
         { provide: LOCALE_ID, useValue: 'pt-BR' }
