@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 @using BrasaoSolution.Repository;
-@using BrasaoSolution.Model;
+@using BrasaoSolution.ViewModel;
 @{
     var progFidelidade = SessionData.ProgramaFidelidadeUsuario;
     var lojaSelecionada = SessionData.Empresas.Where(e => e.CodEmpresa == SessionData.CodLojaSelecionada).FirstOrDefault();

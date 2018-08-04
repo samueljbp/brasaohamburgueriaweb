@@ -14,6 +14,11 @@ namespace BrasaoSolution.ViewModel
 
     public class ComandaViewModel
     {
+        public ComandaViewModel()
+        {
+            this.ClassName = this.GetType().Name;
+        }
+
         public int CodEmpresa { get; set; }
         public string NomeEmpresa { get; set; }
         public int CodComanda { get; set; }
@@ -31,11 +36,17 @@ namespace BrasaoSolution.ViewModel
         public decimal PercentualDesconto { get; set; }
         public decimal ValorDesconto { get; set; }
         public int MotivoDesconto { get; set; }
+        public string ClassName { get; set; }
         public List<ItemComandaViewModel> Itens { get; set; }
     }
 
     public class ItemComandaViewModel
     {
+        public ItemComandaViewModel()
+        {
+            this.ClassName = this.GetType().Name;
+        }
+
         public int SeqItem { get; set; }
         public int CodItem { get; set; }
         public string DescricaoItem { get; set; }
@@ -52,6 +63,7 @@ namespace BrasaoSolution.ViewModel
         public decimal PrecoCombo { get; set; }
         public string DescricaoCombo { get; set; }
         public int AcaoRegistro { get; set; }
+        public string ClassName { get; set; }
         public List<ObservacaoItemComandaViewModel> Obs { get; set; }
         public List<ExtraItemComandaViewModel> Extras { get; set; }
     }

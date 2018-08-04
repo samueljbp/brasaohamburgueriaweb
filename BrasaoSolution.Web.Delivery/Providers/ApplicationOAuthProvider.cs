@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using BrasaoSolution.Model;
-using BrasaoSolution.Repository.Context;
 
 namespace BrasaoSolution.Web.Providers
 {
@@ -20,9 +16,10 @@ namespace BrasaoSolution.Web.Providers
 
         public ApplicationOAuthProvider(string publicClientId)
         {
+            //TODO: Pull from configuration
             if (publicClientId == null)
             {
-                throw new ArgumentNullException("publicClientId");
+                throw new ArgumentNullException(nameof(publicClientId));
             }
 
             _publicClientId = publicClientId;
@@ -30,18 +27,19 @@ namespace BrasaoSolution.Web.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            SetContextHeaders(context);
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
-            ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
+            var user = await userManager.FindAsync(context.UserName, context.Password);
 
             if (user == null)
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                context.SetError("invalid_grant", "Nome de usuário ou senha inválidos.");
                 return;
             }
 
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
+                OAuthDefaults.AuthenticationType);
             ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
                 CookieAuthenticationDefaults.AuthenticationType);
 
@@ -94,6 +92,14 @@ namespace BrasaoSolution.Web.Providers
                 { "userName", userName }
             };
             return new AuthenticationProperties(data);
+        }
+
+        private void SetContextHeaders(OAuthGrantResourceOwnerCredentialsContext context)
+        {
+            context.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+            context.Response.Headers.Add("Access-Control-Allow-Methods", new[] { "GET, PUT, DELETE, POST, OPTIONS" });
+            context.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "Content-Type, Accept, Authorization" });
+            context.Response.Headers.Add("Access-Control-Max-Age", new[] { "1728000" });
         }
     }
 }

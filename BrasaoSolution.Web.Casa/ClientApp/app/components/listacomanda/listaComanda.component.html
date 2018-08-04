@@ -1,0 +1,67 @@
+﻿<mat-accordion *ngIf="mensagemErro">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <span class="text-danger">Erro</span>
+            </mat-panel-title>
+            <mat-panel-description>
+                <span class="text-primary">Ver detalhes</span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        Detalhes do erro
+    </mat-expansion-panel>
+</mat-accordion>
+
+<table mat-table [dataSource]="datasource" multiTemplateDataRows class="mat-elevation-z8" style="margin-top: 8px">
+    <ng-container matColumnDef="seqItem">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let element">{{element.seqItem}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Item</th>
+        <td mat-cell *matCellDef="let element">
+            {{element.descricaoItem}}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantidade">
+        <th mat-header-cell *matHeaderCellDef>Qtd</th>
+        <td mat-cell *matCellDef="let element">{{element.quantidade}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="precoUnitario">
+        <th mat-header-cell *matHeaderCellDef>Preço</th>
+        <td mat-cell *matCellDef="let element">{{element.precoUnitario | currency:'BRL'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="valorTotal">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let element">{{element.valorTotal | currency:'BRL'}}</td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+            <div class="example-element-detail"
+                 [@detailExpand]="element.temExtrasObs() != '' ? 'expanded' : 'collapsed'">
+                <div class="example-element-diagram">
+                    <div class="text-primary" *ngIf="element.getExtrasString() != ''"> {{element.getExtrasString()}} </div>
+                    <div class="text-warning" *ngIf="element.getObsString() != ''"> {{element.getObsString()}} </div>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        class="example-element-row"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" [ngClass]="(row.temExtrasObs() == '' ? 'example-expanded-row' : '')"></tr>
+</table>
+<div class="card bg-light" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="card-body" style="padding-top: 2px; padding-bottom: 2px">
+        <h4>Total comanda: {{valorTotalComanda | currency:'BRL'}}</h4>
+    </div>
+</div>
+<br />
+<button class="btn btn-primary btn-block" [routerLink]="['/pedido']" [attr.disabled]="!comanda.comandaAberta() || comanda.valorTotal <= 0 ? true : null"><i class="fa fa-plus" style="margin-right: 2px;"></i>Adicionar itens</button>

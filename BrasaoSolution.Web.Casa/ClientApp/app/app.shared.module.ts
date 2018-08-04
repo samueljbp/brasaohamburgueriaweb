@@ -7,8 +7,6 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 import { RodapeComponent } from './components/rodape/rodape.component';
 import { PedidoComponent } from './components/pedido/pedido.component';
 import { ItemPedidoComponent } from './components/itempedido/itemPedido.component';
@@ -30,18 +28,20 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ListaPedidoComponent } from './components/listapedido/listaPedido.component';
+import { ErroTokenComponent } from './components/erroToken/erroToken.component';
+import { ListaComandaComponent } from './components/listacomanda/listaComanda.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
         HomeComponent,
         RodapeComponent,
         PedidoComponent,
         ItemPedidoComponent,
         ListaPedidoComponent,
+        ListaComandaComponent,
+        ErroTokenComponent,
         FilterPipe,
         ConfirmationDialog
     ],
@@ -69,11 +69,11 @@ import { ListaPedidoComponent } from './components/listapedido/listaPedido.compo
                 path: '', redirectTo: 'home', pathMatch: 'full'
             },
             { path: 'home', component: HomeComponent },
-            { path: 'counter', component: CounterComponent },
             { path: 'pedido', component: PedidoComponent },
+            { path: 'erroToken', component: ErroTokenComponent },
             { path: 'listaPedido', component: ListaPedidoComponent },
+            { path: 'listaComanda', component: ListaComandaComponent },
             { path: 'itemPedido', component: ItemPedidoComponent, resolve: { dadosItemCardapio: DadosItemCardapioResolver } },
-            { path: 'fetch-data', component: FetchDataComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

@@ -26,6 +26,7 @@ export class ItemComandaViewModel {
     precoCombo: number;
     descricaoCombo: string;
     acaoRegistro: number;
+    className: string;
     obs: ObservacaoItemComandaViewModel[];
     extras: ExtraItemComandaViewModel[];
 

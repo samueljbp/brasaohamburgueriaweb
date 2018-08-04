@@ -1,5 +1,5 @@
 ﻿import { Injectable, Inject } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import * as globals from '../globals';
 import { ComandaViewModel } from "../model/ComandaViewModel";
 import { ItemComandaViewModel } from "../model/ItemComandaViewModel";
@@ -13,7 +13,7 @@ export class CardapioProvider {
     private cardapio: ClasseItemCardapioViewModel[] = new Array<ClasseItemCardapioViewModel>();
     private baseUrl: string;
 
-    constructor(private http: Http, @Inject('BASE_URL') baseUrl: string) {
+    constructor(private http: HttpClient, @Inject('WEBAPI_URL') baseUrl: string) {
         this.baseUrl = baseUrl;
     }
 
@@ -25,13 +25,15 @@ export class CardapioProvider {
         return new Promise((resolve, reject) => {
 
             globals.globalData.comanda = new ComandaViewModel();
+            globals.globalData.comanda.situacao = 1;
             globals.globalData.comanda.numMesa = globals.globalData.numMesa;
             globals.globalData.comanda.valorTotal = 0;
             globals.globalData.comanda.itens = new Array<ItemComandaViewModel>();
 
             this.http
                 .get(this.baseUrl + 'api/Cardapio/GetCardapio?codEmpresa=' + globals.globalData.codEmpresa)
-                .map(res => res.json())
+                .catch((x, y) => { return Observable.of(new Array<ItemComandaViewModel>()); })
+                .map(res => <Array<ClasseItemCardapioViewModel>>res)
                 .subscribe(response => {
                     this.cardapio = response;
                     globals.globalData.initialized = true;

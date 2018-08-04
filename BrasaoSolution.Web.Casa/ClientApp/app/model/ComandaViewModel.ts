@@ -18,6 +18,7 @@ export class ComandaViewModel {
     percentualDesconto: number;
     valorDesconto: number;
     motivoDesconto: number;
+    className: string;
     itens: ItemComandaViewModel[];
 
     addItem(item: ItemComandaViewModel) {
@@ -42,7 +43,21 @@ export class ComandaViewModel {
 
     }
 
-    getItensMostrar(): ItemComandaViewModel[] {
+    getItensPedidoMostrar(): ItemComandaViewModel[] {
+        let retorno: ItemComandaViewModel[] = new Array<ItemComandaViewModel>();
+
+        this.itens.forEach((value, index) => {
+
+            if (value.acaoRegistro == TipoAcaoRegistro.Incluir || value.acaoRegistro == TipoAcaoRegistro.Alterar) {
+                retorno.push(value);
+            }
+
+        });
+
+        return retorno;
+    }
+
+    getItensComandaMostrar(): ItemComandaViewModel[] {
         let retorno: ItemComandaViewModel[] = new Array<ItemComandaViewModel>();
 
         this.itens.forEach((value, index) => {
@@ -125,5 +140,36 @@ export class ComandaViewModel {
 
         return total;;
 
+    }
+
+    getValorTotalComanda(): number {
+
+        let total = 0;
+
+        this.itens.forEach(function (value) {
+            if (value.acaoRegistro == TipoAcaoRegistro.Incluir ||
+                value.acaoRegistro == TipoAcaoRegistro.Alterar ||
+                value.acaoRegistro == TipoAcaoRegistro.Nenhuma) {
+                total = total + value.valorTotal;
+            }
+
+        });
+
+        return total;
+
+    }
+
+    bloqueiaComanda() {
+        //coloca comanda em situação de aguardando conta
+        this.situacao = 8;
+    }
+
+    desbloqueiaComanda() {
+        //abre novamente a comanda
+        this.situacao = 1;
+    }
+
+    comandaAberta(): boolean {
+        return (this.situacao == 1);
     }
 }

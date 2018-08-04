@@ -26,7 +26,9 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\cardapio.provider.ts" />
+    <None Remove="ClientApp\app\components\erroToken\erroToken.component.ts" />
     <None Remove="ClientApp\app\components\itempedido\itemPedido.component.ts" />
+    <None Remove="ClientApp\app\components\listacomanda\listaComanda.component.ts" />
     <None Remove="ClientApp\app\components\listapedido\listaPedido.component.ts" />
     <None Remove="ClientApp\app\components\pedido\pedido.component.ts" />
     <None Remove="ClientApp\app\datasources\listaPedido.datasource.ts" />
@@ -35,6 +37,7 @@
     <None Remove="ClientApp\app\GlobalData.service.ts" />
     <None Remove="ClientApp\app\GlobalData.ts" />
     <None Remove="ClientApp\app\globals.ts" />
+    <None Remove="ClientApp\app\interceptors\http.interceptor.ts" />
     <None Remove="ClientApp\app\model\ClasseItemCardapioViewModel.ts" />
     <None Remove="ClientApp\app\model\ComandaViewModel.ts" />
     <None Remove="ClientApp\app\model\ComplementoItemCardapioViewModel.ts" />
@@ -43,10 +46,12 @@
     <None Remove="ClientApp\app\model\ExtraItemComandaViewModel.ts" />
     <None Remove="ClientApp\app\model\ItemCardapioViewModel.ts" />
     <None Remove="ClientApp\app\model\ItemComandaViewModel.ts" />
+    <None Remove="ClientApp\app\model\lib.ts" />
     <None Remove="ClientApp\app\model\ObservacaoItemComandaViewModel.ts" />
     <None Remove="ClientApp\app\model\ObservacaoProducaoViewModel.ts" />
     <None Remove="ClientApp\app\model\OpcaoExtraViewModel.ts" />
     <None Remove="ClientApp\app\pipes\filter.pipe.ts" />
+    <None Remove="ClientApp\app\services\autenticacao.service.ts" />
     <None Remove="ClientApp\app\services\comanda.service.ts" />
     <None Remove="ClientApp\app\services\dadosItemCardapio.service.ts" />
   </ItemGroup>
@@ -68,10 +73,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\components\erroToken\erroToken.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\itempedido\itemPedido.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\listacomanda\listaComanda.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\listapedido\listaPedido.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\pedido\pedido.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\datasources\listaPedido.datasource.ts" />
+    <TypeScriptCompile Include="ClientApp\app\interceptors\http.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\app\model\lib.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\autenticacao.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\comanda.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\dadosItemCardapio.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\empresa.provider.ts" />

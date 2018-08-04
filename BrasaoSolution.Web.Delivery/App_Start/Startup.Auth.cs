@@ -6,17 +6,14 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Facebook;
 using Owin;
-using BrasaoSolution.Model;
 using BrasaoSolution.Repository.Context;
 using BrasaoSolution.Web.Providers;
-using System.Configuration;
 
 namespace BrasaoSolution.Web
 {
     public partial class Startup
     {
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
-
         public static string PublicClientId { get; private set; }
 
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
@@ -53,20 +50,21 @@ namespace BrasaoSolution.Web
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
+
             // Configure the application for OAuth based flow
             PublicClientId = "self";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
-                AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                // In production mode set AllowInsecureHttp = false
-                AllowInsecureHttp = true
+                AuthorizeEndpointPath = new PathString("/Account/ExternalLogin"),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
+                AllowInsecureHttp = true //Don't do this in production
             };
 
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
+
 
             var facebookAuthenticationOptions = new FacebookAuthenticationOptions()
             {

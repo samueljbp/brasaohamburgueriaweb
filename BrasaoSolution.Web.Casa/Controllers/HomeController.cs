@@ -6,7 +6,7 @@ namespace BrasaoSolution.Web.Casa.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(BrasaoSolutionContext brasaoContext, IHttpContextAccessor httpContextAccessor) : base(brasaoContext, httpContextAccessor)
+        public HomeController(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             
         }

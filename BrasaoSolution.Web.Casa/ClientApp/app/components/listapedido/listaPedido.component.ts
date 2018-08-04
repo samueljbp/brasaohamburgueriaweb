@@ -14,6 +14,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ListaPedidoDataSource } from '../../datasources/listaPedido.datasource';
 import { ComandaService } from '../../services/comanda.service';
 import * as jquery from 'jquery';
+import * as Models from '../../model/lib';
 
 @Component({
     selector: 'listaPedido',
@@ -56,7 +57,7 @@ export class ListaPedidoComponent {
         this.valorTotalPedido = this.comanda.getValorTotalPedido();
         this.urlBase = baseUrl;
 
-        this.dataChange = new BehaviorSubject<ItemComandaViewModel[]>(this.comanda.getItensMostrar());
+        this.dataChange = new BehaviorSubject<ItemComandaViewModel[]>(this.comanda.getItensPedidoMostrar());
         this.datasource = new ListaPedidoDataSource(this.dataChange);
         this.mensagemErro = null;
     }
@@ -75,7 +76,8 @@ export class ListaPedidoComponent {
             if (result) {
 
                 this.comanda.removeItem(item.seqItem);
-                this.dataChange.next(this.comanda.itens);
+                this.valorTotalPedido = this.comanda.getValorTotalPedido();
+                this.dataChange.next(this.comanda.getItensPedidoMostrar());
                 this.data.changeMessage(globals.globalData);
 
             }
@@ -93,9 +95,9 @@ export class ListaPedidoComponent {
         this.dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.comandaService.registraPedido(this.comanda).subscribe((response) => {
-                    if (response.ok) {
-                        this.comanda = jquery.extend(true, globals.globalData.comanda, response.json(), globals.globalData.comanda);
-                        globals.globalData.comanda = this.comanda;
+                    if (response) {
+                        jquery.extend(true, this.comanda, <ComandaViewModel>response);
+                        globals.ajustaPrototipoDeep(<ComandaViewModel>this.comanda);
 
                         this.data.changeMessage(globals.globalData);
                         this.snackBar.open("Pedido gravado com sucesso!", "Fechar", {
@@ -108,7 +110,7 @@ export class ListaPedidoComponent {
                             duration: 2000,
                             panelClass: 'snackbarClass'
                         });
-                        this.mensagemErro = response.statusText;
+                        this.mensagemErro = 'Erro no processamento da operação.';
                     }
 
                 });

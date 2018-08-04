@@ -13,6 +13,9 @@ import { DadosItemCardapioService } from './services/dadosItemCardapio.service';
 import { DadosItemCardapioResolver } from './resolvers/dadosItemCardapio.resolver';
 import { GlobalDataService } from './services/globalData.service';
 import { ComandaService } from './services/comanda.service';
+import { HTTP_INTERCEPTORS, HttpClient, HttpHandler, HttpClientModule } from '@angular/common/http';
+import { CustomHttpInterceptor } from './interceptors/http.interceptor';
+import { AutenticacaoService } from './services/autenticacao.service';
 
 registerLocaleData(localePt);
 
@@ -20,14 +23,17 @@ registerLocaleData(localePt);
     bootstrap: [ AppComponent ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         AppModuleShared
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
-        CardapioProvider, EmpresaProvider, DadosItemCardapioService, DadosItemCardapioResolver, GlobalDataService, ComandaService,
+        { provide: 'WEBAPI_URL', useFactory: getWebAPIUrl },
+        CardapioProvider, EmpresaProvider, DadosItemCardapioService, DadosItemCardapioResolver, GlobalDataService, ComandaService, AutenticacaoService, HttpClient,
         { provide: APP_INITIALIZER, useFactory: cardapioProviderFactory, deps: [CardapioProvider], multi: true },
         { provide: APP_INITIALIZER, useFactory: empresaProviderFactory, deps: [EmpresaProvider], multi: true },
-        { provide: LOCALE_ID, useValue: 'pt-BR' }
+        { provide: LOCALE_ID, useValue: 'pt-BR' },
+        { provide: HTTP_INTERCEPTORS, useClass: CustomHttpInterceptor, multi: true }
     ]
 })
 export class AppModule {
@@ -42,7 +48,19 @@ export function empresaProviderFactory(provider: EmpresaProvider) {
     return () => provider.load();
 }
 
+export function getWebAPIUrl() {
+    setGlobalData();
+
+    return "http://localhost:57919/";
+}
+
 export function getBaseUrl() {
+    setGlobalData();
+
+    return document.getElementsByTagName('base')[0].href;
+}
+
+function setGlobalData() {
     let codEmpresa = getParameterByName("codEmpresa");
     if (codEmpresa != null) {
         globals.globalData.codEmpresa = Number(codEmpresa);
@@ -56,8 +74,6 @@ export function getBaseUrl() {
     } else {
         globals.globalData.numMesa = 2;
     }
-
-    return document.getElementsByTagName('base')[0].href;
 }
 
 export function getParameterByName(name: string) {

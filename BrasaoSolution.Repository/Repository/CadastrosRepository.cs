@@ -468,6 +468,67 @@ namespace BrasaoSolution.Repository
             return null;
         }
 
+        public EmpresaViewModel GetEmpresa(int codEmpresa)
+        {
+            var empresa = (
+                from emps in _contexto.Empresas
+                join bairros in _contexto.Bairros on emps.CodBairro equals bairros.CodBairro
+                join cidades in _contexto.Cidades on bairros.CodCidade equals cidades.CodCidade
+                where emps.CodEmpresa == codEmpresa
+                select new EmpresaViewModel
+                {
+                    CodEmpresa = emps.CodEmpresa,
+                    RazaoSocial = emps.RazaoSocial,
+                    NomeFantasia = emps.NomeFantasia,
+                    InscricaoEstadual = emps.InscricaoEstadual,
+                    Logomarca = emps.Logomarca,
+                    CNPJ = emps.CNPJ,
+                    CodBairro = emps.CodBairro,
+                    NomeBairro = bairros.Nome,
+                    CodCidade = bairros.CodCidade,
+                    NomeCidade = cidades.Nome,
+                    CodEmpresaMatriz = emps.CodEmpresaMatriz,
+                    Complemento = emps.Complemento,
+                    Estado = cidades.Estado,
+                    Logradouro = emps.Logradouro,
+                    Numero = emps.Numero,
+                    Telefone = emps.Telefone,
+                    Email = emps.Email,
+                    Facebook = emps.Facebook,
+                    ImagemBackgroundAutenticada = emps.ImagemBackgroundAutenticada,
+                    ImagemBackgroundPublica = emps.ImagemBackgroundPublica,
+                    CorPrincipal = emps.CorPrincipal,
+                    CorSecundaria = emps.CorSecundaria,
+                    CorPrincipalContraste = emps.CorPrincipalContraste,
+                    CorDestaque = emps.CorDestaque,
+                    TextoInstitucional = emps.TextoInstitucional,
+                    EhFilial = (emps.CodEmpresaMatriz == null),
+                    EmpresaAtiva = emps.EmpresaAtiva,
+                    UrlSite = emps.UrlSite
+                }
+                ).FirstOrDefault();
+
+            if (empresa != null)
+            {
+                if (!String.IsNullOrEmpty(empresa.Logomarca))
+                {
+                    empresa.LogomarcaMini = empresa.Logomarca.Replace("img_logo", "mini-img_logo");
+                }
+
+                if (!String.IsNullOrEmpty(empresa.ImagemBackgroundPublica))
+                {
+                    empresa.ImagemBackgroundPublicaMini = empresa.ImagemBackgroundPublica.Replace("img_bg_publica", "mini-img_bg_publica");
+                }
+
+                if (!String.IsNullOrEmpty(empresa.ImagemBackgroundAutenticada))
+                {
+                    empresa.ImagemBackgroundAutenticadaMini = empresa.ImagemBackgroundAutenticada.Replace("img_bg_autenticada", "mini-img_bg_autenticada");
+                }
+            }
+
+            return empresa;
+        }
+
         public async Task<List<EmpresaViewModel>> GetEmpresas()
         {
             var usuarioMaster = HttpContext.Current.User.IsInRole(Constantes.ROLE_MASTER);
